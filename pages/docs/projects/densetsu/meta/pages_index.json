@@ -1,0 +1,787 @@
+{
+  "generated_at": "2025-12-24",
+  "pages": [
+    {
+      "id": "densetsu_universe_index",
+      "title": "Universe Wiki",
+      "domain": "universe",
+      "type": "Index",
+      "path": "docs/projects/densetsu/universe/index.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "densetsu_engine_index",
+      "title": "Engine Wiki",
+      "domain": "engine",
+      "type": "Index",
+      "path": "docs/projects/densetsu/engine/index.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "template_universe_page",
+      "title": "Universe Page Template",
+      "domain": "universe",
+      "type": "Template",
+      "path": "docs/projects/densetsu/meta/TEMPLATE_UNIVERSE_PAGE.mdx",
+      "status": "stub",
+      "generated": false,
+      "sources": [],
+      "aliases": []
+    },
+    {
+      "id": "template_engine_page",
+      "title": "Engine Page Template",
+      "domain": "engine",
+      "type": "Template",
+      "path": "docs/projects/densetsu/meta/TEMPLATE_ENGINE_PAGE.mdx",
+      "status": "stub",
+      "generated": false,
+      "sources": [],
+      "aliases": []
+    },
+    {
+      "id": "great_eclipse",
+      "title": "The Great Eclipse",
+      "domain": "universe",
+      "type": "Event",
+      "path": "docs/projects/densetsu/universe/overview/great_eclipse.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "calendar_be_ae",
+      "title": "Calendar: BE and AE",
+      "domain": "universe",
+      "type": "Concept",
+      "path": "docs/projects/densetsu/universe/overview/calendar_be_ae.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "world_overview",
+      "title": "World Overview",
+      "domain": "universe",
+      "type": "World",
+      "path": "docs/projects/densetsu/universe/world/world_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "eastern_continent",
+      "title": "Eastern Continent",
+      "domain": "universe",
+      "type": "Region",
+      "path": "docs/projects/densetsu/universe/world/eastern_continent.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "western_continent",
+      "title": "Western Continent",
+      "domain": "universe",
+      "type": "Region",
+      "path": "docs/projects/densetsu/universe/world/western_continent.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "mycomind_covenant",
+      "title": "Mycomind Covenant",
+      "domain": "universe",
+      "type": "Faction/Region",
+      "path": "docs/projects/densetsu/universe/world/mycomind_covenant.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (2025-05-27)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "aokuni_culture",
+      "title": "Aokuni Culture",
+      "domain": "universe",
+      "type": "Culture",
+      "path": "docs/projects/densetsu/universe/cultures/aokuni.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (2025-05-25)",
+        "Universe Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "michio",
+      "title": "Michio",
+      "domain": "universe",
+      "type": "Character",
+      "path": "docs/projects/densetsu/universe/characters/michio.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "hanzo",
+      "title": "Hanzo",
+      "domain": "universe",
+      "type": "Character",
+      "path": "docs/projects/densetsu/universe/characters/hanzo.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (Hanzo is Michio's father)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "hitomi",
+      "title": "Hitomi",
+      "domain": "universe",
+      "type": "Character",
+      "path": "docs/projects/densetsu/universe/characters/hitomi.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (Hitomi is Michio's mother)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "okashira",
+      "title": "Okashira",
+      "domain": "universe",
+      "type": "Character",
+      "path": "docs/projects/densetsu/universe/characters/okashira.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "master_nagamizu",
+      "title": "Master Nagamizu",
+      "domain": "universe",
+      "type": "Character",
+      "path": "docs/projects/densetsu/universe/characters/master_nagamizu.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "bonsai_sage",
+      "title": "Bonsai Sage",
+      "domain": "universe",
+      "type": "Character",
+      "path": "docs/projects/densetsu/universe/characters/bonsai_sage.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "ninth_wave",
+      "title": "Ninth Wave",
+      "domain": "universe",
+      "type": "Faction",
+      "path": "docs/projects/densetsu/universe/factions/ninth_wave.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "marella_caravans",
+      "title": "Marella Caravans (Blackwater Tidebrokers)",
+      "domain": "universe",
+      "type": "Faction",
+      "path": "docs/projects/densetsu/universe/factions/marella_caravans.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (2025-12-15)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "hirogawa",
+      "title": "Hirogawa",
+      "domain": "universe",
+      "type": "Location",
+      "path": "docs/projects/densetsu/universe/locations/hirogawa.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (Hirogawa hub map)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "crimson_dynasty",
+      "title": "Crimson Dynasty",
+      "domain": "universe",
+      "type": "Nation/Faction",
+      "path": "docs/projects/densetsu/universe/locations/crimson_dynasty.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "seigetsu_empire",
+      "title": "Seigetsu Empire",
+      "domain": "universe",
+      "type": "Nation/Faction",
+      "path": "docs/projects/densetsu/universe/locations/seigetsu_empire.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "yukigami",
+      "title": "Yukigami",
+      "domain": "universe",
+      "type": "Nation/Region",
+      "path": "docs/projects/densetsu/universe/locations/yukigami.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "kojimigakure",
+      "title": "Kojimigakure",
+      "domain": "universe",
+      "type": "Nation/Region",
+      "path": "docs/projects/densetsu/universe/locations/kojimigakure.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "galport",
+      "title": "Galport",
+      "domain": "universe",
+      "type": "Location",
+      "path": "docs/projects/densetsu/universe/locations/galport.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (mentions in faction notes)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "kaerugan",
+      "title": "Kaerugan",
+      "domain": "universe",
+      "type": "Location",
+      "path": "docs/projects/densetsu/universe/locations/kaerugan.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (Western Continent)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "eresh_emirate",
+      "title": "Eresh Emirate",
+      "domain": "universe",
+      "type": "Location",
+      "path": "docs/projects/densetsu/universe/locations/eresh_emirate.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (2025-05-27)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "verdathal",
+      "title": "Verdathal",
+      "domain": "universe",
+      "type": "Location",
+      "path": "docs/projects/densetsu/universe/locations/verdathal.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (mentions in Marella notes)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "eddara",
+      "title": "Eddara",
+      "domain": "universe",
+      "type": "Location",
+      "path": "docs/projects/densetsu/universe/locations/eddara.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (mentions in Marella notes)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "timeline_index",
+      "title": "Timeline Index",
+      "domain": "universe",
+      "type": "Index",
+      "path": "docs/projects/densetsu/universe/events/timeline_index.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "hirogawa_town_fire",
+      "title": "Hirogawa Town Fire (event)",
+      "domain": "universe",
+      "type": "Event",
+      "path": "docs/projects/densetsu/universe/events/hirogawa_town_fire.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Hirogawa quest gating)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "infinitree",
+      "title": "Infinitree",
+      "domain": "universe",
+      "type": "Concept",
+      "path": "docs/projects/densetsu/universe/concepts/infinitree.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Universe Document.txt",
+        "Project memory (Infinitree)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "time_rifts",
+      "title": "Time Rifts",
+      "domain": "universe",
+      "type": "Concept",
+      "path": "docs/projects/densetsu/universe/concepts/time_rifts.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Time rifts definition)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "anomalies",
+      "title": "Anomalies",
+      "domain": "universe",
+      "type": "Concept",
+      "path": "docs/projects/densetsu/universe/concepts/anomalies.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Time rifts / anomalies relation)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "chronobonsai_checkpoint",
+      "title": "Chronobonsai (Checkpoint)",
+      "domain": "universe",
+      "type": "Mechanic",
+      "path": "docs/projects/densetsu/universe/concepts/chronobonsai_checkpoint.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Checkpoint system: chronobonsai)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "gong_arch_checkpoint",
+      "title": "Gong Arch (Checkpoint)",
+      "domain": "universe",
+      "type": "Mechanic",
+      "path": "docs/projects/densetsu/universe/concepts/gong_arch_checkpoint.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Checkpoint system: gong arch)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "orb_statue_checkpoint",
+      "title": "Orb Statue (Checkpoint)",
+      "domain": "universe",
+      "type": "Mechanic",
+      "path": "docs/projects/densetsu/universe/concepts/orb_statue_checkpoint.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Checkpoint system: orb statue)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "creatures_index",
+      "title": "Creatures",
+      "domain": "universe",
+      "type": "Index",
+      "path": "docs/projects/densetsu/universe/creatures/index.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Enemies, Creatures, Abominations.txt",
+        "Project memory (Creature framework & rules)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "core_runtime_overview",
+      "title": "Core Runtime Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/runtime/core_runtime_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "world_streaming",
+      "title": "World Streaming",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/runtime/world_streaming.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "save_load",
+      "title": "Save / Load",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/runtime/save_load.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt",
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "data_persistence",
+      "title": "Data Persistence",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/runtime/data_persistence.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "actor_system_overview",
+      "title": "Actor System Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/actors/actor_system_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt",
+        "Project memory (Actor system guidelines)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "actor_types_lifecycle",
+      "title": "Actor Types & Lifecycle",
+      "domain": "engine",
+      "type": "Spec",
+      "path": "docs/projects/densetsu/engine/actors/actor_types_lifecycle.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Actor types + Active/Semi-Active/Passive rule)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "creatures_as_actors",
+      "title": "Creatures as Actors (Framework)",
+      "domain": "engine",
+      "type": "Spec",
+      "path": "docs/projects/densetsu/engine/actors/creatures_as_actors_framework.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Creature framework)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "fsm_system_overview",
+      "title": "FSM System Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/fsm/fsm_system_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt",
+        "Project memory (State.gd base class)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "state_contract",
+      "title": "State Contract (Tags, Context, Events)",
+      "domain": "engine",
+      "type": "Spec",
+      "path": "docs/projects/densetsu/engine/fsm/state_contract_tags_context_events.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (State.gd defines priorities, context flags, tags, frame events)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "stats_overview",
+      "title": "Stats Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/stats_combat/stats_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt",
+        "Project memory (core player stats)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "skills_affinities",
+      "title": "Skills & Elemental Affinities",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/stats_combat/skills_and_elemental_affinities.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (combat skills + elemental affinities)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "combat_overview",
+      "title": "Combat Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/stats_combat/combat_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Game Design Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "input_overview",
+      "title": "Input Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/input_movement/input_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Game Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "movement_controller",
+      "title": "Movement Controller",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/input_movement/movement_controller.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Game Design Document.txt",
+        "Project memory (advanced 2D movement controllers)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "sonic_physics_optional",
+      "title": "Optional Sonic-Style Physics",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/input_movement/sonic_style_physics_optional.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (optional sonic physics for special characters)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "database_overview",
+      "title": "Database & Data Model Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/data_authoring/database_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Game Design Document.txt",
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "authoring_pipeline",
+      "title": "Authoring Pipeline",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/data_authoring/authoring_pipeline.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "in_game_editor_overview",
+      "title": "In‑Game Editor Overview",
+      "domain": "engine",
+      "type": "System",
+      "path": "docs/projects/densetsu/engine/editor/in_game_editor_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Game Design Document.txt",
+        "Project memory (in‑game editor + templates + drag & drop)"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "debug_tools_overview",
+      "title": "Debug Tools Overview",
+      "domain": "engine",
+      "type": "Tooling",
+      "path": "docs/projects/densetsu/engine/tools/debug_tools_overview.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Densetsu Design Document.txt"
+      ],
+      "aliases": []
+    },
+    {
+      "id": "construct2_to_godot",
+      "title": "Construct 2 → Godot Conversion (Tooling)",
+      "domain": "engine",
+      "type": "Tooling",
+      "path": "docs/projects/densetsu/engine/integrations/construct2_to_godot_tooling.mdx",
+      "status": "stub",
+      "generated": true,
+      "sources": [
+        "Project memory (Construct2 conversion plan)"
+      ],
+      "aliases": []
+    }
+  ]
+}

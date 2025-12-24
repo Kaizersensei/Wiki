@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu – Chat‑only Canon & Project‑wide Decisions</title>
+  <link rel="stylesheet" href="../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand"><a href="../../../../retraissance/index.html">Retraissance</a></div>
+    <nav class="nav-links">
+      <a href="../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../retraissance/densetsu/universe/index.html">Universe</a>
+      <a href="../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">Source</p>
+      <h1>Densetsu – Chat‑only Canon & Project‑wide Decisions</h1>
+      <p>Full text extracted from Densetsu_–_Chat‑only_Canon_&_Project‑wide_Decisions.txt. Use this as reference; chat decisions override in conflicts.</p>
+      <article class="markdown">
+        <pre>Densetsu – Chat‑Only Canon &amp; Project‑Wide
+Decisions
+This document summarizes project‑wide changes, rules, and decisions that were defined or refined in
+chats  only,  not  necessarily  reflected  in  formal  design  documents  at  the  time.  It  is  intended  as  a
+consolidation reference for Codex, wiki generation, and future documentation updates.
+1. Canon &amp; Narrative Rules
+1.1 Time, Causality, and Travel
+Time travel is not a player‑controlled mechanic.
+Time is a narrative element meant to be observed, not manipulated.
+Attempts to manipulate time are thematically linked to madness, corruption, or world sickness.
+Time rifts are not portals:
+They are cracks in reality showing how past events unfolded beyond current knowledge.
+They may also show possible future outcomes.
+Their purpose is to provide subtle narrative or mechanical hints, not direct intervention.
+Any future allowance for time interaction (e.g., New Game+) must be framed as alternate timelines,
+not classical time travel.
+1.2 Anomalies
+Anomalies are not generic glitches.
+They are consequences of temporal stress, refusal to accept outcomes, or unresolved causality.
+Bosses and major conflicts may be manifestations of anomalies.
+Relationship between Time Rifts and Anomalies exists but hierarchy is not yet locked (explicitly
+flagged as an open decision).
+2. World Structure &amp; Geography
+2.1 Continents (Chat‑Defined)
+The world is split into two major continents plus independent regions:
+Eastern Continent
+Asian‑inspired cultures.
+Includes Hirogawa, Crimson Dynasty, Seigetsu, Yukigami, Kojimigakure.
+Western Continent
+Culturally diverse, comparable to Europe.
+Includes Kaerugan, Verdathal, Eddara, Galport.
+Mycomind Covenant
+Independent island nation.
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+◦ 
+◦ 
+• 
+◦ 
+◦ 
+• 
+◦ 
+1
+
+2.2 Eresh Emirate (Chat Canon)
+Mesopotamian‑inspired desert realm.
+Governed by dream‑binding god‑kings.
+Landscape filled with buried ancient machinery predating the Eclipse.
+Exports scavenged metals and parts to Kaerugan.
+Desert travel relies on cobbled‑together machines built from recovered tech.
+3. Culture &amp; Factions
+3.1 Aokuni Culture
+“Aokuni” is the canonical name for Japanese‑inspired cultures.
+Applies to Eastern Continent regions unless overridden.
+3.2 Marella Caravans / Blackwater Tidebrokers
+Aquatic, non‑humanoid moray‑like beings.
+Operate hidden underwater caravan routes.
+Exist outside Galport law.
+Gameplay role:
+Optional vendors / quest givers.
+Use favors or rare currencies instead of gold.
+Narrative role:
+Moral gray area.
+Economic rivals yet necessary intermediaries.
+Manolo Marella (&quot;the Tidebroker&quot;) is visually defined as bourgeois (monocle explicitly noted).
+4. Characters &amp; Lineage (Clarifications from Chat)
+Michio is the protagonist.
+Hanzo is Michio’s father.
+Hitomi is Michio’s mother.
+Naming conventions (full names vs given names) are not yet fully locked and flagged as a gap.
+5. Creatures vs Enemies (System‑Level Canon)
+Creatures are treated internally as Actors but belong to a distinct Creature group.
+Key distinctions:
+Creatures act on instinct or environmental balance.
+Enemies act with intent, allegiance, or corruption.
+Creatures:
+Can be hunted, studied, tamed, or ridden.
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+2
+
+Use simplified FSM logic.
+Corrupted creatures may temporarily behave like enemies but remain part of the Creature system.
+6. Gameplay Systems (Chat‑Defined or Refined)
+6.1 Checkpoint System
+Multiple checkpoint types are canon: - Chronobonsai - Transitional zones. - Act as checkpoint, silent loading
+screen, auto‑save, and main menu. - Gong Arch - Area‑native structure holding a gong. - Activating it saves
+progress without full reset. - Orb Statue - Refreshes HP and Ki. - Deity depiction depends on local culture.
+Grouping of these under a single “Checkpoint” concept vs separate pages remains open.
+6.2 Movement &amp; Physics
+Terrain is polygon/collider based, not tilemap‑locked.
+Images, 9‑patch textures, and 3D objects may coexist as terrain.
+Optional Sonic‑style physics can be enabled for specific characters.
+7. Engine &amp; Architecture Decisions
+7.1 Actor System
+Actors are the fundamental runtime unit.
+Actor types include:
+Character
+Utility
+Destructible
+Trap
+Item
+Projectile
+Four operational states:
+Active
+Semi‑Active
+Passive
+7.2 FSM System
+FSM is inspired by OpenBOR.
+State.gd  base class defines:
+Group priorities
+Context flags
+State tags
+Frame events
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+3
+
+FSM and Actor design must not be contradicted across future systems.
+8. Tooling &amp; Pipeline (Chat‑Only)
+8.1 Wiki Strategy
+Retraissance Wiki is the top‑level umbrella.
+Densetsu Wiki is nested under Projects.
+Densetsu is split into:
+Universe Wiki (lore canon)
+Engine Wiki (technical canon)
+Automated page generation is the primary goal.
+In‑browser editing is secondary but required.
+8.2 Documentation Ingestion
+Written information is prioritized over media.
+Media extraction may fail gracefully with placeholders.
+PDFs are acceptable archival sources; structure recovery is best‑effort.
+9. Explicitly Open / Unresolved Items
+These were identified during scaffold generation and discussion: - Canonical full names for Hanzo and
+Hitomi. - Final hierarchy between Time Rifts and Anomalies. - Whether checkpoint mechanics should have a
+shared parent concept page. - Final scope placement of Marella Caravans in main narrative timeline.
+10. Usage Note
+This document represents  chat‑level canon. It should be used to: - Validate generated wiki pages. -
+Cross‑check Codex output. - Identify mismatches between formal documents and accepted decisions.
+It should be updated whenever new project‑wide rules are decided in chat before document integration.
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+4
+</pre>
+      
+        <h2 id="source-excerpts">Source excerpts</h2>
+        <pre class="source-excerpt">Densetsu Game Design Document 
+2026
+
+---
+
+2026 
+
+Densetsu Game Design Document 
+2026 Edition – Canon
+
+---
+
+Densetsu Game Design Document 
+2026 Edition – Canon 
+
+0: Work Policies</pre>
+      
+        <h2 id="open-questions">Open questions / conflicts</h2>
+        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
