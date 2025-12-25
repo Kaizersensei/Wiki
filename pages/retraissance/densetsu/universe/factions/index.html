@@ -3,47 +3,121 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Factions | Universe | Densetsu</title>
+  <title>Factions</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>Factions</h1>
-      <p>Listing pages under Factions.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/factions/marella_caravans.html">Marella Caravans (Blackwater Tidebrokers)</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/factions/ninth_wave.html">Ninth Wave</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search, sort, filter, and group factions.</p>
+
+      <div class="filters">
+        <label for="f-search">Search</label>
+        <input id="f-search" type="search" placeholder="Search factions." />
+
+        <label for="f-filter">Filter region</label>
+        <select id="f-filter"><option value="all">All</option></select>
+
+        <label for="f-sort">Sort</label>
+        <select id="f-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="region">Region</option>
+        </select>
+
+        <label for="f-group">Group by</label>
+        <select id="f-group">
+          <option value="none">None</option>
+          <option value="region">Region</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
-        <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
-        </ul>
-      </div>
+
+      <div id="f-list" class="link-list"></div>
     </section>
   </main>
+
+  <script>
+    const fData = [
+      { name: 'Council of Harbormasters', href: 'council_of_harbormasters.html', region: 'Western' },
+      { name: 'Crimson Dynasty', href: 'crimson_dynasty.html', region: 'Eastern' },
+      { name: 'Eddara Council', href: 'eddara_council.html', region: 'Western' },
+      { name: 'Eresh Emirate', href: 'eresh_emirate.html', region: 'Western' },
+      { name: 'Fire Dominion', href: 'fire_dominion.html', region: 'Eastern' },
+      { name: 'Galport Trade Federation', href: 'galport_trade_federation.html', region: 'Western' },
+      { name: 'Hirogawa Feud', href: 'hirogawa_feud.html', region: 'Eastern' },
+      { name: 'Kaerugan Rust Courts', href: 'kaerugan_rust_courts.html', region: 'Eastern' },
+      { name: 'Marella Caravans', href: 'marella_caravans.html', region: 'Sea' },
+      { name: 'Mycomind Covenant', href: 'mycomind_covenant.html', region: 'Islands' },
+      { name: 'Ninth Wave', href: 'ninth_wave.html', region: 'Sea' },
+      { name: 'Seigetsu Empire', href: 'seigetsu_empire.html', region: 'Eastern' },
+      { name: 'Twilight Covenant', href: 'twilight_covenant.html', region: 'Eastern' },
+      { name: 'Verdant Circle', href: 'verdant_circle.html', region: 'Western' },
+      { name: 'Verdathal Commonwealth', href: 'verdathal_commonwealth.html', region: 'Western' },
+      { name: 'Wakers', href: 'wakers.html', region: 'Anomaly' },
+      { name: 'Water Courts', href: 'water_courts.html', region: 'Sea' }
+    ];
+
+    const fSearch = document.getElementById('f-search');
+    const fFilter = document.getElementById('f-filter');
+    const fSort = document.getElementById('f-sort');
+    const fGroup = document.getElementById('f-group');
+    const fList = document.getElementById('f-list');
+
+    const buildFFilter = () => {
+      const values = Array.from(new Set(fData.map(d => d.region).filter(Boolean))).sort();
+      fFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderF = () => {
+      const q = (fSearch.value || '').toLowerCase();
+      const flt = fFilter.value;
+      let items = fData.filter(d => d.name.toLowerCase().includes(q) || (d.region || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.region === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (fSort.value === 'name') items.sort(sorter('name'));
+      else if (fSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (fSort.value === 'region') items.sort(sorter('region'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.region ? `<span class="meta-chip">${d.region}</span>` : ''}</li>`;
+
+      if (fGroup.value === 'region') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.region || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        fList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        fList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    fSearch.addEventListener('input', renderF);
+    fFilter.addEventListener('change', renderF);
+    fSort.addEventListener('change', renderF);
+    fGroup.addEventListener('change', renderF);
+    buildFFilter();
+    renderF();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+Source: Universe_Document.txt
+- L2316-2317: Pulse Seeds — botanical tech devices used to temporarily stabilize collapsed rift zones to access lost memories/relics.
+- Notes: puzzle/anomaly item; ties to time_fractures_and_anomalies + Root Pearl pathing.
+

@@ -1,0 +1,8 @@
+Source: Universe_Document.txt
+- L1115-1122: Varthun city hosts Temporal Gatekeeper quest within salt-preserved libraries.
+- L4274-4279: Gatekeeper can only be approached through an act of total sacrifice; tied to Hanzo mission log fragment in Salt Libraries.
+
+Notes:
+- Quest gate NPC/entity linked to Salt Libraries of Varthun; likely unlocks time access or knowledge.
+- Cross-links: biomes/varthum_western_borderlands, pois/salt_libraries_of_varthun, natural_occurrences/salt_preservation_memory_economy.
+

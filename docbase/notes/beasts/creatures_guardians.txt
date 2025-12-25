@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L79: Hollow Fang — Wolf-fox hybrid who devoured its own spirit to protect kin; hunts the impure; good morality-gate beast encounter.
+- L81: Aurex the Last Basilisk — Final basilisk guarding vault of cursed knowledge; boss-level guardian for relic dungeons.
+- L83: Komo the Earth Dreamer — Temple-sized sleeping turtle; awakens during celestial misalignment; potential world event trigger.
+- L85: Shyr'aani the Skybreaker — Thunderbird spirit imprisoned by monks; seeks release or revenge; sky/ storm biomes.
+- L87: River Crown — Koi dragon cursed to punish theft from sacred waters; tie to water shrine quests.
+

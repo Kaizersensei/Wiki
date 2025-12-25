@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L2036-2063: Time-fractured hidden cove with stranded ship “Mistral”; tides/currents from different eras, sea now gone; Captain Levantera hums sea tune by fire; coat always caught in wind; unlockable via relic quest.
+
+Notable NPCs:
+- Captain (Levantera) — traveler from shattered nautical age; relic quest unlock.
+
+Secondary NPCs:
+- Echoed sailors’ traces (sea shanty echoes), none persistent.
+

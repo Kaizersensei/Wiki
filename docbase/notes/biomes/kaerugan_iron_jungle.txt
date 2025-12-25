@@ -1,0 +1,15 @@
+Sources:
+- Universe_Document.txt L4268-4274: Kaerugan “Iron Jungle” — techno-mystic land where nature and machine merge; trees hum with memory; Michio tracks rumors of a woman who wields fire without fuel; discovers living code written by his mother for him.
+- Densetsu_Design_Document.txt L10973-10981, L11814-11831: Kaerugan Industrial Federation rising from King Frog’s vassalage; technocratic guild oligarchy; Rustborn machine-worshippers; entropy forges reclaim BE metal; industrial unity/independence push; equipment upgrade nexus and bio-conscious experiments.
+- Densetsu_Design_Document.txt L11537: Rustfall events — metallic rainstorms from Kaerugan smog regions (natural hazard tied to weather/entropy).
+
+Notable NPCs:
+- Rumored fuel-less fire wielder (possible tie to Hitomi code drop).
+- Rustborn cult leaders / Kaerugan guild oligarchs.
+- Industrial philosophers seeking chrono-tech recreation.
+
+Secondary NPCs:
+- Rust Courts arbiters of decay rights.
+- Engineers running entropy forges and Ferro-Ki alloy labs.
+- Smog region workers affected by Rustfall events.
+

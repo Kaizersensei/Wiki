@@ -1,0 +1,69 @@
+﻿Densetsu Arcade Mode Document
+Densetsu Arcade Document
+
+
+Inspiration
+Only striking features will be listed. Those relevant to us have a checkmark ✅.
+
+* Mystic Warriors, Konami, Arcade
+   * Up to 4 players ✅
+   * 5 selectable characters ✅ perhaps even more
+   * Frantic run n’ gun action ✅ but much less emphasis on it
+   * Based on Sunset Warriors engine
+   * Focus on shooting
+   * Varied and interesting set pieces ✅
+   * Minibosses ✅
+   * Abilities - climbing walls, hanging, melee weapons, sliding, rolling ✅
+   * Collectibles are scarce and predetermined - energy, points, power-up
+   * Some auto-scroller or on-rails sections ✅
+   * Levels can go in any direction with heavy use of walls and slopes ✅
+   * Swimming as well as walking underwater ✅
+   * Levels have some depth and the camera defines the plane of action ✅
+   * Player plane is fixed (Pure 2D) ✅
+   * Enemies have simple predefined movement routines ✅ but not all of them
+
+
+Mystic Warriors Arcade Full Game Gameplay Walkthrough 4 Players Coop No Commentary
+
+
+* Streets of Rage Remake
+   * Up to 2 Players
+   * Polished brawler ✅
+   * Can pick up items, but it’s optional ✅
+   * Weapons can also be optionally picked up and can be blunt, sharp, firearms and bombs ✅
+   * Player plane is 2.5D (Depth movement is faked with graphic and logic tricks)
+   * Wide range of melee attacks and movement options ✅
+   * Enemies have some basic judgement and have a “personality”
+   * Varied and interesting set pieces, though few and far apart
+   * Players have special attacks that need to recharge ✅
+   * Clearing levels powers up your special attacks ✅
+   * Losing lives diminishes your power ✅
+   * Special attack power-ups can also be collected ✅
+
+
+
+
+Streets of Rage Remake V5.2 playthrough
+
+
+
+
+Others (no review)
+
+The Messenger *Full game* Gameplay playthrough (no commentary)
+The Street Fighter Clone that became an Anime Fighter - World Heroes
+Game Structure
+* 1 - 4 players | co-op or versus | Stretch Goal: extra modes, characters and levels
+* Mechanics
+
+
+Items
+
+
+Players
+
+
+Enemies
+
+
+Locations

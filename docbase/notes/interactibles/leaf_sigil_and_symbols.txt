@@ -1,0 +1,4 @@
+Source: Universe_Document.txt
+- L1388-1390: Symbolic motifs — Bonsai Tree, Leaf Sigil, Reverse Moon recurring across time arcs; likely used as locks/keys in temples and Infinitree interfaces.
+- L1485-1490: Chronobonsai soil layers hold events; leaf sigils may encode recorded eras; cross-ref Sage/Chronobonsai for retrieval mechanics.
+

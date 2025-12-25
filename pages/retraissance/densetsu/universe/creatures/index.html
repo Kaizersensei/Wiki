@@ -3,46 +3,140 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Creatures | Universe | Densetsu</title>
+  <title>Creatures</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>Creatures</h1>
-      <p>Listing pages under Creatures.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/creatures/index.html">Creatures</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search, sort, filter, and group fauna and beasts.</p>
+
+      <div class="filters">
+        <label for="cr-search">Search</label>
+        <input id="cr-search" type="search" placeholder="Search creatures." />
+
+        <label for="cr-filter">Filter tag</label>
+        <select id="cr-filter"><option value="all">All</option></select>
+
+        <label for="cr-sort">Sort</label>
+        <select id="cr-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="cr-group">Group by</label>
+        <select id="cr-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
+
+      <div id="cr-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Missing:</strong> Add new bestiary entries as they are authored; tag by biome/role.
+      </div>
+      <div class="callout">
+        <strong>See also:</strong>
         <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
+          <li><a href="../enemies/index.html">Enemies &amp; Abominations</a> (hostile NPCs)</li>
+          <li><a href="../characters/index.html">Characters</a> (sentient cast)</li>
+          <li><a href="../lexicon.html">Lexicon</a> (alphabetized terms)</li>
         </ul>
       </div>
     </section>
   </main>
+
+  <script>
+    const crData = [
+      { name: "Cave Rat", href: "cave_rat.html", tag: "subterranean" },
+      { name: "Hagane Snail", href: "hagane_snail.html", tag: "mineral" },
+      { name: "Bamboo Creatures (family)", href: "bamboo_creatures.html", tag: "bamboo" },
+      { name: "Forest Fauna", href: "forest_fauna.html", tag: "forest" },
+      { name: "Aquatic Fauna", href: "aquatic_fauna.html", tag: "aquatic" },
+      { name: "Desert Fauna", href: "desert_fauna.html", tag: "desert" },
+      { name: "Mycomind Fauna", href: "mycomind_fauna.html", tag: "fungal" },
+      { name: "Mount-Class Creatures", href: "mount_class_creatures.html", tag: "mount" },
+      { name: "Corrupted Creatures", href: "corrupted_creatures.html", tag: "corrupted" },
+      { name: "Grizzleback", href: "grizzleback.html", tag: "beast" },
+      { name: "Chitter Vineserpent", href: "chitter_vineserpent.html", tag: "plant-beast" },
+      { name: "Mire Crawler", href: "mire_crawler.html", tag: "insect" },
+      { name: "Wyrm Pup", href: "wyrm_pup.html", tag: "dragon" },
+      { name: "Shard Beetle", href: "shard_beetle.html", tag: "insect" },
+      { name: "Mist Hounds", href: "mist_hounds.html", tag: "spirit" },
+      { name: "Lantern Moths", href: "lantern_moths.html", tag: "support" },
+      { name: "Sand Whiptail", href: "sand_whiptail.html", tag: "mount" },
+      { name: "Celadon Cranes", href: "celadon_cranes.html", tag: "guardian" },
+      { name: "Mossbound Goats", href: "mossbound_goats.html", tag: "guardian" },
+      { name: "The Hollow Fang", href: "hollow_fang.html", tag: "spirit" },
+      { name: "Aurex the Last Basilisk", href: "aurex_last_basilisk.html", tag: "legendary" },
+      { name: "Komo the Earth Dreamer", href: "komo_earth_dreamer.html", tag: "legendary" },
+      { name: "Shyr'aani the Skybreaker", href: "shyraani_skybreaker.html", tag: "legendary" },
+      { name: "The River Crown", href: "river_crown.html", tag: "curse" }
+    ];
+
+    const crSearch = document.getElementById('cr-search');
+    const crFilter = document.getElementById('cr-filter');
+    const crSort = document.getElementById('cr-sort');
+    const crGroup = document.getElementById('cr-group');
+    const crList = document.getElementById('cr-list');
+
+    const buildCrFilter = () => {
+      const values = Array.from(new Set(crData.map(d => d.tag).filter(Boolean))).sort();
+      crFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderCr = () => {
+      const q = (crSearch.value || '').toLowerCase();
+      const flt = crFilter.value;
+      let items = crData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (crSort.value === 'name') items.sort(sorter('name'));
+      else if (crSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (crSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (crGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        crList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        crList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    crSearch.addEventListener('input', renderCr);
+    crFilter.addEventListener('change', renderCr);
+    crSort.addEventListener('change', renderCr);
+    crGroup.addEventListener('change', renderCr);
+    buildCrFilter();
+    renderCr();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

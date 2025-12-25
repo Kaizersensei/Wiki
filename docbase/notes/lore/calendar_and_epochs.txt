@@ -1,0 +1,7 @@
+Source: Universe_Document.txt
+- L25-35, L499-508: Great Eclipse splits calendar into BE (Before Eclipse) and AE (After Eclipse); present age 1326 AE. Great Eclipse stilled all elements (wind halted, water stood, fire dimmed, earth stopped).
+- L502-515: Chronobonsai age marker (~1500 years; rooted 674 BE).
+
+Notes:
+- Use AE/BE for timeline tags; Great Eclipse as major lore anchor for epoch references.
+

@@ -1,0 +1,11 @@
+Sources:
+- Universe_Document.txt L2006-2010: Ninth Wave “Drowning Hour” — controlled fractured time-space surge; structures collapse into alternate states; boss fights twist time rules.
+- Universe_Document.txt L2374-2415: Collapsed rift zones (Minus Depths/Echo Worlds) — delayed movement, ghost afterimages, jellyfish guides, corrupted seaweed lashes; Root Pearl reward + Echo Breath passive on return to Infinitree.
+- Universe_Document.txt L2114-2123: Flickering arcade rift (“Glitch in the Dust”) — Bimmy appears; Echo World manifestation from Time Fan overuse/damage.
+- Densetsu_Design_Document.txt L94-499, L1961: Varthum temporal loops — NPCs and regions trapped in repeating fragments; loop puzzles as core mechanic.
+
+Notes:
+- Anomaly traversal: use Pulse Seeds to stabilize collapsed zones temporarily (Universe_Document.txt L2316-2317).
+- Echo Worlds tie to Time Fan misuse; limit duration of summoned entities (e.g., Bimmy).
+- Loop etiquette: breaking loops requires specific triggers; treat as systemic “puzzle” layer in Varthum and anomaly biomes.
+

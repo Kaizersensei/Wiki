@@ -1,0 +1,10 @@
+Source: Universe_Document.txt
+- L720, L2971-2982, L4253-4256: Mirror Bastion (Seigetsu) — fortress-prison holding Hitomi; Ninth Wave control; echoes prisoner regrets; screams echo to throne room; located in Seigetsu imperial capital.
+
+Notable NPCs:
+- Hitomi (imprisoned).
+- Ninth Wave prison leadership.
+
+Secondary NPCs:
+- Wardens/interrogators.
+- Prisoners whose regrets fuel the Bastion’s echoes.

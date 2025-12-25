@@ -1,0 +1,6 @@
+Sources:
+- Universe_Document.txt L494-508: Great Eclipse cosmology — elements stilled; epoch split BE/AE.
+- Densetsu_Design_Document.txt L10158-10160, L10309-10311, L11839-11842: Dreaming Faith (Eresh) — dream-binding god-kings; World-Dream as architectonic plane; Eresh god-kings consider time structure a dream; tension with Chronosophs.
+- Densetsu_Design_Document.txt L10309-10311: Chronosophs treat time as measurable; see Dreamers’ claims as sacrilege.
+- Universe_Document.txt L1388-1390: Motifs (Bonsai, Leaf Sigil, Reverse Moon) as cosmological symbols.
+

@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L4220-4252: Mine Forge — Foundries established in Old Mines by Ninth Wave; industrialized takeover of former resource node.
+
+Notable NPCs:
+- Mine Forge overseer (Ninth Wave).
+
+Secondary NPCs:
+- Enslaved miners/engineers.
+- Guard detachments maintaining foundries.

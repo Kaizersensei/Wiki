@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L4217-4219: Stone Bridge — connects Hirogawa to other provinces; strategic crossing point before/after Tidal incursions.
+
+Notable NPCs:
+- Hirogawa guards (pre-attack).
+
+Secondary NPCs:
+- Refugees and traders moving between provinces.
+

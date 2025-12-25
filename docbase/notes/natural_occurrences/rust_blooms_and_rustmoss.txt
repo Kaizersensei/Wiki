@@ -1,0 +1,8 @@
+Sources:
+- Densetsu_Design_Document.txt L10923, L11482: Rust Bloom events — Kaerugan entropy engines dissolving material in reverse (decay/erosion as environmental set piece).
+- Densetsu_Design_Document.txt L11692: Rustmoss — thrives near Kaerugan foundries; feeds on metal and residual entropy.
+
+Notes:
+- Pair with weather/rustfall_metal_rain and biomes/kaerugan_iron_jungle.
+- Hazards for equipment durability and environmental traversal; visual cue for entropy influence.
+

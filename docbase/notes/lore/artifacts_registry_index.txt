@@ -1,0 +1,13 @@
+Sources:
+- Universe_Document.txt L3158-3172: Time Fan (Toki no Ōgi).
+- Universe_Document.txt L1485-1492, L515: Chronobonsai/Infinitree (living time anchor, ~674 BE root).
+- Universe_Document.txt L1017-1021: Galport treaty relic set — Alfons’s relic sword, Amelia’s Echo-Song, Kaze’s Anthem, Pombeiro’s seal.
+- Universe_Document.txt L2406-2411: Root Pearl (Echo Breath reward).
+- Universe_Document.txt L2316-2317: Pulse Seeds (rift stabilizers).
+- Densetsu_Design_Document.txt L240-276: Marella Sea Horn (summon vendors).
+- Densetsu_Design_Document.txt L240-249: Abyssal Pearl, Luminescent Scalecloth, Forgotten Relic Core (undersea loot).
+- Universe_Document.txt L2036-2063: Stranded ship “Mistral” (relic quest unlock for Captain Levantera).
+- Universe_Document.txt L3200-3204: Binding charm (Okashira ambush at Temple of Stillness).
+- Densetsu_Design_Document.txt L10920: Dreamfield Resonators (Eresh prophetic visions) — mentioned in faith section.
+- Universe_Document.txt L2300-2308: Ancient devices shaped like twisted trees/fans/seeds; botanical tech relics.
+

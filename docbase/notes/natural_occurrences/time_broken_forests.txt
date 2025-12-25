@@ -1,0 +1,6 @@
+Source: Densetsu_Design_Document.txt
+- L10901, L11376: Time-Broken Forests (Eddara) — plant life experiences rapid looping growth/decay; time anomalies visible in vegetation cycles.
+
+Notes:
+- Fits Eddara/halfling realms; tie to Season of Echoing Howls and Infinitree resonance quests.
+

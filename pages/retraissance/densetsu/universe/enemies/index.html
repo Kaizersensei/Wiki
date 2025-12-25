@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enemies</title>
+  <link rel="stylesheet" href="../../../assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
+      <a href="../../../projects/index.html">Projects</a>
+      <a href="../../index.html">Densetsu</a>
+      <a href="../index.html">Universe</a>
+      <a href="../../engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">universe</p>
+      <h1>Enemies</h1>
+      <p>Search, sort, filter, and group enemies, abominations, and legendary foes.</p>
+
+      <div class="filters">
+        <label for="e-search">Search</label>
+        <input id="e-search" type="search" placeholder="Search enemies." />
+
+        <label for="e-filter">Filter tag</label>
+        <select id="e-filter"><option value="all">All</option></select>
+
+        <label for="e-sort">Sort</label>
+        <select id="e-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="e-group">Group by</label>
+        <select id="e-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
+      </div>
+
+      <div id="e-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Note:</strong> Cross-link to characters where applicable (e.g., Okashira) when adding detail.
+      </div>
+      <div class="callout">
+        <strong>See also:</strong>
+        <ul>
+          <li><a href="../characters/index.html">Characters</a> (sentient NPCs)</li>
+          <li><a href="../creatures/index.html">Creatures</a> (non-sentient fauna)</li>
+          <li><a href="../lexicon.html">Lexicon</a> (alphabetical terms)</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const eData = [
+      { name: "Bandit", href: "bandit.html", tag: "humanoid" },
+      { name: "Ninja Grunts", href: "ninja_grunts.html", tag: "humanoid" },
+      { name: "Okashira", href: "okashira_boss.html", tag: "boss" },
+      { name: "The Mawing Echo", href: "mawing_echo.html", tag: "abomination" },
+      { name: "Rotling Mass", href: "rotling_mass.html", tag: "abomination" },
+      { name: "Mirrorspawn", href: "mirrorspawn.html", tag: "abomination" },
+      { name: "Cinder Wretches", href: "cinder_wretches.html", tag: "abomination" },
+      { name: "Threadworms", href: "threadworms.html", tag: "abomination" },
+      { name: "Soulbound Herald", href: "soulbound_herald.html", tag: "abomination" },
+      { name: "Chime Priestess", href: "chime_priestess.html", tag: "abomination" },
+      { name: "Shrouded Acolyte", href: "shrouded_acolyte.html", tag: "abomination" },
+      { name: "Gravemind Root", href: "gravemind_root.html", tag: "abomination" },
+      { name: "Eclipse Bound", href: "eclipse_bound.html", tag: "abomination" },
+      { name: "Nayuga, the Thousand-Faced", href: "nayuga_thousand_faced.html", tag: "abomination" },
+      { name: "Vez'tar the Devouring Secret", href: "vez_tar_devouring_secret.html", tag: "abomination" },
+      { name: "The Pale Matron", href: "pale_matron.html", tag: "abomination" },
+      { name: "Echo of the First Betrayer", href: "echo_of_the_first_betrayer.html", tag: "abomination" },
+      { name: "King of Nothing", href: "king_of_nothing.html", tag: "abomination" },
+      { name: "Michio the Echowalker", href: "michio_echowalker.html", tag: "legendary" },
+      { name: "Raijin's Last Apprentice", href: "raijins_last_apprentice.html", tag: "legendary" },
+      { name: "The Gilded Ghost", href: "gilded_ghost.html", tag: "legendary" },
+      { name: "Lady of Thorns", href: "lady_of_thorns.html", tag: "legendary" },
+      { name: "The Folded General", href: "folded_general.html", tag: "legendary" },
+      { name: "The Womb Whale", href: "womb_whale.html", tag: "legendary" },
+      { name: "Stonelash Hydra", href: "stonelash_hydra.html", tag: "legendary" },
+      { name: "Grove Tyrant", href: "grove_tyrant.html", tag: "legendary" },
+      { name: "Ashen Kite", href: "ashen_kite.html", tag: "legendary" },
+      { name: "Silkmother", href: "silkmother.html", tag: "legendary" },
+      { name: "The False Heaven", href: "false_heaven.html", tag: "legendary" },
+      { name: "Karma Engine", href: "karma_engine.html", tag: "legendary" },
+      { name: "The Plague Pilgrim", href: "plague_pilgrim.html", tag: "legendary" },
+      { name: "God-Eater Scarab", href: "god_eater_scarab.html", tag: "legendary" },
+      { name: "The Lingering Oath", href: "lingering_oath.html", tag: "legendary" },
+      { name: "Verdance", href: "verdance.html", tag: "legendary" },
+      { name: "Yama-Binder", href: "yama_binder.html", tag: "legendary" },
+      { name: "The Forgotten Shell", href: "forgotten_shell.html", tag: "legendary" },
+      { name: "Torredasso", href: "torredasso.html", tag: "mech" }
+    ];
+
+    const eSearch = document.getElementById('e-search');
+    const eFilter = document.getElementById('e-filter');
+    const eSort = document.getElementById('e-sort');
+    const eGroup = document.getElementById('e-group');
+    const eList = document.getElementById('e-list');
+
+    const buildEFilter = () => {
+      const values = Array.from(new Set(eData.map(d => d.tag).filter(Boolean))).sort();
+      eFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderE = () => {
+      const q = (eSearch.value || '').toLowerCase();
+      const flt = eFilter.value;
+      let items = eData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (eSort.value === 'name') items.sort(sorter('name'));
+      else if (eSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (eSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (eGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        eList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        eList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    eSearch.addEventListener('input', renderE);
+    eFilter.addEventListener('change', renderE);
+    eSort.addEventListener('change', renderE);
+    eGroup.addEventListener('change', renderE);
+    buildEFilter();
+    renderE();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
+</body>
+</html>

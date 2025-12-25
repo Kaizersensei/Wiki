@@ -1,0 +1,4 @@
+Source: Universe_Document.txt
+- L987-995: Dom Pombeiro de Galporta (“Pigeon Marquis”) – flightless pigeon governor-reformer; hub for postal protocols, negotiations, and final treaty brokering.
+- L1014-1021: “Wings of Accord” resolution quest needs Pombeiro’s seal alongside Alfons’s sword, Amelia’s Echo-Song, and Kaze’s Anthem to expose Saul Azar’s coup and lift the Galport flight curse.
+

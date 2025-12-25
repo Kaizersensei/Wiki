@@ -1,0 +1,8 @@
+Source: Universe_Document.txt
+- L4266-4269: Timeline Vault — Sage’s private temporal cache storing records of alternate realities; not yet visually shown; likely gated via Chronobonsai/Infinitree access.
+
+Notable NPCs:
+- Bonsai Sage (owner/guardian).
+
+Secondary NPCs:
+- None; access likely limited to Sage and trusted companions (Michio).

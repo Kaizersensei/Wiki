@@ -3,46 +3,109 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cultures | Universe | Densetsu</title>
+  <title>Cultures</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>Cultures</h1>
-      <p>Listing pages under Cultures.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/cultures/aokuni.html">Aokuni Culture</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search and browse cultures; tags can be expanded as new entries arrive.</p>
+
+      <div class="filters">
+        <label for="cu-search">Search</label>
+        <input id="cu-search" type="search" placeholder="Search cultures." />
+
+        <label for="cu-filter">Filter tag</label>
+        <select id="cu-filter"><option value="all">All</option></select>
+
+        <label for="cu-sort">Sort</label>
+        <select id="cu-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="cu-group">Group by</label>
+        <select id="cu-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
-        <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
-        </ul>
+
+      <div id="cu-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Missing:</strong> Additional cultures not yet mirrored; add entries and tag them (continent/realm/ethos).
       </div>
     </section>
   </main>
+
+  <script>
+    const cuData = [
+      { name: 'Aokuni', href: 'aokuni.html', tag: 'eastern' }
+    ];
+
+    const cuSearch = document.getElementById('cu-search');
+    const cuFilter = document.getElementById('cu-filter');
+    const cuSort = document.getElementById('cu-sort');
+    const cuGroup = document.getElementById('cu-group');
+    const cuList = document.getElementById('cu-list');
+
+    const buildCuFilter = () => {
+      const values = Array.from(new Set(cuData.map(d => d.tag).filter(Boolean))).sort();
+      cuFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderCu = () => {
+      const q = (cuSearch.value || '').toLowerCase();
+      const flt = cuFilter.value;
+      let items = cuData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (cuSort.value === 'name') items.sort(sorter('name'));
+      else if (cuSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (cuSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (cuGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        cuList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        cuList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    cuSearch.addEventListener('input', renderCu);
+    cuFilter.addEventListener('change', renderCu);
+    cuSort.addEventListener('change', renderCu);
+    cuGroup.addEventListener('change', renderCu);
+    buildCuFilter();
+    renderCu();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

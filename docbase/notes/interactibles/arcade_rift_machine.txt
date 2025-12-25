@@ -1,0 +1,4 @@
+Source: Universe_Document.txt
+- L2114-2123: Flickering rift with lone spinning arcade machine in “Glitch in the Dust” side quest; activation summons Bimmy (corrupted memory gunslinger) in digital smoke; anomaly tied to overuse/damage to Time Fan (Echo Worlds).
+- Notes: interactible anomaly device; yields temporary ally/encounter.
+

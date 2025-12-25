@@ -1,0 +1,10 @@
+Source: Universe_Document.txt
+- L4220-4252: Bamboo Thicket near Hirogawa where workers go missing; Tidals built hidden Bamboo Fort using enslaved Hirogawans; stealth/ambush forest zone tied to Ninth Wave control.
+
+Notable NPCs:
+- Tidal/Ninth Wave commanders overseeing fort.
+- Enslaved Hirogawa workers (rescues/quests).
+
+Secondary NPCs:
+- Patrol captains/guards within thicket.
+- Hidden informants aiding escape routes.

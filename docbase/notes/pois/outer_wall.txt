@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L816, L3621-3624: Outer Wall — Fortress-like border of halfling realm held by Kame; artillery via Shellshock Barrages from lakeside; first line of defense for First Root/Infinitree access.
+
+Notable NPCs:
+- Kame (guardian of the Outer Wall).
+- Halfling defenders under his command.
+
+Secondary NPCs:
+- Support crews operating Shellshock Barrage positions.

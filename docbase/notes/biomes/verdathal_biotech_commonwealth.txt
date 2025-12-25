@@ -1,0 +1,11 @@
+Source: Universe_Document.txt
+- L1087-1093: Verdathal spans multiple biomes united by mycelial networks and plant-tech; capital Nythenilsya is a fungal superstructure with biotech temples and bioelectric harnessing; frogfolk inhabit swamps/giant mushroom fields; FireBeetle squads patrol mounted on dragonflies.
+
+Notable NPCs:
+- Verdathal archivists/biotech priests (sapient archives).
+- FireBeetle squad leaders.
+- Frogfolk guild leaders in swamps/mushroom fields.
+
+Secondary NPCs:
+- Bioelectric engineers/plant-tech artisans.
+- Dragonfly riders and patrol units.

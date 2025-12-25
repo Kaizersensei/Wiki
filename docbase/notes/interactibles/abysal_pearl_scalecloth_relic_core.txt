@@ -1,0 +1,4 @@
+Source: Densetsu_Design_Document.txt
+- L240-249: Abyssal Pearl (catalyst; glows near time rifts), Luminescent Scalecloth (light armor vs aquatic hazards), Forgotten Relic Core (pre-Eclipse artifact for late-game crafting).
+- Notes: Marella/undersea loot; ties to Sea Horn vendor pool and anomaly crafting.
+

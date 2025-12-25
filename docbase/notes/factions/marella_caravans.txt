@@ -1,0 +1,10 @@
+Sources:
+- Densetsu_Design_Document.txt L90-140, L9575-9806: Marella Caravans (moray-like aquatic traders led by Manolo Marella; Blackwater Ports; Water/Shadow Ki; Sea Horn access); clandestine trade network beyond Galport law.
+- Densetsu_Design_Document.txt L240-276: Sea Horn summons vendors at resonance points.
+
+Notable Figures:
+- Manolo Marella (Tidebroker).
+
+Secondary Figures:
+- Blackwater caravan leaders; resonant vendor captains.
+

@@ -1,12 +1,20 @@
 :root {
   --bg: #f7f7f2;
-  --panel: #ffffff;
+  --panel: transparent;
   --border: #d7dce2;
   --accent: #1f5fbf;
-  --text: #1c2330;
-  --muted: #516174;
+  --text: #3c1f1a;
+  --muted: #a63a32;
   --nav: #e9edf2;
   --meta-bg: #f2f5f9;
+  --overlay: rgba(20, 24, 32, 0.75);
+  --patch-med: 96;   /* px slice for main parchment */
+  --patch-top: 72;   /* px slice for overlay parchment */
+  --nav-height: 32px;
+  --red-2: #a63a32;
+  --red-3: #c04a40;
+  --page-link: #3d6f62;
+  --page-link-visited: #5a3c6a;
 }
 
 * {
@@ -16,18 +24,27 @@
 body.theme-wiki {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: var(--bg);
+  background: var(--bg) url('./res/parchmentloop_bg.png') repeat;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.1;
+  font-weight: 600; /* thicker default text */
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 a {
-  color: var(--accent);
+  color: var(--page-link);
   text-decoration: none;
+  font-weight: 700;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+a:visited {
+  color: var(--page-link-visited);
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 .site-header {
@@ -35,62 +52,148 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--nav), #dde3eb);
+  border-bottom: 1px solid #111;
+  background: #000;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
+  min-height: var(--nav-height);
 }
 
 .brand a {
-  color: var(--text);
+  color: #fff;
   font-weight: 700;
   letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  height: var(--nav-height);
+  gap: 8px;
+  text-decoration: none;
+}
+
+.nav-logo {
+  display: block;
+  height: calc(var(--nav-height) - 4px); /* 2px margin on top/bottom */
+  width: auto;
+  margin: 2px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.brand .nav-logo {
+  display: block;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
 }
 
 .nav-links {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .nav-links a {
   padding: 6px 10px;
   border-radius: 6px;
-  color: var(--text);
+  color: #7bcdbd;
   border: 1px solid transparent;
+  font-weight: 700;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 .nav-links a:hover {
-  border-color: var(--border);
+  border-color: #7bcdbd;
+  background: rgba(123, 205, 189, 0.1);
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
+}
+
+.nav-links a:visited {
+  color: #64c8b4 !important;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
+}
+
+.nav-links .nav-home {
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
+}
+.nav-links .nav-home:visited {
+  color: #fff;
+}
+.nav-links .nav-home:hover {
+  border-color: #fff;
+}
+
+.nav-links,
+.brand {
+  color: #fff;
+}
+
+.nav-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
   background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.nav-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.nav-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .content {
-  max-width: 1100px;
-  margin: 28px auto 48px;
+  max-width: 1500px;
+  margin: 18px auto 48px;
   padding: 0 18px;
 }
 
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: url('./res/parchmentloop_med.png') repeat-y;
+  background-size: 140% auto; /* widen sheet to fill more center */
+  background-position: center top;
+  border: none;
   border-radius: 10px;
-  padding: 22px;
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+  box-shadow: none;
 }
 
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--muted);
-  font-size: 12px;
+  color: var(--red-2);
+  font-size: 18px; /* ~150% of previous */
+  font-weight: 800;
   margin: 0 0 6px 0;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 h1 {
   margin: 0 0 12px 0;
   font-size: 28px;
+  font-weight: 800; /* thicker titles */
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 p {
@@ -106,6 +209,8 @@ p {
 
 .link-list li {
   margin-bottom: 8px;
+  font-weight: 600;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 .inline-link {
@@ -142,10 +247,23 @@ p {
   font-weight: 600;
 }
 
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #eef2f8;
+  color: var(--text);
+  font-size: 12px;
+  margin-left: 6px;
+  border: 1px solid var(--border);
+}
+
 .markdown h2,
 .markdown h3,
 .markdown h4 {
-  margin: 18px 0 8px;
+  margin: 12px 0 6px;
+  text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
 .markdown ul,
@@ -182,10 +300,9 @@ p {
 
 .callout,
 .media-placeholder {
-  background: #f0f4fb;
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 6px;
+  background: url('./res/parchmentloop_top.png') repeat;
+  border: none;
+  border-radius: 8px;
   padding: 10px 12px;
   margin: 14px 0;
   color: var(--text);
@@ -194,3 +311,342 @@ p {
 .callout strong {
   color: var(--text);
 }
+
+/* Filters */
+.filters {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(160px, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 6px;
+  margin: 12px 0;
+  align-items: end;
+}
+
+.filters label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 0;
+  display: block;
+  grid-row: 1;
+}
+
+.filters input,
+.filters select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  grid-row: 2;
+}
+
+.media-frame {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: url('./res/parchmentloop_top.png') repeat;
+  padding: 8px;
+  margin: 12px 0;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.25);
+}
+/* Meta toggle */
+details.meta-toggle {
+  margin-top: 1.2rem;
+}
+details.meta-toggle summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+details.meta-toggle .meta-grid {
+  margin-top: 0.5rem;
+}
+
+/* Media gallery */
+.media-gallery {
+  margin: 12px 0 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  max-height: 25vh;
+  overflow: auto;
+}
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gallery-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gallery-controls input[type="file"],
+.gallery-controls input[type="text"],
+.gallery-controls input[type="number"] {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.gallery-controls label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.media-thumb {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  min-height: 120px;
+}
+
+.media-thumb img,
+.media-thumb video {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.media-thumb .thumb-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 8px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.6));
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.thumb-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.thumb-actions button {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.thumb-actions button:hover {
+  background: #fff;
+}
+
+.gallery-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.overlay-frame {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: url('./res/parchmentloop_top.png') repeat;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.overlay-frame img,
+.overlay-frame video {
+  max-width: 100%;
+  max-height: 70vh;
+  display: block;
+  margin: 0 auto;
+}
+
+.overlay-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.overlay-nav {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.overlay-nav button {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.timer-status {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.page-cover {
+  margin: 6px 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.page-cover img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.turnaround-strip {
+  margin: 10px 0 16px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.turnaround-header {
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.turnaround-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(160px, 1fr);
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.turnaround-frame {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+}
+
+.turnaround-frame img {
+  width: 100%;
+  height: 180px;
+  max-height: 33vh;
+  object-fit: contain;
+  display: block;
+}
+
+.side-strip {
+  position: fixed;
+  top: 80px;
+  bottom: 16px;
+  width: 160px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+  z-index: 10;
+}
+
+.side-strip-left { left: 12px; }
+.side-strip-right { right: 12px; }
+
+.side-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.side-rail img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.portrait-wrap img {
+  width: 100%;
+  max-height: 20vh;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.audio-wrap {
+  margin-top: 10px;
+}
+
+.audio-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.audio-wrap audio {
+  width: 100%;
+}
+
+.has-media-strips .content {
+  padding-left: 190px;
+  padding-right: 210px;
+}
+
+@media (max-width: 1080px) {
+  .side-strip {
+    display: none;
+  }
+  .has-media-strips .content {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+

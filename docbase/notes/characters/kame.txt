@@ -1,0 +1,5 @@
+Source: Universe_Document.txt
+- L816, L826: Kame – ancient turtle halfling, Guardian of the Outer Wall; historian of time anomalies; first line of defense for halfling realm.
+- L3608-3618: Fortified shell/rope armor; titanic iron-cored staff etched with maps of lost fragments; speaks in riddles about collapsed timelines; fires Shellshock Barrages of high-velocity water from lakeside.
+- L3631-3636: Vital during Fracture Siege guarding the First Root/Infinitree entrance; senses temporal whirlpools from the Time Fan; warns that Hanzo must return to prevent fraying reality.
+

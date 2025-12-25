@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L51: Grizzleback — Territorial bear-like beast mutating from cursed berry overconsumption; hazard for forest biomes and shrines.
+- L53: Chitter Vineserpent — Carnivorous plant-animal hybrid mimicking crying children to lure prey; strong auditory lure mechanic.
+- L55: Mire Crawler — Giant slime-covered insect with relentless hunger; neutral to factions, aggressive in swamps.
+- L57: Wyrm Pup — Abandoned mountain dragon young; trauma-driven aggression, potential taming hook if calmed.
+- L59: Shard Beetle — Explodes into crystal shards on death, damaging all nearby; environmental hazard for melee-heavy parties.
+

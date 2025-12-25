@@ -1,0 +1,6 @@
+Sources:
+- Densetsu_-_Chat-only_Canon_&_Project-wide_Decisions.txt L76-78: Manolo Marella ("The Tidebroker") visually coded as bourgeois (monocle); flagged leader of the Marella caravans.
+- Densetsu_Design_Document.txt L103-126: Marella Caravans of moray-like aquatic folk led by Manolo; run secret trench routes/bioluminescent waypoints, trafficking relics, deep-sea minerals, and pre-Eclipse tech outside Galport law.
+- Densetsu_Design_Document.txt L9583-9591: Blackwater Ports network of submerged markets; Water/Shadow Ki for pressure-depth travel; rivalry with Galport’s harbormasters, covert trade with Verdathal/Eddara for rare biomaterials.
+- Densetsu_Design_Document.txt L9796-9806: Marella physiology/culture (eel-like, pressure-resistant, bioluminescent eyes); Manolo’s leadership unites semi-nomadic caravans; Sea Horn/resonant Ki needed to access their ports.
+

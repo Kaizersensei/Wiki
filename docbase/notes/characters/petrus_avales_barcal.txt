@@ -1,0 +1,4 @@
+Source: Universe_Document.txt
+- L900-913: Petrus Avales Barcal (Pedro Alvares Cabral) – flightless albatross navigator; grants Sea-Thread fast-travel routes and charts hidden rifts; returns dramatically in the final act.
+- L1026-1027: Act II “Charts of Barcal” centers on sailing with Petrus, confronting the Eddaran blockade and diplomacy challenges.
+

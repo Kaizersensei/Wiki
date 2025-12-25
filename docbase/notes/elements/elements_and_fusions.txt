@@ -1,0 +1,21 @@
+Source: Universe_Document.txt
+- L1238-1245: Ninth Wave elemental fusions — Wood (Earth+Water, Midori), Ink (Water+Dark, Kuro), Ice (Water+Wind, Aoi), Magma (Earth+Fire, Aka), Yin-Yang (Holy+Dark, Shion), Stream (Wind+Water, Namika), Wildfire (Fire+Wind, Handless Samurai), Landslide (Earth+Water, Tetsumaru), Twilight (Dark+Lightning -> Gravity, Okashira).
+- L1247: Jet Flame (Wind+Fire) — Tatsumaru (lizard man with floating eye-orb); complements Wildfire fusion.
+- L644: Forgewater Gardens — smithing + agriculture fusion (Earth/Fire/Water) in Crimson Dynasty, anchors elemental research/alchemy theme.
+- L2053-2057: Wind/sea motifs granting passive bonuses (“sea breeze” dodge, wind affinity) from stranded captain encounter — ties Wind + Water to traversal perks.
+- L2730-2738: Michio inherits elemental mix: Wind/Shadow agility (Hanzo), Ninjutsu (discipline), latent Mirage Flame (Hitomi) — personal hybrid lineage.
+- L2811: Nagamizu’s “Kata of the Endless Current” — water-flow defensive style reinforcing Earth/Water redirection.
+- L4051-4058: Ninth Wave rise/fall likened to tides — elemental narrative framing for Wave bosses.
+
+Design_Document cross-check (Nine Simple Elements + sample secondary Concords):
+- Base elements (DD L11195-11220): Earth, Water, Wind, Fire, Light, Dark, Thunder, Gaea, Timespace (Time/Space).
+- Secondary Concord examples (DD L11256-11285):
+  - Steam (Fire+Water)
+  - Dust (Earth+Wind)
+  - Lightning (Fire+Thunder) — refined channel use
+  - Bloom (Gaea+Water) — healing Ki emission/biotech
+  - Voidlight (Light+Dark) — perception without illumination (Chronosophic cloaking)
+  - Chronofrost (Timespace+Water) — temp reduction via time dilation
+- Notes: abstract syntheses drift toward temporal phenomena and paradox risk.
+
+See also: base_elements_schema.txt for schema/enums and acceptance rules for elements field.

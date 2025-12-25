@@ -3,47 +3,111 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Events | Universe | Densetsu</title>
+  <title>Events &amp; Timeline</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
-      <h1>Events</h1>
-      <p>Listing pages under Events.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/events/hirogawa_town_fire.html">Hirogawa Town Fire (event)</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/events/timeline_index.html">Timeline Index</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p class="eyebrow">universe</p>
+      <h1>Events &amp; Timeline</h1>
+      <p>Search, sort, filter, and group events.</p>
+
+      <div class="filters">
+        <label for="e-search">Search</label>
+        <input id="e-search" type="search" placeholder="Search events." />
+
+        <label for="e-filter">Filter tag</label>
+        <select id="e-filter"><option value="all">All</option></select>
+
+        <label for="e-sort">Sort</label>
+        <select id="e-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="e-group">Group by</label>
+        <select id="e-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
-        <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
-        </ul>
+
+      <div id="e-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Missing:</strong> Event catalog is sparse; add more beats/arcs and tag them by age/region.
       </div>
     </section>
   </main>
+
+  <script>
+    const eData = [
+      { name: 'Hirogawa Town Fire', href: 'hirogawa_town_fire.html', tag: 'event' },
+      { name: 'Timeline Arcs', href: 'timeline_arcs.html', tag: 'timeline' },
+      { name: 'Timeline Index', href: 'timeline_index.html', tag: 'timeline' }
+    ];
+
+    const eSearch = document.getElementById('e-search');
+    const eFilter = document.getElementById('e-filter');
+    const eSort = document.getElementById('e-sort');
+    const eGroup = document.getElementById('e-group');
+    const eList = document.getElementById('e-list');
+
+    const buildEFilter = () => {
+      const values = Array.from(new Set(eData.map(d => d.tag).filter(Boolean))).sort();
+      eFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderE = () => {
+      const q = (eSearch.value || '').toLowerCase();
+      const flt = eFilter.value;
+      let items = eData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (eSort.value === 'name') items.sort(sorter('name'));
+      else if (eSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (eSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (eGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        eList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        eList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    eSearch.addEventListener('input', renderE);
+    eFilter.addEventListener('change', renderE);
+    eSort.addEventListener('change', renderE);
+    eGroup.addEventListener('change', renderE);
+    buildEFilter();
+    renderE();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

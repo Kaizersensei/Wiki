@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L149: The Womb Whale — Flying sea creature whose belly holds a lost temple; airborne/dungeon hybrid locale.
+- L151: Stonelash Hydra — Cave-slumbering hydra that “devours arrogance”; tests hubris mechanics.
+- L153: Grove Tyrant — Walking bonsai titan rivaling the Sage’s tree; grows weapons; ties to Infinitree/Chronobonsai lore.
+- L155: Ashen Kite — Phoenix-like paper/flame bird reborn whenever written about; meta-lore hook.
+- L157: Silkmother — Colossal spider weaving illusions as silk; traps memories in her web; dungeon boss/ally.
+

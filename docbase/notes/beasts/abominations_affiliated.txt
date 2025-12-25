@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L109: Soulbound Herald — Demonic envoy summoned to declare war on karmic temples; ritual set-piece foe.
+- L111: Chime Priestess — Rings despair bells to weaken spiritual barriers for masters; support caster in cult encounters.
+- L113: Shrouded Acolyte — Part-human, part-shadow enforcer of ancient taboos on trespassers.
+- L115: Gravemind Root — Corrupts nature from sacrilegious burial grounds; decay-god servant; ties to forest/crypt biomes.
+- L117: Eclipse Bound — Summoned only during solar eclipses; assassin targeting celestial monks; time-limited boss.
+

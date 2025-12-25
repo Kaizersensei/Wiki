@@ -1,0 +1,24 @@
+Sources:
+- Densetsu_Design_Document.txt L11195-11220: Nine Simple Elements (Earth, Water, Wind, Fire, Light, Dark, Thunder, Gaea, Timespace) with domains/principles/behavior.
+- Densetsu_Design_Document.txt L11256-11285: Secondary Concord examples (Steam, Dust, Lightning, Bloom, Voidlight, Chronofrost); warning that abstract syntheses drift toward temporal phenomena/paradox.
+- Universe_Document.txt L1238-1247: Ninth Wave fusion list (Wood, Ink, Ice, Magma, Yin-Yang, Stream, Wildfire, Jet Flame, Landslide, Twilight/Gravity).
+
+Base Element List (for schema/enums):
+- Earth, Water, Wind, Fire, Light, Dark, Thunder, Gaea, Timespace
+
+Secondary Concord Examples (starter set):
+- Steam (Fire+Water)
+- Dust (Earth+Wind)
+- Lightning (Fire+Thunder)
+- Bloom (Gaea+Water)
+- Voidlight (Light+Dark)
+- Chronofrost (Timespace+Water)
+
+Known Fusion Sets (antagonist/character-aligned):
+- Ninth Wave fusions: Wood (Earth+Water), Ink (Water+Dark), Ice (Water+Wind), Magma (Earth+Fire), Yin-Yang (Holy+Dark), Stream (Wind+Water), Wildfire (Fire+Wind), Jet Flame (Wind+Fire), Landslide (Earth+Water), Twilight/Gravity (Dark+Lightning).
+
+Generator/frontmatter guidance:
+- Elements field should accept base elements and known concords; flag unknown combos for review.
+- Allow multiple entries per entity (e.g., dual-affinity characters or locations with mixed element signatures).
+- For highly abstract combos (Timespace + X), include a validation warning about paradox/instability where relevant.
+

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Artifacts &amp; Relics</title>
+  <link rel="stylesheet" href="../../../assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
+      <a href="../../../projects/index.html">Projects</a>
+      <a href="../../index.html">Densetsu</a>
+      <a href="../index.html">Universe</a>
+      <a href="../../engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">universe</p>
+      <h1>Artifacts &amp; Relics</h1>
+      <p>Search, sort, and group relics.</p>
+
+      <div class="filters">
+        <label for="a-search">Search</label>
+        <input id="a-search" type="search" placeholder="Search artifacts." />
+
+        <label for="a-filter">Filter tag</label>
+        <select id="a-filter"><option value="all">All</option></select>
+
+        <label for="a-sort">Sort</label>
+        <select id="a-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="a-group">Group by</label>
+        <select id="a-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
+      </div>
+
+      <div id="a-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Note:</strong> Tagging is provisional; update tags as lore hardens (e.g., relic questlines or regions).
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const aData = [
+      { name: "Alfons's Relic Sword", href: "relic_sword_alfons.html", tag: "weapon" },
+      { name: 'Echo-Song', href: 'echo_song.html', tag: 'music' },
+      { name: "Kaze's Anthem", href: 'kaze_anthem.html', tag: 'music' },
+      { name: "Pombeiro's Seal", href: 'pombeiro_seal.html', tag: 'seal' },
+      { name: 'Infinitree Bark Shard', href: 'infinitree_bark_shard.html', tag: 'tree' },
+      { name: 'Time Fan (Toki no Ogi)', href: 'time_fan.html', tag: 'time' },
+      { name: 'Marella Sea Horn', href: 'marella_sea_horn.html', tag: 'sea' },
+      { name: 'Artifacts Registry', href: 'artifacts_registry.html', tag: 'registry' }
+    ];
+
+    const aSearch = document.getElementById('a-search');
+    const aFilter = document.getElementById('a-filter');
+    const aSort = document.getElementById('a-sort');
+    const aGroup = document.getElementById('a-group');
+    const aList = document.getElementById('a-list');
+
+    const buildAFilter = () => {
+      const values = Array.from(new Set(aData.map(d => d.tag).filter(Boolean))).sort();
+      aFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderA = () => {
+      const q = (aSearch.value || '').toLowerCase();
+      const flt = aFilter.value;
+      let items = aData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (aSort.value === 'name') items.sort(sorter('name'));
+      else if (aSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (aSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (aGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        aList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        aList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    aSearch.addEventListener('input', renderA);
+    aFilter.addEventListener('change', renderA);
+    aSort.addEventListener('change', renderA);
+    aGroup.addEventListener('change', renderA);
+    buildAFilter();
+    renderA();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
+</body>
+</html>

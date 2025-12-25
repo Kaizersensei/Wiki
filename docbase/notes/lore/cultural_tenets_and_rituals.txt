@@ -1,0 +1,12 @@
+Sources:
+- Universe_Document.txt L864-866: Dofan music (Galport) — fado-like saudade themes.
+- Universe_Document.txt L583-585: Hirogawa warrior traditions, fire festivals, planting ceremonies.
+- Universe_Document.txt L804-806: Blessed creature pact (pred/prey etiquette).
+- Universe_Document.txt L1997-1999: Season of Echoing Howls (Eddara night animal reenactments; rage-fugue risk).
+- Universe_Document.txt L4219-4225: Hirogawa shrine/POI rituals (Shrine of Still Flames flame message).
+- Densetsu_Design_Document.txt L10158-10160: Dreaming Faith rites (Eresh); dreambinding as devotion.
+- Densetsu_Design_Document.txt L94-499: Loop etiquette in Varthum (respecting/altering loops as puzzle framework).
+
+Notes:
+- Use for flavor sections and social rules; informs faction behaviors and quest hooks.
+

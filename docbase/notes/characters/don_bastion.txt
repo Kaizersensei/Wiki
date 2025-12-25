@@ -1,0 +1,5 @@
+Source: Universe_Document.txt
+- L896-900: Don Bastion “The Fog Bastion” – mythic raven (flightless) king lost in war-fog; sightings spark Sebastianist cult events; returns dramatically in final act.
+- L1046-1052: Boss sequence – walks head-on into Saul Azar’s warmachine while player disables treads/artillery; machine explodes, Saul ejects; Phase V duel on foot with firearms/knife.
+- L1057-1067: Outcome branches – if Bastion lives he helps broker Eddara treaty; if he dies, becomes martyr legend and treaty is signed in his memory; symbol in themes of legacy/sacrifice and curse-lifting.
+

@@ -1,0 +1,5 @@
+Source: Universe_Document.txt
+- L3663-3668: Pip Frogga – 10-year-old Verdathal frog mechanic from Shreckhausen/Boingsen; loreteller and questgiver tied to Verdathal hubs.
+- L3675-3687: Prodigy salvager who repaired a crashed ship with old-world scraps; mentorship gains opened Verdathal’s tech boom and wetlands prosperity.
+- L3689-3696: Non-combatant (no elemental affinity); serves as narrative guide and mechanic contact.
+

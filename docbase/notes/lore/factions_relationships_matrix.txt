@@ -1,0 +1,12 @@
+Sources:
+- Universe_Document.txt L859-1067: Galport–Eddara treaty (Wings of Accord); Saul Azar coup opposed by rebels (Kaze), treaty brokers (Pombeiro, Petrus, Ferdinand, Amelia).
+- Densetsu_Design_Document.txt L10950-10960: Eresh–Kaerugan–Crimson triad (industrial/metaphysical core).
+- Densetsu_Design_Document.txt L9571, L9624-9625: Varthum trades memory tech with Eresh/Galport; Verdathal/Eresh tension over ethos.
+- Universe_Document.txt L4268-4274: Kaerugan Iron Jungle vs Verdathal/Eresh tech flows; Hitomi code thread.
+- Densetsu_Design_Document.txt L9796-9806: Marella vs Galport maritime rivalry; covert trade with Verdathal/Eddara.
+- Universe_Document.txt L275, L3730-3738: Ninth Wave antagonistic to all; controls Bamboo Fort/Mine Forge/Mirror Bastion; pursues Infinitree/Chronobonsai.
+
+Notes:
+- Allies/neutral: Eddara ↔ Verdathal (shared bio/forest tech); Mycomind neutral/outside Okashira reach; Kojimigakure shadow trade links realms.
+- Hostilities: Galport ↔ Marella (trade war); Galport ↔ Saul Azar (internal); Ninth Wave ↔ Hirogawa/Seigetsu/Eddara; Eresh ↔ Verdathal ethos tension.
+

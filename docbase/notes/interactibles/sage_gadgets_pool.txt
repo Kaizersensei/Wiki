@@ -1,0 +1,4 @@
+Source: Densetsu_Design_Document.txt
+- L285-330: Sage’s Gadgets idea pool — Gramoflower (sound anomaly recorder), Chronobloom (instability indicator), Memory Lantern (projects past visions), Seed Scanner (botanical relic detector), Pulse Reed (reveals invisible rift paths), Verdant Prism (exposes hidden frequencies/entities), Wispcatcher Net (captures riftspawn/spectral fragments), Spore Compass (tilts toward anomaly cores), Chronosap Vial (resets corrupted ground), Timestitch Needle (repairs small tears), Bloomvine Sling (seed traversal/defense), Ocular Root (remote sensory), Petal Projector (illusion reconstructions), Sapdrip Totem (corruption detector), Fracture Harp (anomaly proximity tones).
+- Design philosophy: detection/interpretation/resolution; harmonize with natural conditions; malfunction in artificial/corrupted zones.
+

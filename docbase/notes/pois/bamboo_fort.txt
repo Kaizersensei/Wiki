@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L4220-4252: Bamboo Fort — Ninth Wave/Tidal fort built with enslaved Hirogawa workers inside Bamboo Thicket; stealth/ambush forest fortification; pairs with Bamboo Thicket biome note.
+
+Notable NPCs:
+- Tidal/Ninth Wave fort commander.
+
+Secondary NPCs:
+- Enslaved workers/prisoners (rescue targets).
+- Patrol squads/archers within bamboo canopy.

@@ -1,0 +1,12 @@
+Source: Universe_Document.txt
+- L624-625: Sān Jiāng — Crimson Dynasty capital named for three converging rivers; tiered coastal metropolis blending ritual imperial architecture with maritime reach.
+- L1982-1983: Temporal floods reverse river flow, salinating ceremonial fields; requires floodgates/river monks to stabilize.
+- L644: Forgewater Gardens within Crimson territory (botanical + smithing) likely near river convergence.
+
+Notable NPCs:
+- Crimson Court members / elemental lords (local rule).
+- River monks (maintain floodgates, ceremonial fields).
+
+Secondary NPCs:
+- River artisans, smiths of Forgewater Gardens.
+- Pilgrims/officials conducting rites at converging rivers.

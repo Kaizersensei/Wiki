@@ -1,0 +1,6 @@
+Source: Universe_Document.txt
+- L954-962: Saul Azar “The Gilded Vulture” – treasurer-turned-usurper financing a totalitarian coup; assassinates King Elmanu II and rules Galport.
+- L1023: Prologue beat—royal murder with Saul seizing interim power and unleashing secret police.
+- L1034: Finale “Wings of Accord” requires defeating Saul to secure the Eddaran treaty and break the flight curse.
+- L1046-1052: Boss sequence—pilots a warmachine (phases I-III), ejects into “Desperation Mode,” then duels on foot with firearms/knife in Phase V (Don Bastion + player finish him).
+

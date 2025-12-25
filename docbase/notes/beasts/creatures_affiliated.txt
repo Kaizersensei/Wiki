@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L65: Mist Hounds — Condensed fog hounds deployed by shadow clan; scent-track targets; fits stealth/ambush encounters.
+- L67: Lantern Moths — Serve forest monks by marking intruders with glowing spores; useful as alert systems or guides.
+- L69: Sand Whiptail — Desert warlord mounts; agile mount/weapon blend for dune biomes.
+- L71: Celadon Cranes — Guardians of sacred ponds; peaceful until waters disturbed; tie to Eddara water shrines.
+- L73: Mossbound Goats — Passive until provoked near shrines; become furious protectors, signaling sacred zone trespass.
+

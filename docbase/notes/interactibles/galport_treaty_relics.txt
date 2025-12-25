@@ -1,0 +1,7 @@
+Source: Universe_Document.txt
+- L930-934: Alfons’s relic sword — key to treaty rites; relic blade from founding monarch lineage.
+- L1018-1021: Treaty ritual set — requires Alfons’s relic sword, Amelia’s Echo-Song, Kaze’s Anthem, and Pombeiro’s seal to expose Saul Azar’s coup and lift flight curse.
+- L952-956: Kaze’s Anthem — rebel rally song tied to uprising gauge; required in ritual; cross-ref Kaze (characters).
+- L888-893: Amelia’s Echo-Song — Dofan ballads triggering memory visions; mentors player in Echo-Song sidequests; ritual component.
+- L987-995: Pombeiro’s seal — governor-reformer’s mark needed for treaty; obtained through postal/political quests.
+

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Team</title>
+  <link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../index.html">Retraissance</a>
+      <a href="../projects/index.html">Projects</a>
+      <a href="../densetsu/index.html">Densetsu</a>
+      <a href="../densetsu/universe/index.html">Universe</a>
+      <a href="../densetsu/engine/index.html">Engine</a>
+      <a href="index.html">Team</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">team</p>
+      <h1>Retraissance Team</h1>
+      <p>Search and browse team members. Replace placeholder entries with real profiles as you populate the roster.</p>
+
+      <div class="filters">
+        <label for="t-search">Search</label>
+        <input id="t-search" type="search" placeholder="Search team members." />
+
+        <label for="t-filter">Filter initial</label>
+        <select id="t-filter"><option value="all">All</option></select>
+
+        <label for="t-sort">Sort</label>
+        <select id="t-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+        </select>
+
+        <label for="t-group">Group by</label>
+        <select id="t-group">
+          <option value="none">None</option>
+          <option value="letter">Initial</option>
+        </select>
+      </div>
+
+      <div id="t-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Guidance:</strong> keep names consistent with media folder slugs (e.g., <code>turnaround.png</code>, <code>portrait.png</code> in <code>assets/media/team/&lt;slug&gt;</code>) so auto-loading works.
+      </div>
+      <div class="callout">
+        <strong>Related:</strong>
+        <ul>
+          <li><a href="../projects/index.html">Projects</a> for project directories.</li>
+          <li><a href="../densetsu/index.html">Densetsu</a> if you want lore/engine teams mapped to projects.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tData = [
+      { name: 'Creative Director (Example)', href: 'creative_director.html' },
+      { name: 'Studio Lead (Example)', href: 'studio_lead.html' },
+      { name: 'Technical Lead (Example)', href: 'technical_lead.html' }
+    ].map(d => ({ ...d, letter: (d.name || '').charAt(0).toUpperCase() || 'Other' }));
+
+    const tSearch = document.getElementById('t-search');
+    const tFilter = document.getElementById('t-filter');
+    const tSort = document.getElementById('t-sort');
+    const tGroup = document.getElementById('t-group');
+    const tList = document.getElementById('t-list');
+
+    const buildFilter = () => {
+      const values = Array.from(new Set(tData.map(d => d.letter))).sort();
+      tFilter.innerHTML = '<option value=\"all\">All</option>' + values.map(v => `<option value=\"${v}\">${v}</option>`).join('');
+    };
+
+    const render = () => {
+      const q = (tSearch.value || '').toLowerCase();
+      const flt = tFilter.value;
+      let items = tData.filter(d => d.name.toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.letter === flt);
+
+      if (tSort.value === 'name') items.sort((a, b) => a.name.localeCompare(b.name));
+      else items.sort((a, b) => b.name.localeCompare(a.name));
+
+      const renderItem = d => `<li><a href=\"${d.href}\">${d.name}</a><span class=\"meta-chip\">${d.letter}</span></li>`;
+
+      if (tGroup.value === 'letter') {
+        const grouped = {};
+        items.forEach(d => {
+          (grouped[d.letter] = grouped[d.letter] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class=\"link-list\">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        tList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        tList.innerHTML = '<ul class=\"link-list\">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    tSearch.addEventListener('input', render);
+    tFilter.addEventListener('change', render);
+    tSort.addEventListener('change', render);
+    tGroup.addEventListener('change', render);
+    buildFilter();
+    render();
+  </script>
+  <script src="../assets/site.js" defer></script>
+</body>
+</html>

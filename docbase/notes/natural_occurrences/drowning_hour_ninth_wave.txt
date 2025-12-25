@@ -1,0 +1,7 @@
+Source: Universe_Document.txt
+- L2006-2010: The Ninth Wave – “The Drowning Hour” — controlled surge of fractured time-space wielded as a weapon; structures collapse into alternate states; boss fights twist time rules.
+
+Notes:
+- Tied to Ninth Wave incursions; can overlay existing biomes/POIs.
+- Use as timed encounter/weather-like anomaly during Wave boss phases.
+

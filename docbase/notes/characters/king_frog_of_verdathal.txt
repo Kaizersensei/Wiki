@@ -1,0 +1,3 @@
+Sources:
+- Densetsu_Design_Document.txt L10973-10976: Kaerugan was a vassal under corrupt reign of King Frog; now moving toward sovereignty; industrial guilds replacing royal decree; furnaces speak louder than crowns.
+- Densetsu_Design_Document.txt L11815-11818: After King Frog’s regime fell, governance transferred to Industrial Councils (forging, smelting, entropic engineering, logistics); stratification persists (Rustborn Zealots, etc.).

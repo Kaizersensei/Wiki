@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L96: Mawing Echo — Screaming spirit of fractured sound/bone; devours thought; use in echo/sonic anomaly biomes.
+- L98: Rotling Mass — Cursed meat pile that mimics the dead it devours; corpse-activated threat.
+- L100: Mirrorspawn — Warped backwards copy of the player; universal hostility; mirrors/illusion spaces.
+- L102: Cinder Wretches — Burning souls running endlessly, igniting everything; fire hazard in open areas.
+- L104: Threadworms — Parasitic spirits that stitch into corpses and puppeteer them; necrotic infestation vector.
+

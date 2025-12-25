@@ -1,0 +1,12 @@
+Source: Universe_Document.txt
+- L1115-1122: Varthum borderlands — dying coastal territory; motto “Salt seals truth; memory costs everything”; salt-preserved libraries where knowledge is currency; city Varthun hosts Temporal Gatekeeper quest.
+- L4272-4279: Salt Libraries of Varthun — memory-as-currency city; Michio finds torn page from Hanzo’s mission log; mentions Temporal Gatekeeper accessible only via act of total sacrifice.
+
+Notable NPCs:
+- Temporal Gatekeeper (entity of the Salt Libraries/Varthun).
+- Librarians/knowledge brokers who trade salted texts.
+
+Secondary NPCs:
+- Memory merchants and scribes.
+- Seekers hunting Hanzo’s mission pages.
+

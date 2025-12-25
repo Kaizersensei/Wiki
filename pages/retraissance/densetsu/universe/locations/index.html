@@ -3,55 +3,125 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Locations | Universe | Densetsu</title>
+  <title>Locations</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>Locations</h1>
-      <p>Listing pages under Locations.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/crimson_dynasty.html">Crimson Dynasty</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/eddara.html">Eddara</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/eresh_emirate.html">Eresh Emirate</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/galport.html">Galport</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/hirogawa.html">Hirogawa</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/kaerugan.html">Kaerugan</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/kojimigakure.html">Kojimigakure</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/seigetsu_empire.html">Seigetsu Empire</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/verdathal.html">Verdathal</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/locations/yukigami.html">Yukigami</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search, sort, filter, and group locations.</p>
+
+      <div class="filters">
+        <label for="l-search">Search</label>
+        <input id="l-search" type="search" placeholder="Search locations." />
+
+        <label for="l-filter">Filter region</label>
+        <select id="l-filter"><option value="all">All</option></select>
+
+        <label for="l-sort">Sort</label>
+        <select id="l-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="region">Region</option>
+        </select>
+
+        <label for="l-group">Group by</label>
+        <select id="l-group">
+          <option value="none">None</option>
+          <option value="region">Region</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
-        <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
-        </ul>
-      </div>
+
+      <div id="l-list" class="link-list"></div>
     </section>
   </main>
+
+  <script>
+    const lData = [
+      { name: 'Chronobonsai Chamber', href: 'chronobonsai_chamber.html', region: 'Eastern' },
+      { name: 'Crimson Dynasty', href: 'crimson_dynasty.html', region: 'Eastern' },
+      { name: 'Eddara', href: 'eddara.html', region: 'Western' },
+      { name: 'Eresh Emirate', href: 'eresh_emirate.html', region: 'Western' },
+      { name: 'Galport', href: 'galport.html', region: 'Western' },
+      { name: 'Glitch in the Dust', href: 'glitch_in_the_dust.html', region: 'Anomaly' },
+      { name: 'Hirogawa', href: 'hirogawa.html', region: 'Eastern' },
+      { name: 'Kaerugan: Iron Jungle', href: 'kaerugan_iron_jungle.html', region: 'Eastern' },
+      { name: 'Kaerugan (legacy)', href: 'kaerugan.html', region: 'Eastern' },
+      { name: 'Kojimigakure', href: 'kojimigakure.html', region: 'Islands' },
+      { name: 'Minus Depths', href: 'minus_depths.html', region: 'Anomaly' },
+      { name: 'Mistral Stranded Cove', href: 'mistral_stranded_cove.html', region: 'Islands' },
+      { name: 'Mycomind Covenant', href: '../world/mycomind_covenant.html', region: 'Islands' },
+      { name: 'Seigetsu Empire', href: 'seigetsu_empire.html', region: 'Eastern' },
+      { name: 'Shrine of Still Flames', href: 'shrine_of_still_flames.html', region: 'Eastern' },
+      { name: 'Temple of Stillness', href: 'temple_of_stillness.html', region: 'Eastern' },
+      { name: 'Tree Resonance Grove', href: 'tree_resonance_grove.html', region: 'Eastern' },
+      { name: 'Varthum', href: 'varthum.html', region: 'Western' },
+      { name: 'Verdathal', href: 'verdathal.html', region: 'Western' },
+      { name: 'Waterfall Training Grounds', href: 'waterfall_training_grounds.html', region: 'Eastern' },
+      { name: 'Yukigami', href: 'yukigami.html', region: 'Eastern' }
+    ];
+
+    const lSearch = document.getElementById('l-search');
+    const lFilter = document.getElementById('l-filter');
+    const lSort = document.getElementById('l-sort');
+    const lGroup = document.getElementById('l-group');
+    const lList = document.getElementById('l-list');
+
+    const buildLFilter = () => {
+      const values = Array.from(new Set(lData.map(d => d.region).filter(Boolean))).sort();
+      lFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderL = () => {
+      const q = (lSearch.value || '').toLowerCase();
+      const flt = lFilter.value;
+      let items = lData.filter(d => d.name.toLowerCase().includes(q) || (d.region || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.region === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (lSort.value === 'name') items.sort(sorter('name'));
+      else if (lSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (lSort.value === 'region') items.sort(sorter('region'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.region ? `<span class="meta-chip">${d.region}</span>` : ''}</li>`;
+
+      if (lGroup.value === 'region') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.region || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        lList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        lList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    lSearch.addEventListener('input', renderL);
+    lFilter.addEventListener('change', renderL);
+    lSort.addEventListener('change', renderL);
+    lGroup.addEventListener('change', renderL);
+    buildLFilter();
+    renderL();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

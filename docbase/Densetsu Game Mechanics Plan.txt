@@ -1,0 +1,63 @@
+﻿Game Mechanics Implementation Plan
+1. Player Mechanics
+Movement & Traversal
+* - Implement configurable jump/dash physics
+* - Create grappling hook logic with attach/detach anchors
+* - Mount logic with stamina timers and terrain checks
+Checkpoint Saves
+* - Develop checkpoint manager handling multiple types
+* - Auto-save restrictions (safe zones)
+* - Respawn positioning varying by checkpoint quality
+Time Rifts
+* - Create trigger zones
+* - Hook up timeline event playback
+* - Apply visual VFX and audio adjustments
+2. Combat Mechanics
+Real-Time Martial Combat
+* - Create attack collision system
+* - Deliver timing logic for parries/dodges
+* - Enemy AI to react accordingly
+Elemental & Combo System
+* - Build element type system and effect mapping
+* - Combo buffer system with chaining windows
+* - Enemy resistances and vulnerabilities
+Taming & Bonding
+* - Develop AI state machine for tamed creatures
+* - Implement bond XP and thresholds
+* - Ride/summon logic with command inputs
+Parry/Critical Systems
+* - Code parry timing window detection
+* - Critical hit multipliers
+* - XP feedback loop
+3. World & Environmental Mechanics
+Puzzle & Environmental Interaction
+* - Design elemental triggers (e.g., ice, fire)
+* - Integrate physics for interactive/kickable props
+NPC & Faction Interaction
+* - Implement dialogue triggers
+* - NPC scripts reacting to player choices
+* - Track changing player reputation
+4. Progression Systems
+Skill Growth & Learning
+* - Track actions and XP values
+* - Create skill tree progression display
+* - Auto-unlock linked abilities
+Relics & Bond Synergy
+* - Item database setup
+* - Relic equip logic
+* - Modify player parameters based on relics
+5. UI & Feedback
+Interface & Feedback
+* - Prototype HUD elements
+* - Implement on-screen prompts
+* - Animation triggers tied to events
+6. System & Technical Infrastructure
+Save System
+* - Build save/load manager
+* - Data integrity and restart logic
+Data-driven AI
+* - Define behavior trees
+* - Serialize AI states and decisions
+Visual Effects Pipeline
+* - Script shaders for rifts
+* - Create time distortion effects

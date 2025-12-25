@@ -1,0 +1,8 @@
+Sources:
+- Densetsu_Design_Document.txt L11537: Rustfall events — metallic rainstorms in Kaerugan smog regions, residue of entropy engines.
+- Densetsu_Design_Document.txt L10973-10981: Kaerugan industrial smog/entropy forges context; ties Rustfall to Iron Jungle hazards.
+
+Notes:
+- Environmental hazard that corrodes gear and feeds Rustborn cult themes.
+- Synergizes with Kaerugan biomes and entropy/decay mechanics.
+

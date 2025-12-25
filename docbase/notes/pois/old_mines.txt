@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L4217-4223: Old Mines — crystal/ore mines near Hirogawa; overtaken by Tidal forces; later industrialized into Mine Forge (see pois/mine_forge).
+
+Notable NPCs:
+- Tidal overseers (post-occupation).
+
+Secondary NPCs:
+- Enslaved miners; Hirogawa workers captured during occupation.
+

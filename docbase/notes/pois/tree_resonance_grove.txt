@@ -1,0 +1,9 @@
+Source: Universe_Document.txt
+- L817-818: Tree Resonance Grove — Training site where Bob teaches Michio to listen to trees/Infinitree whispers; part of halfling realm POIs (alongside Greenwood Glades/Outer Wall).
+
+Notable NPCs:
+- Bob (trainer; Infinitree whisper technique).
+- Michio (student).
+
+Secondary NPCs:
+- Halfling trainees learning resonance.

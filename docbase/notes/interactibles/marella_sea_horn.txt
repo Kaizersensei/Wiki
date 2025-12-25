@@ -1,0 +1,5 @@
+Source: Densetsu_Design_Document.txt
+- L240-276: Marella Sea Horn — abyssal shell artifact tuned to tide pulse; activates at coastal/underwater resonance points marked by bioluminescent coral/sound cues; summons Marella vendor via Ki signal through Mycelium Neural Network/Blackwater Channels; contraband/deep-sea relics; overuse draws Galport or hostile sealife.
+- L9796-9806: Blackwater Ports require resonant Ki or Sea Horn to access Marella markets.
+- Notes: ties to biomes/varthum_western_borderlands (coastal), biomes/galport_time_fractured_port, biomes/kaerugan_iron_jungle (trade), beasts/misc_creatures_anomalies (deep-sea fauna).
+

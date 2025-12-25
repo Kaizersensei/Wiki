@@ -1,0 +1,5 @@
+Source: Universe_Document.txt
+- L827-828: Fen (Fenrir) — Wolf defector from a berserker clan, now a woodworker and quiet sentinel of peace.
+- L2167-2171: Listed among possible party/companion units (with Kodomaru, Bob, etc.); tied to time/turn prediction mechanic.
+- L3537-3540: “Fenrir, the Ice Howl”; role: Wanderer, Mercenary, Ally to the Elder's Circle.
+- L3567-3569: Backstory — ex-berserker from frostbound tribes beyond Hirogawa peaks; abandoned blood oath after senseless raid; wandered south, collapsed near Halfling realm.

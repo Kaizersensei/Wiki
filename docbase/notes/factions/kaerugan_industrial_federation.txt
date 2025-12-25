@@ -1,0 +1,10 @@
+Sources:
+- Densetsu_Design_Document.txt L10973-10981, L11814-11831: Kaerugan Industrial Federation — technocratic oligarchy of guild engineers; Rustborn machine-worshippers; entropy forges; independence from King Frog legacy; exports steel/components.
+- Universe_Document.txt L4268-4274: Iron Jungle blend of machine/nature; Hitomi code relic threads.
+
+Notable Figures:
+- Guild oligarchs; Rustborn cult leaders; industrial philosophers.
+
+Secondary Figures:
+- Entropy forge engineers; Rust Court arbiters; Ferro-Ki alloy labs.
+

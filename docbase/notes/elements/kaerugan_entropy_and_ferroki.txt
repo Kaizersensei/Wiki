@@ -1,0 +1,9 @@
+Sources:
+- Densetsu_Design_Document.txt L10923-11120, L11537, L11692: Kaerugan entropy engines/forges, Rust Bloom events, Rustmoss; engineers developing Ferro-Ki alloys; technocratic guilds see entropy as divine metamorphosis (Rustborn), chrono-tech recreation.
+- Universe_Document.txt L4268-4274: Iron Jungle blend of machine/nature; trees hum with memory; living code written by Hitomi.
+
+Notes:
+- Entropy/decay as elemental axis distinct from classical elements; fuels Rustfall metal rain, Rustmoss growth, Rust Bloom reverse-dissolution events.
+- Ferro-Ki alloys combine metallic conduction with Ki flow; underpin Kaerugan metallurgical dominance and entropy weaponization.
+- Cross-links: weather/rustfall_metal_rain, biomes/kaerugan_iron_jungle, natural_occurrences/salt_preservation_memory_economy (contrast), interactibles/temporal_gatekeeper (knowledge vs decay).
+

@@ -1,0 +1,313 @@
+### Creatures — comprehensive list with cross-reference
+
+*(compiled strictly from project chats, memories, and the **Enemies, Creatures, Abominations** document references; no inferred additions)*
+
+---
+
+#### **Cave Rat**
+
+* **Description:** Small subterranean scavenger inhabiting caves, mines, and underground passages. Operates in groups, relies on instinct, and reinforces low-level ecosystem activity.
+* **Systems:** Creature Actor (instinct-driven FSM).
+* **Interactions:** Can be hunted, studied, or culled; not narrative-driven.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Cave fauna / early-game creatures.
+
+---
+
+#### **Hagane Snail**
+
+* **Description:** Slow-moving gastropod with a hardened, metal-like shell adapted to mineral-rich environments. Extremely durable for its size.
+* **Systems:** Creature Actor; high defense, low mobility.
+* **Interactions:** Environmental hazard, resource source, or study target.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Armored / mineral creatures.
+
+---
+
+#### **Bamboo Creatures (family)**
+
+* **Description:** Plant-based fauna native to bamboo forests. Exist in multiple variants with different behaviors (passive, territorial, reactive), but all remain ecological rather than sentient enemies.
+* **Systems:** Creature Actor; biome-bound logic.
+* **Interactions:** Can be avoided, hunted, studied, or interacted with indirectly through quests tied to bamboo regions.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Bamboo / plant creatures.
+
+---
+
+#### **Forest Fauna (general group)**
+
+* **Description:** Non-unique wildlife populating forested regions (e.g., deer-like, boar-like, spirit-adjacent animals). Emphasize atmosphere and ecological balance rather than combat challenge.
+* **Systems:** Creature Actor; ambient or reactive AI.
+* **Interactions:** Hunting, observation, environmental storytelling.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Forest fauna category.
+
+---
+
+#### **Aquatic Fauna (general group)**
+
+* **Description:** Non-humanoid marine and freshwater creatures inhabiting rivers, coasts, and deep-sea regions. Separate from sentient aquatic factions.
+* **Systems:** Creature Actor with water-specific movement logic.
+* **Interactions:** Optional hunting, study, traversal context.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Aquatic creatures.
+
+---
+
+#### **Desert Fauna (general group)**
+
+* **Description:** Creatures adapted to arid regions such as the Ashen Sands near Eresh and Kaerugan. Often burrowing, nocturnal, or heat-resistant.
+* **Systems:** Creature Actor; environment-adaptive behaviors.
+* **Interactions:** Environmental hazards, resource gathering, ecological reinforcement.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Desert creatures.
+
+---
+
+#### **Mycomind Fauna**
+
+* **Description:** Fungus-associated creatures native to the Mycomind Covenant. Behavior often symbiotic or parasitic, tied to spores, decay, and growth cycles.
+* **Systems:** Creature Actor; fungal/ecological logic.
+* **Interactions:** Study, taming, or environmental manipulation.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Fungal / Mycomind creatures.
+
+---
+
+#### **Mount-Class Creatures**
+
+* **Description:** Larger fauna suitable for riding or transport. Defined by traversal utility rather than combat role.
+* **Systems:** Creature Actor with mount/riding extensions.
+* **Interactions:** Taming, bonding, traversal mechanics.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Mounts / rideable creatures.
+
+---
+
+#### **Corrupted Creatures (state, not a species)**
+
+* **Description:** Any creature temporarily altered by corruption, anomalies, or environmental sickness. Behavior becomes hostile and enemy-like while corrupted.
+* **Systems:** Creature Actor with corruption overlay; does **not** become an Enemy Actor.
+* **Interactions:** Combat, cleansing, or containment; may revert to normal state.
+* **Cross-reference:** *Enemies, Creatures, Abominations* — Corruption states.
+
+---
+
+### Notes on scope
+
+* Sentient beings, factions, bosses, and anomaly manifestations are **not** listed unless explicitly treated as creatures.
+* This list reflects **all creature concepts currently mentioned**; additional named creatures from the *Enemies, Creatures, Abominations* document can be appended verbatim once individual entries are enumerated.
+
+If you want, the next step can be:
+
+* a **one-to-one import** of every named entry from *Enemies, Creatures, Abominations* into individual wiki stubs, or
+* a **taxonomy table** mapping creatures → biomes → systems.
+
+### Enemies
+
+* 
+**Bandit**: Attacking any enemy humanoid or any hostile regardless of alignment or skill. 
+
+
+* 
+**Ninja Grunts**: They belong to factions that are antagonistic to the player and act out of duty or spite. 
+
+
+* 
+**Okashira**: A main antagonist boss or sub-boss who is unique and key to the game’s events. 
+
+
+
+### Creatures (Lore Fauna)
+
+* 
+**Grizzleback**: A territorial bear-like beast that mutates from overconsumption of cursed berries. 
+
+
+* 
+**Chitter Vineserpent**: A carnivorous plant-animal hybrid that hunts by mimicking the sounds of crying children. 
+
+
+* 
+**Mire Crawler**: A giant, slime-covered insect with relentless hunger. 
+
+
+* 
+**Wyrm Pup**: The abandoned young of a mountain dragon that lashes out due to trauma. 
+
+
+* 
+**Shard Beetle**: Explodes into shards of crystal on death, damaging everything nearby. 
+
+
+* 
+**Mist Hounds**: Creatures made of condensed fog used by a shadow clan to scent-track targets. 
+
+
+* 
+**Lantern Moths**: Serve forest monks by marking intruders with glowing spores. 
+
+
+* 
+**Sand Whiptail**: Domesticated by desert warlords as agile mounts and weapons. 
+
+
+* 
+**Celadon Cranes**: Peaceful guardians of sacred ponds that attack if the waters are touched. 
+
+
+* 
+**Mossbound Goats**: Harmless protectors that become furious if provoked near shrines. 
+
+
+* 
+**The Hollow Fang**: A wolf-fox hybrid that devoured its own spirit to protect its kin and now hunts the impure. 
+
+
+* 
+**Aurex the Last Basilisk**: The final of its kind, guarding a vault of cursed knowledge. 
+
+
+* 
+**Komo the Earth Dreamer**: A temple-sized sleeping turtle that awakens during celestial misalignment. 
+
+
+* 
+**Shyr'aani the Skybreaker**: A thunderbird spirit seeking release or revenge against the monks who imprisoned it. 
+
+
+* 
+**The River Crown**: A koi dragon cursed to devour those who steal from sacred waters. 
+
+
+
+### Abominations (Spiritual/Demonic)
+
+* 
+**The Mawing Echo**: A screaming spirit made of fractured sound and bone that devours thought. 
+
+
+* 
+**Rotling Mass**: A pile of cursed meat that mimics the dead it devours. 
+
+
+* 
+**Mirrorspawn**: A warped, backwards copy of the player that despises all living beings. 
+
+
+* 
+**Cinder Wretches**: Burnt souls that run forever, igniting everything they touch. 
+
+
+* 
+**Threadworms**: Parasitic spirits that puppeteer corpses chaotically. 
+
+
+* 
+**Soulbound Herald**: A demonic envoy summoned to declare war on karmic temples. 
+
+
+* 
+**Chime Priestess**: Weakens spiritual barriers by ringing the bell of despair. 
+
+
+* 
+**Shrouded Acolyte**: A part-human, part-shadow entity that enforces ancient taboos. 
+
+
+* 
+**Gravemind Root**: Born from sacrilegious burial grounds, infecting nature in service to decay gods. 
+
+
+* 
+**Eclipse Bound**: Assassins summoned during solar eclipses to kill celestial monks. 
+
+
+* 
+**Nayuga, the Thousand-Faced**: Collects masks of slain warriors to build personas and control factions. 
+
+
+* 
+**Vez'tar the Devouring Secret**: A metaphysical parasite in the form of a book that grows powerful when read. 
+
+
+* 
+**The Pale Matron**: A massive stitched doll made of skin and regret that offers twisted comfort. 
+
+
+* 
+**Echo of the First Betrayer**: A cursed wind that whispers treachery. 
+
+
+* 
+**King of Nothing**: An empty throne that generates a phantom ruler from the regrets of those nearby. 
+
+
+
+### Legendary Humans, Creatures, & Abominations
+
+* 
+**Michio the Echowalker**: A future or alternate version of the player embodying extreme karma. 
+
+
+* 
+**Raijin’s Last Apprentice**: A lightning-scarred monk who has become half-spirit. 
+
+
+* 
+**The Gilded Ghost**: A faceless assassin haunting those who disturb royal tombs. 
+
+
+* 
+**Lady of Thorns**: A noble cursed to bloom poisonous roses from her skin. 
+
+
+* 
+**The Folded General**: Wears shifting origami armor and can bend space by folding air. 
+
+
+* 
+**The Womb Whale**: A flying sea creature whose belly contains a lost temple. 
+
+
+* 
+**Stonelash Hydra**: A cave-dwelling beast that devours arrogance. 
+
+
+* 
+**Grove Tyrant**: A walking bonsai titan that grows weapons from its body. 
+
+
+* 
+**Ashen Kite**: A phoenix-like bird made of paper and flame, reborn when written about. 
+
+
+* 
+**Silkmother**: A colossal spider weaving lost memories into illusionary silk webs. 
+
+
+* 
+**The False Heaven**: A floating citadel made of discarded dreams that causes memory loss. 
+
+
+* 
+**Karma Engine**: A prison machine that grows stronger the more it is attacked. 
+
+
+* 
+**The Plague Pilgrim**: An eternal walker whose presence warps life. 
+
+
+* 
+**God-Eater Scarab**: A beetle bloated with divine bile after devouring part of a deity. 
+
+
+* 
+**The Lingering Oath**: A possessed sword that takes control of those who pick it up. 
+
+
+* 
+**Verdance**: A great moss-covered stag whose breath heals allies. 
+
+
+* 
+**Yama-Binder**: A skeletal dog bound by soul fire, loyal to the truly cursed. 
+
+
+* **The Forgotten Shell**: A colossal tortoise with an ecosystem on its back that awakens once a century.
+
+### Special Mechanical Concept
+
+* **Torredasso**: A giant mech inspired by the Belém Tower and Portuguese metalwork, featuring Manueline filigree, Armillary Sphere joints, and a funicular winch system for vertical mobility.

@@ -1,0 +1,12 @@
+Source: Universe_Document.txt
+- L4272-4279: Salt Libraries of Varthun — memory-as-currency archives; books salted to preserve truth; contains Hanzo mission log fragment; mentions Temporal Gatekeeper reachable only via total sacrifice.
+- L1115-1122: Varthun city hosts Temporal Gatekeeper quest within salt-preserved stacks.
+
+Notable NPCs:
+- Temporal Gatekeeper (quest target).
+- Librarians/knowledge brokers trading salted texts.
+
+Secondary NPCs:
+- Archive custodians and salt scribes.
+- Seekers hunting Hanzo’s log pages.
+

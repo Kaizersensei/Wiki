@@ -1,0 +1,12 @@
+Sources:
+- Universe_Document.txt L1115-1122, L4272-4279: Varthum/Varthun — salt-preserved libraries; Temporal Gatekeeper quest; knowledge as currency.
+- Densetsu_Design_Document.txt L94-499, L4428-6254, L9424-9725: Varthum Highlands scholar-state; Chronarchs trapped in time loops; memory tech trade with Eresh/Galport; temporal loop mechanics center.
+
+Notable Figures:
+- Chronarchs (loop-bound scholar rulers).
+- Temporal Gatekeeper (Salt Libraries focal entity).
+
+Secondary Figures:
+- Librarians/looped scholars.
+- Memory crystal traders and loop researchers.
+

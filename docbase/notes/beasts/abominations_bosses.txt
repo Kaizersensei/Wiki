@@ -1,0 +1,7 @@
+Source: Enemies, Creatures, Abominations.txt
+- L123: Nayuga, the Thousand-Faced — Collects identities/masks of slain warriors; controls factions via personas; identity/illusion boss.
+- L125: Vez'tar the Devouring Secret — Metaphysical parasite book gaining power by being read; cursed tome encounter.
+- L127: The Pale Matron — Massive stitched doll healer-turned-nightmare offering “comfort”; body-horror boss.
+- L129: Echo of the First Betrayer — Cursed wind of the first karma breaker; whispers treachery; atmospheric boss.
+- L131: King of Nothing — Empty throne generating phantom ruler from entrants’ regrets; mind-fight set piece.
+

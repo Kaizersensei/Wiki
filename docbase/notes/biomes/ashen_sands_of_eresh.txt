@@ -1,0 +1,11 @@
+Source: Universe_Document.txt
+- L1151-1158: Mesopotamian-inspired desert realm ruled by god-kings; broken metal ruins half-buried in sand; treaded machine caravans cross dunes; exports scavenged metal to Verdathal; location: Ashen Sands of Eresh—domain of illusions, trials, identity crises.
+- L1996-1999: Dream-State — slumbering god holds land in dreamtime; reality bends under emotional weight; time puzzles fluctuate with player doubts.
+
+Notable NPCs:
+- God-kings of Eresh (rulers of illusions/trials).
+- Desert warlords commanding tread caravans.
+
+Secondary NPCs:
+- Metal scavengers and caravan crews.
+- Illusion priests administering identity trials.

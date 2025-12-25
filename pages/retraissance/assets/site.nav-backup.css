@@ -1,0 +1,489 @@
+:root {
+  --bg: #f7f7f2;
+  --panel: transparent;
+  --border: #d7dce2;
+  --accent: #1f5fbf;
+  --text: #3c1f1a;
+  --muted: #a63a32;
+  --nav: #e9edf2;
+  --meta-bg: #f2f5f9;
+  --overlay: rgba(20, 24, 32, 0.75);
+  --patch-med: 96;   /* px slice for main parchment */
+  --patch-top: 72;   /* px slice for overlay parchment */
+  --nav-height: 32px;
+  --red-2: #a63a32;
+  --red-3: #c04a40;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.theme-wiki {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg) url('./res/parchmentloop_bg.png') repeat;
+  color: var(--text);
+  line-height: 1.6;
+  font-weight: 500; /* slightly thicker default text */
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid #111;
+  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: var(--nav-height);
+}
+
+.brand a {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  height: var(--nav-height);
+  gap: 8px;
+  text-decoration: none;
+}
+
+.nav-logo {
+  display: block;
+  height: calc(var(--nav-height) - 4px); /* 2px margin on top/bottom */
+  width: auto;
+  margin: 2px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.nav-links::before {
+  content: "Retraissance";
+  color: #fff;
+  font-weight: 700;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.brand .nav-logo {
+  display: block;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.nav-links a {
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #9fe6d4;
+  border: 1px solid transparent;
+}
+
+.nav-links a:hover {
+  border-color: #9fe6d4;
+  background: rgba(159, 230, 212, 0.1);
+}
+
+.nav-links a:visited {
+  color: #6fd6bd !important;
+}
+
+.nav-links,
+.brand {
+  color: #fff;
+}
+
+.nav-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.nav-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.nav-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.content {
+  max-width: 1100px;
+  margin: 28px auto 48px;
+  padding: 0 18px;
+}
+
+.panel {
+  background: url('./res/parchmentloop_med.png') repeat-y;
+  background-size: 120% auto; /* widen ~20% from center */
+  background-position: center top;
+  border: none;
+  border-radius: 10px;
+  padding: 22px;
+  box-shadow: none;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--red-2);
+  font-size: 18px; /* ~150% of previous */
+  margin: 0 0 6px 0;
+}
+
+h1 {
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  font-weight: 800; /* thicker titles */
+}
+
+p {
+  color: var(--muted);
+  margin: 0 0 14px 0;
+}
+
+.link-list {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 12px 0 0;
+}
+
+.link-list li {
+  margin-bottom: 8px;
+}
+
+.inline-link {
+  font-weight: 600;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px 12px;
+  background: var(--meta-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 10px 0 16px;
+}
+
+.meta-item {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.meta-key {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.meta-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #eef2f8;
+  color: var(--text);
+  font-size: 12px;
+  margin-left: 6px;
+  border: 1px solid var(--border);
+}
+
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  margin: 18px 0 8px;
+}
+
+.markdown ul,
+.markdown ol {
+  margin: 0 0 12px 22px;
+}
+
+.markdown code {
+  background: #f0f3f8;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.markdown pre {
+  background: #f0f3f8;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  overflow: auto;
+}
+
+.markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--border);
+  padding: 8px;
+  text-align: left;
+}
+
+.callout,
+.media-placeholder {
+  background: url('./res/parchmentloop_top.png') repeat;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 14px 0;
+  color: var(--text);
+}
+
+.callout strong {
+  color: var(--text);
+}
+
+/* Filters */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px 14px;
+  margin: 16px 0;
+}
+
+.filters label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.filters input,
+.filters select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* Meta toggle */
+details.meta-toggle {
+  margin-top: 1.2rem;
+}
+details.meta-toggle summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+details.meta-toggle .meta-grid {
+  margin-top: 0.5rem;
+}
+
+/* Edit mode */
+.edit-mode [contenteditable="true"] {
+  outline: 1px dashed var(--accent);
+  background: rgba(31, 95, 191, 0.05);
+}
+
+/* Media gallery */
+.media-gallery {
+  margin: 12px 0 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gallery-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gallery-controls input[type="file"],
+.gallery-controls input[type="text"],
+.gallery-controls input[type="number"] {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.gallery-controls label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.media-thumb {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  min-height: 120px;
+}
+
+.media-thumb img,
+.media-thumb video {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.media-thumb .thumb-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 8px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.6));
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.thumb-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.thumb-actions button {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.thumb-actions button:hover {
+  background: #fff;
+}
+
+.gallery-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.overlay-frame {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: url('./res/parchmentloop_top.png') repeat;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.overlay-frame img,
+.overlay-frame video {
+  max-width: 100%;
+  max-height: 70vh;
+  display: block;
+  margin: 0 auto;
+}
+
+.overlay-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.overlay-nav {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.overlay-nav button {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.timer-status {
+  font-size: 12px;
+  color: var(--muted);
+}

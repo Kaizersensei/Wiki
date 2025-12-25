@@ -1,0 +1,8 @@
+Source: Universe_Document.txt
+- L817: Greenwood Glades — Peaceful training area for spirit communication/nature bonding; halfling realm; pairs with Tree Resonance Grove and Outer Wall.
+
+Notable NPCs:
+- Halfling elders/monks leading spirit communication.
+
+Secondary NPCs:
+- Novice spirit-talkers and visiting pilgrims.

@@ -3,51 +3,112 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Concepts | Universe | Densetsu</title>
+  <title>Concepts</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>Concepts</h1>
-      <p>Listing pages under Concepts.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/concepts/anomalies.html">Anomalies</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/concepts/chronobonsai_checkpoint.html">Chronobonsai (Checkpoint)</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/concepts/gong_arch_checkpoint.html">Gong Arch (Checkpoint)</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/concepts/infinitree.html">Infinitree</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/concepts/orb_statue_checkpoint.html">Orb Statue (Checkpoint)</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/concepts/time_rifts.html">Time Rifts</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search, sort, filter, and group world concepts.</p>
+
+      <div class="filters">
+        <label for="c-search">Search</label>
+        <input id="c-search" type="search" placeholder="Search concepts." />
+
+        <label for="c-filter">Filter tag</label>
+        <select id="c-filter"><option value="all">All</option></select>
+
+        <label for="c-sort">Sort</label>
+        <select id="c-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="c-group">Group by</label>
+        <select id="c-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
-        <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
-        </ul>
-      </div>
+
+      <div id="c-list" class="link-list"></div>
     </section>
   </main>
+
+  <script>
+    const cData = [
+      { name: 'Anomalies', href: 'anomalies.html', tag: 'anomaly' },
+      { name: 'Time Rifts', href: 'time_rifts.html', tag: 'anomaly' },
+      { name: 'Time Anomalies & Loops', href: 'time_anomalies_and_loops.html', tag: 'anomaly' },
+      { name: 'Infinitree', href: 'infinitree.html', tag: 'world tree' },
+      { name: 'Chronobonsai Checkpoint', href: 'chronobonsai_checkpoint.html', tag: 'checkpoint' },
+      { name: 'Gong Arch Checkpoint', href: 'gong_arch_checkpoint.html', tag: 'checkpoint' },
+      { name: 'Orb Statue Checkpoint', href: 'orb_statue_checkpoint.html', tag: 'checkpoint' },
+      { name: 'Elements & Concords', href: 'elements_and_concords.html', tag: 'elements' }
+    ];
+
+    const cSearch = document.getElementById('c-search');
+    const cFilter = document.getElementById('c-filter');
+    const cSort = document.getElementById('c-sort');
+    const cGroup = document.getElementById('c-group');
+    const cList = document.getElementById('c-list');
+
+    const buildCFilter = () => {
+      const values = Array.from(new Set(cData.map(d => d.tag).filter(Boolean))).sort();
+      cFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderC = () => {
+      const q = (cSearch.value || '').toLowerCase();
+      const flt = cFilter.value;
+      let items = cData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (cSort.value === 'name') items.sort(sorter('name'));
+      else if (cSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (cSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (cGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        cList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        cList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    cSearch.addEventListener('input', renderC);
+    cFilter.addEventListener('change', renderC);
+    cSort.addEventListener('change', renderC);
+    cGroup.addEventListener('change', renderC);
+    buildCFilter();
+    renderC();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

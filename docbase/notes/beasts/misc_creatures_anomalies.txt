@@ -1,0 +1,5 @@
+Source: Universe_Document.txt
+- L1089-1092: FireBeetle squad — armored beetle soldiers mounted on giant dragonflies patrolling Verdathal skies; faction-aligned flying units (biotech/plant-tech).
+- L2434: Turtle-like creature floating endlessly in the distance, seemingly unreachable — ambient anomaly fauna; potential world-boss or unreachable lore hint.
+- L2374-2377, 2388-2396: Riftspawn concept — distorted enemy types emerging in rift/collapsed zones; jellyfish neutral until disturbed; corrupted seaweed lashes with electric arcs; supports time-glitch biomes (Minus Depths).
+

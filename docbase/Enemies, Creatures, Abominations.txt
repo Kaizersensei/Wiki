@@ -1,0 +1,257 @@
+﻿Enemies, Creatures, Abominations
+
+
+Info Sheets
+
+  
+________________
+Enemies
+
+
+Definition of Enemy:
+An enemy is anything that can be considered an antagonist - someone who through force and/or deception actively works to stop the player from progressing.
+
+
+Most enemies are humans or hybrids. What sets them apart from hostiles is their motive. While a hostile could attack you in territorial or self defense, they have no quarrel with you. They’ll only consider you an enemy (or prey!) if you don’t respect their space or possessions. 
+
+
+
+
+________________
+
+
+Therefore enemies will fall into these categories:
+1. Selfish & Chaotic
+They attack any enemy humanoid or any hostile regardless of karmic,
+Factional and elemental alignment or skill.
+  
+
+Example: A bandit
+1. Affiliated & Dutiful
+        They belong to factions that are antagonistic to the player, player’s faction or 
+karmic alignment. They act out of duty or spite and are actively trying to win
+  
+
+Example: Ninja Grunts
+2. Driven by ambition
+        These enemies are vital to the storyline - they are the main antagonists!
+        Bosses and Sub-bosses fall into this category. They only differ from the
+previous because they are rare or unique and key to the game’s events.
+  
+
+Example: Okashira
+Creatures (Lore Fauna)
+Definition of Creature
+Creatures are the natural and often mystical fauna of the world—beasts, spirits, and hybrids born from the land’s many regions, elemental forces, or ancient bloodlines. They may range from harmless forest dwellers to fiercely territorial apex predators. While some are intelligent or even trainable, most act on instinct, and their hostility stems from protection, hunger, or territory. Their alignment can vary greatly, and they often reflect the environment they inhabit.
+Natural or magical beasts that live in the world. Some are intelligent, some act purely on instinct, but they all have a place in the ecosystem.
+________________
+1. Selfish & Chaotic
+Act on instinct, hunger, fear, or madness. Will attack anything in their space.
+Examples:
+* Grizzleback – A territorial bear-like beast that mutates from overconsumption of cursed berries.
+
+* Chitter Vineserpent – A carnivorous plant-animal hybrid that hunts by mimicking the sounds of crying children.
+
+* Mire Crawler – A giant, slime-covered insect with no allegiance, just relentless hunger.
+
+* Wyrm Pup – The abandoned young of a mountain dragon, lashes out at everything due to trauma.
+
+* Shard Beetle – Explodes into shards of crystal on death, damaging everything nearby regardless of allegiance.
+
+________________
+   2. Affiliated & Dutiful
+Bred, trained, or spiritually bound to a faction or territory.
+Examples:
+   * Mist Hounds – Used by a shadow clan; made of condensed fog and scent-track targets of interest.
+
+   * Lantern Moths – Serve forest monks by marking intruders with glowing spores.
+
+   * Sand Whiptail – Domesticated by desert warlords, used as agile mounts and weapons.
+
+   * Celadon Cranes – Guardians of sacred ponds. Peaceful until you touch their waters.
+
+   * Mossbound Goats – Harmless until provoked near shrines, where they become furious protectors.
+
+________________
+      3. Driven by Ambition Creatures (Bosses or Guardians)
+Unique beasts with personal history or spiritual purpose. Often tied to quests, legacies, or karmic balance.
+Examples:
+      * The Hollow Fang – A wolf-fox hybrid who devoured its own spirit to protect its kin, now hunts the impure.
+
+      * Aurex the Last Basilisk – The final of its kind, guarding a vault of cursed knowledge.
+
+      * Komo the Earth Dreamer – A sleeping turtle the size of a temple, who awakens during celestial misalignment.
+
+      * Shyr'aani the Skybreaker – A thunderbird spirit imprisoned by ancient monks, seeking release or revenge.
+
+      * The River Crown – A koi dragon cursed to devour those who take from sacred waters without permission.
+
+________________
+Abominations (Spiritual/Demonic)
+Entities born from corruption, broken rituals, or astral bleed. Often twisted echoes of something once pure.
+________________
+         1. Selfish & Chaotic Abominations
+Mindless, ravenous, or totally unstable. Driven by hunger, pain, or instinct.
+Examples:
+         * The Mawing Echo – A screaming spirit made of fractured sound and bone, devours thought.
+
+         * Rotling Mass – A pile of cursed meat that mimics the dead it devours.
+
+         * Mirrorspawn – Copies your form, but backwards and warped. Despises all living beings.
+
+         * Cinder Wretches – Burnt souls that run forever, igniting everything they touch in blind panic.
+
+         * Threadworms – Parasitic spirits that stitch into corpses and puppeteer them chaotically.
+
+            2. Affiliated & Dutiful Abominations
+Created by cults, dark rituals, or demonic factions. Have purpose, orders, or pacts to fulfill.
+Examples:
+            * Soulbound Herald – A demonic envoy summoned to declare war on karmic temples.
+
+            * Chime Priestess – Rings the bell of despair to weaken spiritual barriers for her masters.
+
+            * Shrouded Acolyte – Part-human, part-shadow, enforces ancient taboos on trespassers.
+
+            * Gravemind Root – Born from sacrilegious burial grounds, infects nature in service to decay gods.
+
+            * Eclipse Bound – Summoned only during solar eclipses, tasked with assassinating celestial monks.
+
+
+               3. Driven by Ambition Abominations
+Unique nightmares or entities with goals beyond mere destruction. Major bosses or story anchors.
+Examples:
+               * Nayuga, the Thousand-Faced – Collects identities and masks of slain warriors, builds personas to control factions.
+
+               * Vez'tar the Devouring Secret – A metaphysical parasite in the form of a book, gains power by being read.
+
+               * The Pale Matron – Once a healer, now a massive stitched doll made of skin and regret, offers “comfort.”
+
+               * Echo of the First Betrayer – The first man who broke karma, now a cursed wind that whispers treachery.
+
+               * King of Nothing – An empty throne that generates a phantom ruler from the deepest regrets of those who enter its presence.
+
+________________
+Legendary Ideas
+These can be mythic questlines, hidden world bosses, or rare encounters.
+________________
+Legendary Humans/Humanoids
+                  * Michio the Echowalker – (maybe post-game?) Future/alternate version of the player, embodying extreme karma.
+
+                  * Raijin’s Last Apprentice – A lightning-scarred monk who’s become half-spirit through meditation.
+
+                  * The Gilded Ghost – A faceless assassin who haunts those who disturb royal tombs.
+
+                  * Lady of Thorns – A noble cursed to bloom poison roses from her skin, untouched and tragic.
+
+                  * The Folded General – Wears a constantly shifting origami armor. Can bend space briefly by folding air.
+
+ Legendary Creatures
+                     * The Womb Whale – A flying sea creature whose belly holds an entire lost temple.
+
+                     * Stonelash Hydra – Slumbers in deep caves, devours arrogance.
+
+                     * Grove Tyrant – A walking bonsai titan, rival to the Sage's tree. Grows weapons from its body.
+
+                     * Ashen Kite – A phoenix-like bird made of paper and flame, reborn every time it’s written about.
+
+                     * Silkmother – A colossal spider that spins illusions as silk, weaving lost memories into her web.
+
+Legendary Abominations
+                        * The False Heaven – A floating, smiling citadel built of discarded dreams. Anyone who enters forgets who they are.
+
+                        * Karma Engine – A prison machine powered by suffering. The more you attack it, the stronger it grows.
+
+                        * The Plague Pilgrim – Walks eternally across the world. Its mere presence warps life around it.
+
+                        * God-Eater Scarab – Devoured part of a forgotten deity. Now bloated with divine bile and madness.
+
+                        * The Lingering Oath – A sword possessed by the dying promise of a warrior betrayed. Possesses those who pick it up.
+________________
+Tameable Beasts and Abominations
+In a world where both mystical and natural forces shape the land, some creatures—be they fauna or otherworldly—can be tamed and ridden by those with the skill, courage, or spiritual resonance required. These mounts aren’t just for traversal—they are allies, weapons, and sometimes guardians.
+________________
+
+
+🔐 Taming Methods
+The process of taming depends heavily on the nature of the creature:
+🐗 Wild Creatures (Lore Fauna)
+                           * Approach & Bonding: Requires stealth, patience, or the offering of specific food or items. Often easier to tame if the creature is young or injured.
+
+                           * Training Routines: Through repeated exposure, rewards, and protection, creatures can bond with a handler over time.
+
+                           * Herbal Lures: Some rare herbs calm beasts or trigger taming states temporarily.
+
+                           * Cultural Knowledge: Some NPC tribes or monasteries specialize in beast training and may provide scrolls, relics, or guidance.
+
+👹 Abominations & Supernatural Beasts
+                              * Spiritual Binding: Taming may require a ritual—often dangerous—where the creature’s essence is bound to the rider’s life force.
+
+                              * Seal Tokens: Enchanted talismans or blood pacts can be used to contain and command more malevolent beings.
+
+                              * Defeat & Dominate: Some abominations only yield after being defeated in combat or bested in a trial.
+
+                              * Symbiotic Pacts: Rare instances where abominations seek a host or rider for their own goals, creating uneasy alliances.
+
+________________
+
+
+🐉 Use Cases
+Ridable beasts are more than mounts—they serve strategic, narrative, and exploratory functions:
+🔹 Traversal
+                                 * Cross hazardous terrain (e.g., lava fields, deep swamps, vertical cliffs).
+
+                                 * Access otherwise unreachable zones (airborne or burrowing beasts).
+
+                                 * Evade faster enemies or chase swift targets.
+
+🔸 Combat Enhancement
+                                    * Beasts provide unique attacks (fire breath, poison clouds, charge strikes).
+
+                                    * Some absorb damage, shield the rider, or even retaliate when attacked.
+
+                                    * Tamed abominations might corrupt or hex enemies just by proximity.
+
+🔹 Puzzle & Environment Interaction
+                                       * Giant turtles that trigger pressure plates.
+
+                                       * Elephant-like creatures that pull or break obstacles.
+
+                                       * Snakelike abominations that slither through narrow puzzle tunnels.
+
+🔸 Story Integration
+                                          * Legendary mounts are tied to myth arcs or major character growth moments.
+
+                                          * Some mounts have histories, personalities, or even dialogue in mystical forms.
+
+                                          * Others become targets of enemy factions or coveted by rivals.
+
+________________
+
+
+________________
+🧿 Types of Ridable Beasts
+Category
+	Examples
+	Specialty
+	Elemental Beasts
+	Fire Lizards, Thunder Oxen
+	Elemental immunity, charged attacks
+	Natural Creatures
+	War Elephants, Giant Turtles
+	High defense, strength or mobility
+	Mystical Abominations
+	Bone Serpents, Phantom Hounds
+	Spiritual attacks, fear effects
+	Construct-Mount Hybrids
+	Golem Rhinos, Sealed Spirits
+	Environmental interaction
+	________________
+
+
+📜 Legendary Mounts
+These rare mounts are one-of-a-kind, and often tied to quests or karmic alignment. Examples include:
+                                             * "Verdance" – A great moss-covered stag whose breath heals allies.
+
+                                             * "Yama-Binder" – A skeletal dog bound by chains of soul fire, loyal only to the truly cursed.
+
+                                             * "The Forgotten Shell" – A colossal tortoise with a mini-ecosystem on its back, only awakens once a century.

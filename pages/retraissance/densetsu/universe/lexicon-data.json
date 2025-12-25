@@ -1,0 +1,922 @@
+[
+  {
+    "Name": "Aka",
+    "Href": "characters/aka.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Alfons’s Relic Sword",
+    "Href": "artifacts/relic_sword_alfons.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Amelia",
+    "Href": "characters/amelia.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Anomalies",
+    "Href": "concepts/anomalies.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Aoi",
+    "Href": "characters/aoi.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Aokuni Culture",
+    "Href": "cultures/aokuni.html",
+    "Category": "cultures"
+  },
+  {
+    "Name": "Aquatic Fauna",
+    "Href": "creatures/aquatic_fauna.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Artifacts &amp; Relics",
+    "Href": "artifacts/index.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Artifacts Registry",
+    "Href": "artifacts/artifacts_registry.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Ashen Kite",
+    "Href": "enemies/ashen_kite.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Aurex the Last Basilisk",
+    "Href": "creatures/aurex_last_basilisk.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Aya",
+    "Href": "characters/aya.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Bamboo Creatures (family)",
+    "Href": "creatures/bamboo_creatures.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Bandit",
+    "Href": "enemies/bandit.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Bob",
+    "Href": "characters/bob.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Bonsai Sage",
+    "Href": "characters/bonsai_sage.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Calendar: BE and AE",
+    "Href": "overview/calendar_be_ae.html",
+    "Category": "overview"
+  },
+  {
+    "Name": "Cave Rat",
+    "Href": "creatures/cave_rat.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Celadon Cranes",
+    "Href": "creatures/celadon_cranes.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Characters",
+    "Href": "characters/index.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Chime Priestess",
+    "Href": "enemies/chime_priestess.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Chitter Vineserpent",
+    "Href": "creatures/chitter_vineserpent.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Chronobonsai (Checkpoint)",
+    "Href": "concepts/chronobonsai_checkpoint.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Chronobonsai Chamber",
+    "Href": "locations/chronobonsai_chamber.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Cinder Wretches",
+    "Href": "enemies/cinder_wretches.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Concepts",
+    "Href": "concepts/index.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Corrupted Creatures",
+    "Href": "creatures/corrupted_creatures.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Cosmology &amp; Epochs",
+    "Href": "world/cosmology_and_epochs.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Council of Harbormasters",
+    "Href": "factions/council_of_harbormasters.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Creatures",
+    "Href": "creatures/index.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Crimson Dynasty",
+    "Href": "factions/crimson_dynasty.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Crimson Dynasty",
+    "Href": "locations/crimson_dynasty.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Crimson Dynasty Titles",
+    "Href": "characters/crimson_dynasty_titles.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Cultural Tenets &amp; Rituals",
+    "Href": "world/cultural_tenets.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Cultures",
+    "Href": "cultures/index.html",
+    "Category": "cultures"
+  },
+  {
+    "Name": "Desert Fauna",
+    "Href": "creatures/desert_fauna.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Dog Elder Of Eddara",
+    "Href": "characters/dog_elder_of_eddara.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Eastern Continent",
+    "Href": "world/eastern_continent.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Echo of the First Betrayer",
+    "Href": "enemies/echo_of_the_first_betrayer.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Echo-Song",
+    "Href": "artifacts/echo_song.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Eclipse Bound",
+    "Href": "enemies/eclipse_bound.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Eddara",
+    "Href": "locations/eddara.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Eddara Council of Elders",
+    "Href": "factions/eddara_council.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Elements and Concords",
+    "Href": "concepts/elements_and_concords.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Enemies",
+    "Href": "enemies/index.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Eresh Emirate",
+    "Href": "locations/eresh_emirate.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Eresh Emirate",
+    "Href": "factions/eresh_emirate.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Events &amp; Timeline",
+    "Href": "events/index.html",
+    "Category": "events"
+  },
+  {
+    "Name": "Faction Relationships",
+    "Href": "world/relationships_matrix.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Factions",
+    "Href": "factions/index.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Fenrir",
+    "Href": "characters/fenrir.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Fire Dominion",
+    "Href": "factions/fire_dominion.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Forest Fauna",
+    "Href": "creatures/forest_fauna.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Galport",
+    "Href": "locations/galport.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Galport Trade Federation",
+    "Href": "factions/galport_trade_federation.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Glitch in the Dust",
+    "Href": "locations/glitch_in_the_dust.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "God-Eater Scarab",
+    "Href": "enemies/god_eater_scarab.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Gong Arch (Checkpoint)",
+    "Href": "concepts/gong_arch_checkpoint.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Gravemind Root",
+    "Href": "enemies/gravemind_root.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Grizzleback",
+    "Href": "creatures/grizzleback.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Grove Tyrant",
+    "Href": "enemies/grove_tyrant.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Hagane Snail",
+    "Href": "creatures/hagane_snail.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Hanzo",
+    "Href": "characters/hanzo.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Hirogawa",
+    "Href": "locations/hirogawa.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Hirogawa Feud",
+    "Href": "factions/hirogawa_feud.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Hirogawa Town Fire (event)",
+    "Href": "events/hirogawa_town_fire.html",
+    "Category": "events"
+  },
+  {
+    "Name": "Historical Arcs",
+    "Href": "events/timeline_arcs.html",
+    "Category": "events"
+  },
+  {
+    "Name": "Hitomi",
+    "Href": "characters/hitomi.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Independent Realms",
+    "Href": "world/independent_realms.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Infinitree",
+    "Href": "concepts/infinitree.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Infinitree Bark Shard",
+    "Href": "artifacts/infinitree_bark_shard.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Ishigane",
+    "Href": "characters/ishigane.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Kaerugan",
+    "Href": "locations/kaerugan.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Kaerugan Rust Courts",
+    "Href": "factions/kaerugan_rust_courts.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Kaerugan: The Iron Jungle",
+    "Href": "locations/kaerugan_iron_jungle.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Karma Engine",
+    "Href": "enemies/karma_engine.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Kaze",
+    "Href": "characters/kaze.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Kaze’s Anthem",
+    "Href": "artifacts/kaze_anthem.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "King Frog Of Verdathal",
+    "Href": "characters/king_frog_of_verdathal.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "King of Nothing",
+    "Href": "enemies/king_of_nothing.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Kodomaru",
+    "Href": "characters/kodomaru.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Kojimigakure",
+    "Href": "locations/kojimigakure.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Komo the Earth Dreamer",
+    "Href": "creatures/komo_earth_dreamer.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Kuro",
+    "Href": "characters/kuro.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Lady of Thorns",
+    "Href": "enemies/lady_of_thorns.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Languages & Writing",
+    "Href": "languages_writing.html",
+    "Category": "root"
+  },
+  {
+    "Name": "Lantern Moths",
+    "Href": "creatures/lantern_moths.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Lexicon",
+    "Href": "lexicon.html",
+    "Category": "root"
+  },
+  {
+    "Name": "Locations",
+    "Href": "locations/index.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Magic & Tech Principles",
+    "Href": "magic_principles.html",
+    "Category": "root"
+  },
+  {
+    "Name": "Manolo Marella",
+    "Href": "characters/manolo_marella.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Marella Caravans (Blackwater Tidebrokers)",
+    "Href": "factions/marella_caravans.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Marella Sea Horn",
+    "Href": "artifacts/marella_sea_horn.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Master Nagamizu",
+    "Href": "characters/master_nagamizu.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Nagamizu",
+    "Href": "characters/master_nagamizu.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Michio",
+    "Href": "characters/michio.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Michio the Echowalker",
+    "Href": "enemies/michio_echowalker.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Midori",
+    "Href": "characters/midori.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Minus Depths",
+    "Href": "locations/minus_depths.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Mire Crawler",
+    "Href": "creatures/mire_crawler.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Mirrorspawn",
+    "Href": "enemies/mirrorspawn.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Mist Hounds",
+    "Href": "creatures/mist_hounds.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Mistral Stranded Cove",
+    "Href": "locations/mistral_stranded_cove.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Mossbound Goats",
+    "Href": "creatures/mossbound_goats.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Mount-Class Creatures",
+    "Href": "creatures/mount_class_creatures.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Mycomind Covenant",
+    "Href": "factions/mycomind_covenant.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Mycomind Covenant",
+    "Href": "world/mycomind_covenant.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Mycomind",
+    "Href": "world/mycomind_covenant.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Mycomind Fauna",
+    "Href": "creatures/mycomind_fauna.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Namika",
+    "Href": "characters/namika.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Nayuga, the Thousand-Faced",
+    "Href": "enemies/nayuga_thousand_faced.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Ninja Grunts",
+    "Href": "enemies/ninja_grunts.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Ninth Wave",
+    "Href": "factions/ninth_wave.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Okashira",
+    "Href": "characters/okashira.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Okashira",
+    "Href": "enemies/okashira_boss.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Orb Statue (Checkpoint)",
+    "Href": "concepts/orb_statue_checkpoint.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Overview",
+    "Href": "overview/index.html",
+    "Category": "overview"
+  },
+  {
+    "Name": "Petrus Avales Barcal",
+    "Href": "characters/petrus_avales_barcal.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Pip",
+    "Href": "characters/pip.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Pombeiro De Galporta",
+    "Href": "characters/pombeiro_de_galporta.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Pombeiro’s Seal",
+    "Href": "artifacts/pombeiro_seal.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Raijin's Last Apprentice",
+    "Href": "enemies/raijins_last_apprentice.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Rotling Mass",
+    "Href": "enemies/rotling_mass.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Sand Whiptail",
+    "Href": "creatures/sand_whiptail.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Saul Azar",
+    "Href": "characters/saul_azar.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Seigetsu Empire",
+    "Href": "locations/seigetsu_empire.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Seigetsu Empire",
+    "Href": "factions/seigetsu_empire.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Seigetsu",
+    "Href": "locations/seigetsu_empire.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Shard Beetle",
+    "Href": "creatures/shard_beetle.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Shion",
+    "Href": "characters/shion.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Shrine of Still Flames",
+    "Href": "locations/shrine_of_still_flames.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Shrouded Acolyte",
+    "Href": "enemies/shrouded_acolyte.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Shyr'aani the Skybreaker",
+    "Href": "creatures/shyraani_skybreaker.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Silkmother",
+    "Href": "enemies/silkmother.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Soulbound Herald",
+    "Href": "enemies/soulbound_herald.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Stonelash Hydra",
+    "Href": "enemies/stonelash_hydra.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Temple of Stillness",
+    "Href": "locations/temple_of_stillness.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Tera",
+    "Href": "characters/tera.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Tetsumaru",
+    "Href": "characters/tetsumaru.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "The False Heaven",
+    "Href": "enemies/false_heaven.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Folded General",
+    "Href": "enemies/folded_general.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Forgotten Shell",
+    "Href": "enemies/forgotten_shell.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Gilded Ghost",
+    "Href": "enemies/gilded_ghost.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Great Eclipse",
+    "Href": "overview/great_eclipse.html",
+    "Category": "overview"
+  },
+  {
+    "Name": "The Hollow Fang",
+    "Href": "creatures/hollow_fang.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "The Lingering Oath",
+    "Href": "enemies/lingering_oath.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Mawing Echo",
+    "Href": "enemies/mawing_echo.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Pale Matron",
+    "Href": "enemies/pale_matron.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The Plague Pilgrim",
+    "Href": "enemies/plague_pilgrim.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "The River Crown",
+    "Href": "creatures/river_crown.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "The Womb Whale",
+    "Href": "enemies/womb_whale.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Threadworms",
+    "Href": "enemies/threadworms.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Time Anomalies &amp; Loops",
+    "Href": "concepts/time_anomalies_and_loops.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Time Fan (Toki no Ōgi)",
+    "Href": "artifacts/time_fan.html",
+    "Category": "artifacts"
+  },
+  {
+    "Name": "Time Rifts",
+    "Href": "concepts/time_rifts.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Timeline Index",
+    "Href": "events/timeline_index.html",
+    "Category": "events"
+  },
+  {
+    "Name": "Torredasso",
+    "Href": "enemies/torredasso.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Tree Resonance Grove",
+    "Href": "locations/tree_resonance_grove.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Twilight Covenant",
+    "Href": "factions/twilight_covenant.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Universe Wiki",
+    "Href": "index.html",
+    "Category": "root"
+  },
+  {
+    "Name": "Varthum",
+    "Href": "locations/varthum.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Verdance",
+    "Href": "enemies/verdance.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Verdant Circle",
+    "Href": "factions/verdant_circle.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Verdathal",
+    "Href": "locations/verdathal.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Verdathal Commonwealth",
+    "Href": "factions/verdathal_commonwealth.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Vez'tar the Devouring Secret",
+    "Href": "enemies/vez_tar_devouring_secret.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Wakers (Eresh)",
+    "Href": "factions/wakers.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Water Courts",
+    "Href": "factions/water_courts.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Waterfall Training Grounds",
+    "Href": "locations/waterfall_training_grounds.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Western Continent",
+    "Href": "world/western_continent.html",
+    "Category": "world"
+  },
+  {
+    "Name": "World",
+    "Href": "world/index.html",
+    "Category": "world"
+  },
+  {
+    "Name": "World Overview",
+    "Href": "world/world_overview.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Wyrm Pup",
+    "Href": "creatures/wyrm_pup.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "Yama-Binder",
+    "Href": "enemies/yama_binder.html",
+    "Category": "enemies"
+  },
+  {
+    "Name": "Yukigami",
+    "Href": "locations/yukigami.html",
+    "Category": "locations"
+  },
+  {
+    "Name": "Betto",
+    "Href": "characters/betto.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Kyo",
+    "Href": "characters/kyo.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Pta-Khaem",
+    "Href": "characters/pta_khaem.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Dream King of Eresh",
+    "Href": "characters/pta_khaem.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Ferdinand Passaro",
+    "Href": "characters/ferdinand_passaro.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "King Elmanu II",
+    "Href": "characters/king_elmanu_ii.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Don Bastion",
+    "Href": "characters/don_bastion.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Solid the Snake",
+    "Href": "characters/solid_the_snake.html",
+    "Category": "characters"
+  },
+  {
+    "Name": "Hideo Kohiba",
+    "Href": "characters/hideo_kohiba.html",
+    "Category": "characters"
+  }
+]

@@ -1,0 +1,5 @@
+Source: Universe_Document.txt
+- L900-912: Sea-Thread routes from Petrus Avales Barcal — flightless albatross navigator grants Sea-Thread fast-travel and charts hidden rifts; returns in final act.
+- L1026-1027: Act II “Charts of Barcal” — sailing with Petrus to break Eddaran blockade, unlocking covert sea lanes.
+- L2291-2299: Time Fan / Infinitree / Sage experiments draw from lost rift corridors; reference for rift-map generation.
+

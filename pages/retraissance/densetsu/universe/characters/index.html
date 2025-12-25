@@ -3,51 +3,149 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Characters | Universe | Densetsu</title>
+  <title>Characters</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>Characters</h1>
-      <p>Listing pages under Characters.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/characters/bonsai_sage.html">Bonsai Sage</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/characters/hanzo.html">Hanzo</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/characters/hitomi.html">Hitomi</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/characters/master_nagamizu.html">Master Nagamizu</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/characters/michio.html">Michio</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/characters/okashira.html">Okashira</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search and browse characters by name.</p>
+
+      <div class="filters">
+        <label for="c-search">Search</label>
+        <input id="c-search" type="search" placeholder="Search characters." />
+
+        <label for="c-filter">Filter initial</label>
+        <select id="c-filter"><option value="all">All</option></select>
+
+        <label for="c-sort">Sort</label>
+        <select id="c-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+        </select>
+
+        <label for="c-group">Group by</label>
+        <select id="c-group">
+          <option value="none">None</option>
+          <option value="letter">Initial</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
+
+      <div id="c-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Note:</strong> Roles and affiliations are not tagged yet; add tags per character to improve filtering.
+      </div>
+      <div class="callout">
+        <strong>See also:</strong>
         <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
+          <li><a href="../enemies/index.html">Enemies &amp; Abominations</a> for antagonist profiles.</li>
+          <li><a href="../creatures/index.html">Creatures</a> for non-sentient fauna.</li>
+          <li><a href="../lexicon.html">Lexicon</a> for alphabetized terms.</li>
         </ul>
       </div>
     </section>
   </main>
+
+  <script>
+    const cData = [
+      { name: 'Aka', href: 'aka.html' },
+      { name: 'Amelia', href: 'amelia.html' },
+      { name: 'Aoi', href: 'aoi.html' },
+      { name: 'Aya', href: 'aya.html' },
+      { name: 'Betto', href: 'betto.html' },
+      { name: 'Bob', href: 'bob.html' },
+      { name: 'Bonsai Sage', href: 'bonsai_sage.html' },
+      { name: 'Crimson Dynasty Titles', href: 'crimson_dynasty_titles.html' },
+      { name: 'Don Bastion', href: 'don_bastion.html' },
+      { name: 'Dog Elder of Eddara', href: 'dog_elder_of_eddara.html' },
+      { name: 'Fenrir', href: 'fenrir.html' },
+      { name: 'Ferdinand Passaro', href: 'ferdinand_passaro.html' },
+      { name: 'Hanzo', href: 'hanzo.html' },
+      { name: 'Hideo Kohiba', href: 'hideo_kohiba.html' },
+      { name: 'Hitomi', href: 'hitomi.html' },
+      { name: 'Ishigane', href: 'ishigane.html' },
+      { name: 'Kaze', href: 'kaze.html' },
+      { name: 'King Frog of Verdathal', href: 'king_frog_of_verdathal.html' },
+      { name: 'King Elmanu II', href: 'king_elmanu_ii.html' },
+      { name: 'Kodomaru', href: 'kodomaru.html' },
+      { name: 'Kyo', href: 'kyo.html' },
+      { name: 'Kuro', href: 'kuro.html' },
+      { name: 'Manolo Marella', href: 'manolo_marella.html' },
+      { name: 'Master Nagamizu', href: 'master_nagamizu.html' },
+      { name: 'Michio', href: 'michio.html' },
+      { name: 'Midori', href: 'midori.html' },
+      { name: 'Namika', href: 'namika.html' },
+      { name: 'Okashira', href: 'okashira.html' },
+      { name: 'Petrus Avales Barcal', href: 'petrus_avales_barcal.html' },
+      { name: 'Pip', href: 'pip.html' },
+      { name: 'Pombeiro de Galporta', href: 'pombeiro_de_galporta.html' },
+      { name: 'Pta-Khaem (Dream King of Eresh)', href: 'pta_khaem.html' },
+      { name: 'Saul Azar', href: 'saul_azar.html' },
+      { name: 'Solid the Snake', href: 'solid_the_snake.html' },
+      { name: 'Shion', href: 'shion.html' },
+      { name: 'Tera', href: 'tera.html' },
+      { name: 'Tetsumaru', href: 'tetsumaru.html' }
+    ].map(d => ({ ...d, letter: (d.name || '').charAt(0).toUpperCase() || 'Other' }));
+
+    const cSearch = document.getElementById('c-search');
+    const cFilter = document.getElementById('c-filter');
+    const cSort = document.getElementById('c-sort');
+    const cGroup = document.getElementById('c-group');
+    const cList = document.getElementById('c-list');
+
+    const buildCFilter = () => {
+      const values = Array.from(new Set(cData.map(d => d.letter))).sort();
+      cFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderC = () => {
+      const q = (cSearch.value || '').toLowerCase();
+      const flt = cFilter.value;
+      let items = cData.filter(d => d.name.toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.letter === flt);
+
+      if (cSort.value === 'name') items.sort((a, b) => a.name.localeCompare(b.name));
+      else items.sort((a, b) => b.name.localeCompare(a.name));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a><span class="meta-chip">${d.letter}</span></li>`;
+
+      if (cGroup.value === 'letter') {
+        const grouped = {};
+        items.forEach(d => {
+          (grouped[d.letter] = grouped[d.letter] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        cList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        cList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    cSearch.addEventListener('input', renderC);
+    cFilter.addEventListener('change', renderC);
+    cSort.addEventListener('change', renderC);
+    cGroup.addEventListener('change', renderC);
+    buildCFilter();
+    renderC();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+Source: Universe_Document.txt
+- L1115-1122: Varthum/Varthun — salt-preserved libraries where knowledge is currency; motto “Salt seals truth; memory costs everything.”
+- L4272-4279: Salt Libraries of Varthun use salted books to preserve truth; trade pages (e.g., Hanzo mission log fragment).
+
+Notes:
+- Mechanic hook: salt as preservation/anti-corruption medium; knowledge traded like goods.
+- Links to Temporal Gatekeeper quest and Salt Library POI.
+

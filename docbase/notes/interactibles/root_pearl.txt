@@ -1,0 +1,4 @@
+Source: Universe_Document.txt
+- L2406-2411: Root Pearl — hidden behind coral wall in Minus Depth/Collapsed Rift; surviving the loop and retrieving it returns player to Infinitree and grants “Echo Breath” passive (water-zone agility boost post-dodge) plus journal entry “The World That Wasn’t.”
+- Tie-in: Accessed via rift anomaly puzzle (crate push + flickering rift dash) in flooded area; links anomalies to Infinitree rewards.
+

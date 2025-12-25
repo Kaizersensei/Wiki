@@ -1,0 +1,6 @@
+Sources:
+- Universe_Document.txt L25-35, L499-515: Great Eclipse (epoch split BE/AE; present 1326 AE; Chronobonsai age ~1500 years → 674 BE rooting).
+- Universe_Document.txt L513: Hanzo disappearance 1313 AE.
+- Universe_Document.txt L1480-1542: Hirogawa attack / Chronobonsai reveal kickstarts Michio’s journey (1326 AE context).
+- Universe_Document.txt L1017-1035: Galport treaty arc (Acts I–V “Wings of Accord”) during current timeline.
+

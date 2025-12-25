@@ -1,0 +1,10 @@
+Source: Universe_Document.txt
+- L4219-4220: Waterfall Training Grounds — forest path leading to waterfalls where Michio trains; early-game combat/movement tutorial zone linked to Hirogawa.
+
+Notable NPCs:
+- Michio (training).
+- Master Nagamizu (mentor presence/flashbacks).
+
+Secondary NPCs:
+- Apprentices using the grounds before the fire.
+

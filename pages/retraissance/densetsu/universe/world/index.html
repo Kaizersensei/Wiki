@@ -3,49 +3,112 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>World | Universe | Densetsu</title>
+  <title>World</title>
   <link rel="stylesheet" href="../../../assets/site.css" />
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand"><a href="../../../index.html">Retraissance</a></div>
+    <div class="brand">
+      <a href="../../../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
     <nav class="nav-links">
+      <a class="nav-home" href="../../../index.html">Retraissance</a>
       <a href="../../../projects/index.html">Projects</a>
       <a href="../../index.html">Densetsu</a>
       <a href="../index.html">Universe</a>
       <a href="../../engine/index.html">Engine</a>
     </nav>
   </header>
+
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">Universe Category</p>
+      <p class="eyebrow">universe</p>
       <h1>World</h1>
-      <p>Listing pages under World.</p>
-      <ul class="link-list">
-        <li><a href="../../../../docs/projects/densetsu/universe/world/eastern_continent.html">Eastern Continent</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/world/mycomind_covenant.html">Mycomind Covenant</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/world/western_continent.html">Western Continent</a></li>
-        <li><a href="../../../../docs/projects/densetsu/universe/world/world_overview.html">World Overview</a></li>
-      </ul>
-      <div class="callout">
-        <strong>Missing / conflicting information:</strong>
-        <ul>
-          <li>Content is imported stubs; add canon text per project sources. Chat decisions supersede docs if conflicts arise.</li>
-          <li>Media/tables not provided; add assets under static/projects/densetsu/media and update links when available.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
+      <p>Search, sort, filter, and group world pages.</p>
+
+      <div class="filters">
+        <label for="w-search">Search</label>
+        <input id="w-search" type="search" placeholder="Search world pages." />
+
+        <label for="w-filter">Filter tag</label>
+        <select id="w-filter"><option value="all">All</option></select>
+
+        <label for="w-sort">Sort</label>
+        <select id="w-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="tag">Tag</option>
+        </select>
+
+        <label for="w-group">Group by</label>
+        <select id="w-group">
+          <option value="none">None</option>
+          <option value="tag">Tag</option>
+        </select>
       </div>
-    
-      <div id="category-autofill" class="callout">
-        <h2>Link opportunities & new subpages</h2>
-        <ul>
-          <li>Cross-link entries inside this category and back to parent index.</li>
-          <li>Add subpages for variants, subregions, or related mechanics.</li>
-          <li>Propose new categories where needed (e.g., artifacts, flora/fauna, netcode, rendering).</li>
-          <li>Note missing media/tables and add placeholders in target pages.</li>
-        </ul>
-      </div>
+
+      <div id="w-list" class="link-list"></div>
     </section>
   </main>
+
+  <script>
+    const wData = [
+      { name: 'World Overview', href: 'world_overview.html', tag: 'overview' },
+      { name: 'Eastern Continent', href: 'eastern_continent.html', tag: 'continent' },
+      { name: 'Western Continent', href: 'western_continent.html', tag: 'continent' },
+      { name: 'Independent Realms', href: 'independent_realms.html', tag: 'realms' },
+      { name: 'Mycomind Covenant', href: 'mycomind_covenant.html', tag: 'realm' },
+      { name: 'Cosmology & Epochs', href: 'cosmology_and_epochs.html', tag: 'cosmology' },
+      { name: 'Faction Relationships', href: 'relationships_matrix.html', tag: 'politics' },
+      { name: 'Cultural Tenets', href: 'cultural_tenets.html', tag: 'culture' }
+    ];
+
+    const wSearch = document.getElementById('w-search');
+    const wFilter = document.getElementById('w-filter');
+    const wSort = document.getElementById('w-sort');
+    const wGroup = document.getElementById('w-group');
+    const wList = document.getElementById('w-list');
+
+    const buildWFilter = () => {
+      const values = Array.from(new Set(wData.map(d => d.tag).filter(Boolean))).sort();
+      wFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const renderW = () => {
+      const q = (wSearch.value || '').toLowerCase();
+      const flt = wFilter.value;
+      let items = wData.filter(d => d.name.toLowerCase().includes(q) || (d.tag || '').toLowerCase().includes(q));
+      if (flt !== 'all') items = items.filter(d => d.tag === flt);
+
+      const sorter = key => (a, b) => (a[key] || '').localeCompare(b[key] || '');
+      if (wSort.value === 'name') items.sort(sorter('name'));
+      else if (wSort.value === 'name-desc') items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+      else if (wSort.value === 'tag') items.sort(sorter('tag'));
+
+      const renderItem = d => `<li><a href="${d.href}">${d.name}</a>${d.tag ? `<span class="meta-chip">${d.tag}</span>` : ''}</li>`;
+
+      if (wGroup.value === 'tag') {
+        const grouped = {};
+        items.forEach(d => {
+          const k = d.tag || 'Unspecified';
+          (grouped[k] = grouped[k] || []).push(d);
+        });
+        const html = Object.keys(grouped).sort().map(k => `<h3>${k}</h3><ul class="link-list">${grouped[k].map(renderItem).join('')}</ul>`).join('');
+        wList.innerHTML = html || '<p>No matches.</p>';
+      } else {
+        wList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
+      }
+    };
+
+    wSearch.addEventListener('input', renderW);
+    wFilter.addEventListener('change', renderW);
+    wSort.addEventListener('change', renderW);
+    wGroup.addEventListener('change', renderW);
+    buildWFilter();
+    renderW();
+  </script>
+  <script src="../../../assets/site.js" defer></script>
 </body>
 </html>
