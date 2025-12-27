@@ -6,6 +6,571 @@
   // Inline lexicon fallback for universe auto-linking (forward slashes).
 
   const isVideo = (src = '') => /\.mp4$|\.webm$|\.ogg$|\.mp3$/i.test(src);
+  const saveEndpoint = window.SAVE_ENDPOINT || 'http://localhost:3000/__save';
+  const saveBase = (saveEndpoint || '').replace(/\/__save.*$/, '').replace(/\/$/, '') || 'http://localhost:3000';
+  const createEndpoint = `${saveBase}/__create`;
+  const deleteEndpoint = `${saveBase}/__delete`;
+  const tagsEndpoint = `${saveBase}/__update-tags`;
+  const LEXICON_FALLBACK = Array.isArray(window.UNIVERSE_LEXICON_DATA) ? window.UNIVERSE_LEXICON_DATA : [];
+  const CONTROL_SELECTOR = '.inline-remove, .inline-move, .inline-size, .inline-align-group, .inline-remove-media, .inline-edit-media';
+
+  const fetchJsonSafe = async (url) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const initPrevNextNav = async () => {
+    // Remove any existing baked/duplicate pagers before adding a fresh one.
+    document.querySelectorAll('.pager-floating').forEach(el => el.remove());
+    const pagePath = (location.pathname || '').replace(/\\/g, '/');
+    if (/\bindex\.html?$/i.test(pagePath)) return;
+
+    const nav = document.createElement('div');
+    nav.className = 'pager pager-floating';
+    const makeLink = (text, href, cls) => {
+      const a = document.createElement('a');
+      a.textContent = text;
+      a.href = href;
+      a.className = cls;
+      return a;
+    };
+
+    const upLink = makeLink('Up to Index', 'index.html', 'pager-up');
+    nav.appendChild(upLink);
+
+    // If file://, we cannot fetch neighbors due to CORS; show only Up and disabled prev/next.
+    if (location.protocol === 'file:') {
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '← Prev (serve over http:// to enable)';
+      prevBtn.className = 'pager-prev';
+      prevBtn.disabled = true;
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = 'Next → (serve over http:// to enable)';
+      nextBtn.className = 'pager-next';
+      nextBtn.disabled = true;
+      nav.appendChild(prevBtn);
+      nav.appendChild(nextBtn);
+    } else {
+      // Determine directory and index URL
+      const dir = pagePath.replace(/[^/]+$/, '');
+      const indexUrl = `${dir}index.html`;
+      let html = '';
+      const loadIndexHtml = async () => {
+        try {
+          let res = await fetch(indexUrl);
+          if (res.ok) return await res.text();
+          // fallback: go one directory up if index missing here
+          const parent = dir.replace(/[^/]+\/$/, '');
+          if (parent && parent !== dir) {
+            res = await fetch(`${parent}index.html`);
+            if (res.ok) upLink.href = `${parent}index.html`; // adjust Up link
+            if (res.ok) return await res.text();
+          }
+        } catch (_) { /* ignore */ }
+        return '';
+      };
+      html = await loadIndexHtml();
+
+      let items = [];
+      if (html) {
+        let doc = null;
+        try { doc = new DOMParser().parseFromString(html, 'text/html'); } catch (_) { doc = null; }
+        if (doc) {
+          const anchors = Array.from(doc.querySelectorAll('#c-list a, #t-list a, .link-list a'));
+          if (anchors.length) {
+            items = anchors.map(a => ({
+              name: (a.textContent || '').trim(),
+              href: a.getAttribute('href') || ''
+            })).filter(i => i.href);
+          }
+          if (!items.length) {
+            const scripts = ['c-data-json', 't-data-json', 'tools-data-json'];
+            for (const id of scripts) {
+              const node = doc.getElementById(id);
+              if (!node) continue;
+              try {
+                const data = JSON.parse(node.textContent || '[]');
+                if (Array.isArray(data) && data.length) {
+                  items = data.map(d => ({ name: d.name, href: d.href })).filter(i => i.name && i.href);
+                  break;
+                }
+              } catch (_) { /* ignore */ }
+            }
+          }
+        }
+      }
+      if (!items.length && pagePath.includes('/team/')) {
+        const tags = await fetchJsonSafe(`${dir}../assets/tags.json`);
+        const team = tags && tags.team ? Object.keys(tags.team) : [];
+        items = team.map(slug => ({ name: slug.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), href: `${slug}.html` }));
+      }
+      if (!items.length && pagePath.includes('/densetsu/universe/')) {
+        const base = pagePath.substring(0, pagePath.indexOf('/densetsu/universe/') + '/densetsu/universe/'.length);
+        const lex = await fetchJsonSafe(`${base}lexicon-data.json`);
+        if (Array.isArray(lex)) {
+          const relDir = dir.substring(dir.indexOf('/densetsu/universe/') + '/densetsu/universe/'.length);
+          items = lex
+            .filter(e => (e.Href || '').startsWith(relDir))
+            .map(e => {
+              const href = (e.Href || '').replace(relDir, '');
+              return { name: e.Name, href };
+            })
+            .filter(i => i.name && i.href);
+        }
+      }
+      const current = pagePath.split('/').pop();
+      const idx = items.findIndex(i => (i.href || '').replace(/#.*$/, '') === current);
+      const prev = idx > -1 ? (items[idx - 1] || null) : null;
+      const next = idx > -1 ? (items[idx + 1] || null) : null;
+      if (prev) nav.appendChild(makeLink(`← ${prev.name}`, prev.href, 'pager-prev'));
+      if (next) nav.appendChild(makeLink(`${next.name} →`, next.href, 'pager-next'));
+    }
+
+    // Always float on body so header layout is untouched.
+    nav.style.position = 'fixed';
+    document.body.appendChild(nav);
+
+    const positionPager = () => {
+      const header = document.querySelector('.site-header');
+      const rect = header ? header.getBoundingClientRect() : null;
+      const top = rect ? (rect.top + (rect.height / 2) - (nav.offsetHeight / 2)) : 32;
+      nav.style.left = '50%';
+      nav.style.top = `${Number.isFinite(top) ? top : 32}px`;
+      nav.style.transform = 'translateX(-50%)';
+    };
+    positionPager();
+    window.addEventListener('resize', positionPager);
+  };
+
+  const ensureToolsNavLink = () => {
+    const nav = document.querySelector('.nav-links');
+    if (!nav) return;
+    const pagePath = (location.pathname || '').replace(/\\/g, '/');
+    const parts = pagePath.split('/').filter(Boolean);
+    const idxPages = parts.indexOf('pages');
+    let prefix = '';
+    if (idxPages !== -1) {
+      const after = parts.slice(idxPages + 1); // after 'pages'
+      const depth = Math.max(after.length - 1, 0); // exclude file
+      prefix = '../'.repeat(depth);
+    }
+    const toolsHref = `${prefix}retraissance/tools/index.html`;
+    const exists = Array.from(nav.querySelectorAll('a')).some(a => (a.getAttribute('href') || '').includes('/tools/index.html') || (a.textContent || '').trim().toLowerCase() === 'tools');
+    if (exists) return;
+    const link = document.createElement('a');
+    link.href = toolsHref;
+    link.textContent = 'Tools';
+    const randomBtn = nav.querySelector('.nav-random');
+    if (randomBtn && randomBtn.parentElement === nav) {
+      nav.insertBefore(link, randomBtn);
+    } else {
+      nav.appendChild(link);
+    }
+  };
+
+  // Lightbox helper for inline images/videos (pseudotag media).
+  const bindInlineLightbox = () => {
+    if (document.body.classList.contains('edit-active')) return;
+    const mediaNodes = Array.from(document.querySelectorAll('img.inline-image, video.inline-video'));
+    mediaNodes.forEach(node => {
+      if (node.dataset.lightboxBound) return;
+      node.dataset.lightboxBound = '1';
+      node.addEventListener('click', (e) => {
+        if (document.body.classList.contains('edit-active')) return;
+        if (node.classList.contains('inline-media-missing')) return;
+        e.preventDefault();
+        const liveList = Array.from(document.querySelectorAll('img.inline-image:not(.inline-media-missing), video.inline-video:not(.inline-media-missing)'));
+        const items = liveList.map(n => ({
+          src: n.currentSrc || n.src || '',
+          title: n.getAttribute('alt') || n.dataset.pseudo || ''
+        })).filter(i => i.src);
+        const idx = Math.max(0, liveList.indexOf(node));
+        if (!items.length || idx < 0) return;
+        openOverlay(items, idx);
+      });
+    });
+  };
+
+  // Group Retraissance home + Team + Projects under a single dropdown (less hover flicker).
+  const setupRetraissanceDropdown = () => {
+    const nav = document.querySelector('.nav-links');
+    if (!nav || nav.querySelector('.nav-dropdown.nav-root')) return;
+
+    const findLink = (match) => Array.from(nav.querySelectorAll('a')).find(a => (a.getAttribute('href') || '').includes(match));
+    const home = nav.querySelector('.nav-home') || findLink('index.html');
+    const team = findLink('team/index.html');
+    const projectsDropdown = Array.from(nav.querySelectorAll('.nav-dropdown')).find(d => /projects/i.test(d.textContent || ''));
+    const projectsLink = findLink('projects/index.html');
+
+    const root = document.createElement('div');
+    root.className = 'nav-dropdown nav-root';
+    const toggle = document.createElement('span');
+    toggle.className = 'nav-dropdown-toggle';
+    toggle.textContent = 'Retraissance ▾';
+    const menu = document.createElement('div');
+    menu.className = 'nav-dropdown-menu';
+
+    const addItem = (el, fallbackText) => {
+      if (!el) return;
+      const clone = el.cloneNode(true);
+      if (fallbackText) clone.textContent = fallbackText;
+      menu.appendChild(clone);
+      el.remove();
+    };
+
+    addItem(home, 'Home');
+    addItem(team, 'Team');
+    if (projectsDropdown) {
+      const proj = projectsDropdown.querySelector('a[href*="projects/index"]') || projectsDropdown.querySelector('a');
+      if (proj) {
+        const clone = proj.cloneNode(true);
+        clone.textContent = clone.textContent || 'Projects';
+        menu.appendChild(clone);
+      } else {
+        const link = document.createElement('a');
+        link.href = 'projects/index.html';
+        link.textContent = 'Projects';
+        menu.appendChild(link);
+      }
+      projectsDropdown.remove();
+    } else if (projectsLink) {
+      addItem(projectsLink, 'Projects');
+    } else {
+      const link = document.createElement('a');
+      link.href = 'projects/index.html';
+      link.textContent = 'Projects';
+      menu.appendChild(link);
+    }
+
+    root.appendChild(toggle);
+    root.appendChild(menu);
+    nav.insertBefore(root, nav.firstChild);
+  };
+
+  const resolvePseudoUrl = (url) => {
+    const trimmed = (url || '').trim();
+    if (!trimmed) return '';
+    if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
+    if (trimmed.startsWith('/assets/')) return `${location.origin}/pages/retraissance${trimmed}`;
+    if (trimmed.startsWith('/pages/')) return `${location.origin}${trimmed}`;
+    try { return new URL(trimmed, location.href).toString(); } catch (_) { return trimmed; }
+  };
+
+  // Inline media injector: replace <image>url</image> with <img>, <video [-loop] [-nocontrols]>url</video> with <video>, and <line> with hr.
+  const applyInlineMedia = () => {
+    const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
+    const imgPattern = /<image>([^<]+)<\/image>/i;
+    const vidPattern = /<video([^>]*)>([^<]+)<\/video>/i;
+    const linePattern = /<line><\/line>/i;
+    const walkerFilter = {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (parent) {
+          const tag = parent.tagName;
+          if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
+          if (parent.closest('.no-autolink, [data-autolink="off"]')) return NodeFilter.FILTER_REJECT;
+          if (parent.closest('.link-list')) return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    };
+
+    scopes.forEach(scope => {
+      const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, walkerFilter);
+      const nodes = [];
+      let n;
+      while ((n = walker.nextNode())) nodes.push(n);
+      nodes.forEach(node => {
+        const text = node.nodeValue || '';
+        if (!imgPattern.test(text) && !vidPattern.test(text) && !linePattern.test(text)) return;
+        const frag = document.createDocumentFragment();
+        let remaining = text;
+        while (imgPattern.test(remaining) || vidPattern.test(remaining) || linePattern.test(remaining)) {
+          const nextImg = imgPattern.exec(remaining);
+          const nextVid = vidPattern.exec(remaining);
+          const nextLine = linePattern.exec(remaining);
+          let useMatch = null;
+          const candidates = [];
+          if (nextImg) candidates.push({ type: 'img', match: nextImg });
+          if (nextVid) candidates.push({ type: 'vid', match: nextVid });
+          if (nextLine) candidates.push({ type: 'line', match: nextLine });
+          if (candidates.length) {
+            useMatch = candidates.sort((a, b) => a.match.index - b.match.index)[0];
+          }
+          if (!useMatch) break;
+          const { type, match } = useMatch;
+          const before = remaining.slice(0, match.index);
+          if (before) frag.appendChild(document.createTextNode(before));
+          if (type === 'img') {
+            const raw = (match[1] || '').trim();
+            const url = resolvePseudoUrl(raw);
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = raw.split('/').pop() || 'image';
+            img.dataset.pseudo = raw;
+            img.loading = 'lazy';
+            img.className = 'inline-image';
+            if (!url) {
+              img.classList.add('inline-media-missing');
+              img.dataset.missing = '1';
+            }
+            frag.appendChild(img);
+            remaining = remaining.slice(match.index + match[0].length);
+            continue;
+          }
+          if (type === 'line') {
+            const hr = document.createElement('hr');
+            frag.appendChild(hr);
+            remaining = remaining.slice(match.index + match[0].length);
+            continue;
+          }
+          const rawAttrs = (match[1] || '').toLowerCase();
+          const rawSrc = (match[2] || '').trim();
+          const url = resolvePseudoUrl(rawSrc);
+          const noControls = /-nocontrols/.test(rawAttrs);
+          const loop = /-loop/.test(rawAttrs);
+          const vid = document.createElement('video');
+          vid.src = url;
+          vid.controls = !noControls;
+          vid.loop = loop;
+          if (loop) vid.setAttribute('loop', '');
+          vid.autoplay = true;
+          vid.setAttribute('autoplay', '');
+          vid.muted = true;
+          vid.setAttribute('muted', '');
+          vid.className = 'inline-video';
+          vid.dataset.pseudo = rawSrc;
+          if (!url) {
+            vid.classList.add('inline-media-missing');
+            vid.dataset.missing = '1';
+          }
+          vid.style.maxWidth = '100%';
+          vid.style.display = 'block';
+          vid.style.margin = '12px auto';
+          vid.style.maxHeight = '135vh'; // slightly smaller (~75% of previous)
+          vid.playsInline = true;
+          vid.setAttribute('playsinline', '');
+          let loopDelay = 150;
+          vid.addEventListener('loadedmetadata', () => {
+            const d = vid.duration;
+            if (Number.isFinite(d) && d > 0) {
+              loopDelay = Math.min(750, Math.max(50, d * 50)); // ~5% of duration, clamped
+            }
+          });
+          vid.addEventListener('canplay', () => {
+            try { vid.play(); } catch (_) { /* ignore */ }
+          }, { once: true });
+          if (loop) {
+            vid.addEventListener('ended', () => {
+              setTimeout(() => {
+                try { vid.currentTime = 0; vid.play(); } catch (_) { /* ignore */ }
+              }, loopDelay);
+            });
+          }
+          frag.appendChild(vid);
+          remaining = remaining.slice(match.index + match[0].length);
+        }
+        if (remaining) frag.appendChild(document.createTextNode(remaining));
+
+        // Re-block media nodes to isolate alignment from surrounding text.
+        const rebuilt = document.createDocumentFragment();
+        frag.childNodes.forEach(ch => {
+          if (ch.nodeType === 1 && (ch.tagName === 'IMG' || ch.tagName === 'VIDEO')) {
+            const block = document.createElement('div');
+            block.className = 'inline-media-block';
+            block.contentEditable = 'false';
+            block.appendChild(ch);
+            rebuilt.appendChild(block);
+          } else {
+            rebuilt.appendChild(ch);
+          }
+        });
+
+        const parent = node.parentElement;
+        if (parent && parent.tagName !== 'P' && rebuilt.childNodes.length === 1 && rebuilt.firstChild.classList && rebuilt.firstChild.classList.contains('inline-media-block')) {
+          node.replaceWith(rebuilt);
+        } else if (parent && parent.tagName !== 'P') {
+          const wrap = document.createElement('p');
+          while (rebuilt.firstChild) wrap.appendChild(rebuilt.firstChild);
+          node.replaceWith(wrap);
+        } else {
+          node.replaceWith(rebuilt);
+        }
+      });
+    });
+  };
+
+  const cleanupInlineMediaWrappers = () => {
+    if (document.body.classList.contains('edit-active')) return;
+    document.querySelectorAll('.inline-media-wrap').forEach(wrap => {
+      const parent = wrap.parentElement;
+      if (parent) {
+        while (wrap.firstChild) parent.insertBefore(wrap.firstChild, wrap);
+        wrap.remove();
+      }
+    });
+  };
+
+  const stripEditArtifacts = () => {
+    document.querySelectorAll(`${CONTROL_SELECTOR}, .pager-floating, .edit-bar, .side-strip`).forEach(el => el.remove());
+    cleanupInlineMediaWrappers();
+  };
+
+  // Remove any lingering inline control elements that may have been saved previously.
+  const purgeControlArtifacts = () => {
+    document.querySelectorAll(`${CONTROL_SELECTOR}, .side-strip`).forEach(el => el.remove());
+  };
+
+  const initRandomButton = () => {
+    let nav = document.querySelector('.nav-links');
+    if (!nav) {
+      const header = document.querySelector('.site-header');
+      if (!header) return;
+      nav = document.createElement('nav');
+      nav.className = 'nav-links';
+      header.appendChild(nav);
+    }
+
+    const pagePath = (location.pathname || '').replace(/\\/g, '/');
+    const isFile = location.protocol === 'file:';
+    const existingRand = Array.from(nav.querySelectorAll('.nav-random'));
+    let btn = existingRand[0];
+    existingRand.slice(1).forEach(el => el.remove()); // dedupe extras
+
+    const ensureButton = () => {
+      if (btn) return;
+      btn = document.createElement('button');
+      btn.className = 'nav-btn nav-random';
+      btn.title = 'Random data page';
+      btn.textContent = 'Random';
+      nav.appendChild(btn);
+    };
+    ensureButton();
+
+    // Decorate button (icon) idempotently
+    if (!btn.classList.contains('nav-random-icon')) {
+      const logo = document.querySelector('.nav-logo');
+      if (logo) {
+        try {
+          const srcUrl = new URL(logo.getAttribute('src'), location.href);
+          const randomPath = srcUrl.pathname.replace(/\/res\/LOGO_Retraissance.gif.*$/i, '/media/ui/random.png');
+          btn.style.backgroundImage = `url(${randomPath})`;
+          btn.classList.add('nav-random-icon');
+        } catch (_) { /* ignore */ }
+      }
+    }
+    if (!btn.classList.contains('nav-btn')) btn.classList.add('nav-btn');
+
+    const addCandidate = (list, href, base) => {
+      if (!href || /index\.html?$/i.test(href)) return;
+      try {
+        const abs = new URL(href, base || location.href).href;
+        list.push(abs);
+      } catch (_) { /* ignore */ }
+    };
+
+    const gatherFromIndex = async () => {
+      const dir = pagePath.replace(/[^/]+$/, '');
+      const indexUrl = `${dir}index.html`;
+      const targets = [];
+      try {
+        const res = await fetch(indexUrl);
+        if (!res.ok) return targets;
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const anchors = Array.from(doc.querySelectorAll('#c-list a, #t-list a, .link-list a'));
+        if (anchors.length) {
+          anchors.forEach(a => addCandidate(targets, a.getAttribute('href'), indexUrl));
+        }
+        if (!anchors.length) {
+          ['c-data-json', 't-data-json', 'tools-data-json'].forEach(id => {
+            const node = doc.getElementById(id);
+            if (!node) return;
+            try {
+              const data = JSON.parse(node.textContent || '[]');
+              (Array.isArray(data) ? data : []).forEach(d => addCandidate(targets, d.href, indexUrl));
+            } catch (_) { /* ignore */ }
+          });
+        }
+      } catch (_) { /* ignore */ }
+      return targets;
+    };
+
+    const gatherFromLexicon = async () => {
+      const uniIdx = pagePath.indexOf('/densetsu/universe/');
+      if (uniIdx === -1) return [];
+      const base = pagePath.substring(0, uniIdx + '/densetsu/universe/'.length);
+      const lexUrl = `${location.origin}${base}lexicon-data.json`;
+      const lex = await fetchJsonSafe(lexUrl);
+      const list = Array.isArray(lex) ? lex : [];
+      const targets = [];
+      list.forEach(e => addCandidate(targets, e.Href, `${location.origin}${base}`));
+      return targets;
+    };
+
+    const gatherFromGlobalLexicon = async () => {
+      const rootLex = await fetchJsonSafe(`${location.origin}/pages/retraissance/densetsu/universe/lexicon-data.json`);
+      const list = Array.isArray(rootLex) ? rootLex : [];
+      const targets = [];
+      list.forEach(e => addCandidate(targets, e.Href, `${location.origin}/pages/retraissance/densetsu/universe/`));
+      return targets;
+    };
+
+    const gatherFromTags = async () => {
+      if (!pagePath.includes('/team/')) return [];
+      const dir = pagePath.replace(/[^/]+$/, '');
+      const tags = await fetchJsonSafe(`${dir}../assets/tags.json`);
+      const targets = [];
+      if (tags && tags.team) {
+        Object.keys(tags.team).forEach(slug => addCandidate(targets, `${slug}.html`, dir));
+      }
+      return targets;
+    };
+
+    if (!btn.dataset.randInit) {
+      btn.dataset.randInit = '1';
+      btn.addEventListener('click', async () => {
+        if (isFile) {
+          alert('Random page requires http://localhost:3000 (file:// blocks fetch).');
+          return;
+        }
+        const targets = [];
+
+        ['c-data-json', 't-data-json'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          try {
+            const data = JSON.parse(el.textContent || '[]');
+            (Array.isArray(data) ? data : []).forEach(d => addCandidate(targets, d.href));
+          } catch (_) { /* ignore */ }
+        });
+
+        const fromIndex = await gatherFromIndex();
+        const fromLex = await gatherFromLexicon();
+        const fromTags = await gatherFromTags();
+        const fromGlobalLex = await gatherFromGlobalLexicon();
+        const fromFallback = (LEXICON_FALLBACK || []).map(e => {
+          try {
+            const abs = new URL(e.Href, `${location.origin}/pages/retraissance/densetsu/universe/`).href;
+            return abs;
+          } catch (_) { return null; }
+        }).filter(Boolean);
+        const all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromGlobalLex, ...fromFallback];
+        const uniq = Array.from(new Set(all));
+        if (!uniq.length) {
+          alert('No data pages found for random navigation. Ensure lexicon-data.json is reachable over http.');
+          return;
+        }
+        const choice = uniq[Math.floor(Math.random() * uniq.length)];
+        location.href = choice;
+      });
+    }
+  };
 
   const openOverlay = (items, startIndex = 0) => {
     state.overlayOpen = true;
@@ -99,16 +664,16 @@
           const url = `${prefix}${name}.${ext}`;
           if (!fallback) fallback = url;
           try {
-            let res = await fetch(url, { method: 'HEAD' });
-            if (!res.ok && res.status === 405) {
-              // Some servers disallow HEAD; retry with GET.
-              res = await fetch(url, { method: 'GET' });
-            }
-            if (res.ok) return url;
-          } catch (_) { /* ignore */ }
+              let res = await fetch(url, { method: 'HEAD' });
+              if (!res.ok && res.status === 405) {
+                // Some servers disallow HEAD; retry with GET.
+                res = await fetch(url, { method: 'GET' });
+              }
+              if (res.ok) return url;
+            } catch (_) { /* ignore */ }
         }
       }
-      return fallback;
+      return null;
     }
 
     const items = await probeMedia(baseMediaPath, slug, names, exts, 1);
@@ -117,6 +682,14 @@
 
   const insertCover = (panel, src) => {
     if (!src) return;
+    const existing = panel.querySelector('.page-cover');
+    if (existing) {
+      const img = existing.querySelector('img') || document.createElement('img');
+      img.src = src;
+      img.alt = img.alt || 'Cover';
+      if (!existing.contains(img)) existing.appendChild(img);
+      return;
+    }
     const h1 = panel.querySelector('h1');
     const cover = document.createElement('div');
     cover.className = 'page-cover';
@@ -204,10 +777,12 @@
   };
 
   const insertRightStrip = (portraitSrc, audioSrc) => {
-    if (!portraitSrc && !audioSrc) return;
+    const hasPortrait = !!portraitSrc;
+    const hasAudio = !!audioSrc;
+    if (!hasPortrait && !hasAudio) return;
     const strip = document.createElement('div');
     strip.className = 'side-strip side-strip-right';
-    if (portraitSrc) {
+    if (hasPortrait) {
       const imgWrap = document.createElement('div');
       imgWrap.className = 'portrait-wrap';
       const link = document.createElement('a');
@@ -221,7 +796,7 @@
       imgWrap.appendChild(link);
       strip.appendChild(imgWrap);
     }
-    if (audioSrc) {
+    if (hasAudio) {
       const playerWrap = document.createElement('div');
       playerWrap.className = 'audio-wrap';
       const label = document.createElement('div');
@@ -250,7 +825,13 @@
     if (!scope || isIndex) return;
 
     const markerIdx = pagePath.indexOf(scope.marker);
-    const assetsBase = pagePath.substring(0, markerIdx + scope.marker.length) + 'assets/';
+    let assetsBase;
+    if (scope.marker === '/team/') {
+      // Team assets live at /assets/, not under /team/assets/
+      assetsBase = pagePath.substring(0, markerIdx) + '/assets/';
+    } else {
+      assetsBase = pagePath.substring(0, markerIdx + scope.marker.length) + 'assets/';
+    }
     const slug = pagePath
       .substring(markerIdx + scope.marker.length)
       .replace(/^\//, '')
@@ -308,8 +889,1188 @@
     const audioSrc = await findFirstMedia(baseMedia, slug, audioCandidates, audioExts);
     insertRightStrip(portrait, audioSrc);
   };
+    const enableInlineEdit = () => {
+      const panel = document.querySelector('.panel');
+      if (!panel) return;
+      let editObserver = null;
+      let observerPaused = false;
+    const removeControlOverlays = () => panel.querySelectorAll(CONTROL_SELECTOR).forEach(el => el.remove());
+
+    const bar = document.createElement('div');
+    bar.className = 'edit-bar';
+
+    const wrapInlineMedia = () => {
+      const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+      mediaNodes.forEach(node => {
+        let wrap = node.closest('.inline-media-wrap');
+        if (!wrap) {
+          wrap = document.createElement('div');
+          wrap.className = 'inline-media-wrap';
+          const parent = node.parentElement;
+          parent.insertBefore(wrap, node);
+          wrap.appendChild(node);
+        }
+        // normalize stored size once per media
+        if (!node.dataset.sizePercent) {
+          const parent = node.parentElement;
+          let pct = 100;
+          if (parent && parent.getBoundingClientRect().width) {
+            const w = node.getBoundingClientRect().width || 0;
+            const pw = parent.getBoundingClientRect().width || 1;
+            pct = Math.min(200, Math.max(10, (w / pw) * 100));
+          } else if (node.style.width && node.style.width.endsWith('%')) {
+            pct = parseFloat(node.style.width);
+          }
+          node.dataset.sizePercent = String(pct);
+          node.style.width = `${pct}%`;
+        } else {
+          node.style.width = `${parseFloat(node.dataset.sizePercent || '100')}%`;
+        }
+      });
+    };
+
+    // Ensure inline pseudotag media are wrapped and have edit controls.
+    const ensureMediaControls = () => {
+      wrapInlineMedia();
+      const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
+      mediaNodes.forEach(node => {
+        const wrap = node.closest('.inline-media-wrap');
+        if (!wrap) return;
+        let btnDel = wrap.querySelector('.inline-remove-media');
+        if (!btnDel) {
+          btnDel = document.createElement('button');
+          btnDel.type = 'button';
+          btnDel.className = 'inline-remove-media';
+          btnDel.textContent = '–';
+          btnDel.title = 'Remove media';
+          btnDel.addEventListener('click', (e) => {
+            e.stopPropagation();
+            wrap.remove();
+            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+            if (saveBtn) saveBtn.disabled = false;
+          });
+          wrap.appendChild(btnDel);
+        }
+        let btnEditMedia = wrap.querySelector('.inline-edit-media');
+        if (!btnEditMedia) {
+          btnEditMedia = document.createElement('button');
+          btnEditMedia.type = 'button';
+          btnEditMedia.className = 'inline-edit-media';
+          btnEditMedia.textContent = '?';
+          btnEditMedia.title = 'Edit media source';
+          btnEditMedia.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const current = node.getAttribute('src') || node.dataset.pseudo || '';
+            const loopAttr = node.loop ? ' -loop' : '';
+            const ncAttr = node.controls === false ? ' -nocontrols' : '';
+            const runPicker = () => {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = node.tagName === 'VIDEO' ? 'video/*,audio/*' : 'image/*,video/*,audio/*';
+              input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                const name = file.name;
+                node.dataset.pseudo = name;
+                node.src = resolvePseudoUrl(name);
+                node.classList.remove('inline-media-missing');
+                node.removeAttribute('data-missing');
+                if (node.tagName === 'VIDEO') {
+                  try { node.load(); node.play(); } catch (_) { /* ignore */ }
+                }
+                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+                if (saveBtn) saveBtn.disabled = false;
+              }, { once: true });
+              input.click();
+            };
+            const raw = prompt('Media source (you can include -loop and -nocontrols):', `${current}${loopAttr}${ncAttr}`);
+            if (!raw) {
+              runPicker();
+              return;
+            }
+            const hasLoop = /-loop/.test(raw);
+            const noControls = /-nocontrols/.test(raw);
+            const cleaned = raw.replace(/-loop/gi, '').replace(/-nocontrols/gi, '').trim();
+            node.dataset.pseudo = cleaned;
+            node.src = resolvePseudoUrl(cleaned);
+            if (!cleaned) {
+              node.classList.add('inline-media-missing');
+              node.dataset.missing = '1';
+            } else {
+              node.classList.remove('inline-media-missing');
+              node.removeAttribute('data-missing');
+            }
+            if (node.tagName === 'VIDEO') {
+              node.loop = hasLoop;
+              if (hasLoop) node.setAttribute('loop', '');
+              else node.removeAttribute('loop');
+              node.controls = !noControls;
+              if (noControls) node.setAttribute('controls', 'false');
+              else node.setAttribute('controls', 'true');
+              try { node.load(); node.play(); } catch (_) { /* ignore */ }
+            }
+            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+            if (saveBtn) saveBtn.disabled = false;
+          });
+          wrap.appendChild(btnEditMedia);
+        }
+        const adjustSize = (delta) => {
+          const base = node.dataset.sizePercent
+            ? parseFloat(node.dataset.sizePercent)
+            : (node.style.width && node.style.width.endsWith('%'))
+              ? parseFloat(node.style.width)
+              : 100;
+          const next = Math.min(200, Math.max(10, base + delta));
+          node.dataset.sizePercent = String(next);
+          node.style.width = `${next}%`;
+          const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+          if (saveBtn) saveBtn.disabled = false;
+        };
+        if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
+          node.dataset.sizePercent = String(parseFloat(node.style.width));
+        }
+        let btnShrink = wrap.querySelector('.inline-size-down');
+        if (!btnShrink) {
+          btnShrink = document.createElement('button');
+          btnShrink.type = 'button';
+          btnShrink.className = 'inline-size inline-size-down';
+          btnShrink.textContent = '–';
+          btnShrink.title = 'Shrink media';
+          btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
+          wrap.appendChild(btnShrink);
+        }
+        let btnGrow = wrap.querySelector('.inline-size-up');
+        if (!btnGrow) {
+          btnGrow = document.createElement('button');
+          btnGrow.type = 'button';
+          btnGrow.className = 'inline-size inline-size-up';
+          btnGrow.textContent = '+';
+          btnGrow.title = 'Grow media';
+          btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
+          wrap.appendChild(btnGrow);
+        }
+        let alignGroup = wrap.querySelector('.inline-align-group');
+        if (!alignGroup) {
+          alignGroup = document.createElement('div');
+          alignGroup.className = 'inline-align-group';
+          const makeAlignBtn = (label, value) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'inline-align';
+            b.textContent = label;
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const block = wrap.closest('.inline-media-block') || wrap.parentElement;
+              if (block) block.style.textAlign = value;
+              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+              if (saveBtn) saveBtn.disabled = false;
+            });
+            alignGroup.appendChild(b);
+          };
+          makeAlignBtn('L', 'left');
+          makeAlignBtn('C', 'center');
+          makeAlignBtn('R', 'right');
+          wrap.appendChild(alignGroup);
+        }
+      });
+    };
+
+    const selectionTouchesMediaBlock = () => {
+      const sel = window.getSelection && window.getSelection();
+      if (!sel || !sel.rangeCount) return null;
+      const node = sel.getRangeAt(0).commonAncestorContainer;
+      const el = node.nodeType === 1 ? node : node.parentElement;
+      return el && el.closest && el.closest('.inline-media-block');
+    };
+
+    const execCmd = (cmd) => {
+      const alignmentCmds = ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'];
+      if (alignmentCmds.includes(cmd)) {
+        const sel = window.getSelection && window.getSelection();
+        const range = sel && sel.rangeCount ? sel.getRangeAt(0) : null;
+        const alignValue = cmd === 'justifyCenter' ? 'center' : cmd === 'justifyRight' ? 'right' : cmd === 'justifyFull' ? 'justify' : 'left';
+        const findBlockTarget = (node) => {
+          let el = node && (node.nodeType === 1 ? node : node.parentElement);
+          while (el && el !== document.body) {
+            if (el.classList && el.classList.contains('inline-media-block')) return el;
+            if (el.matches && el.matches('p, h1, h2, h3, h4, li, blockquote, pre, .callout')) return el;
+            if (el.classList && (el.classList.contains('markdown') || el.classList.contains('panel'))) break; // stop climbing at container
+            el = el.parentElement;
+          }
+          return null;
+        };
+        if (range) {
+          const target = findBlockTarget(range.commonAncestorContainer);
+          if (target) {
+            target.style.textAlign = alignValue;
+            btnSave.disabled = false;
+            return;
+          }
+          // If selection is inside the panel but not wrapped in a block, wrap the selection in a paragraph and align it.
+          if (panel.contains(range.commonAncestorContainer)) {
+            const wrap = document.createElement('p');
+            wrap.style.textAlign = alignValue;
+            wrap.appendChild(range.extractContents());
+            range.insertNode(wrap);
+            sel.removeAllRanges();
+            const after = document.createRange();
+            after.setStartAfter(wrap);
+            after.collapse(true);
+            sel.addRange(after);
+            btnSave.disabled = false;
+            wrapInlineMedia();
+            return;
+          }
+        }
+      }
+      try { document.execCommand(cmd, false, null); } catch (_) { /* ignore */ }
+      wrapInlineMedia();
+      sanitizeSelectionContext();
+      btnSave.disabled = false;
+    };
+
+    const formatRow = document.createElement('div');
+    formatRow.className = 'edit-format-row';
+    const mkFmt = (label, title, cmd) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = label;
+      b.title = title;
+      b.addEventListener('mousedown', (e) => e.preventDefault()); // keep text selection
+      b.addEventListener('click', () => execCmd(cmd));
+      formatRow.appendChild(b);
+    };
+    const addCustomBtn = (label, title, handler) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = label;
+      b.title = title;
+      b.addEventListener('mousedown', (e) => e.preventDefault()); // keep selection
+      b.addEventListener('click', handler);
+      formatRow.appendChild(b);
+    };
+    mkFmt('B', 'Bold (Ctrl+B)', 'bold');
+    mkFmt('I', 'Italic (Ctrl+I)', 'italic');
+    mkFmt('U', 'Underline (Ctrl+U)', 'underline');
+    mkFmt('•', 'Toggle bullet list (Ctrl+Shift+8)', 'insertUnorderedList');
+    mkFmt('L', 'Align left', 'justifyLeft');
+    mkFmt('C', 'Align center', 'justifyCenter');
+    mkFmt('R', 'Align right', 'justifyRight');
+    const applyTextBox = () => {
+      const editableRoot = panel.querySelector('.markdown') || panel;
+      const describeRange = () => {
+        const sel = window.getSelection && window.getSelection();
+        const r = sel && sel.rangeCount ? sel.getRangeAt(0) : null;
+        const use = r && editableRoot.contains(r.commonAncestorContainer) ? r : (lastRange && editableRoot.contains(lastRange.commonAncestorContainer) ? lastRange : null);
+        if (!use) return null;
+        const pathFor = (node, root) => {
+          const path = [];
+          let n = node;
+          while (n && n !== root) {
+            const p = n.parentNode;
+            if (!p) return null;
+            path.unshift(Array.prototype.indexOf.call(p.childNodes, n));
+            n = p;
+          }
+          return n === root ? path : null;
+        };
+        const startPath = pathFor(use.startContainer, editableRoot);
+        const endPath = pathFor(use.endContainer, editableRoot);
+        if (!startPath || !endPath) return null;
+        return { startPath, startOffset: use.startOffset, endPath, endOffset: use.endOffset };
+      };
+      const resolveRange = (desc) => {
+        if (!desc) return null;
+        const resolvePath = (path, root) => {
+          let n = root;
+          for (const idx of path) {
+            if (!n.childNodes || idx >= n.childNodes.length) return null;
+            n = n.childNodes[idx];
+          }
+          return n;
+        };
+        const sc = resolvePath(desc.startPath, editableRoot);
+        const ec = resolvePath(desc.endPath, editableRoot);
+        if (!sc || !ec) return null;
+        try {
+          const r = document.createRange();
+          const clampOffset = (node, off) => {
+            if (node.nodeType === 3) return Math.min(off, (node.nodeValue || '').length);
+            return Math.min(off, node.childNodes.length);
+          };
+          r.setStart(sc, clampOffset(sc, desc.startOffset));
+          r.setEnd(ec, clampOffset(ec, desc.endOffset));
+          return r;
+        } catch (_) { return null; }
+      };
+
+      const savedDesc = describeRange();
+
+      setEditable(true);
+
+      let range = resolveRange(savedDesc);
+      const target = editableRoot;
+      if (!range || !target.contains(range.commonAncestorContainer)) {
+        range = document.createRange();
+        range.selectNodeContents(target);
+        range.collapse(false);
+      }
+      const box = document.createElement('div');
+      box.className = 'callout';
+      if (range.collapsed) {
+        const p = document.createElement('p');
+        p.textContent = 'TBD.';
+        box.appendChild(p);
+        range.insertNode(box);
+      } else {
+        const frag = range.extractContents();
+        if (!frag.childNodes.length) {
+          const p = document.createElement('p');
+          p.textContent = 'TBD.';
+          box.appendChild(p);
+        } else {
+          box.appendChild(frag);
+        }
+        range.insertNode(box);
+      }
+      const after = document.createRange();
+      after.setStartAfter(box);
+      after.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(after);
+      lastRange = after.cloneRange();
+      sanitizeSelectionContext();
+      btnSave.disabled = false;
+    };
+    addCustomBtn('Box', 'Wrap selection in a text box', applyTextBox);
+
+    let lastRange = null;
+
+    const btnNew = document.createElement('button');
+    btnNew.textContent = 'New Page';
+    btnNew.className = 'secondary';
+    const btnAddHeading = document.createElement('button');
+    btnAddHeading.textContent = 'Add Heading';
+    btnAddHeading.className = 'secondary';
+    const btnDelete = document.createElement('button');
+    btnDelete.textContent = 'Delete';
+    btnDelete.className = 'danger';
+    const btnEdit = document.createElement('button');
+    btnEdit.textContent = 'Edit';
+    const btnSave = document.createElement('button');
+    btnSave.textContent = 'Save';
+    btnSave.disabled = true;
+    const btnCancel = document.createElement('button');
+    btnCancel.textContent = 'Cancel';
+    btnCancel.className = 'secondary';
+    bar.appendChild(formatRow);
+    bar.appendChild(btnNew);
+    bar.appendChild(btnAddHeading);
+    bar.appendChild(btnDelete);
+    bar.appendChild(btnEdit);
+    bar.appendChild(btnSave);
+    bar.appendChild(btnCancel);
+    document.body.appendChild(bar);
+
+    const targetRoot = panel.querySelector('.markdown') || panel;
+    const saveSelectionIfEditable = () => {
+      const sel = window.getSelection && window.getSelection();
+      if (!sel || !sel.rangeCount) return;
+      const r = sel.getRangeAt(0);
+      if (!targetRoot.contains(r.commonAncestorContainer)) return;
+      lastRange = r.cloneRange();
+    };
+    targetRoot.addEventListener('mouseup', saveSelectionIfEditable);
+    targetRoot.addEventListener('keyup', saveSelectionIfEditable);
+    targetRoot.addEventListener('input', saveSelectionIfEditable);
+    targetRoot.addEventListener('keyup', (e) => {
+      if (!document.body.classList.contains('edit-active')) return;
+      if ((e.ctrlKey || e.metaKey) && ['b','i','u'].includes(e.key.toLowerCase())) {
+        sanitizeSelectionContext();
+      }
+    });
+    document.addEventListener('selectionchange', () => {
+      if (!document.body.classList.contains('edit-active')) return;
+      saveSelectionIfEditable();
+    });
+
+    const setEditable = (on) => {
+      document.body.classList.toggle('edit-active', on);
+      purgeControlArtifacts();
+      btnSave.disabled = !on;
+      btnEdit.disabled = on;
+        const targets = panel.querySelectorAll('.markdown, .callout, .panel > h1, .panel > .eyebrow, [data-editable="true"], .editable-text, .panel > p');
+        targets.forEach(el => { el.contentEditable = on; });
+        if (on) {
+          targets.forEach(el => sanitizeEditableElement(el));
+          ensureMediaControls();
+        }
+
+      // Protect buttons from being edited (typing/cloning/deleting via contentEditable).
+      const lockButtons = () => {
+        const btns = panel.querySelectorAll('button');
+        btns.forEach(b => {
+          b.contentEditable = 'false';
+          b.setAttribute('draggable', 'false');
+          if (!b.dataset.noEditGuard) {
+            b.addEventListener('keydown', (e) => e.preventDefault());
+            b.addEventListener('beforeinput', (e) => e.preventDefault());
+            b.dataset.noEditGuard = '1';
+          }
+        });
+      };
+      lockButtons();
+
+      const runWithPause = (fn) => {
+        observerPaused = true;
+        try { fn(); } finally { observerPaused = false; }
+      };
+
+      const attachControls = (el, { allowMove = false, pairWithNext = false } = {}) => {
+        let removeBtn = el.querySelector('.inline-remove');
+        if (on && !removeBtn) {
+          removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'inline-remove';
+          removeBtn.textContent = '-';
+          removeBtn.title = 'Remove block';
+          removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            runWithPause(() => {
+              const next = el.nextElementSibling;
+              if (el.parentElement) el.remove();
+              if (pairWithNext && next && (next.matches('.callout') || next.matches('p') || next.matches('div'))) {
+                if (confirm('Remove following block too?')) next.remove();
+              }
+              btnSave.disabled = false;
+            });
+          });
+          el.appendChild(removeBtn);
+        } else if (!on && removeBtn) {
+          removeBtn.remove();
+        }
+
+        if (!allowMove) return;
+        const ensureBtn = (cls, label, title, handler) => {
+          let btn = el.querySelector(`.${cls}`);
+          if (on && !btn) {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `inline-move ${cls}`;
+            btn.textContent = label;
+            btn.title = title;
+            btn.addEventListener('click', handler);
+            el.appendChild(btn);
+          } else if (!on && btn) {
+            btn.remove();
+          }
+        };
+
+        const movePair = (dir) => {
+          // Operate on the nearest direct child of .markdown or .panel to avoid trapping inside deeper blocks.
+          const findContainer = (node) => {
+            let n = node;
+            while (n && n.parentElement && !n.parentElement.classList.contains('markdown') && !n.parentElement.classList.contains('panel')) {
+              n = n.parentElement;
+            }
+            if (n && n.parentElement && (n.parentElement.classList.contains('markdown') || n.parentElement.classList.contains('panel'))) {
+              return { container: n, parent: n.parentElement };
+            }
+            return null;
+          };
+          const ctx = findContainer(el);
+          if (!ctx) return;
+          const { container, parent } = ctx;
+          const next = container.nextElementSibling;
+          const pair = [container];
+          if (pairWithNext && next && (next.matches('.callout') || next.matches('p') || next.matches('div'))) pair.push(next);
+          runWithPause(() => {
+            if (dir === 'up') {
+              const target = container.previousElementSibling;
+              if (!target || !parent) return;
+              pair.forEach(node => parent.insertBefore(node, target));
+            } else {
+              const after = pair[pair.length - 1].nextElementSibling;
+              if (!after || !parent) return;
+              pair.reverse().forEach(node => parent.insertBefore(node, after.nextElementSibling));
+            }
+            btnSave.disabled = false;
+          });
+        };
+
+        ensureBtn('inline-move-up', '↑', 'Move up', (e) => { e.stopPropagation(); movePair('up'); });
+        ensureBtn('inline-move-down', '↓', 'Move down', (e) => { e.stopPropagation(); movePair('down'); });
+      };
+
+      const refreshControls = () => {
+        removeControlOverlays();
+        lockButtons();
+        const headings = panel.querySelectorAll('h1, h2, h3');
+        headings.forEach(h => attachControls(h, { allowMove: true, pairWithNext: true }));
+        const blocks = panel.querySelectorAll('.callout, .markdown p, .panel > p, .source-excerpt, pre.source-excerpt, pre');
+        blocks.forEach(b => {
+          const isCallout = b.classList && b.classList.contains('callout');
+          attachControls(b, { allowMove: isCallout, pairWithNext: false });
+        });
+        // Ensure any control buttons remain non-editable/undraggable overlays.
+        panel.querySelectorAll(CONTROL_SELECTOR).forEach(btn => {
+          btn.contentEditable = 'false';
+          btn.setAttribute('draggable', 'false');
+          btn.tabIndex = -1;
+          btn.style.userSelect = 'none';
+          btn.addEventListener('mousedown', (e) => e.stopPropagation(), { once: true });
+          btn.addEventListener('click', (e) => e.stopPropagation(), { once: true });
+        });
+        // Re-wrap media in case surrounding alignment changes stripped wrappers.
+        wrapInlineMedia();
+        ensureMediaControls();
+      };
+
+      refreshControls();
+
+      // unwrap any media wrappers when leaving edit mode
+      if (!on) {
+        panel.querySelectorAll('.inline-media-wrap').forEach(wrap => {
+          const parent = wrap.parentElement;
+          if (parent) {
+            while (wrap.firstChild) parent.insertBefore(wrap.firstChild, wrap);
+            wrap.remove();
+          }
+        });
+      } else {
+        ensureMediaControls();
+      }
+        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+        mediaNodes.forEach(node => {
+          let btnDel = node.closest('.inline-media-wrap')?.querySelector('.inline-remove-media');
+          if (!btnDel) {
+            const wrap = node.closest('.inline-media-wrap');
+            if (!wrap) return;
+            btnDel = document.createElement('button');
+            btnDel.type = 'button';
+            btnDel.className = 'inline-remove-media';
+            btnDel.textContent = '–';
+            btnDel.title = 'Remove media';
+            btnDel.addEventListener('click', (e) => {
+              e.stopPropagation();
+              wrap.remove();
+              btnSave.disabled = false;
+            });
+            wrap.appendChild(btnDel);
+          }
+          let btnEditMedia = node.closest('.inline-media-wrap')?.querySelector('.inline-edit-media');
+          if (!btnEditMedia) {
+            btnEditMedia = document.createElement('button');
+            btnEditMedia.type = 'button';
+            btnEditMedia.className = 'inline-edit-media';
+            btnEditMedia.textContent = '✎';
+            btnEditMedia.title = 'Edit media source';
+            btnEditMedia.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const current = node.getAttribute('src') || node.dataset.pseudo || '';
+              const loopAttr = node.loop ? ' -loop' : '';
+              const ncAttr = node.controls === false ? ' -nocontrols' : '';
+              const runPicker = () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = node.tagName === 'VIDEO' ? 'video/*,audio/*' : 'image/*,video/*,audio/*';
+                input.addEventListener('change', () => {
+                  const file = input.files && input.files[0];
+                  if (!file) return;
+                  const name = file.name;
+                  node.dataset.pseudo = name;
+                  node.src = resolvePseudoUrl(name);
+                  node.classList.remove('inline-media-missing');
+                  node.removeAttribute('data-missing');
+                  if (node.tagName === 'VIDEO') {
+                    try { node.load(); node.play(); } catch (_) { /* ignore */ }
+                  }
+                  btnSave.disabled = false;
+                }, { once: true });
+                input.click();
+              };
+              const raw = prompt('Media source (you can include -loop and -nocontrols):', `${current}${loopAttr}${ncAttr}`);
+              if (!raw) {
+                runPicker();
+                return;
+              }
+              const hasLoop = /-loop/.test(raw);
+              const noControls = /-nocontrols/.test(raw);
+              const cleaned = raw.replace(/-loop/gi, '').replace(/-nocontrols/gi, '').trim();
+              node.dataset.pseudo = cleaned;
+              node.src = resolvePseudoUrl(cleaned);
+              if (!cleaned) {
+                node.classList.add('inline-media-missing');
+                node.dataset.missing = '1';
+              } else {
+                node.classList.remove('inline-media-missing');
+                node.removeAttribute('data-missing');
+              }
+              if (node.tagName === 'VIDEO') {
+                node.loop = hasLoop;
+                if (hasLoop) node.setAttribute('loop', '');
+                else node.removeAttribute('loop');
+                node.controls = !noControls;
+                if (noControls) node.setAttribute('controls', 'false');
+                else node.setAttribute('controls', 'true');
+                try { node.load(); node.play(); } catch (_) { /* ignore */ }
+              }
+              btnSave.disabled = false;
+            });
+            wrap.appendChild(btnEditMedia);
+          }
+          const adjustSize = (delta) => {
+            const base = node.dataset.sizePercent
+              ? parseFloat(node.dataset.sizePercent)
+              : (node.style.width && node.style.width.endsWith('%'))
+                ? parseFloat(node.style.width)
+                : 100;
+            const next = Math.min(200, Math.max(10, base + delta));
+            node.dataset.sizePercent = String(next);
+            node.style.width = `${next}%`;
+            btnSave.disabled = false;
+          };
+          // initialize dataset size from existing width once
+          if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
+            node.dataset.sizePercent = String(parseFloat(node.style.width));
+          }
+          let btnShrink = wrap.querySelector('.inline-size-down');
+          if (!btnShrink) {
+            btnShrink = document.createElement('button');
+            btnShrink.type = 'button';
+            btnShrink.className = 'inline-size inline-size-down';
+            btnShrink.textContent = '–';
+            btnShrink.title = 'Decrease size (5%)';
+            btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
+            wrap.appendChild(btnShrink);
+          }
+          let btnGrow = wrap.querySelector('.inline-size-up');
+          if (!btnGrow) {
+            btnGrow = document.createElement('button');
+            btnGrow.type = 'button';
+            btnGrow.className = 'inline-size inline-size-up';
+            btnGrow.textContent = '+';
+            btnGrow.title = 'Increase size (5%)';
+            btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
+            wrap.appendChild(btnGrow);
+          }
+          const applyAlign = (val) => {
+            node.dataset.align = val;
+            node.style.display = 'block';
+            node.style.marginTop = node.style.marginTop || '12px';
+            node.style.marginBottom = node.style.marginBottom || '12px';
+            if (val === 'left') {
+              node.style.marginLeft = '0';
+              node.style.marginRight = 'auto';
+            } else if (val === 'right') {
+              node.style.marginLeft = 'auto';
+              node.style.marginRight = '0';
+            } else {
+              node.style.marginLeft = 'auto';
+              node.style.marginRight = 'auto';
+            }
+            btnSave.disabled = false;
+          };
+          const alignGroup = wrap.querySelector('.inline-align-group') || (() => {
+            const g = document.createElement('div');
+            g.className = 'inline-align-group';
+            wrap.appendChild(g);
+            return g;
+          })();
+          const ensureAlignBtn = (cls, label, val) => {
+            let b = alignGroup.querySelector(`.${cls}`);
+            if (!b) {
+              b = document.createElement('button');
+              b.type = 'button';
+              b.className = `inline-align ${cls}`;
+              b.textContent = label;
+              b.addEventListener('click', (e) => { e.stopPropagation(); applyAlign(val); });
+              alignGroup.appendChild(b);
+            }
+          };
+          ensureAlignBtn('inline-align-left', '←', 'left');
+          ensureAlignBtn('inline-align-center', '•', 'center');
+          ensureAlignBtn('inline-align-right', '→', 'right');
+          applyAlign(node.dataset.align || 'center');
+          // ease clicking overlays by disabling pointer events on media while editing
+          if (on) {
+            node.dataset._pe = node.style.pointerEvents || '';
+            node.style.pointerEvents = 'none';
+          }
+        });
+
+      if (!on) {
+        // restore pointer events on media
+        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+        mediaNodes.forEach(node => {
+          if (node.dataset && node.dataset._pe !== undefined) {
+            node.style.pointerEvents = node.dataset._pe;
+            delete node.dataset._pe;
+          } else {
+            node.style.pointerEvents = '';
+          }
+        });
+        if (window.getSelection) {
+          const sel = window.getSelection();
+          if (sel) sel.removeAllRanges();
+        }
+      } else {
+        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+        mediaNodes.forEach(node => {
+          node.dataset._pe = node.style.pointerEvents || '';
+          node.style.pointerEvents = 'none';
+        });
+      }
+
+      if (editObserver) {
+        editObserver.disconnect();
+        editObserver = null;
+      }
+      if (on) {
+        editObserver = new MutationObserver((mutations) => {
+          if (!document.body.classList.contains('edit-active')) return;
+          if (observerPaused) return;
+          // Ignore churn that only touches control overlays.
+          const onlyControls = mutations.every(m => {
+            const nodes = [...m.addedNodes, ...m.removedNodes];
+            return nodes.every(n => {
+              const el = n.nodeType === 1 ? n : null;
+              return el && el.matches && el.matches(CONTROL_SELECTOR);
+            });
+          });
+          if (onlyControls) return;
+          observerPaused = true;
+          try { refreshControls(); } catch (err) { console.error('refreshControls failed', err); }
+          observerPaused = false;
+        });
+        editObserver.observe(panel, { childList: true, subtree: true });
+      }
+    };
+
+    // Plain-text paste handler to normalize formatting to site styles.
+    const sanitizeNode = (node) => {
+      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H2','H3','H4','BLOCKQUOTE','PRE','CODE','A','HR','LINE','DIV','IMG','VIDEO']);
+      const transformSpan = (span) => {
+        const style = (span.getAttribute('style') || '').toLowerCase();
+        const isBold = /font-weight:\s*(bold|[7-9]\d\d|1\d00)/.test(style);
+        const isItalic = /font-style:\s*italic/.test(style);
+        const isUnderline = /text-decoration:\s*underline/.test(style);
+        const frag = document.createDocumentFragment();
+        let container = frag;
+        if (isBold) {
+          const s = document.createElement('strong');
+          container.appendChild(s);
+          container = s;
+        }
+        if (isItalic) {
+          const em = document.createElement('em');
+          container.appendChild(em);
+          container = em;
+        }
+        if (isUnderline) {
+          const u = document.createElement('u');
+          container.appendChild(u);
+          container = u;
+        }
+        span.childNodes.forEach(ch => {
+          const clean = sanitizeNode(ch);
+          if (clean) container.appendChild(clean);
+        });
+        return frag;
+      };
+      if (node.nodeType === Node.TEXT_NODE) return document.createTextNode(node.nodeValue || '');
+      if (node.nodeType !== Node.ELEMENT_NODE) return null;
+      const tag = node.tagName;
+      if (tag === 'SPAN') return transformSpan(node);
+      if (!allowed.has(tag)) {
+        const frag = document.createDocumentFragment();
+        node.childNodes.forEach(ch => {
+          const clean = sanitizeNode(ch);
+          if (clean) frag.appendChild(clean);
+        });
+        return frag;
+      }
+      if (tag === 'DIV' && !node.classList.contains('callout') && !node.classList.contains('inline-media-block')) {
+        const frag = document.createDocumentFragment();
+        node.childNodes.forEach(ch => {
+          const clean = sanitizeNode(ch);
+          if (clean) frag.appendChild(clean);
+        });
+        return frag;
+      }
+      if (tag === 'DIV' && node.classList.contains('inline-media-block')) {
+        const el = document.createElement('div');
+        el.className = 'inline-media-block';
+        el.contentEditable = 'false';
+        if (node.style && node.style.textAlign) el.style.textAlign = node.style.textAlign;
+        node.childNodes.forEach(ch => {
+          const clean = sanitizeNode(ch);
+          if (clean) el.appendChild(clean);
+        });
+        return el;
+      }
+      if (tag === 'IMG' || tag === 'VIDEO') {
+        const el = document.createElement(tag.toLowerCase());
+        const src = node.getAttribute('src') || '';
+        if (src) el.setAttribute('src', src);
+        if (node.className) el.className = node.className;
+        if (node.dataset.sizePercent) el.dataset.sizePercent = node.dataset.sizePercent;
+        if (node.dataset.pseudo) el.dataset.pseudo = node.dataset.pseudo;
+        if (node.dataset.missing) el.dataset.missing = node.dataset.missing;
+        if (!src) {
+          el.classList.add('inline-media-missing');
+          el.dataset.missing = '1';
+        }
+        if (tag === 'VIDEO') {
+          const attrs = ['controls', 'loop', 'autoplay', 'muted', 'playsinline'];
+          attrs.forEach(a => {
+            if (node.hasAttribute(a)) el.setAttribute(a, node.getAttribute(a) || '');
+          });
+        }
+        return el;
+      }
+      let mappedTag = tag === 'B' ? 'strong' : tag === 'I' ? 'em' : tag.toLowerCase();
+      if (tag === 'LINE') mappedTag = 'hr';
+      const el = document.createElement(mappedTag);
+      if (tag === 'DIV' && node.classList.contains('callout')) el.className = 'callout';
+      if (tag === 'LINE') el.dataset.pseudoline = '1';
+      if (node.style && node.style.textAlign) el.style.textAlign = node.style.textAlign;
+      if (tag === 'A') {
+        const href = node.getAttribute('href') || '';
+        if (!/^javascript:/i.test(href)) el.setAttribute('href', href);
+      }
+      node.childNodes.forEach(ch => {
+        const clean = sanitizeNode(ch);
+        if (clean) el.appendChild(clean);
+      });
+      return el;
+    };
+
+    const sanitizeHtmlFragment = (html) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+      const root = doc.body.firstChild;
+      const frag = document.createDocumentFragment();
+      root.childNodes.forEach(ch => {
+        const clean = sanitizeNode(ch);
+        if (clean) frag.appendChild(clean);
+      });
+      return frag;
+    };
+
+    const sanitizeEditableElement = (el) => {
+      // Work on a clone stripped of overlay controls to avoid persisting their symbols.
+      const temp = el.cloneNode(true);
+      temp.querySelectorAll(CONTROL_SELECTOR).forEach(n => n.remove());
+      const html = temp.innerHTML;
+      const frag = sanitizeHtmlFragment(html);
+      // Drop empty headings that may be introduced during sanitization/pasting.
+      Array.from(frag.querySelectorAll ? frag.querySelectorAll('h1,h2,h3,h4') : []).forEach(node => {
+        if (!node.textContent || !node.textContent.trim()) node.remove();
+      });
+      el.innerHTML = '';
+      el.appendChild(frag);
+    };
+
+    const sanitizeSelectionContext = () => {
+      const sel = window.getSelection && window.getSelection();
+      if (!sel || !sel.rangeCount) return;
+      const node = sel.anchorNode;
+      const editable = node && (node.nodeType === 1 ? node : node.parentElement) && (node.nodeType === 1 ? node : node.parentElement).closest && (node.nodeType === 1 ? node : node.parentElement).closest('.markdown, .callout, [contenteditable="true"]');
+      if (editable) sanitizeEditableElement(editable);
+    };
+
+    const handlePaste = (e) => {
+      if (!document.body.classList.contains('edit-active')) return;
+      const target = e.target;
+      if (!(target && (target.isContentEditable || target.closest('[contenteditable=\"true\"]')))) return;
+      const html = (e.clipboardData && e.clipboardData.getData('text/html')) || '';
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      if (!html && !text) return;
+      e.preventDefault();
+      const sel = window.getSelection();
+      if (!sel || !sel.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      let frag = null;
+      if (html) {
+        frag = sanitizeHtmlFragment(html);
+      } else {
+        const lines = text.replace(/\r\n/g, '\n').split('\n');
+        frag = document.createDocumentFragment();
+        lines.forEach((line, idx) => {
+          if (idx > 0) frag.appendChild(document.createElement('br'));
+          frag.appendChild(document.createTextNode(line));
+        });
+      }
+      range.deleteContents();
+      range.insertNode(frag);
+      sel.collapse(range.endContainer, range.endOffset);
+      btnSave.disabled = false;
+    };
+    document.addEventListener('paste', handlePaste);
+    const selectionTouchesControl = () => {
+      const sel = window.getSelection();
+      if (!sel || !sel.rangeCount) return false;
+      const nodes = [sel.anchorNode, sel.focusNode];
+      return nodes.some(n => {
+        const el = n && (n.nodeType === 1 ? n : n.parentElement);
+        return el && el.closest(CONTROL_SELECTOR);
+      });
+    };
+    const handleProtectedKeys = (e) => {
+      if (!document.body.classList.contains('edit-active')) return;
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        if (selectionTouchesControl() || (e.target && e.target.closest(CONTROL_SELECTOR))) {
+          e.preventDefault();
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'x') {
+        if (selectionTouchesControl() || (e.target && e.target.closest(CONTROL_SELECTOR))) {
+          e.preventDefault();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleProtectedKeys, true);
+    const normalizeInputPath = (input) => {
+      if (!input) return null;
+      const clean = input.replace(/\\/g, '/').replace(/^\/+/, '');
+      if (clean.startsWith('pages/')) return clean;
+      return `pages/retraissance/${clean}`;
+    };
+
+    const slugify = (s = '') => (s || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '') || 'untitled';
+
+    const promptCreatePage = async () => {
+      const available = ['character','enemy','creature','location','artifact','culture','faction','concept','event','world','team','tool'];
+      const template = (prompt(`Template? (${available.join('/')})`, 'character') || 'character').toLowerCase();
+      const chosen = available.includes(template) ? template : 'character';
+      const title = prompt('Page title:', 'Untitled') || 'Untitled';
+      const slug = slugify(title);
+      const defaultPaths = {
+        character: `pages/retraissance/densetsu/universe/characters/${slug}.html`,
+        enemy: `pages/retraissance/densetsu/universe/enemies/${slug}.html`,
+        creature: `pages/retraissance/densetsu/universe/creatures/${slug}.html`,
+        location: `pages/retraissance/densetsu/universe/locations/${slug}.html`,
+        artifact: `pages/retraissance/densetsu/universe/artifacts/${slug}.html`,
+        culture: `pages/retraissance/densetsu/universe/cultures/${slug}.html`,
+        faction: `pages/retraissance/densetsu/universe/factions/${slug}.html`,
+        concept: `pages/retraissance/densetsu/universe/concepts/${slug}.html`,
+        event: `pages/retraissance/densetsu/universe/events/${slug}.html`,
+        world: `pages/retraissance/densetsu/universe/world/${slug}.html`,
+        team: `pages/retraissance/team/${slug}.html`,
+        tool: `pages/retraissance/tools/${slug}.html`,
+      };
+
+      const path = defaultPaths[chosen] || `pages/retraissance/${slug}.html`;
+      const override = prompt(`Confirm path or provide custom for ${chosen}:\n${path}`, path);
+      const finalPath = normalizeInputPath(override);
+      if (!finalPath) return;
+      const fixedPath = /\.html?$/i.test(finalPath) ? finalPath : `${finalPath}.html`;
+
+      try {
+        const res = await fetch(createEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: fixedPath, title, template: chosen })
+        });
+        if (!res.ok) throw new Error(`Create failed ${res.status}`);
+        // On success, reload to pick up updated indexes (no alert to stay silent)
+        location.reload(true);
+      } catch (err) {
+        console.error('Create failed', err);
+        alert(`Create failed: ${err.message}`);
+      }
+    };
+
+    const promptDeletePage = async () => {
+      // Normalize path to be relative to repo root (start at pages/retraissance/...).
+      const pagePath = (location.pathname || '').replace(/\\/g, '/');
+      const relMatch = pagePath.match(/(pages\/retraissance\/.*)$/);
+      const normPath = relMatch ? relMatch[1] : pagePath.replace(/^\/+/, '');
+      if (!normPath) return alert('Cannot resolve page path for deletion.');
+      if (!confirm(`Delete this page?\n${normPath}`)) return;
+      const removeMedia = confirm('Also delete associated media folder?');
+      try {
+        const res = await fetch(deleteEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: normPath, removeMedia })
+        });
+        if (!res.ok) throw new Error(`Delete failed ${res.status}`);
+        // Navigate up one level to avoid 404
+        const parent = pagePath.replace(/[^/]+$/, 'index.html');
+        location.href = parent;
+      } catch (err) {
+        console.error('Delete failed', err);
+        alert(`Delete failed: ${err.message}`);
+      }
+    };
+
+    const doSave = async () => {
+      btnSave.disabled = true;
+      btnEdit.disabled = true;
+      // Normalize path to be relative to repo root (start at pages/retraissance/...).
+      const pagePath = (location.pathname || '').replace(/\\/g, '/');
+      const relMatch = pagePath.match(/(pages\/retraissance\/.*)$/);
+      const normPath = relMatch ? relMatch[1] : pagePath.replace(/^\/+/, '');
+      stripEditArtifacts();
+      const payload = {
+        path: normPath || (location.pathname || '').replace(/^\//, ''),
+        html: document.documentElement.outerHTML
+      };
+      try {
+        const res = await fetch(saveEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          mode: 'cors'
+        });
+        if (!res.ok) throw new Error(`Save failed ${res.status}`);
+        setEditable(false);
+        btnEdit.disabled = false;
+        location.reload(true);
+      } catch (err) {
+        btnSave.disabled = false;
+        btnEdit.disabled = false;
+        console.error('Save failed', err, payload);
+        alert(`Save failed: ${err.message}\nEnsure dev save server is running: node scripts/dev-save-server.js`);
+      }
+    };
+
+    btnNew.addEventListener('click', promptCreatePage);
+    btnDelete.addEventListener('click', promptDeletePage);
+
+    const addHeadingBlock = () => {
+      setEditable(true);
+      const target = panel.querySelector('.markdown') || panel;
+      const heading = prompt('Heading text:', 'New Section');
+      if (!heading) return;
+      const h2 = document.createElement('h2');
+      h2.textContent = heading;
+      const block = document.createElement('div');
+      block.className = 'callout';
+      block.innerHTML = '<p>TBD.</p>';
+
+      const sel = window.getSelection && window.getSelection();
+      let range = null;
+      if (lastRange && target.contains(lastRange.commonAncestorContainer)) {
+        range = lastRange.cloneRange();
+      } else if (sel && sel.rangeCount && target.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+        range = sel.getRangeAt(0).cloneRange();
+      }
+      const frag = document.createDocumentFragment();
+      frag.appendChild(h2);
+      frag.appendChild(block);
+
+      const findPanelChild = (node) => {
+        let n = node;
+        if (n && n.nodeType === Node.TEXT_NODE) n = n.parentElement;
+        while (n && n !== target && n.parentElement !== target) {
+          n = n.parentElement;
+        }
+        return (n && n.parentElement === target) ? n : null;
+      };
+
+      const insertAfter = (ref, fragment) => {
+        if (ref && ref.nextSibling) target.insertBefore(fragment, ref.nextSibling);
+        else target.appendChild(fragment);
+      };
+
+      const isEmptyBlock = (el) => {
+        if (!el) return false;
+        if (el.querySelector && el.querySelector('img, video, hr')) return false;
+        const text = (el.textContent || '').trim();
+        return text.length === 0;
+      };
+
+      const withinTarget = range && target.contains(range.commonAncestorContainer);
+      if (withinTarget) {
+        const panelChild = findPanelChild(range.commonAncestorContainer);
+        if (panelChild) {
+          // if current block is empty, replace it; else find next empty block; else insert after.
+          if (isEmptyBlock(panelChild)) {
+            target.insertBefore(frag, panelChild);
+            panelChild.remove();
+          } else {
+            let cursor = panelChild.nextElementSibling;
+            let placed = false;
+            while (cursor) {
+              if (isEmptyBlock(cursor)) {
+                target.insertBefore(frag, cursor);
+                cursor.remove();
+                placed = true;
+                break;
+              }
+              cursor = cursor.nextElementSibling;
+            }
+            if (!placed) insertAfter(panelChild, frag);
+          }
+        } else {
+          target.appendChild(frag);
+        }
+        if (sel) {
+          const after = document.createRange();
+          after.setStartAfter(block);
+          after.collapse(true);
+          sel.removeAllRanges();
+          sel.addRange(after);
+        }
+      } else {
+        target.appendChild(frag);
+      }
+      // remember new position after insertion
+      const afterBlockRange = document.createRange();
+      afterBlockRange.setStartAfter(block);
+      afterBlockRange.collapse(true);
+      lastRange = afterBlockRange.cloneRange();
+      document.body.classList.add('edit-active');
+      btnSave.disabled = false;
+    };
+    btnAddHeading.addEventListener('click', addHeadingBlock);
+
+    btnEdit.addEventListener('click', () => setEditable(true));
+    btnSave.addEventListener('click', doSave);
+    btnCancel.addEventListener('click', () => location.reload(true));
+    // ensure we start in view mode even if markup had edit-active
+    setEditable(false);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        if (!btnSave.disabled) doSave();
+      }
+      if (e.ctrlKey && e.shiftKey && (e.key === '8' || e.key === '*')) {
+        e.preventDefault();
+        execCmd('insertUnorderedList');
+      }
+      if (e.key === 'Escape' && document.body.classList.contains('edit-active')) {
+        e.preventDefault();
+        location.reload(true);
+      }
+    });
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
-    initMediaLayout();
+    // Remove any baked edit bars/pagers/side-strips and edit-active flag before initializing.
+    stripEditArtifacts();
+    document.body.classList.remove('edit-active');
+    try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
+    try { applyInlineMedia(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
+    try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
+    // Fallback: if the toolbar failed to appear, attempt a second pass after a tick.
+    if (!document.querySelector('.edit-bar')) {
+      setTimeout(() => {
+        try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit retry failed', err); }
+      }, 0);
+    }
+    try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
+    try { setupRetraissanceDropdown(); } catch (err) { console.error('setupRetraissanceDropdown failed', err); }
+    try { ensureToolsNavLink(); } catch (err) { console.error('ensureToolsNavLink failed', err); }
+    try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
 
     // Universe autolink from lexicon data
     const pagePath = (location.pathname || '').replace(/\\\\/g, '/');
@@ -385,11 +2146,21 @@
 
       fetch(lexUrl).then(r => r.json()).then(data => {
         if (Array.isArray(data) && data.length) apply(data);
-        else apply(UNIVERSE_LEXICON_DATA);
-      }).catch(() => apply(UNIVERSE_LEXICON_DATA));
+        else apply(LEXICON_FALLBACK);
+      }).catch(() => apply(LEXICON_FALLBACK));
     }
+
+    // Inline media tokens (images/videos) everywhere
+    try { applyInlineMedia(); } catch (err) { console.error('inline media inject failed', err); }
+    try { cleanupInlineMediaWrappers(); } catch (err) { console.error('media wrapper cleanup failed', err); }
   });
 
-  window.wikiUi = {};
+  window.wikiUi = {
+    endpoints: {
+      save: saveEndpoint,
+      create: createEndpoint,
+      delete: deleteEndpoint,
+      tags: tagsEndpoint,
+    }
+  };
 })();
-
