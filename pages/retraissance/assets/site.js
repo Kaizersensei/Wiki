@@ -256,17 +256,61 @@
     const trimmed = (url || '').trim();
     if (!trimmed) return '';
     if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
-    if (trimmed.startsWith('/assets/')) return `${location.origin}/pages/retraissance${trimmed}`;
-    if (trimmed.startsWith('/pages/')) return `${location.origin}${trimmed}`;
+    const isFile = (location.protocol === 'file:');
+
+    const resolveLocal = (p) => {
+      const rel = isFile && p.startsWith('/') ? p.slice(1) : p;
+      try { return new URL(rel, location.href).toString(); } catch (_) { return rel; }
+    };
+
+    if (trimmed.startsWith('/assets/')) {
+      const full = `/pages/retraissance${trimmed}`;
+      return isFile ? resolveLocal(full) : `${location.origin}${full}`;
+    }
+    if (trimmed.startsWith('/pages/')) {
+      return isFile ? resolveLocal(trimmed) : `${location.origin}${trimmed}`;
+    }
+
+    // If it's just a filename (no slash), try to auto-resolve against the page's media folder.
+    const isBareName = !/[\\/]/.test(trimmed);
+    if (isBareName) {
+      const pagePath = (location.pathname || '').replace(/\\/g, '/');
+      const slug = (pagePath.split('/').pop() || '').replace(/\.html?$/i, '');
+      const candidates = [];
+      // Team pages
+      if (/\/retraissance\/team\//.test(pagePath)) {
+        candidates.push(`/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
+      }
+      // Universe pages
+      const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/([^/]+)\//);
+      if (uniMatch) {
+        const section = uniMatch[1];
+        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/${trimmed}`);
+        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${slug}/${trimmed}`);
+      }
+      // Engine/tools fallback
+      if (/\/retraissance\/densetsu\/engine\//.test(pagePath)) {
+        candidates.push(`/pages/retraissance/densetsu/assets/media/engine/${slug}/${trimmed}`);
+      }
+      // Generic assets fallback
+      candidates.push(`/pages/retraissance/assets/media/${slug}/${trimmed}`);
+      candidates.push(`/pages/retraissance/assets/media/${trimmed}`);
+
+      const first = candidates.find(Boolean);
+      if (first) return isFile ? resolveLocal(first) : `${location.origin}${first}`;
+    }
+
+    // Fallback to relative resolution
     try { return new URL(trimmed, location.href).toString(); } catch (_) { return trimmed; }
   };
 
-  // Inline media injector: replace <image>url</image> with <img>, <video [-loop] [-nocontrols]>url</video> with <video>, and <line> with hr.
+  // Inline media injector: replace pseudotags (<image>, <video>, <box>, <line>) in text nodes, then handle literal tags.
   const applyInlineMedia = () => {
     const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
-    const imgPattern = /<image>([^<]+)<\/image>/i;
-    const vidPattern = /<video([^>]*)>([^<]+)<\/video>/i;
+    const imgPattern = /<image>([\s\S]*?)<\/image>/i;
+    const vidPattern = /<video([^>]*)>([\s\S]*?)<\/video>/i;
     const linePattern = /<line><\/line>/i;
+    const boxPattern = /<box>([\s\S]*?)<\/box>/i;
     const walkerFilter = {
       acceptNode(node) {
         const parent = node.parentElement;
@@ -282,30 +326,35 @@
 
     scopes.forEach(scope => {
       const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, walkerFilter);
-      const nodes = [];
+      const toReplace = [];
       let n;
-      while ((n = walker.nextNode())) nodes.push(n);
-      nodes.forEach(node => {
-        const text = node.nodeValue || '';
-        if (!imgPattern.test(text) && !vidPattern.test(text) && !linePattern.test(text)) return;
+      while ((n = walker.nextNode())) toReplace.push(n);
+
+      toReplace.forEach(node => {
+        const decodedText = (node.nodeValue || '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        if (!imgPattern.test(decodedText) && !vidPattern.test(decodedText) && !linePattern.test(decodedText) && !boxPattern.test(decodedText)) return;
+
         const frag = document.createDocumentFragment();
-        let remaining = text;
-        while (imgPattern.test(remaining) || vidPattern.test(remaining) || linePattern.test(remaining)) {
-          const nextImg = imgPattern.exec(remaining);
-          const nextVid = vidPattern.exec(remaining);
-          const nextLine = linePattern.exec(remaining);
-          let useMatch = null;
+        let remaining = decodedText;
+        const nextMatch = () => {
           const candidates = [];
-          if (nextImg) candidates.push({ type: 'img', match: nextImg });
-          if (nextVid) candidates.push({ type: 'vid', match: nextVid });
-          if (nextLine) candidates.push({ type: 'line', match: nextLine });
-          if (candidates.length) {
-            useMatch = candidates.sort((a, b) => a.match.index - b.match.index)[0];
-          }
-          if (!useMatch) break;
-          const { type, match } = useMatch;
+          const mImg = imgPattern.exec(remaining);
+          const mVid = vidPattern.exec(remaining);
+          const mLine = linePattern.exec(remaining);
+          const mBox = boxPattern.exec(remaining);
+          if (mImg) candidates.push({ type: 'img', match: mImg });
+          if (mVid) candidates.push({ type: 'vid', match: mVid });
+          if (mLine) candidates.push({ type: 'line', match: mLine });
+          if (mBox) candidates.push({ type: 'box', match: mBox });
+          return candidates.sort((a, b) => a.match.index - b.match.index)[0] || null;
+        };
+
+        let found;
+        while ((found = nextMatch())) {
+          const { type, match } = found;
           const before = remaining.slice(0, match.index);
           if (before) frag.appendChild(document.createTextNode(before));
+
           if (type === 'img') {
             const raw = (match[1] || '').trim();
             const url = resolvePseudoUrl(raw);
@@ -320,71 +369,82 @@
               img.dataset.missing = '1';
             }
             frag.appendChild(img);
-            remaining = remaining.slice(match.index + match[0].length);
-            continue;
-          }
-          if (type === 'line') {
-            const hr = document.createElement('hr');
-            frag.appendChild(hr);
-            remaining = remaining.slice(match.index + match[0].length);
-            continue;
-          }
-          const rawAttrs = (match[1] || '').toLowerCase();
-          const rawSrc = (match[2] || '').trim();
-          const url = resolvePseudoUrl(rawSrc);
-          const noControls = /-nocontrols/.test(rawAttrs);
-          const loop = /-loop/.test(rawAttrs);
-          const vid = document.createElement('video');
-          vid.src = url;
-          vid.controls = !noControls;
-          vid.loop = loop;
-          if (loop) vid.setAttribute('loop', '');
-          vid.autoplay = true;
-          vid.setAttribute('autoplay', '');
-          vid.muted = true;
-          vid.setAttribute('muted', '');
-          vid.className = 'inline-video';
-          vid.dataset.pseudo = rawSrc;
-          if (!url) {
-            vid.classList.add('inline-media-missing');
-            vid.dataset.missing = '1';
-          }
-          vid.style.maxWidth = '100%';
-          vid.style.display = 'block';
-          vid.style.margin = '12px auto';
-          vid.style.maxHeight = '135vh'; // slightly smaller (~75% of previous)
-          vid.playsInline = true;
-          vid.setAttribute('playsinline', '');
-          let loopDelay = 150;
-          vid.addEventListener('loadedmetadata', () => {
-            const d = vid.duration;
-            if (Number.isFinite(d) && d > 0) {
-              loopDelay = Math.min(750, Math.max(50, d * 50)); // ~5% of duration, clamped
+          } else if (type === 'line') {
+            frag.appendChild(document.createElement('hr'));
+          } else if (type === 'box') {
+            const raw = match[1] || '';
+            const callout = document.createElement('div');
+            callout.className = 'callout';
+            const tmp = document.createElement('div');
+            tmp.innerHTML = raw;
+            if (tmp.childNodes.length) {
+              while (tmp.firstChild) callout.appendChild(tmp.firstChild);
+            } else {
+              const p = document.createElement('p');
+              p.textContent = 'TBD.';
+              callout.appendChild(p);
             }
-          });
-          vid.addEventListener('canplay', () => {
-            try { vid.play(); } catch (_) { /* ignore */ }
-          }, { once: true });
-          if (loop) {
-            vid.addEventListener('ended', () => {
-              setTimeout(() => {
-                try { vid.currentTime = 0; vid.play(); } catch (_) { /* ignore */ }
-              }, loopDelay);
+            frag.appendChild(callout);
+          } else if (type === 'vid') {
+            const rawAttrs = (match[1] || '').toLowerCase();
+            const rawSrc = (match[2] || '').trim();
+            const url = resolvePseudoUrl(rawSrc);
+            const noControls = /-nocontrols/.test(rawAttrs);
+            const loop = /-loop/.test(rawAttrs);
+            const vid = document.createElement('video');
+            vid.src = url;
+            vid.controls = !noControls;
+            vid.loop = loop;
+            if (loop) vid.setAttribute('loop', '');
+            vid.autoplay = true;
+            vid.setAttribute('autoplay', '');
+            vid.muted = true;
+            vid.setAttribute('muted', '');
+            vid.className = 'inline-video';
+            vid.dataset.pseudo = rawSrc;
+            if (!url) {
+              vid.classList.add('inline-media-missing');
+              vid.dataset.missing = '1';
+            }
+            vid.style.maxWidth = '100%';
+            vid.style.display = 'block';
+            vid.style.margin = '12px auto';
+            vid.style.maxHeight = '135vh';
+            vid.playsInline = true;
+            vid.setAttribute('playsinline', '');
+            let loopDelay = 150;
+            vid.addEventListener('loadedmetadata', () => {
+              const d = vid.duration;
+              if (Number.isFinite(d) && d > 0) {
+                loopDelay = Math.min(750, Math.max(50, d * 50));
+              }
             });
+            vid.addEventListener('canplay', () => { try { vid.play(); } catch (_) {} }, { once: true });
+            if (loop) {
+              vid.addEventListener('ended', () => {
+                setTimeout(() => { try { vid.currentTime = 0; vid.play(); } catch (_) {} }, loopDelay);
+              });
+            }
+            frag.appendChild(vid);
           }
-          frag.appendChild(vid);
+
           remaining = remaining.slice(match.index + match[0].length);
         }
         if (remaining) frag.appendChild(document.createTextNode(remaining));
 
-        // Re-block media nodes to isolate alignment from surrounding text.
+        // Wrap media nodes into inline-media-blocks
         const rebuilt = document.createDocumentFragment();
         frag.childNodes.forEach(ch => {
           if (ch.nodeType === 1 && (ch.tagName === 'IMG' || ch.tagName === 'VIDEO')) {
             const block = document.createElement('div');
             block.className = 'inline-media-block';
             block.contentEditable = 'false';
-            block.appendChild(ch);
+            const inner = document.createElement('div');
+            inner.className = 'inline-media-wrap';
+            inner.style.display = 'inline-block';
+            inner.style.maxWidth = '100%';
+            inner.appendChild(ch);
+            block.appendChild(inner);
             rebuilt.appendChild(block);
           } else {
             rebuilt.appendChild(ch);
@@ -402,6 +462,138 @@
           node.replaceWith(rebuilt);
         }
       });
+
+      // Convert literal tags that may remain.
+      scope.querySelectorAll('box').forEach(boxEl => {
+        const callout = document.createElement('div');
+        callout.className = 'callout';
+        if (boxEl.dataset && boxEl.dataset.boxMarker) callout.dataset.boxMarker = boxEl.dataset.boxMarker;
+        while (boxEl.firstChild) callout.appendChild(boxEl.firstChild);
+        if (!callout.childNodes.length) {
+          const p = document.createElement('p');
+          p.textContent = 'TBD.';
+          callout.appendChild(p);
+        }
+        boxEl.replaceWith(callout);
+      });
+      scope.querySelectorAll('image').forEach(imgTag => {
+        const raw = (imgTag.textContent || imgTag.getAttribute('src') || '').trim();
+        const url = resolvePseudoUrl(raw);
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = raw.split('/').pop() || 'image';
+        img.dataset.pseudo = raw;
+        img.loading = 'lazy';
+        img.className = 'inline-image';
+        if (!url) {
+          img.classList.add('inline-media-missing');
+          img.dataset.missing = '1';
+        }
+        const block = document.createElement('div');
+        block.className = 'inline-media-block';
+        block.contentEditable = 'false';
+        const inner = document.createElement('div');
+        inner.className = 'inline-media-wrap';
+        inner.style.display = 'inline-block';
+        inner.style.maxWidth = '100%';
+        inner.appendChild(img);
+        block.appendChild(inner);
+        imgTag.replaceWith(block);
+      });
+      scope.querySelectorAll('line').forEach(lineTag => {
+        const hr = document.createElement('hr');
+        lineTag.replaceWith(hr);
+      });
+      scope.querySelectorAll('video').forEach(vidTag => {
+        if (vidTag.getAttribute('src')) return;
+        const rawSrc = (vidTag.textContent || '').trim();
+        if (!rawSrc) return;
+        const url = resolvePseudoUrl(rawSrc);
+        const clone = document.createElement('video');
+        clone.src = url;
+        clone.dataset.pseudo = rawSrc;
+        clone.className = 'inline-video';
+        clone.autoplay = true;
+        clone.setAttribute('autoplay', '');
+        clone.muted = true;
+        clone.setAttribute('muted', '');
+        clone.playsInline = true;
+        clone.setAttribute('playsinline', '');
+        clone.style.maxWidth = '100%';
+        clone.style.display = 'block';
+        clone.style.margin = '12px auto';
+        clone.style.maxHeight = '135vh';
+        if (!url) {
+          clone.classList.add('inline-media-missing');
+          clone.dataset.missing = '1';
+        }
+        const block = document.createElement('div');
+        block.className = 'inline-media-block';
+        block.contentEditable = 'false';
+        const inner = document.createElement('div');
+        inner.className = 'inline-media-wrap';
+        inner.style.display = 'inline-block';
+        inner.style.maxWidth = '100%';
+        inner.appendChild(clone);
+        block.appendChild(inner);
+        vidTag.replaceWith(block);
+      });
+  });
+};
+
+  // Fallback: replace any remaining pseudotags in innerHTML (including encoded) to ensure rendering.
+  const renderImageHtml = (raw) => {
+    const url = resolvePseudoUrl(raw);
+    const missing = url ? '' : ' inline-media-missing';
+    const missingAttr = url ? '' : ' data-missing="1"';
+    const safeAlt = (raw.split('/').pop() || 'image').replace(/"/g, '');
+    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}></div></div>`;
+  };
+  const renderLineHtml = () => '<hr>';
+  const renderBoxHtml = (raw) => {
+    const inner = raw && raw.trim() ? raw : '<p>TBD.</p>';
+    return `<div class="callout">${inner}</div>`;
+  };
+  const renderVideoHtml = (raw, attrs = '') => {
+    const url = resolvePseudoUrl(raw);
+    const missing = url ? '' : ' inline-media-missing';
+    const missingAttr = url ? '' : ' data-missing="1"';
+    const hasNoControls = /-nocontrols/i.test(attrs || '');
+    const shouldLoop = /-loop/i.test(attrs || '');
+    const ctrlAttr = hasNoControls ? '' : ' controls';
+    const loopAttr = shouldLoop ? ' loop' : '';
+    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><video class="inline-video${missing}" src="${url}" data-pseudo="${raw}" autoplay muted playsinline${ctrlAttr}${loopAttr}${missingAttr} style="max-width:100%;display:block;margin:12px auto;max-height:135vh;"></video></div></div>`;
+  };
+
+  // Apply DOM-aware injection then a string fallback to catch any encoded tags.
+  const applyInlineMediaWithFallback = () => {
+    const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
+    scopes.forEach(scope => {
+      // If formatting split the pseudotag across spans/tags, flatten that container to plain text first.
+      const tagRegex = /<\s*(image|video|box|line)|&lt;\s*(image|video|box|line)/i;
+      scope.querySelectorAll('p, div, span, li, h1, h2, h3, h4, h5, h6').forEach(el => {
+        const txt = el.innerText || '';
+        if (tagRegex.test(txt)) {
+          el.textContent = txt; // strip inline formatting so parsing can see the raw pseudotag text
+        }
+      });
+
+      try { applyInlineMedia(); } catch (err) { console.error('applyInlineMedia failed', err); }
+
+      let html = scope.innerHTML;
+      const hasPseudo = /<image>|<video|<box>|<line>|&lt;image&gt;|&lt;video|&lt;box&gt;|&lt;line&gt;/i.test(html);
+      if (!hasPseudo) return;
+      html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+      html = html
+        .replace(/<image>([\s\S]*?)<\/image>/gi, (_, p) => renderImageHtml(p.trim()))
+        .replace(/<line><\/line>/gi, () => renderLineHtml())
+        .replace(/<box>([\s\S]*?)<\/box>/gi, (_, p) => renderBoxHtml(p))
+        .replace(/<video([^>]*)>([\s\S]*?)<\/video>/gi, (_, attrs, src) => renderVideoHtml(src.trim(), attrs))
+        .replace(/&lt;image&gt;([\s\S]*?)&lt;\/image&gt;/gi, (_, p) => renderImageHtml(p.trim()))
+        .replace(/&lt;line&gt;&lt;\/line&gt;/gi, () => renderLineHtml())
+        .replace(/&lt;box&gt;([\s\S]*?)&lt;\/box&gt;/gi, (_, p) => renderBoxHtml(p))
+        .replace(/&lt;video([^>]*)&gt;([\s\S]*?)&lt;\/video&gt;/gi, (_, attrs, src) => renderVideoHtml(src.trim(), attrs));
+      scope.innerHTML = html;
     });
   };
 
@@ -1163,87 +1355,46 @@
     mkFmt('R', 'Align right', 'justifyRight');
     const applyTextBox = () => {
       const editableRoot = panel.querySelector('.markdown') || panel;
-      const describeRange = () => {
-        const sel = window.getSelection && window.getSelection();
-        const r = sel && sel.rangeCount ? sel.getRangeAt(0) : null;
-        const use = r && editableRoot.contains(r.commonAncestorContainer) ? r : (lastRange && editableRoot.contains(lastRange.commonAncestorContainer) ? lastRange : null);
-        if (!use) return null;
-        const pathFor = (node, root) => {
-          const path = [];
-          let n = node;
-          while (n && n !== root) {
-            const p = n.parentNode;
-            if (!p) return null;
-            path.unshift(Array.prototype.indexOf.call(p.childNodes, n));
-            n = p;
-          }
-          return n === root ? path : null;
-        };
-        const startPath = pathFor(use.startContainer, editableRoot);
-        const endPath = pathFor(use.endContainer, editableRoot);
-        if (!startPath || !endPath) return null;
-        return { startPath, startOffset: use.startOffset, endPath, endOffset: use.endOffset };
-      };
-      const resolveRange = (desc) => {
-        if (!desc) return null;
-        const resolvePath = (path, root) => {
-          let n = root;
-          for (const idx of path) {
-            if (!n.childNodes || idx >= n.childNodes.length) return null;
-            n = n.childNodes[idx];
-          }
-          return n;
-        };
-        const sc = resolvePath(desc.startPath, editableRoot);
-        const ec = resolvePath(desc.endPath, editableRoot);
-        if (!sc || !ec) return null;
-        try {
-          const r = document.createRange();
-          const clampOffset = (node, off) => {
-            if (node.nodeType === 3) return Math.min(off, (node.nodeValue || '').length);
-            return Math.min(off, node.childNodes.length);
-          };
-          r.setStart(sc, clampOffset(sc, desc.startOffset));
-          r.setEnd(ec, clampOffset(ec, desc.endOffset));
-          return r;
-        } catch (_) { return null; }
-      };
-
-      const savedDesc = describeRange();
-
       setEditable(true);
-
-      let range = resolveRange(savedDesc);
-      const target = editableRoot;
-      if (!range || !target.contains(range.commonAncestorContainer)) {
+      const sel = window.getSelection && window.getSelection();
+      let range = sel && sel.rangeCount ? sel.getRangeAt(0).cloneRange() : null;
+      if (!range || !editableRoot.contains(range.commonAncestorContainer)) {
         range = document.createRange();
-        range.selectNodeContents(target);
+        range.selectNodeContents(editableRoot);
         range.collapse(false);
       }
-      const box = document.createElement('div');
-      box.className = 'callout';
+
+      const boxTag = document.createElement('box');
+      const marker = `box-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      boxTag.dataset.boxMarker = marker;
       if (range.collapsed) {
         const p = document.createElement('p');
         p.textContent = 'TBD.';
-        box.appendChild(p);
-        range.insertNode(box);
+        boxTag.appendChild(p);
       } else {
-        const frag = range.extractContents();
-        if (!frag.childNodes.length) {
-          const p = document.createElement('p');
-          p.textContent = 'TBD.';
-          box.appendChild(p);
-        } else {
-          box.appendChild(frag);
-        }
-        range.insertNode(box);
+        boxTag.appendChild(range.extractContents());
       }
+      range.insertNode(boxTag);
       const after = document.createRange();
-      after.setStartAfter(box);
+      after.setStartAfter(boxTag);
       after.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(after);
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(after);
+      }
       lastRange = after.cloneRange();
+      applyInlineMedia();
+      const placed = editableRoot.querySelector(`[data-box-marker=\"${marker}\"]`);
+      if (placed) {
+        const afterBox = document.createRange();
+        afterBox.setStartAfter(placed);
+        afterBox.collapse(true);
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(afterBox);
+        }
+        lastRange = afterBox.cloneRange();
+      }
       sanitizeSelectionContext();
       btnSave.disabled = false;
     };
@@ -1447,10 +1598,10 @@
       }
         const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
         mediaNodes.forEach(node => {
-          let btnDel = node.closest('.inline-media-wrap')?.querySelector('.inline-remove-media');
+          const wrap = node.closest('.inline-media-wrap');
+          if (!wrap) return;
+          let btnDel = wrap.querySelector('.inline-remove-media');
           if (!btnDel) {
-            const wrap = node.closest('.inline-media-wrap');
-            if (!wrap) return;
             btnDel = document.createElement('button');
             btnDel.type = 'button';
             btnDel.className = 'inline-remove-media';
@@ -1463,7 +1614,7 @@
             });
             wrap.appendChild(btnDel);
           }
-          let btnEditMedia = node.closest('.inline-media-wrap')?.querySelector('.inline-edit-media');
+          let btnEditMedia = wrap.querySelector('.inline-edit-media');
           if (!btnEditMedia) {
             btnEditMedia = document.createElement('button');
             btnEditMedia.type = 'button';
@@ -1654,7 +1805,7 @@
 
     // Plain-text paste handler to normalize formatting to site styles.
     const sanitizeNode = (node) => {
-      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H2','H3','H4','BLOCKQUOTE','PRE','CODE','A','HR','LINE','DIV','IMG','VIDEO']);
+      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H2','H3','H4','BLOCKQUOTE','PRE','CODE','A','HR','LINE','DIV','IMG','VIDEO','BOX']);
       const transformSpan = (span) => {
         const style = (span.getAttribute('style') || '').toLowerCase();
         const isBold = /font-weight:\s*(bold|[7-9]\d\d|1\d00)/.test(style);
@@ -1694,6 +1845,21 @@
           if (clean) frag.appendChild(clean);
         });
         return frag;
+      }
+      if (tag === 'BOX') {
+        const el = document.createElement('div');
+        el.className = 'callout';
+        if (node.dataset && node.dataset.boxMarker) el.dataset.boxMarker = node.dataset.boxMarker;
+        node.childNodes.forEach(ch => {
+          const clean = sanitizeNode(ch);
+          if (clean) el.appendChild(clean);
+        });
+        if (!el.childNodes.length) {
+          const p = document.createElement('p');
+          p.textContent = 'TBD.';
+          el.appendChild(p);
+        }
+        return el;
       }
       if (tag === 'DIV' && !node.classList.contains('callout') && !node.classList.contains('inline-media-block')) {
         const frag = document.createDocumentFragment();
@@ -2064,7 +2230,7 @@
     stripEditArtifacts();
     document.body.classList.remove('edit-active');
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
-    try { applyInlineMedia(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
+    try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
     try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
     // Fallback: if the toolbar failed to appear, attempt a second pass after a tick.
     if (!document.querySelector('.edit-bar')) {
@@ -2156,7 +2322,7 @@
     }
 
     // Inline media tokens (images/videos) everywhere
-    try { applyInlineMedia(); } catch (err) { console.error('inline media inject failed', err); }
+    try { applyInlineMediaWithFallback(); } catch (err) { console.error('inline media inject failed', err); }
     try { cleanupInlineMediaWrappers(); } catch (err) { console.error('media wrapper cleanup failed', err); }
   });
 
