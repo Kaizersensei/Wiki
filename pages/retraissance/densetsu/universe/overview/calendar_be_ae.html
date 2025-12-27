@@ -1,126 +1,80 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="en" class=" kwqyszq idc0_350 tlpnveciro yngbspd kjchsjy pernfdqei sygdtbdop cqwjrqfm lijkvgsr dpeaxfcd iigivnqq juakret sqfmjfqk dglzwj wfumeuqp jrztgjck vgpqrhy jovrxxke clrqbccmt wzdnbdqr zwkhxfkiqg atrpteqza efogxgeq gdjpfxen kbeiijs tzlmnmxji jerdzltwl dqqehej svrkiqwk flstvteu gailvdkl jmazplyho wftcghcpdg ggsikgopb mrgcpla bjfsskhms xqcpgdg yithwmzps onxglgj hkbjgkdsh okzvwdsw ocmemyzq qubfkriesr vtxuqdtz ovbijnzt xngevzlph ntyrvfluya alltuwhf uhxgq xoabrac jsuxijs dmmupmb djvvrdrmt gkpuarvg dkeuznycu qjtvhidpbm btsnfvbiw teedwnbt ggxeadqb eovflzs chegkrl royctrosph xnziuxguf zhbbjsv wduxc xnjowetb tnpmzh jyeedtpvr icxmoia"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendar: BE and AE</title>
-  <link rel="stylesheet" href="../../../assets/site.css" />
-</head>
-<body class="theme-wiki">
-
+  <link rel="stylesheet" href="../../../assets/site.css">
+<style type="text/css"></style><style type="text/css" id="operaUserStyle">
+  video {
+    filter: -opera-shader(url(data:text/plain;base64,Ly8gaHR0cHM6Ly9naXRodWIuY29tL0dQVU9wZW4tRWZmZWN0cy9GaWRlbGl0eUZYLUNBUwovLyB2MwoKdW5pZm9ybSBzaGFkZXIgaUNodW5rOwp1bmlmb3JtIGZsb2F0MiBpQ2h1bmtTaXplOwp1bmlmb3JtIGZsb2F0MiBpTW91c2U7CnVuaWZvcm0gZmxvYXQgaUFyZ3NbMV07Cgpjb25zdCBmbG9hdCBFUFNJT04gPSAwLjE7CmNvbnN0IGZsb2F0IFZfTUlOID0gMDsKY29uc3QgZmxvYXQgVl9MT1cgPSAwLjI1Owpjb25zdCBmbG9hdCBWX01FRCA9IDAuNTsKY29uc3QgZmxvYXQgVl9ISUdIID0gMC43NTsKY29uc3QgZmxvYXQgVl9NQVggPSAxOwoKY29uc3QgZmxvYXQgVEhSRVNIT0xEX0FSRUEgPSA4MDAgKiA2MDA7CmNvbnN0IGZsb2F0IE1JTl9BUkVBID0gNDAwICogMTAwOwpjb25zdCBmbG9hdCBNSU5fU1RSSVAgPSAyMDsKY29uc3QgZmxvYXQgTUFSR0lOID0gMTsKCmZsb2F0MyBwaXhlbChpbnQgeCwgaW50IHksIGZsb2F0MiB4eSkgewogICAgcmV0dXJuIGlDaHVuay5ldmFsKHh5ICsgZmxvYXQyKHgsIHkpKS5yZ2I7Cn0KCmZsb2F0MyBzaGFycGVuKGZsb2F0MiB4eSkgewogICAgZmxvYXQzIGYgPQogICAgICAgIHBpeGVsKC0xLCAtMSwgeHkpICogIDEgKwogICAgICAgIHBpeGVsKCAwLCAtMSwgeHkpICogLTEgKwogICAgICAgIHBpeGVsKCAxLCAtMSwgeHkpICogIDEgKwoKICAgICAgICBwaXhlbCgtMSwgMCwgeHkpICogLTEgICsKICAgICAgICBwaXhlbCggMCwgMCwgeHkpICogLTEgICsKICAgICAgICBwaXhlbCggMSwgMCwgeHkpICogLTEgICsKCiAgICAgICAgcGl4ZWwoLTEsIDEsIHh5KSAqIDEgICArCiAgICAgICAgcGl4ZWwoIDAsIDEsIHh5KSAqIC0xICArCiAgICAgICAgcGl4ZWwoIDEsIDEsIHh5KSAqIDE7CiAgICByZXR1cm4gZiAvIC0xOwp9CgpmbG9hdDQgUkdYMihmbG9hdDIgeHkpIHsKICAgIGZsb2F0NCBjb2xvciA9IGlDaHVuay5ldmFsKHh5KTsKCiAgICBpZiAoaUNodW5rU2l6ZS54ICogaUNodW5rU2l6ZS55IDwgTUlOX0FSRUEpIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgaWYgKGlDaHVua1NpemUueSA8IE1JTl9TVFJJUCB8fCBpQ2h1bmtTaXplLnggPCBNSU5fU1RSSVApIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgaWYgKHh5LnggPCBNQVJHSU4gfHwgeHkueCA+IChpQ2h1bmtTaXplLnggLSBNQVJHSU4pIHx8CiAgICAgICAgeHkueSA8IE1BUkdJTiB8fCB4eS55ID4gKGlDaHVua1NpemUueSAtIE1BUkdJTikpIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgcmV0dXJuIGZsb2F0NChzaGFycGVuKHh5KSwgMSk7Cn0KCmZsb2F0IG1pbjMoZmxvYXQgeCwgZmxvYXQgeSwgZmxvYXQgeikgewogICAgcmV0dXJuIG1pbih4LCBtaW4oeSwgeikpOwp9CgpmbG9hdCBtYXgzKGZsb2F0IHgsIGZsb2F0IHksIGZsb2F0IHopIHsKICAgIHJldHVybiBtYXgoeCwgbWF4KHksIHopKTsKfQoKZmxvYXQgcmNwKGZsb2F0IHYpIHsKICAgIHJldHVybiAxIC8gdjsKfQoKZmxvYXQzIFJHWDMoZmxvYXQyIHh5LCBmbG9hdCBzdHJlbmd0aCkgewogICAgZmxvYXQzIGEgPSBwaXhlbCgtMSwgLTEsIHh5KTsKICAgIGZsb2F0MyBiID0gcGl4ZWwoIDAsIC0xLCB4eSk7CiAgICBmbG9hdDMgYyA9IHBpeGVsKCAxLCAtMSwgeHkpOwoKICAgIGZsb2F0MyBkID0gcGl4ZWwoLTEsIDAsIHh5KTsKICAgIGZsb2F0MyBlID0gcGl4ZWwoIDAsIDAsIHh5KTsKICAgIGZsb2F0MyBmID0gcGl4ZWwoIDEsIDAsIHh5KTsKCiAgICBmbG9hdDMgZyA9IHBpeGVsKC0xLCAxLCB4eSk7CiAgICBmbG9hdDMgaCA9IHBpeGVsKCAwLCAxLCB4eSk7CiAgICBmbG9hdDMgaSA9IHBpeGVsKCAxLCAxLCB4eSk7CgogICAgZmxvYXQgbW5SID0gbWluMyhtaW4zKGQuciwgZS5yLCBmLnIpLCBiLnIsIGgucik7CiAgICBmbG9hdCBtbkcgPSBtaW4zKG1pbjMoZC5nLCBlLmcsIGYuZyksIGIuZywgaC5nKTsKICAgIGZsb2F0IG1uQiA9IG1pbjMobWluMyhkLmIsIGUuYiwgZi5iKSwgYi5iLCBoLmIpOwoKICAgIGZsb2F0IG1uUjIgPSBtaW4zKG1pbjMobW5SLCBhLnIsIGMuciksIGcuciwgaS5yKTsKICAgIGZsb2F0IG1uRzIgPSBtaW4zKG1pbjMobW5HLCBhLmcsIGMuZyksIGcuZywgaS5nKTsKICAgIGZsb2F0IG1uQjIgPSBtaW4zKG1pbjMobW5CLCBhLmIsIGMuYiksIGcuYiwgaS5iKTsKCiAgICBtblIgPSBtblIgKyBtblIyOwogICAgbW5HID0gbW5HICsgbW5HMjsKICAgIG1uQiA9IG1uQiArIG1uQjI7CgogICAgZmxvYXQgbXhSID0gbWF4MyhtYXgzKGQuciwgZS5yLCBmLnIpLCBiLnIsIGgucik7CiAgICBmbG9hdCBteEcgPSBtYXgzKG1heDMoZC5nLCBlLmcsIGYuZyksIGIuZywgaC5nKTsKICAgIGZsb2F0IG14QiA9IG1heDMobWF4MyhkLmIsIGUuYiwgZi5iKSwgYi5iLCBoLmIpOwoKICAgIGZsb2F0IG14UjIgPSBtYXgzKG1heDMobXhSLCBhLnIsIGMuciksIGcuciwgaS5yKTsKICAgIGZsb2F0IG14RzIgPSBtYXgzKG1heDMobXhHLCBhLmcsIGMuZyksIGcuZywgaS5nKTsKICAgIGZsb2F0IG14QjIgPSBtYXgzKG1heDMobXhCLCBhLmIsIGMuYiksIGcuYiwgaS5iKTsKCiAgICBteFIgPSBteFIgKyBteFIyOwogICAgbXhHID0gbXhHICsgbXhHMjsKICAgIG14QiA9IG14QiArIG14QjI7CgogICAgZmxvYXQgcmNwTVIgPSByY3AobXhSKTsKICAgIGZsb2F0IHJjcE1HID0gcmNwKG14Ryk7CiAgICBmbG9hdCByY3BNQiA9IHJjcChteEIpOwoKICAgIGZsb2F0IGFtcFIgPSBzYXR1cmF0ZShtaW4obW5SLCAyIC0gbXhSKSAqIHJjcE1SKTsKICAgIGZsb2F0IGFtcEcgPSBzYXR1cmF0ZShtaW4obW5HLCAyIC0gbXhHKSAqIHJjcE1HKTsKICAgIGZsb2F0IGFtcEIgPSBzYXR1cmF0ZShtaW4obW5CLCAyIC0gbXhCKSAqIHJjcE1CKTsKCiAgICBhbXBSID0gc3FydChhbXBSKTsKICAgIGFtcEcgPSBzcXJ0KGFtcEcpOwogICAgYW1wQiA9IHNxcnQoYW1wQik7CgogICAgZmxvYXQgcGVhayA9IC1yY3AobWl4KDgsIDUsIHN0cmVuZ3RoKSk7CgogICAgZmxvYXQgd1IgPSBhbXBSICogcGVhazsKICAgIGZsb2F0IHdHID0gYW1wRyAqIHBlYWs7CiAgICBmbG9hdCB3QiA9IGFtcEIgKiBwZWFrOwoKICAgIGZsb2F0IHJjcFdlaWdodFIgPSByY3AoMSArIDQgKiB3Uik7CiAgICBmbG9hdCByY3BXZWlnaHRHID0gcmNwKDEgKyA0ICogd0cpOwogICAgZmxvYXQgcmNwV2VpZ2h0QiA9IHJjcCgxICsgNCAqIHdCKTsKCiAgICByZXR1cm4gZmxvYXQzKAogICAgICAgIHNhdHVyYXRlKChiLnIgKiB3UiArIGQuciAqIHdSICsgZi5yICogd1IgKyBoLnIgKiB3UiArIGUucikgKiByY3BXZWlnaHRSKSwKICAgICAgICBzYXR1cmF0ZSgoYi5nICogd0cgKyBkLmcgKiB3RyArIGYuZyAqIHdHICsgaC5nICogd0cgKyBlLmcpICogcmNwV2VpZ2h0RyksCiAgICAgICAgc2F0dXJhdGUoKGIuYiAqIHdCICsgZC5iICogd0IgKyBmLmIgKiB3QiArIGguYiAqIHdCICsgZS5iKSAqIHJjcFdlaWdodEIpKTsKfQoKCmZsb2F0NCBtYWluKGZsb2F0MiB4eSkgewoKICAgIGZsb2F0NCBvcmlnaW5hbENvbG9yID0gaUNodW5rLmV2YWwoeHkpOwogICAgaWYgKG9yaWdpbmFsQ29sb3IuYSA8IDEpIHsKICAgICAgICByZXR1cm4gaUNodW5rLmV2YWwoeHkpOwogICAgfQoKICAgIGZsb2F0IGludGVuc2l0eSA9IGlBcmdzWzBdOwogICAgZmxvYXQgc3RyZW5ndGggPSAwOwogICAgZmxvYXQzIGNvbG9yOwoKICAgIGlmIChpbnRlbnNpdHkgPCBWX01JTiArIEVQU0lPTikgewogICAgICAgIHN0cmVuZ3RoID0gMC4xMDsKICAgICAgICBjb2xvciA9IFJHWDMoeHksIHN0cmVuZ3RoKTsKCiAgICB9IGVsc2UgaWYgKGludGVuc2l0eSA+IFZfTE9XIC0gRVBTSU9OICYmIGludGVuc2l0eSA8IFZfTE9XICsgRVBTSU9OKSB7CiAgICAgICAgc3RyZW5ndGggPSAwLjMzOwogICAgICAgIGNvbG9yID0gUkdYMyh4eSwgc3RyZW5ndGgpOwoKICAgIH0gZWxzZSBpZiAoaW50ZW5zaXR5ID4gVl9NRUQgLSBFUFNJT04gJiYgaW50ZW5zaXR5IDwgVl9NRUQgKyBFUFNJT04pIHsKICAgICAgICBzdHJlbmd0aCA9IDAuNTsKICAgICAgICBjb2xvciA9IFJHWDMoeHksIHN0cmVuZ3RoKTsKCiAgICB9IGVsc2UgaWYgKGludGVuc2l0eSA+IFZfSElHSCAtIEVQU0lPTiAmJiBpbnRlbnNpdHkgPCBWX0hJR0ggKyBFUFNJT04pIHsKICAgICAgICBzdHJlbmd0aCA9IDAuOTk7CiAgICAgICAgY29sb3IgPSBSR1gzKHh5LCBzdHJlbmd0aCk7CgogICAgfSBlbHNlIGlmIChpbnRlbnNpdHkgPiBWX01BWCAtIEVQU0lPTikgewogICAgICAgIHN0cmVuZ3RoID0gMTsKICAgICAgICBjb2xvciA9IFJHWDIoeHkpLnJnYjsKICAgIH0KCiAgICByZXR1cm4gZmxvYXQ0KGNvbG9yLCBvcmlnaW5hbENvbG9yLmEpOwp9) -opera-args(0.75 calc(env(-opera-accent-color-r, 255)/255) calc(env(-opera-accent-color-g, 255)/255) calc(env(-opera-accent-color-b, 255)/255)));
+  }
+</style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style><style type="text/css"></style></head>
+<body class="theme-wiki has-media-strips edit-active">
   <header class="site-header">
     <div class="brand">
       <a href="../../../index.html" aria-label="Retraissance">
-        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+        <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance">
       </a>
     </div>
-    <nav class="nav-links">
-      <a class="nav-home" href="../../../index.html">Retraissance</a>
-      <a href="../../../projects/index.html">Projects</a>
-      <a href="../../index.html">Densetsu</a>
-      <a href="../index.html">Universe</a>
-      <a href="../../engine/index.html">Engine</a>
-    </nav>
+    <nav class="nav-links"><div class="nav-dropdown nav-root"><span class="nav-dropdown-toggle">Retraissance ▾</span><div class="nav-dropdown-menu"><a class="nav-home" href="../../../index.html">Home</a><a href="../../../team/index.html">Team</a><a href="../../../projects/index.html">Projects Index</a></div></div>
+      
+      
+      
+      <div class="nav-dropdown">
+        <span class="nav-dropdown-toggle">Densetsu ▼</span>
+        <div class="nav-dropdown-menu">
+          <a href="../../../densetsu/universe/index.html">Universe</a>
+          <a href="../../../densetsu/engine/index.html">Engine</a>
+        </div>
+      </div>
+      <a href="../../../tools/index.html">Tools</a>
+    <button class="nav-btn nav-random nav-random-icon" title="Random data page" style="background-image: url(&quot;/pages/retraissance/assets/media/ui/random.png&quot;);" data-rand-init="1">Random</button></nav>
   </header>
 
   <main class="content">
     <section class="panel">
-      <p class="eyebrow">universe</p>
-      <h1>Calendar: BE and AE</h1>
-      <article class="markdown">
-        <h2 id="overview">Overview</h2>
-<p>(TODO)</p>
-<h2 id="narrative-role">Narrative role</h2>
-<p>(TODO)</p>
-<h2 id="known-facts">Known facts</h2>
-<ul>
-<li>(TODO)</li>
-</ul>
-<h2 id="mechanics-impact">Mechanics impact</h2>
-<p>(TODO; link to Engine pages)</p>
-<h2 id="relationships">Relationships</h2>
-<ul>
-<li>(TODO)</li>
-</ul>
-<h2 id="sources">Sources</h2>
-<ul>
-<li>(TODO; keep aligned with frontmatter)</li>
-</ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to related factions, locations, characters, and events.</li>
-          <li>Note any lore-to-engine references (e.g., systems inspired by this entry).</li>
-          <li>Propose new subcategories: Artifacts & Relics, Flora/Fauna taxonomy, Languages/Writing, Magic/Tech principles, Timeline eras.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Overview & Calendar 
+      <p class="eyebrow" contenteditable="true">universe</p>
+      <h1 contenteditable="true"><a href="/pages/retraissance/densetsu/universe/overview/calendar_be_ae.html">Calendar: BE and AE</a></h1><article class="markdown" contenteditable="true">
+        <h2>Summary</h2>
+        
+          <p><br><a href="/pages/retraissance/densetsu/universe/overview/great_eclipse.html">The Great Eclipse</a> is the zero point for recorded time. Prior advanced civilizations collapsed; knowledge and tech were buried.</p><hr><h2>Great Eclipse (Foundational Event)</h2>
+        
+          <div class="callout"><ul><li>Cosmic/spiritual/elemental rupture; light and time severed.</li><li>Occurred during early elemental faction war.</li><li>All elements halted momentarily; temporal instability persisted.</li><li>Marked the end of the Old Cycle.</li><li>Simultaneous events:&nbsp;<a href="http://localhost:3000/pages/retraissance/densetsu/universe/concepts/infinitree.html">Infinitree</a>&nbsp;anchored timelines;&nbsp;<a href="http://localhost:3000/pages/retraissance/densetsu/universe/characters/bonsai_sage.html">Bonsai Sage</a>&nbsp;arrived from ruined future.</li></ul>
 
-Densetsu​
+</div><br><em style="text-align: center;"><div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display: inline-block; max-width: 100%;"><img src="http://localhost:3000/pages/retraissance/densetsu/assets/media/universe/eclipse_calendar/arrival_eclipse.png" class="inline-image" data-size-percent="60" data-pseudo="http://localhost:3000/pages/retraissance/densetsu/assets/media/universe/eclipse_calendar/arrival_eclipse.png" style="width: 60%;"></div></div></em><em><p style="text-align: center;"><em><em>Arrival of the <a href="/pages/retraissance/densetsu/universe/characters/bonsai_sage.html">Bonsai Sage</a> and <a href="/pages/retraissance/densetsu/universe/concepts/infinitree.html">Infinitree</a> during the eclipse (AI Concept, edited)</em></em></p><br></em><p></p><hr>
+        
 
----
+        <h2>Great Eclipse Calendar</h2><br><div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display: inline-block; max-width: 100%;"><img src="http://localhost:3000/pages/retraissance/densetsu/assets/media/universe/eclipse_calendar/eclipse_calendar.png" class="inline-image" data-size-percent="100" data-pseudo="http://localhost:3000/pages/retraissance/densetsu/assets/media/universe/eclipse_calendar/eclipse_calendar.png" style="width: 100%;"></div></div><br><p></p><div class="callout"><p><strong>BE (Before Eclipse): </strong>forgotten age of myth when skies were whole.<br><strong>AE (After Eclipse): </strong>era of consequence.</p><p><br><strong><u>Now:</u> </strong>1326 AE.<br><br>
 
-2011-2025 Retraissance 
- 
-Section 1: Overview & Calendar 
-1.1 The Great Eclipse and Calendar 
-The Great Eclipse marks the cataclysmic turning point in recorded history—a celestial rupture that
+</p><ul><li>Month names: Janure, Febure, Masu, Apuri, Mai, Junin, Jurin, Augutsu, Sopputemu, Okutoba, Nofenba, Detsenba.<br><br></li><li>Seasons/climates mirror the real&nbsp;<a href="http://localhost:3000/pages/retraissance/densetsu/universe/world/index.html">world</a>.<br><br></li><li>
 
----
+Temporal distortion blocks clean BE↔AE conversion; scholarly dates use epithets (e.g., Year of the Lotus Moon).
 
-Section 1: Overview & Calendar 
-1.1 The Great Eclipse and Calendar 
-The Great Eclipse marks the cataclysmic turning point in recorded history—a celestial rupture that 
-severed light from time itself. From that moment, the calendar split into two distinct epochs:</pre>
+<br></li></ul>&nbsp; &nbsp; &nbsp;</div><br><p></p><hr><h2>Epoch Structure</h2><p><br>The calendar is split into two non-convertible epochs:----</p>BE — <em>Before Eclipse</em><br><em><br></em><ul>
+
+<li><p>Mythic, poorly preserved era----</p>
+</li>
+<li>
+<p>Chronology is unreliable----</p>
+</li>
+<li>
+<p>Time was described as <em>“less rooted”</em>----</p>
+</li>
+<li>
+<p>Records overlap, contradict, or fragment----</p>
+</li>
+<li>
+<p>Used primarily by scholars, sages, and ancient entities----</p></li></ul><br>AE — <em>After Eclipse</em><br><br><em><ul><li>
+<p>Standard modern dating system----</p>
+</li>
+<li>
+<p>Counts years since <a href="/pages/retraissance/densetsu/universe/overview/great_eclipse.html">the Great Eclipse</a>----</p>
+</li>
+<li>
+<p>Used universally in governance, history, and daily life----</p></li></ul></em><hr><h2>Current Age</h2><div class="callout"><p>TBD.</p></div></article>
       
-        <h2>Great Eclipse Calendar</h2>
-        <div class="callout"><p>BE (Before Eclipse): forgotten age of myth when skies were whole. AE (After Eclipse): era of consequence; time since Great Eclipse, now 1326 AE. Temporal distortion prevents clean BE↔AE conversion; scholarly dates include epithets (e.g., Year of the Lotus Moon).</p></div>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
-    
-    <details class="meta-toggle"><summary>Show page info</summary>
-<div class='meta-grid'>
-<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>calendar_be_ae</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Calendar: BE and AE</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>stub</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>universe</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Concept</span></div><div class='meta-item'><span class='meta-key'>aliases</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Universe Document.txt, Densetsu Design Document.txt</span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2025-12-24</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>True</span></div>
-</div>
-</details>
     </section>
   </main>
-  <script src="../../../assets/site.js" defer></script>
-</body>
-</html>
 
+  <script src="../../../assets/site.js" defer=""></script>
 
-
-
-
-
-
+</body></html>

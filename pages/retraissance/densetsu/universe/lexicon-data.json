@@ -918,5 +918,35 @@
     "Name": "Hideo Kohiba",
     "Href": "characters/hideo_kohiba.html",
     "Category": "characters"
+  },
+  {
+    "Name": "Kaizer Sensei",
+    "Href": "../team/kaizer.html",
+    "Category": "team"
+  },
+  {
+    "Name": "Android",
+    "Href": "../team/android.html",
+    "Category": "team"
+  },
+  {
+    "Name": "CyberSpaceGod",
+    "Href": "../team/cyber_space_god.html",
+    "Category": "team"
+  },
+  {
+    "Name": "Miles Eventide",
+    "Href": "../team/miles_eventide.html",
+    "Category": "team"
+  },
+  {
+    "Name": "MusicFox",
+    "Href": "../team/music_fox.html",
+    "Category": "team"
+  },
+  {
+    "Name": "Lyrakes",
+    "Href": "../team/lyrakes.html",
+    "Category": "team"
   }
 ]

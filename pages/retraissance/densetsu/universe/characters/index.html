@@ -8,17 +8,28 @@
 </head>
 <body class="theme-wiki">
   <header class="site-header">
-    <div class="brand">
+                <div class="brand">
       <a href="../../../index.html" aria-label="Retraissance">
         <img class="nav-logo" src="../../../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
       </a>
     </div>
-    <nav class="nav-links">
+                    <nav class="nav-links">
       <a class="nav-home" href="../../../index.html">Retraissance</a>
-      <a href="../../../projects/index.html">Projects</a>
-      <a href="../../index.html">Densetsu</a>
-      <a href="../index.html">Universe</a>
-      <a href="../../engine/index.html">Engine</a>
+      <a href="../../../team/index.html">Team</a>
+      <div class="nav-dropdown">
+        <span class="nav-dropdown-toggle">Projects ▾</span>
+        <div class="nav-dropdown-menu">
+          <a href="../../../projects/index.html">Projects Index</a>
+          <a href="../../../densetsu/index.html">Densetsu</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <span class="nav-dropdown-toggle">Densetsu ▾</span>
+        <div class="nav-dropdown-menu">
+          <a href="../../../densetsu/universe/index.html">Universe</a>
+          <a href="../../../densetsu/engine/index.html">Engine</a>
+        </div>
+      </div>
     </nav>
   </header>
 
@@ -35,6 +46,9 @@
         <label for="c-filter">Filter initial</label>
         <select id="c-filter"><option value="all">All</option></select>
 
+        <label for="c-tag">Filter tag</label>
+        <select id="c-tag"><option value="all">All</option></select>
+
         <label for="c-sort">Sort</label>
         <select id="c-sort">
           <option value="name">Name (A-Z)</option>
@@ -48,7 +62,16 @@
         </select>
       </div>
 
+      <div class="filters" style="grid-template-columns: 1fr; grid-auto-flow: row; row-gap: 8px;">
+        <button id="c-manage-tags" class="nav-btn">Manage tags</button>
+        <small>Tag changes save to <code>assets/tags.json</code>. Dev save server must be running.</small>
+      </div>
+      <div class="callout">
+        <strong>Note:</strong> Add/remove here only edits links. Ensure the target page already exists. To create a new page, use the “New Page” button in the edit toolbar first.
+      </div>
+
       <div id="c-list" class="link-list"></div>
+      <div id="c-add-wrap" class="link-editor-add"></div>
 
       <div class="callout">
         <strong>Note:</strong> Roles and affiliations are not tagged yet; add tags per character to improve filtering.
@@ -64,68 +87,368 @@
     </section>
   </main>
 
+  <script id="c-data-json" type="application/json">
+[
+  {
+    "name": "Aka",
+    "href": "aka.html",
+    "tags": [
+      "hirogawa",
+      "survivor"
+    ]
+  },
+  {
+    "name": "Amelia",
+    "href": "amelia.html",
+    "tags": [
+      "galport",
+      "ally"
+    ]
+  },
+  {
+    "name": "Aoi",
+    "href": "aoi.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Aya",
+    "href": "aya.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Betto",
+    "href": "betto.html",
+    "tags": [
+      "hirogawa",
+      "survivor"
+    ]
+  },
+  {
+    "name": "Bob",
+    "href": "bob.html",
+    "tags": [
+      "npc"
+    ]
+  },
+  {
+    "name": "Bonsai Sage",
+    "href": "bonsai_sage.html",
+    "tags": [
+      "mentor",
+      "hirogawa"
+    ]
+  },
+  {
+    "name": "Crimson Dynasty Titles",
+    "href": "crimson_dynasty_titles.html",
+    "tags": [
+      "reference"
+    ]
+  },
+  {
+    "name": "Don Bastion",
+    "href": "don_bastion.html",
+    "tags": [
+      "galport",
+      "merchant"
+    ]
+  },
+  {
+    "name": "Dog Elder of Eddara",
+    "href": "dog_elder_of_eddara.html",
+    "tags": [
+      "eddara",
+      "mentor"
+    ]
+  },
+  {
+    "name": "Fenrir",
+    "href": "fenrir.html",
+    "tags": [
+      "legendary"
+    ]
+  },
+  {
+    "name": "Ferdinand Passaro",
+    "href": "ferdinand_passaro.html",
+    "tags": [
+      "galport",
+      "diplomat"
+    ]
+  },
+  {
+    "name": "Hanzo",
+    "href": "hanzo.html",
+    "tags": [
+      "hirogawa",
+      "protagonist"
+    ]
+  },
+  {
+    "name": "Hideo Kohiba",
+    "href": "hideo_kohiba.html",
+    "tags": [
+      "kojimigakure",
+      "shadow"
+    ]
+  },
+  {
+    "name": "Hitomi",
+    "href": "hitomi.html",
+    "tags": [
+      "hirogawa",
+      "support"
+    ]
+  },
+  {
+    "name": "Ishigane",
+    "href": "ishigane.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Kaze",
+    "href": "kaze.html",
+    "tags": [
+      "galport",
+      "rebel"
+    ]
+  },
+  {
+    "name": "King Frog of Verdathal",
+    "href": "king_frog_of_verdathal.html",
+    "tags": [
+      "verdathal"
+    ]
+  },
+  {
+    "name": "King Elmanu II",
+    "href": "king_elmanu_ii.html",
+    "tags": [
+      "galport",
+      "monarch"
+    ]
+  },
+  {
+    "name": "Kodomaru",
+    "href": "kodomaru.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Kyo",
+    "href": "kyo.html",
+    "tags": [
+      "hirogawa",
+      "survivor"
+    ]
+  },
+  {
+    "name": "Kuro",
+    "href": "kuro.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Manolo Marella",
+    "href": "manolo_marella.html",
+    "tags": [
+      "marella",
+      "smuggler"
+    ]
+  },
+  {
+    "name": "Master Nagamizu",
+    "href": "master_nagamizu.html",
+    "tags": [
+      "hirogawa",
+      "mentor"
+    ]
+  },
+  {
+    "name": "Michio",
+    "href": "michio.html",
+    "tags": [
+      "hirogawa",
+      "protagonist"
+    ]
+  },
+  {
+    "name": "Midori",
+    "href": "midori.html",
+    "tags": [
+      "hirogawa",
+      "support"
+    ]
+  },
+  {
+    "name": "Namika",
+    "href": "namika.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Okashira",
+    "href": "okashira.html",
+    "tags": [
+      "antagonist"
+    ]
+  },
+  {
+    "name": "Petrus Avales Barcal",
+    "href": "petrus_avales_barcal.html",
+    "tags": [
+      "galport",
+      "diplomat"
+    ]
+  },
+  {
+    "name": "Pip",
+    "href": "pip.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Pombeiro de Galporta",
+    "href": "pombeiro_de_galporta.html",
+    "tags": [
+      "galport",
+      "leader"
+    ]
+  },
+  {
+    "name": "Pta-Khaem (Dream King of Eresh)",
+    "href": "pta_khaem.html",
+    "tags": [
+      "eresh",
+      "dream"
+    ]
+  },
+  {
+    "name": "Saul Azar",
+    "href": "saul_azar.html",
+    "tags": [
+      "galport",
+      "antagonist"
+    ]
+  },
+  {
+    "name": "Shion",
+    "href": "shion.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Solid the Snake",
+    "href": "solid_the_snake.html",
+    "tags": [
+      "kojimigakure",
+      "smuggler"
+    ]
+  },
+  {
+    "name": "Tera",
+    "href": "tera.html",
+    "tags": [
+      "ally"
+    ]
+  },
+  {
+    "name": "Tetsumaru",
+    "href": "tetsumaru.html",
+    "tags": [
+      "ally"
+    ]
+  }
+]
+</script>
+
   <script>
-    const cData = [
-      { name: 'Aka', href: 'aka.html' },
-      { name: 'Amelia', href: 'amelia.html' },
-      { name: 'Aoi', href: 'aoi.html' },
-      { name: 'Aya', href: 'aya.html' },
-      { name: 'Betto', href: 'betto.html' },
-      { name: 'Bob', href: 'bob.html' },
-      { name: 'Bonsai Sage', href: 'bonsai_sage.html' },
-      { name: 'Crimson Dynasty Titles', href: 'crimson_dynasty_titles.html' },
-      { name: 'Don Bastion', href: 'don_bastion.html' },
-      { name: 'Dog Elder of Eddara', href: 'dog_elder_of_eddara.html' },
-      { name: 'Fenrir', href: 'fenrir.html' },
-      { name: 'Ferdinand Passaro', href: 'ferdinand_passaro.html' },
-      { name: 'Hanzo', href: 'hanzo.html' },
-      { name: 'Hideo Kohiba', href: 'hideo_kohiba.html' },
-      { name: 'Hitomi', href: 'hitomi.html' },
-      { name: 'Ishigane', href: 'ishigane.html' },
-      { name: 'Kaze', href: 'kaze.html' },
-      { name: 'King Frog of Verdathal', href: 'king_frog_of_verdathal.html' },
-      { name: 'King Elmanu II', href: 'king_elmanu_ii.html' },
-      { name: 'Kodomaru', href: 'kodomaru.html' },
-      { name: 'Kyo', href: 'kyo.html' },
-      { name: 'Kuro', href: 'kuro.html' },
-      { name: 'Manolo Marella', href: 'manolo_marella.html' },
-      { name: 'Master Nagamizu', href: 'master_nagamizu.html' },
-      { name: 'Michio', href: 'michio.html' },
-      { name: 'Midori', href: 'midori.html' },
-      { name: 'Namika', href: 'namika.html' },
-      { name: 'Okashira', href: 'okashira.html' },
-      { name: 'Petrus Avales Barcal', href: 'petrus_avales_barcal.html' },
-      { name: 'Pip', href: 'pip.html' },
-      { name: 'Pombeiro de Galporta', href: 'pombeiro_de_galporta.html' },
-      { name: 'Pta-Khaem (Dream King of Eresh)', href: 'pta_khaem.html' },
-      { name: 'Saul Azar', href: 'saul_azar.html' },
-      { name: 'Solid the Snake', href: 'solid_the_snake.html' },
-      { name: 'Shion', href: 'shion.html' },
-      { name: 'Tera', href: 'tera.html' },
-      { name: 'Tetsumaru', href: 'tetsumaru.html' }
-    ].map(d => ({ ...d, letter: (d.name || '').charAt(0).toUpperCase() || 'Other' }));
+    // Reset any accidentally saved edit state/markup
+  document.body.classList.remove('edit-active');
+    const cListReset = document.getElementById('c-list');
+    const cAddWrapReset = document.getElementById('c-add-wrap');
+    if (cListReset) cListReset.innerHTML = '';
+    if (cAddWrapReset) cAddWrapReset.innerHTML = '';
+
+    const TAGS_URL = "../../../assets/tags.json";
+    const TAG_ENDPOINT = (window.SAVE_ENDPOINT || 'http://localhost:3000/__save').replace(/\/__save.*$/, '').replace(/\/$/, '') + '/__update-tags';
+    const dataEl = document.getElementById('c-data-json');
+    const initialData = (() => {
+      if (dataEl) {
+        try { return JSON.parse(dataEl.textContent || '[]'); } catch (e) { return []; }
+      }
+      return [];
+    })();
+    const cData = (initialData.length ? initialData : []).map(d => {
+      const letter = (d.name || '').charAt(0).toUpperCase() || 'Other';
+      const baseTags = Array.from(new Set([...(d.tags || []), letter]));
+      return { ...d, letter, baseTags, tags: baseTags.slice() };
+    });
+    const persistData = () => {
+      if (!dataEl) return;
+      const plain = cData.map(({ name, href, tags }) => ({ name, href, tags }));
+      dataEl.textContent = JSON.stringify(plain, null, 2);
+    };
+
+    let tagStore = {};
 
     const cSearch = document.getElementById('c-search');
     const cFilter = document.getElementById('c-filter');
+    const cTag = document.getElementById('c-tag');
     const cSort = document.getElementById('c-sort');
     const cGroup = document.getElementById('c-group');
     const cList = document.getElementById('c-list');
 
+    const slugFromHref = (href = '') => href.replace(/\\/g, '/').split('/').pop().replace(/\.html?$/, '');
+
+    const mergeTags = () => {
+      const charTags = (tagStore.characters) || {};
+      cData.forEach(d => {
+        const slug = slugFromHref(d.href);
+        const stored = charTags[slug];
+        const letter = (d.name || '').charAt(0).toUpperCase() || 'Other';
+        const base = (stored && stored.length) ? stored.slice() : (d.baseTags || []).slice();
+        if (!base.includes(letter)) base.push(letter);
+        d.tags = base;
+        d.letter = letter;
+      });
+    };
+
     const buildCFilter = () => {
       const values = Array.from(new Set(cData.map(d => d.letter))).sort();
       cFilter.innerHTML = '<option value="all">All</option>' + values.map(v => `<option value="${v}">${v}</option>`).join('');
+      const tagValues = Array.from(new Set(cData.flatMap(d => d.tags || []))).sort();
+      cTag.innerHTML = '<option value="all">All</option>' + tagValues.map(v => `<option value="${v}">${v}</option>`).join('');
     };
 
     const renderC = () => {
+      const editing = document.body.classList.contains('edit-active');
       const q = (cSearch.value || '').toLowerCase();
       const flt = cFilter.value;
+      const tag = cTag.value;
       let items = cData.filter(d => d.name.toLowerCase().includes(q));
       if (flt !== 'all') items = items.filter(d => d.letter === flt);
+      if (tag !== 'all') items = items.filter(d => (d.tags || []).includes(tag));
 
       if (cSort.value === 'name') items.sort((a, b) => a.name.localeCompare(b.name));
       else items.sort((a, b) => b.name.localeCompare(a.name));
 
-      const renderItem = d => `<li><a href="${d.href}">${d.name}</a><span class="meta-chip">${d.letter}</span></li>`;
+      const renderItem = d => {
+        const chips = (d.tags || []).map(t => `<span class="meta-chip">${t}</span>`).join('');
+        const remove = editing ? `<button class="inline-remove" data-href="${d.href}" title="Remove">✕</button>` : '';
+        return `<li>${remove}<a href="${d.href}">${d.name}</a><span class="meta-chip">${d.letter}</span>${chips}</li>`;
+      };
 
       if (cGroup.value === 'letter') {
         const grouped = {};
@@ -137,14 +460,99 @@
       } else {
         cList.innerHTML = '<ul class="link-list">' + (items.map(renderItem).join('') || '<li>No matches.</li>') + '</ul>';
       }
+
+      const addWrap = document.getElementById('c-add-wrap');
+      if (editing) {
+        addWrap.innerHTML = '<button id="c-add" class="nav-btn">+ Add entry</button>';
+      } else {
+        addWrap.innerHTML = '';
+      }
     };
 
     cSearch.addEventListener('input', renderC);
     cFilter.addEventListener('change', renderC);
+    cTag.addEventListener('change', renderC);
     cSort.addEventListener('change', renderC);
     cGroup.addEventListener('change', renderC);
+    const loadTags = async () => {
+      try {
+        const res = await fetch(TAGS_URL);
+        if (res.ok) tagStore = await res.json();
+      } catch (_) { tagStore = {}; }
+      mergeTags();
+      buildCFilter();
+      renderC();
+    };
+
+    const manageTags = async () => {
+      const menu = cData.map(d => `${slugFromHref(d.href)} – ${d.name}`).join('\n');
+      const slug = prompt(`Edit tags for which entry? Provide slug:\n${menu}`, slugFromHref(cData[0].href));
+      if (!slug) return;
+      const current = (tagStore.characters && tagStore.characters[slug]) || [];
+      const raw = prompt(`Tags for ${slug} (comma separated):`, current.join(', '));
+      if (raw === null) return;
+      const tags = raw.split(',').map(t => t.trim()).filter(Boolean);
+      try {
+        const res = await fetch(TAG_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ section: 'characters', slug, tags })
+        });
+        if (!res.ok) throw new Error(`Update failed ${res.status}`);
+        if (!tagStore.characters) tagStore.characters = {};
+        tagStore.characters[slug] = tags;
+        mergeTags();
+        buildCFilter();
+        renderC();
+        alert('Tags saved to assets/tags.json');
+      } catch (err) {
+        console.error('Tag update failed', err);
+        alert(`Tag update failed: ${err.message}`);
+      }
+    };
+
+    document.getElementById('c-manage-tags').addEventListener('click', manageTags);
+    document.getElementById('c-list').addEventListener('click', (e) => {
+      const btn = e.target.closest('.inline-remove');
+      if (!btn) return;
+      const href = btn.dataset.href;
+      const idx = cData.findIndex(d => d.href === href);
+      if (idx !== -1) {
+        cData.splice(idx, 1);
+        buildCFilter();
+        renderC();
+        const saveBtn = document.querySelector('.edit-bar button:nth-of-type(4)');
+        if (saveBtn) saveBtn.disabled = false;
+        persistData();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.id === 'c-add') {
+        const name = prompt('Name?');
+        if (!name) return;
+        const href = prompt('Href (relative, e.g., new_character.html)?', `${name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}.html`);
+        if (!href) return;
+        const tagsRaw = prompt('Tags (comma separated)?', '');
+        const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+        const letter = (name || '').charAt(0).toUpperCase() || 'Other';
+        if (!tags.includes(letter)) tags.push(letter);
+        cData.push({ name, href, tags, letter, baseTags: tags.slice() });
+        buildCFilter();
+        renderC();
+        const saveBtn = document.querySelector('.edit-bar button:nth-of-type(4)'); // Edit, Save, Cancel order after new/del
+        if (saveBtn) saveBtn.disabled = false;
+        persistData();
+      }
+    });
+
+    const bodyObserver = new MutationObserver(() => renderC());
+    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    // initial render from embedded defaults, then refresh from tag store
+    mergeTags();
     buildCFilter();
     renderC();
+    loadTags();
   </script>
   <script src="../../../assets/site.js" defer></script>
 </body>

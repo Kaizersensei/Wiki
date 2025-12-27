@@ -906,9 +906,14 @@
         if (!wrap) {
           wrap = document.createElement('div');
           wrap.className = 'inline-media-wrap';
+          wrap.style.display = 'inline-block';
+          wrap.style.maxWidth = '100%';
           const parent = node.parentElement;
           parent.insertBefore(wrap, node);
           wrap.appendChild(node);
+        } else if (!wrap.style.display) {
+          wrap.style.display = 'inline-block';
+          wrap.style.maxWidth = '100%';
         }
         // normalize stored size once per media
         if (!node.dataset.sizePercent) {

@@ -1,0 +1,230 @@
+{
+  "characters": {
+    "aka": [
+      "9thwave",
+      "boss",
+      "human",
+      "fire",
+      "earth",
+      "magma",
+      "nodachi",
+      "sword"
+    ],
+    "amelia": [
+      "galport",
+      "ally",
+      "avian",
+      "lark"
+    ],
+    "aoi": [
+      "9thwave",
+      "boss",
+      "water",
+      "dark",
+      "ice",
+      "spear"
+    ],
+    "aya": [
+      "ally"
+    ],
+    "betto": [
+      "hirogawa",
+      "survivor",
+      "companion",
+      "dog"
+    ],
+    "bob": [
+      "npc",
+      "eddara",
+      "beaver"
+    ],
+    "bonsai_sage": [
+      "mentor",
+      "hirogawa",
+      "chronogardener",
+      "time-traveler",
+      "herbalist"
+    ],
+    "crimson_dynasty_titles": [
+      "reference"
+    ],
+    "don_bastion": [
+      "galport",
+      "king",
+      "MIA",
+      "legendary",
+      "armored",
+      "gyrfalcon",
+      "short-sword",
+      "armor",
+      "helmet"
+    ],
+    "dog_elder_of_eddara": [
+      "eddara",
+      "mentor",
+      "dog",
+      "wizard-cane"
+    ],
+    "fenrir": [
+      "eddara",
+      "legendary",
+      "husky",
+      "wolf",
+      "chain-mail",
+      "armor",
+      "axe",
+      "cape"
+    ],
+    "ferdinand_passaro": [
+      "galport",
+      "writer",
+      "medium",
+      "avian",
+      "owl",
+      "glasses",
+      "hat"
+    ],
+    "hanzo": [
+      "hirogawa",
+      "parent",
+      "MIA",
+      "perfect-future",
+      "time-traveler",
+      "dagger",
+      "tessen",
+      "kunai-on-rope",
+      "wind",
+      "dark",
+      "human"
+    ],
+    "hideo_kohiba": [
+      "kojimigakure",
+      "renegade",
+      "mayor",
+      "parody",
+      "homage"
+    ],
+    "hitomi": [
+      "hirogawa",
+      "parent",
+      "MIA",
+      "perfect-future",
+      "prisoner",
+      "fire"
+    ],
+    "ishigane": [
+      "ally"
+    ],
+    "kaze": [
+      "galport",
+      "rebel"
+    ],
+    "king_frog_of_verdathal": [
+      "verdathal"
+    ],
+    "king_elmanu_ii": [
+      "galport",
+      "monarch"
+    ],
+    "kodomaru": [
+      "ally"
+    ],
+    "kyo": [
+      "hirogawa",
+      "survivor"
+    ],
+    "kuro": [
+      "ally"
+    ],
+    "manolo_marella": [
+      "marella",
+      "smuggler"
+    ],
+    "master_nagamizu": [
+      "hirogawa",
+      "mentor"
+    ],
+    "michio": [
+      "hirogawa",
+      "protagonist"
+    ],
+    "midori": [
+      "hirogawa",
+      "support"
+    ],
+    "namika": [
+      "ally"
+    ],
+    "okashira": [
+      "antagonist"
+    ],
+    "petrus_avales_barcal": [
+      "galport",
+      "diplomat"
+    ],
+    "pip": [
+      "ally"
+    ],
+    "pombeiro_de_galporta": [
+      "galport",
+      "leader"
+    ],
+    "pta_khaem": [
+      "eresh",
+      "dream"
+    ],
+    "saul_azar": [
+      "galport",
+      "antagonist"
+    ],
+    "shion": [
+      "ally"
+    ],
+    "solid_the_snake": [
+      "kojimigakure",
+      "smuggler"
+    ],
+    "tera": [
+      "ally"
+    ],
+    "tetsumaru": [
+      "ally"
+    ]
+  },
+  "team": {
+    "kaizer": [
+      "creative",
+      "lead",
+      "direction"
+    ],
+    "miles_eventide": [
+      "programming",
+      "lead",
+      "engine"
+    ],
+    "android": [
+      "infrastructure",
+      "automation",
+      "technical"
+    ],
+    "cyber_space_god": [
+      "qa",
+      "testing",
+      "stability"
+    ],
+    "music_fox": [
+      "audio",
+      "music",
+      "sound"
+    ],
+    "lyrakes": [
+      "honorable",
+      "support",
+      "thanks"
+    ],
+    "testperson": []
+  },
+  "tools": {
+    "infiniboard": []
+  }
+}
