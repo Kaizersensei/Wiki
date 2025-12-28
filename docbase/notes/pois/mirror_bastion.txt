@@ -1,5 +1,6 @@
 Source: Universe_Document.txt
-- L720, L2971-2982, L4253-4256: Mirror Bastion (Seigetsu) — fortress-prison holding Hitomi; Ninth Wave control; echoes prisoner regrets; screams echo to throne room; located in Seigetsu imperial capital.
+- L720, L2971-2982, L4253-4256: Mirror Bastion (Varthum) — fortress-prison holding Hitomi; Ninth Wave control; echoes prisoner regrets; screams echo to throne room; located in Varthum.
+- Captured while searching Varthum memory crystals for Hanzo; placed in a temporal loop prison. Only able to project flame messages when the relived memory includes fire; otherwise isolated and unaware of outside events.
 
 Notable NPCs:
 - Hitomi (imprisoned).

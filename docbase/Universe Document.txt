@@ -1,4 +1,4 @@
-﻿Lore Document Revision
+Lore Document Revision
   
 
 
@@ -1782,7 +1782,7 @@ Hitomi's Imprisonment – The Mirror Bastion
 “If you scream too loudly in the Bastion, it echoes in the throne room.”
 Hitomi vanished not long after Michio began his solo journey. She had caught whispers—fragments of time-warped echoes—that Hanzo had been spotted near the ancient shrine where he disappeared. She pursued the trail into the Tenebral Marches, a borderland warped by unstable time anomalies.
 There, she was caught by the Kageken, the monarchy’s covert guard who specialize in rooting out dissidents and "truth whisperers." They ambushed her under cover of a false truce. She didn’t go quietly. Seven Kageken were injured. One has never walked again.
-Now, she’s imprisoned in the Mirror Bastion—a secret fortress-prison hidden within the Imperial Court itself, beneath the Hall of Painted Silence in Seigetsu. No trial. No public record. The Bastion is a cruel irony—it reflects your greatest regrets and forces prisoners to relive them, endlessly.
+Now, she’s imprisoned in the Mirror Bastion—a secret fortress-prison hidden within the Imperial Court itself, beneath the Hall of Painted Silence in Varthum. No trial. No public record. The Bastion is a cruel irony—it reflects your greatest regrets and forces prisoners to relive them, endlessly.
 Her confinement is silent and solitary, yet she resists. Her mind is her weapon. She plays the long game. Somewhere deep inside her, she believes Hanzo is alive. And that Michio will learn the truth—perhaps even find her.
 Some say she’s sending encoded messages out through cherry blossom motifs painted by a mysterious street artist in Seigetsu. Others think that’s just a myth.
 But then again…
@@ -2534,7 +2534,7 @@ Other Realms
 
                                                                                                                                                                                                                                     * Mine Forge – Foundries set up in the Old Mines.
 
-                                                                                                                                                                                                                                    * Mirror Bastion (Seigetsu) – Hitomi’s prison; controlled by Ninth Wave affiliates.
+                                                                                                                                                                                                                                    * Mirror Bastion (Varthum) – Hitomi’s prison; controlled by Ninth Wave affiliates.
 
 ________________
 🌀 Time Fracture Zones / Glitch Realms

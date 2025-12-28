@@ -274,6 +274,20 @@ a:hover {
   margin: 0 0 6px 0;
   text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
+.breadcrumb {
+  margin: 0 0 12px 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--red-2);
+}
+.breadcrumb a {
+  color: var(--red-2);
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
 
 h1 {
   margin: 0 0 12px 0;
@@ -780,15 +794,40 @@ details.meta-toggle .meta-grid {
 }
 .inline-move {
   display: none;
-  margin-left: 4px;
-  padding: 2px 6px;
+  margin: 0 2px;
+  padding: 4px 10px;
   border: 1px solid var(--border);
-  border-radius: 4px;
-  background: #fff4d6;
+  border-radius: 6px;
+  background: #fff;
+  color: #2c2c2c;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  font-size: 13px;
+  line-height: 1.1;
+  min-width: 32px;
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
-.edit-active .inline-move {
-  display: inline-block;
+.inline-move-group {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  z-index: 7;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 6px;
+  gap: 6px;
+  pointer-events: auto;
+  min-width: 96px;
+  justify-content: center;
+}
+.edit-active .inline-move-group {
+  display: inline-flex;
 }
 .inline-move:hover {
   background: #ffe9ae;
@@ -803,8 +842,8 @@ details.meta-toggle .meta-grid {
 .inline-image {
   max-width: 100%;
   height: auto;
-  display: inline-block;
-  margin: 6px 4px;
+  display: block;
+  margin: 12px auto;
   border: 1px solid var(--border);
   border-radius: 6px;
   background: #fff;

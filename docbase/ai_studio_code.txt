@@ -1,0 +1,62 @@
+# Technical Specification: Wiki-to-Book "Drop-In" Implementation
+
+## Overview
+The goal is to transform a standard wiki or website landing page into a realistic, interactive digital book. This specific implementation must handle deep-linking, hierarchical "Wiki" structures, and ensure that content is never truncated by using internal page scrolling.
+
+---
+
+## 1. Deep-Linking (Drop-In Behavior)
+The application must support a `url` query parameter to allow external sites to link directly to a "Bookified" version of themselves.
+
+### Logic (App.tsx)
+- **Parameter Detection**: On mount, check `window.location.search` for a `url` key.
+- **Immediate Execution**: If the key exists, bypass the landing/splash UI and immediately trigger the fetching and processing state.
+- **State Management**:
+  - `IDLE`: Standard landing page.
+  - `FETCHING/PROCESSING`: Loading state with thematic feedback.
+  - `READING`: The interactive book view.
+
+---
+
+## 2. AI Content Restructuring (Gemini API)
+The AI must be instructed to treat the web content as a manuscript rather than a raw scrape.
+
+### Prompt Engineering (services/geminiService.ts)
+- **Wiki Awareness**: Instruct the model to identify hierarchical lists (nested menus, category trees) and preserve them as a "Table of Contents" on the opening pages.
+- **Formatting**: Use clean Markdown-style bullet points and indentation for nested items.
+- **Segmentation**: Divide content into logical pages (~300-500 words each) but prioritize semantic breaks (chapters, sections).
+
+---
+
+## 3. UI/UX: The "No Truncation" Scrollable Page
+Standard digital books often cut off text. This implementation uses a "Magic Paper" approach where the aesthetic remains static while the content scrolls.
+
+### Component Logic (components/ReaderPage.tsx)
+- **Visual Layers**:
+  1. **Fixed Background**: Paper texture and "Spine shadow" must remain static.
+  2. **Scrolling Content**: The text area must use `overflow-y-auto` with a custom-styled, minimal scrollbar.
+  3. **Visual Cues**: Implement a `sticky` header for section titles and a bottom "fade-out" gradient to signal more content below the fold.
+- **Styles**: Use a custom CSS scrollbar that matches the book's color palette (e.g., subtle browns/tans) to maintain immersion.
+
+---
+
+## 4. Visual Identity & Aesthetics
+- **Color Palette**: 
+  - Paper: `#fdfaf1`
+  - Text: `#3a2e2a` (Sepia-toned dark brown)
+  - Cover: `#3d2b1f` (Leather) with `#b8860b` (Gold leaf accents).
+- **Typography**: 
+  - Display: 'Playfair Display' (Serif, elegant).
+  - Body: 'EB Garamond' (Classical book serif).
+- **Effects**: 
+  - `page-curl`: A CSS-based gradient in the bottom corner of right-hand pages.
+  - `perspective-1000`: Used on the cover for a 3D hover effect.
+
+---
+
+## 5. Coding Agent Instructions
+When implementing, ensure the following:
+1. **Responsive Design**: On mobile, the book should stack or switch to a single-page view.
+2. **CORS Handling**: Use a proxy (like `allorigins`) to fetch HTML content from external wikis.
+3. **Accessibility**: Ensure page turning is available via keyboard (Arrows) and clear button targets.
+4. **Performance**: Truncate raw HTML input to the AI (approx. 30k-40k characters) to avoid context window overflows while capturing main content.

@@ -24,6 +24,38 @@
     }
   };
 
+const buildBreadcrumb = () => {
+    const panel = document.querySelector('.panel');
+    if (!panel) return;
+    const h1 = panel.querySelector('h1');
+    const old = panel.querySelector('.breadcrumb');
+    const eyebrow = panel.querySelector('.eyebrow');
+    const path = (location.pathname || '').replace(/\\/g, '/');
+    const match = path.match(/pages\/(.+)/);
+    if (!match) return;
+    const segments = match[1].split('/').filter(Boolean);
+    if (!segments.length) return;
+    // Skip breadcrumb on the top-level Retraissance index
+    if ((segments.length === 1 && /index\.html?$/i.test(segments[0])) || (segments.length <= 2 && segments[0] === 'retraissance' && /index\.html?$/i.test(segments[1] || ''))) return;
+    const makeLabel = (s) => s.replace(/\.html?$/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const crumbs = [];
+    let accum = '/pages';
+    segments.forEach((seg) => {
+      const isFile = /\.html?$/i.test(seg);
+      const label = isFile && h1 ? (h1.textContent.trim() || makeLabel(seg)) : makeLabel(seg);
+      accum += `/${seg}`;
+      const href = isFile ? accum : `${accum}/index.html`;
+      crumbs.push({ label, href });
+    });
+    const nav = document.createElement('nav');
+    nav.className = 'breadcrumb';
+    nav.innerHTML = crumbs.map((c, i) => `<a href="${c.href}">${c.label}</a>${i < crumbs.length - 1 ? ' / ' : ''}`).join('');
+    if (old) old.replaceWith(nav);
+    else if (eyebrow) eyebrow.replaceWith(nav);
+    else if (h1) panel.insertBefore(nav, h1);
+    else panel.prepend(nav);
+  };
+
   const initPrevNextNav = async () => {
     // Remove any existing baked/duplicate pagers before adding a fresh one.
     document.querySelectorAll('.pager-floating').forEach(el => el.remove());
@@ -542,12 +574,21 @@
 };
 
   // Fallback: replace any remaining pseudotags in innerHTML (including encoded) to ensure rendering.
-  const renderImageHtml = (raw) => {
+  const renderImageHtml = (raw, attrs = '') => {
     const url = resolvePseudoUrl(raw);
     const missing = url ? '' : ' inline-media-missing';
     const missingAttr = url ? '' : ' data-missing="1"';
+    const sizeMatch = attrs.match(/data-size\s*=\s*"([^"]+)"/i) || attrs.match(/size\s*=\s*"([^"]+)"/i);
+    const alignMatch = attrs.match(/data-align\s*=\s*"([^"]+)"/i) || attrs.match(/align\s*=\s*"([^"]+)"/i);
+    const sizeVal = sizeMatch ? sizeMatch[1] : '';
+    const alignVal = alignMatch ? alignMatch[1] : '';
+    const widthStyle = sizeVal ? `width:${sizeVal}${sizeVal.includes('%') ? '' : '%'};` : '';
+    const alignStyle = alignVal === 'left' ? 'margin-left:0;margin-right:auto;'
+      : alignVal === 'right' ? 'margin-left:auto;margin-right:0;' : 'margin-left:auto;margin-right:auto;';
     const safeAlt = (raw.split('/').pop() || 'image').replace(/"/g, '');
-    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}></div></div>`;
+    const dataSizeAttr = sizeVal ? ` data-size="${sizeVal}"` : '';
+    const dataAlignAttr = alignVal ? ` data-align="${alignVal}"` : '';
+    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}${dataSizeAttr}${dataAlignAttr} style="${widthStyle}${alignStyle}"></div></div>`;
   };
   const renderLineHtml = () => '<hr>';
   const renderBoxHtml = (raw) => {
@@ -569,31 +610,139 @@
   const applyInlineMediaWithFallback = () => {
     const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
     scopes.forEach(scope => {
-      // If formatting split the pseudotag across spans/tags, flatten that container to plain text first.
-      const tagRegex = /<\s*(image|video|box|line)|&lt;\s*(image|video|box|line)/i;
-      scope.querySelectorAll('p, div, span, li, h1, h2, h3, h4, h5, h6').forEach(el => {
-        const txt = el.innerText || '';
-        if (tagRegex.test(txt)) {
-          el.textContent = txt; // strip inline formatting so parsing can see the raw pseudotag text
-        }
-      });
-
       try { applyInlineMedia(); } catch (err) { console.error('applyInlineMedia failed', err); }
 
       let html = scope.innerHTML;
-      const hasPseudo = /<image>|<video|<box>|<line>|&lt;image&gt;|&lt;video|&lt;box&gt;|&lt;line&gt;/i.test(html);
+      // Detect both raw and encoded pseudotags, even when attributes are present.
+      const hasPseudo = /<image\b|<video\b|<box\b|<line\b|&lt;image\b|&lt;video\b|&lt;box\b|&lt;line\b/i.test(html);
       if (!hasPseudo) return;
-      html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+      // Decode any single- or double-encoded bracket entities.
       html = html
-        .replace(/<image>([\s\S]*?)<\/image>/gi, (_, p) => renderImageHtml(p.trim()))
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>');
+      html = html
+        .replace(/<image([^>]*)>([\s\S]*?)<\/image>/gi, (_, attr, p) => renderImageHtml(p.trim(), attr || ''))
         .replace(/<line><\/line>/gi, () => renderLineHtml())
         .replace(/<box>([\s\S]*?)<\/box>/gi, (_, p) => renderBoxHtml(p))
         .replace(/<video([^>]*)>([\s\S]*?)<\/video>/gi, (_, attrs, src) => renderVideoHtml(src.trim(), attrs))
-        .replace(/&lt;image&gt;([\s\S]*?)&lt;\/image&gt;/gi, (_, p) => renderImageHtml(p.trim()))
+        .replace(/&lt;image([^>]*)&gt;([\s\S]*?)&lt;\/image&gt;/gi, (_, attr, p) => renderImageHtml(p.trim(), attr || ''))
         .replace(/&lt;line&gt;&lt;\/line&gt;/gi, () => renderLineHtml())
         .replace(/&lt;box&gt;([\s\S]*?)&lt;\/box&gt;/gi, (_, p) => renderBoxHtml(p))
         .replace(/&lt;video([^>]*)&gt;([\s\S]*?)&lt;\/video&gt;/gi, (_, attrs, src) => renderVideoHtml(src.trim(), attrs));
       scope.innerHTML = html;
+      // If any literal <image> tags remain (DOM created elements), convert them in-place too.
+      scope.querySelectorAll('image').forEach(tag => {
+        const raw = (tag.textContent || '').trim();
+        const attrs = [];
+        if (tag.hasAttribute('data-size')) attrs.push(`data-size="${tag.getAttribute('data-size')}"`);
+        if (tag.hasAttribute('size')) attrs.push(`size="${tag.getAttribute('size')}"`);
+        if (tag.hasAttribute('data-align')) attrs.push(`data-align="${tag.getAttribute('data-align')}"`);
+        const htmlFrag = renderImageHtml(raw, attrs.join(' '));
+        const temp = document.createElement('div');
+        temp.innerHTML = htmlFrag;
+        const rendered = temp.firstChild;
+        tag.replaceWith(rendered);
+      });
+      // As a last resort, convert text nodes that still contain pseudo markup.
+      const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const p = node.parentElement;
+          if (p) {
+            const tag = p.tagName;
+            if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
+            if (p.closest && p.closest(CONTROL_SELECTOR)) return NodeFilter.FILTER_REJECT;
+          }
+          const val = node.nodeValue || '';
+          if (val.includes('<image') || val.includes('<video') || val.includes('<box') || val.includes('<line')) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          if (val.includes('&lt;image') || val.includes('&lt;video') || val.includes('&lt;box') || val.includes('&lt;line')) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_REJECT;
+        }
+      });
+      const textNodes = [];
+      let tn;
+      while ((tn = walker.nextNode())) textNodes.push(tn);
+      textNodes.forEach(node => {
+        const raw = (node.nodeValue || '')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>');
+        const frag = document.createDocumentFragment();
+        let remaining = raw;
+        const next = () => {
+          const candidates = [];
+          const mi = /<image([^>]*)>([\s\S]*?)<\/image>/i.exec(remaining);
+          const mv = /<video([^>]*)>([\s\S]*?)<\/video>/i.exec(remaining);
+          const mb = /<box>([\s\S]*?)<\/box>/i.exec(remaining);
+          const ml = /<line><\/line>/i.exec(remaining);
+          if (mi) candidates.push({ type: 'img', m: mi });
+          if (mv) candidates.push({ type: 'vid', m: mv });
+          if (mb) candidates.push({ type: 'box', m: mb });
+          if (ml) candidates.push({ type: 'line', m: ml });
+          if (!candidates.length) return null;
+          return candidates.sort((a, b) => a.m.index - b.m.index)[0];
+        };
+        let hit;
+        while ((hit = next())) {
+          const { type, m } = hit;
+          const before = remaining.slice(0, m.index);
+          if (before) frag.appendChild(document.createTextNode(before));
+          if (type === 'img') {
+            const htmlFrag = renderImageHtml((m[2] || '').trim(), m[1] || '');
+            const tmp = document.createElement('div');
+            tmp.innerHTML = htmlFrag;
+            frag.appendChild(tmp.firstChild);
+          } else if (type === 'vid') {
+            const htmlFrag = renderVideoHtml((m[2] || '').trim(), m[1] || '');
+            const tmp = document.createElement('div');
+            tmp.innerHTML = htmlFrag;
+            frag.appendChild(tmp.firstChild);
+          } else if (type === 'box') {
+            const htmlFrag = renderBoxHtml(m[1] || '');
+            const tmp = document.createElement('div');
+            tmp.innerHTML = htmlFrag;
+            frag.appendChild(tmp.firstChild);
+          } else if (type === 'line') {
+            const tmp = document.createElement('hr');
+            frag.appendChild(tmp);
+          }
+          remaining = remaining.slice(m.index + m[0].length);
+        }
+        if (remaining) frag.appendChild(document.createTextNode(remaining));
+        node.replaceWith(frag);
+      });
+      // Wrap any bare inline media nodes (native img/video) for controls/display.
+      const wrapMediaNode = (node) => {
+        if (!node || node.closest('.inline-media-block')) return;
+        const block = document.createElement('div');
+        block.className = 'inline-media-block';
+        block.contentEditable = 'false';
+        const wrap = document.createElement('div');
+        wrap.className = 'inline-media-wrap';
+        wrap.style.display = 'inline-block';
+        wrap.style.maxWidth = '100%';
+        const pseudo = node.dataset && node.dataset.pseudo;
+        if (pseudo && (!node.src || node.src.includes('inline-media-missing'))) {
+          node.src = resolvePseudoUrl(pseudo);
+        }
+        if (node.dataset && node.dataset.size && !node.style.width) {
+          node.style.width = `${node.dataset.size}${node.dataset.size.includes('%') ? '' : '%'}`;
+        }
+        if (node.dataset && node.dataset.align) {
+          block.style.textAlign = node.dataset.align;
+        }
+        wrap.appendChild(node);
+        block.appendChild(wrap);
+        if (node.parentElement) node.parentElement.replaceWith(block);
+      };
+      scope.querySelectorAll('img.inline-image').forEach(wrapMediaNode);
+      scope.querySelectorAll('video.inline-video').forEach(wrapMediaNode);
     });
   };
 
@@ -1138,11 +1287,12 @@
           btnDel = document.createElement('button');
           btnDel.type = 'button';
           btnDel.className = 'inline-remove-media';
-          btnDel.textContent = '–';
+          btnDel.textContent = '×';
           btnDel.title = 'Remove media';
           btnDel.addEventListener('click', (e) => {
             e.stopPropagation();
-            wrap.remove();
+            const block = wrap.closest('.inline-media-block');
+            if (block) block.remove(); else wrap.remove();
             const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
             if (saveBtn) saveBtn.disabled = false;
           });
@@ -1219,6 +1369,7 @@
               : 100;
           const next = Math.min(200, Math.max(10, base + delta));
           node.dataset.sizePercent = String(next);
+          node.dataset.size = String(next);
           node.style.width = `${next}%`;
           const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
           if (saveBtn) saveBtn.disabled = false;
@@ -1246,6 +1397,128 @@
           btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
           wrap.appendChild(btnGrow);
         }
+        // Move controls for media blocks
+        let moveGroup = wrap.querySelector('.inline-move-group');
+        if (!moveGroup) {
+          moveGroup = document.createElement('div');
+          moveGroup.className = 'inline-move-group';
+          wrap.appendChild(moveGroup);
+        }
+        const ensureMoveBtn = (cls, label, title, dir) => {
+          let btn = moveGroup.querySelector(`.${cls}`);
+          if (!btn) {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `inline-move ${cls}`;
+            btn.textContent = label;
+            btn.title = title;
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const block = wrap.closest('.inline-media-block');
+              if (!block) return;
+              const markdown = panel.querySelector('.markdown') || panel;
+
+              // Find the start of the current section (nearest preceding h2/h3/h4 within markdown).
+              const findSectionStart = (el) => {
+                let cursor = el;
+                while (cursor && cursor !== markdown) {
+                  if (cursor.tagName && /^H[234]$/i.test(cursor.tagName)) return cursor;
+                  if (cursor.previousElementSibling) {
+                    cursor = cursor.previousElementSibling;
+                    if (cursor && cursor.tagName && /^H[234]$/i.test(cursor.tagName)) return cursor;
+                  } else {
+                    cursor = cursor.parentElement;
+                  }
+                }
+                // fallback: nearest direct child of markdown
+                let fallback = el;
+                while (fallback && fallback.parentElement !== markdown) fallback = fallback.parentElement;
+                return fallback;
+              };
+
+              const start = findSectionStart(block);
+              const fallbackMoveBlock = () => {
+                const parent = block.parentElement;
+                if (!parent) return false;
+                const sibling = dir === 'up' ? block.previousElementSibling : block.nextElementSibling;
+                if (!sibling) return false;
+                if (dir === 'up') parent.insertBefore(block, sibling);
+                else parent.insertBefore(block, sibling.nextSibling);
+                return true;
+              };
+
+              if (!start || !start.parentElement) {
+                if (!fallbackMoveBlock()) return;
+                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+                if (saveBtn) saveBtn.disabled = false;
+                return;
+              }
+
+              const collectSection = (startNode) => {
+                const nodes = [];
+                let n = startNode;
+                while (n) {
+                  nodes.push(n);
+                  const next = n.nextElementSibling;
+                  if (next && next.tagName && /^H[234]$/i.test(next.tagName)) break;
+                  n = next;
+                }
+                return nodes;
+              };
+
+              const sectionNodes = collectSection(start);
+              const parent = start.parentElement;
+
+              const findPrevSectionStart = () => {
+                let n = start.previousElementSibling;
+                while (n) {
+                  if (n.tagName && /^H[234]$/i.test(n.tagName)) return n;
+                  n = n.previousElementSibling;
+                }
+                return null;
+              };
+              const findNextSectionStart = () => {
+                let n = sectionNodes[sectionNodes.length - 1].nextElementSibling;
+                while (n) {
+                  if (n.tagName && /^H[234]$/i.test(n.tagName)) return n;
+                  n = n.nextElementSibling;
+                }
+                return null;
+              };
+
+              const moveSectionUp = () => {
+                const prevStart = findPrevSectionStart();
+                if (!prevStart) return false;
+                const frag = document.createDocumentFragment();
+                sectionNodes.forEach(node => frag.appendChild(node));
+                parent.insertBefore(frag, prevStart);
+                return true;
+              };
+              const moveSectionDown = () => {
+                const nextStart = findNextSectionStart();
+                if (!nextStart) return false;
+                // insert after the next section group
+                const nextGroup = collectSection(nextStart);
+                const anchor = nextGroup[nextGroup.length - 1].nextSibling;
+                const frag = document.createDocumentFragment();
+                sectionNodes.forEach(node => frag.appendChild(node));
+                parent.insertBefore(frag, anchor);
+                return true;
+              };
+
+              const moved = dir === 'up' ? moveSectionUp() : moveSectionDown();
+              if (!moved) {
+                // If no neighboring section to swap with, try local block move as fallback.
+                if (!fallbackMoveBlock()) return;
+              }
+              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+              if (saveBtn) saveBtn.disabled = false;
+            });
+            moveGroup.appendChild(btn);
+          }
+        };
+        ensureMoveBtn('inline-move-up', '↑', 'Move media up', 'up');
+        ensureMoveBtn('inline-move-down', '↓', 'Move media down', 'down');
         let alignGroup = wrap.querySelector('.inline-align-group');
         if (!alignGroup) {
           alignGroup = document.createElement('div');
@@ -1259,6 +1532,7 @@
               e.stopPropagation();
               const block = wrap.closest('.inline-media-block') || wrap.parentElement;
               if (block) block.style.textAlign = value;
+              node.dataset.align = value;
               const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
               if (saveBtn) saveBtn.disabled = false;
             });
@@ -1408,6 +1682,9 @@
     const btnAddHeading = document.createElement('button');
     btnAddHeading.textContent = 'Add Heading';
     btnAddHeading.className = 'secondary';
+    const btnAddImage = document.createElement('button');
+    btnAddImage.textContent = 'Add Image';
+    btnAddImage.className = 'secondary';
     const btnDelete = document.createElement('button');
     btnDelete.textContent = 'Delete';
     btnDelete.className = 'danger';
@@ -1423,6 +1700,7 @@
     bar.appendChild(btnNew);
     bar.appendChild(btnAddHeading);
     bar.appendChild(btnDelete);
+    bar.appendChild(btnAddImage);
     bar.appendChild(btnEdit);
     bar.appendChild(btnSave);
     bar.appendChild(btnCancel);
@@ -1458,6 +1736,8 @@
         const targets = panel.querySelectorAll('.markdown, .callout, .panel > h1, .panel > .eyebrow, [data-editable="true"], .editable-text, .panel > p');
         targets.forEach(el => { el.contentEditable = on; });
         if (on) {
+          // First re-render any pseudotags entered as text so media controls can attach.
+          try { applyInlineMediaWithFallback(); } catch (err) { console.error('inline media refresh failed', err); }
           targets.forEach(el => sanitizeEditableElement(el));
           ensureMediaControls();
         }
@@ -1805,7 +2085,7 @@
 
     // Plain-text paste handler to normalize formatting to site styles.
     const sanitizeNode = (node) => {
-      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H2','H3','H4','BLOCKQUOTE','PRE','CODE','A','HR','LINE','DIV','IMG','VIDEO','BOX']);
+      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H2','H3','H4','BLOCKQUOTE','PRE','CODE','A','HR','LINE','DIV','IMG','VIDEO','BOX','IMAGE']);
       const transformSpan = (span) => {
         const style = (span.getAttribute('style') || '').toLowerCase();
         const isBold = /font-weight:\s*(bold|[7-9]\d\d|1\d00)/.test(style);
@@ -1834,7 +2114,63 @@
         });
         return frag;
       };
-      if (node.nodeType === Node.TEXT_NODE) return document.createTextNode(node.nodeValue || '');
+      if (node.nodeType === Node.TEXT_NODE) {
+        const txt = node.nodeValue || '';
+        if (!txt.includes('<image') && !txt.includes('<video') && !txt.includes('<box') && !txt.includes('<line')) {
+          return document.createTextNode(txt);
+        }
+        // Convert pseudotag text into elements so it can be rendered later.
+        const frag = document.createDocumentFragment();
+        let remaining = txt;
+        const nextMatch = () => {
+          const patterns = [
+            { type: 'img', re: /<image([^>]*)>([\s\S]*?)<\/image>/i },
+            { type: 'vid', re: /<video([^>]*)>([\s\S]*?)<\/video>/i },
+            { type: 'box', re: /<box>([\s\S]*?)<\/box>/i },
+            { type: 'line', re: /<line><\/line>/i },
+          ];
+          let best = null;
+          patterns.forEach(pat => {
+            const m = pat.re.exec(remaining);
+            if (m && (best === null || m.index < best.match.index)) best = { pat, match: m };
+          });
+          return best;
+        };
+        let found;
+        while ((found = nextMatch())) {
+          const { pat, match } = found;
+          const before = remaining.slice(0, match.index);
+          if (before) frag.appendChild(document.createTextNode(before));
+          if (pat.type === 'img') {
+            const el = document.createElement('image');
+            const attrs = match[1] || '';
+            const body = (match[2] || '').trim();
+            const size = (attrs.match(/data-size\s*=\s*"([^"]+)"/i) || [])[1] || '';
+            const align = (attrs.match(/data-align\s*=\s*"([^"]+)"/i) || [])[1] || '';
+            if (size) el.setAttribute('data-size', size);
+            if (align) el.setAttribute('data-align', align);
+            el.textContent = body;
+            frag.appendChild(el);
+          } else if (pat.type === 'vid') {
+            const el = document.createElement('video');
+            const attrs = (match[1] || '').trim();
+            const body = (match[2] || '').trim();
+            if (attrs) el.setAttribute('data-attrs', attrs);
+            el.textContent = body;
+            frag.appendChild(el);
+          } else if (pat.type === 'box') {
+            const el = document.createElement('box');
+            el.innerHTML = match[1] || '';
+            frag.appendChild(el);
+          } else if (pat.type === 'line') {
+            const el = document.createElement('line');
+            frag.appendChild(el);
+          }
+          remaining = remaining.slice(match.index + match[0].length);
+        }
+        if (remaining) frag.appendChild(document.createTextNode(remaining));
+        return frag;
+      }
       if (node.nodeType !== Node.ELEMENT_NODE) return null;
       const tag = node.tagName;
       if (tag === 'SPAN') return transformSpan(node);
@@ -1880,14 +2216,31 @@
         });
         return el;
       }
+      if (tag === 'IMAGE') {
+        const el = document.createElement('image');
+        if (node.dataset.size) el.setAttribute('data-size', node.dataset.size);
+        if (node.dataset.sizePercent) el.setAttribute('data-size', node.dataset.sizePercent);
+        if (node.dataset.align) el.setAttribute('data-align', node.dataset.align);
+        el.textContent = node.textContent || '';
+        return el;
+      }
       if (tag === 'IMG' || tag === 'VIDEO') {
         const el = document.createElement(tag.toLowerCase());
         const src = node.getAttribute('src') || '';
         if (src) el.setAttribute('src', src);
         if (node.className) el.className = node.className;
         if (node.dataset.sizePercent) el.dataset.sizePercent = node.dataset.sizePercent;
+        if (node.dataset.size) el.dataset.size = node.dataset.size;
+        if (node.dataset.align) el.dataset.align = node.dataset.align;
         if (node.dataset.pseudo) el.dataset.pseudo = node.dataset.pseudo;
         if (node.dataset.missing) el.dataset.missing = node.dataset.missing;
+        if (node.style) {
+          const copy = ['width','height','maxWidth','maxHeight','margin','display','pointerEvents'];
+          copy.forEach(k => {
+            const v = node.style[k];
+            if (v) el.style[k] = v;
+          });
+        }
         if (!src) {
           el.classList.add('inline-media-missing');
           el.dataset.missing = '1';
@@ -2084,10 +2437,83 @@
     const doSave = async () => {
       btnSave.disabled = true;
       btnEdit.disabled = true;
+
+      // Re-hydrate inline media into pseudotags before capture, so tags survive saving (and preserve size/alignment).
+      const restorePseudotags = () => {
+        const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
+        const wrapIfBare = (node) => {
+          if (!node.parentElement || node.parentElement === document.body) return false;
+          const pLike = ['P', 'DIV', 'LI'];
+          if (pLike.includes(node.parentElement.tagName)) return false;
+          const p = document.createElement('p');
+          node.replaceWith(p);
+          p.appendChild(node);
+          return true;
+        };
+        scopes.forEach(scope => {
+          scope.querySelectorAll('img.inline-image').forEach(img => {
+            const pseudo = img.dataset.pseudo || '';
+            if (!pseudo.trim()) return;
+            const size = img.dataset.size || img.dataset.sizePercent || (img.style.width && img.style.width.endsWith('%') ? img.style.width.replace('%','') : '');
+            const parentAlign = (img.closest('.inline-media-block') || {}).style && (img.closest('.inline-media-block') || {}).style.textAlign;
+            const align = img.dataset.align || (parentAlign ? (parentAlign === 'left' || parentAlign === 'right' ? parentAlign : 'center') : '');
+            const cleanImg = document.createElement('img');
+            cleanImg.className = 'inline-image';
+            cleanImg.dataset.pseudo = pseudo.trim();
+            if (size) cleanImg.dataset.size = size;
+            if (align) cleanImg.dataset.align = align;
+            if (size) cleanImg.style.width = `${size}${size.includes('%') ? '' : '%'}`;
+            if (align === 'left') cleanImg.style.margin = '12px auto 12px 0';
+            else if (align === 'right') cleanImg.style.margin = '12px 0 12px auto';
+            else cleanImg.style.margin = '12px auto';
+            cleanImg.src = resolvePseudoUrl(pseudo.trim());
+            const block = img.closest('.inline-media-block');
+            if (block) {
+              block.replaceWith(cleanImg);
+            } else {
+              if (!wrapIfBare(cleanImg)) img.replaceWith(cleanImg);
+            }
+          });
+          scope.querySelectorAll('video.inline-video').forEach(vid => {
+            const pseudo = vid.dataset.pseudo || '';
+            if (!pseudo.trim()) return;
+            const attrs = [];
+            if (!vid.controls) attrs.push('-nocontrols');
+            if (vid.loop) attrs.push('-loop');
+            const cleanVid = document.createElement('video');
+            cleanVid.className = 'inline-video';
+            cleanVid.dataset.pseudo = pseudo.trim();
+            if (attrs.length) cleanVid.dataset.attrs = attrs.join(' ');
+            cleanVid.src = resolvePseudoUrl(pseudo.trim());
+            cleanVid.autoplay = true;
+            cleanVid.muted = true;
+            cleanVid.playsInline = true;
+            cleanVid.setAttribute('playsinline', '');
+            if (attrs.includes('-loop')) { cleanVid.loop = true; cleanVid.setAttribute('loop', ''); }
+            if (attrs.includes('-nocontrols')) cleanVid.controls = false;
+            else cleanVid.controls = true;
+            cleanVid.style.maxWidth = '100%';
+            cleanVid.style.display = 'block';
+            cleanVid.style.margin = '12px auto';
+            const block = vid.closest('.inline-media-block');
+            if (block) {
+              block.replaceWith(cleanVid);
+            } else {
+              if (!wrapIfBare(cleanVid)) vid.replaceWith(cleanVid);
+            }
+          });
+        });
+      };
+
       // Normalize path to be relative to repo root (start at pages/retraissance/...).
       const pagePath = (location.pathname || '').replace(/\\/g, '/');
       const relMatch = pagePath.match(/(pages\/retraissance\/.*)$/);
       const normPath = relMatch ? relMatch[1] : pagePath.replace(/^\/+/, '');
+
+      // Ensure any text pseudotags are rendered so we can convert them back cleanly.
+      try { applyInlineMediaWithFallback(); } catch (_) {}
+      // Apply conversion before stripping edit artifacts to preserve tags (now into native media tags).
+      restorePseudotags();
       stripEditArtifacts();
       const payload = {
         path: normPath || (location.pathname || '').replace(/^\//, ''),
@@ -2203,6 +2629,61 @@
     };
     btnAddHeading.addEventListener('click', addHeadingBlock);
 
+    const addImageAtCursor = () => {
+      setEditable(true);
+      const pseudo = prompt('Image filename (from media folder or URL):', '') || '';
+      if (!pseudo.trim()) return;
+      const size = prompt('Width percent (10-200):', '100') || '100';
+      const align = (prompt('Align (left/center/right):', 'center') || 'center').toLowerCase();
+      const img = document.createElement('img');
+      img.className = 'inline-image';
+      img.dataset.pseudo = pseudo.trim();
+      img.dataset.size = size.trim();
+      img.dataset.align = ['left','right','center'].includes(align) ? align : 'center';
+      img.src = resolvePseudoUrl(pseudo.trim());
+      img.style.width = `${size}${size.includes('%') ? '' : '%'}`;
+      if (img.dataset.align === 'left') img.style.margin = '12px auto 12px 0';
+      else if (img.dataset.align === 'right') img.style.margin = '12px 0 12px auto';
+      else img.style.margin = '12px auto';
+      img.style.display = 'block';
+
+      // wrap immediately to ensure consistent layout
+      const wrap = document.createElement('div');
+      wrap.className = 'inline-media-wrap';
+      wrap.style.display = 'inline-block';
+      wrap.style.maxWidth = '100%';
+      const block = document.createElement('div');
+      block.className = 'inline-media-block';
+      block.style.textAlign = img.dataset.align || 'center';
+      block.contentEditable = 'false';
+      wrap.appendChild(img);
+      block.appendChild(wrap);
+
+      const target = panel.querySelector('.markdown') || panel;
+      const sel = window.getSelection && window.getSelection();
+      let range = null;
+      if (lastRange && target.contains(lastRange.commonAncestorContainer)) {
+        range = lastRange.cloneRange();
+      } else if (sel && sel.rangeCount && target.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+        range = sel.getRangeAt(0).cloneRange();
+      }
+
+      const placeNode = (node) => {
+        if (range) {
+          range.deleteContents();
+          range.insertNode(node);
+        } else {
+          target.appendChild(node);
+        }
+      };
+
+      placeNode(block);
+      try { applyInlineMediaWithFallback(); ensureMediaControls(); } catch (_) {}
+      const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
+      if (saveBtn) saveBtn.disabled = false;
+    };
+    btnAddImage.addEventListener('click', addImageAtCursor);
+
     btnEdit.addEventListener('click', () => setEditable(true));
     btnSave.addEventListener('click', doSave);
     btnCancel.addEventListener('click', () => location.reload(true));
@@ -2229,6 +2710,7 @@
     // Remove any baked edit bars/pagers/side-strips and edit-active flag before initializing.
     stripEditArtifacts();
     document.body.classList.remove('edit-active');
+    try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
     try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }

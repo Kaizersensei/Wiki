@@ -1,12 +1,14 @@
 # Mawing Echo
 
 ## Summary
-(TODO: 2–6 sentence canonical summary.)
+Screaming spirit made of fractured sound and bone that devours thought. Hunts in echo-rich spaces, chasing the loudest actor and stacking mind-drain when overlapping screams collide. Can be disrupted by silence, soft surfaces, or shattering its exposed bone core. Responds to rhythm or chants, implying it can be “retuned” temporarily.
 
 ## Known facts
-- Enemy page scaffold: intent-driven hostile actor.
+- Origin region unspecified; fits echo anomalies, ruins, mausoleums.
+- Sonic predator; attacks with cone screams that split into ricocheting echoes.
+- Weak to silence effects and physical disruption of its bone core.
 
 ## Open questions / TODO
-- Add canonical lore: origin, allegiance, region, relation to Eclipse/anomalies.
-- Add AI pattern callouts: approach, attack phases, tells, counters, weak points.
-- Add drops/loot hooks only if already defined elsewhere.
+- Decide canonical spawn biomes (echo anomalies vs. haunted ruins vs. rifts).
+- Choose counter item/puzzle: silence bomb, chant timing, or bone-core break.
+- Clarify whether it leaves echo/memory crafting drops.

@@ -1,12 +1,14 @@
 # Stonelash Hydra
 
 ## Summary
-(TODO: 2–6 sentence canonical summary.)
+Cave-slumbering hydra that “devours arrogance.” Reacts to taunts and over-aggro by spawning more stone-plated heads; defensive, humble play reduces its pressure. Uses whip-like stone lashes and regrows severed heads faster and thinner. Found in deep caves as a pride-trial; loose rock and pillars can be used to pin it.
 
 ## Known facts
-- Enemy page scaffold: intent-driven hostile actor.
+- Described as slumbering in caves and punishing arrogance.
+- Attacks with multiple lash heads; regrowth mechanic implied.
+- Humility/patience vs. arrogance/aggression is the intended fight lever.
 
 ## Open questions / TODO
-- Add canonical lore: origin, allegiance, region, relation to Eclipse/anomalies.
-- Add AI pattern callouts: approach, attack phases, tells, counters, weak points.
-- Add drops/loot hooks only if already defined elsewhere.
+- Define how “arrogance” is measured (aggro, DPS bursts, taunts?).
+- Canonical location: which cavern network (Eddara/Kaerugan/other)?
+- Rewards: stone lash scales, humility sigils, or other crafting drops?

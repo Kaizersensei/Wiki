@@ -1,8 +1,8 @@
-# Generic Page Directive (Codex) — Reader-Facing Only
+# Generic Page Directive (Codex) - Reader-Facing Only
 
 > Goal: Generate a **single, self-contained HTML data page** that matches the reader-facing layout (typography, spacing, hierarchy, content blocks) of the existing wiki pages, while remaining content-agnostic.
 
-Reference layout/source: `calendar_be_ae.html`
+Reference layout/source: `calendar_be_ae.html` (also use `great_eclipse.html` and `world_overview.html` as exemplars for section cadence, media wrapping, and source blocks)
 
 ---
 
@@ -55,19 +55,20 @@ Use this order unless the target content requires changes:
 
 ### 3.3 Lists and callouts
 - Use bullet lists for scannability.
-- Use callouts for high-signal content (definitions, rules, constraints, key facts) with the site’s existing callout styling:
+- Use callouts for high-signal content (definitions, rules, constraints, key facts) with the site's existing callout styling:
   - `<div class="callout"> ... </div>`
 
 ### 3.4 Media blocks (match the reference look)
-- Use the same inline media block structure as the reference page so images behave and align consistently.
+- Use the same inline media block structure as the reference pages so images behave and align consistently (centered block with `inline-media-block` + `inline-media-wrap` + `<img class="inline-image" data-pseudo="...">`).
 - Provide a short caption when it improves comprehension.
 
 ### 3.5 Source/KB references
-- When citing KB or source `.md` files, surface them in an expandable, non-editable block (e.g., `<details><summary>Sources</summary><pre>…</pre></details>`), preserving read-only text.
+- When citing KB or source `.md` files, surface them in an expandable, non-editable block (e.g., `<details><summary>Sources</summary><pre>.</pre></details>`), preserving read-only text.
+- Pull facts from `docbase/kb/` (new KB articles). Preserve the layout rhythm demonstrated in `calendar_be_ae.html`, `great_eclipse.html`, and `world_overview.html`; treat them as canonical design patterns.
 
 ### 3.6 Placeholders
 - If information is missing, include placeholders as italic text in square brackets:
-  - `[*Placeholder: …*]`
+  - `[*Placeholder: .*]`
 - Do not invent facts.
 
 ---
@@ -103,3 +104,9 @@ Use this order unless the target content requires changes:
   - Notes / placeholders
 
 [*Placeholder: Add optional page-type presets later (Character / Location / Faction) with recommended subheadings.*]
+
+
+## Breadcrumb
+- Every page shows a breadcrumb nav (home → section → page) on the top line where the eyebrow sits.
+- Use the automatically generated breadcrumb (preferred) or manual links if auto is unavailable.
+- Breadcrumb should link each segment to its index page; final segment is the current page.

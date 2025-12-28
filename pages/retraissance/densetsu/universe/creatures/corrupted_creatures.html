@@ -48,14 +48,14 @@
           <li><strong>Species:</strong> Corrupted Creatures (corrupted state)</li>
           <li><strong>Occupation/Role:</strong> Creature / wildlife</li>
           <li><strong>Height/Weight:</strong> Not recorded</li>
-          <li><strong>Bloodline/Elements:</strong> TBD</li>
-          <li><strong>Learned:</strong> TBD</li>
+          <li><strong>Bloodline/Elements:</strong> Overwritten by anomaly overlay</li>
+          <li><strong>Learned:</strong> None; behaves as hostile overlay on base creature AI</li>
           <li><strong>Role (Main/Side/Antagonist):</strong> Encounter / ambient</li>
           <li><strong>Faction:</strong> Unaffiliated / TBD</li>
           <li><strong>Classification:</strong> Creature</li>
           <li><strong>Tag:</strong> corrupted state</li>
           <li><strong>Source:</strong> docbase/creatures.txt (Creatures section)</li>
-          <li><strong>Biome/Region:</strong> TBD</li>
+          <li><strong>Biome/Region:</strong> Any anomaly-touched biome</li>
         </ul></div>
                 <h2>Gameplay Data</h2>
         <div class="callout"><h3>Baseline</h3>
@@ -78,11 +78,19 @@
           </ul>
         </div>
 
-        <h2>Behavior &amp; Notes</h2>
-        <div class="callout"><p>(TODO) Describe AI patterns, aggression/passivity, and interactions.</p></div>
+        <h2>Behavior & Notes</h2>
+        <div class="callout"><ul>
+          <li>Base creatures gain a temporary hostile overlay from anomalies; keep original drops/shape but altered moves.</li>
+          <li>Aggression spikes toward any actor; may fixate on anomaly sources or artifact heat signatures.</li>
+          <li>Overlay should be cleansable (time-stabilize, purge) to revert them to neutral creature behavior.</li>
+          <li>Use as escalation knobs: corruption density tracks local imbalance, not permanent faction change.</li>
+        </ul></div>
 
         <h2>Open questions / conflicts</h2>
-        <div class="callout"><p>(TODO) Document unresolved lore or placement issues.</p></div>
+        <div class="callout"><ul>
+          <li>Define cleanse rules: what tools/skills revert vs. kill, and do players gain goodwill for non-lethal clears?</li>
+          <li>Clarify whether corrupted state affects taming flags or mount eligibility.</li>
+        </ul></div>
       </article>
     </section>
   </main>

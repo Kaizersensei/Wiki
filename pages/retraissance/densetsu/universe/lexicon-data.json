@@ -5,7 +5,7 @@
     "Category": "characters"
   },
   {
-    "Name": "Alfons’s Relic Sword",
+    "Name": "Alfons\u2019s Relic Sword",
     "Href": "artifacts/relic_sword_alfons.html",
     "Category": "artifacts"
   },
@@ -35,7 +35,7 @@
     "Category": "creatures"
   },
   {
-    "Name": "Artifacts &amp; Relics",
+    "Name": "Artifacts & Relics",
     "Href": "artifacts/index.html",
     "Category": "artifacts"
   },
@@ -101,13 +101,18 @@
   },
   {
     "Name": "Chime Priestess",
-    "Href": "enemies/chime_priestess.html",
+    "Href": "creatures/chime_priestess.html",
     "Category": "enemies"
   },
   {
     "Name": "Chitter Vineserpent",
     "Href": "creatures/chitter_vineserpent.html",
     "Category": "creatures"
+  },
+  {
+    "Name": "Chii",
+    "Href": "characters/chii.html",
+    "Category": "characters"
   },
   {
     "Name": "Chronobonsai (Checkpoint)",
@@ -121,7 +126,7 @@
   },
   {
     "Name": "Cinder Wretches",
-    "Href": "enemies/cinder_wretches.html",
+    "Href": "creatures/cinder_wretches.html",
     "Category": "enemies"
   },
   {
@@ -135,7 +140,7 @@
     "Category": "creatures"
   },
   {
-    "Name": "Cosmology &amp; Epochs",
+    "Name": "Cosmology & Epochs",
     "Href": "world/cosmology_and_epochs.html",
     "Category": "world"
   },
@@ -145,7 +150,7 @@
     "Category": "factions"
   },
   {
-    "Name": "Creatures",
+    "Name": "Creatures & Abominations",
     "Href": "creatures/index.html",
     "Category": "creatures"
   },
@@ -165,7 +170,7 @@
     "Category": "characters"
   },
   {
-    "Name": "Cultural Tenets &amp; Rituals",
+    "Name": "Cultural Tenets & Rituals",
     "Href": "world/cultural_tenets.html",
     "Category": "world"
   },
@@ -191,7 +196,7 @@
   },
   {
     "Name": "Echo of the First Betrayer",
-    "Href": "enemies/echo_of_the_first_betrayer.html",
+    "Href": "creatures/echo_of_the_first_betrayer.html",
     "Category": "enemies"
   },
   {
@@ -201,7 +206,7 @@
   },
   {
     "Name": "Eclipse Bound",
-    "Href": "enemies/eclipse_bound.html",
+    "Href": "creatures/eclipse_bound.html",
     "Category": "enemies"
   },
   {
@@ -227,7 +232,8 @@
   {
     "Name": "Eresh Emirate",
     "Href": "locations/eresh_emirate.html",
-    "Category": "locations"
+    "Category": "locations",
+    "Aliases": "Eresh"
   },
   {
     "Name": "Eresh Emirate",
@@ -235,7 +241,7 @@
     "Category": "factions"
   },
   {
-    "Name": "Events &amp; Timeline",
+    "Name": "Events & Timeline",
     "Href": "events/index.html",
     "Category": "events"
   },
@@ -291,7 +297,7 @@
   },
   {
     "Name": "Gravemind Root",
-    "Href": "enemies/gravemind_root.html",
+    "Href": "creatures/gravemind_root.html",
     "Category": "enemies"
   },
   {
@@ -385,7 +391,7 @@
     "Category": "characters"
   },
   {
-    "Name": "Kaze’s Anthem",
+    "Name": "Kaze\u2019s Anthem",
     "Href": "artifacts/kaze_anthem.html",
     "Category": "artifacts"
   },
@@ -396,7 +402,7 @@
   },
   {
     "Name": "King of Nothing",
-    "Href": "enemies/king_of_nothing.html",
+    "Href": "creatures/king_of_nothing.html",
     "Category": "enemies"
   },
   {
@@ -501,7 +507,7 @@
   },
   {
     "Name": "Mirrorspawn",
-    "Href": "enemies/mirrorspawn.html",
+    "Href": "creatures/mirrorspawn.html",
     "Category": "enemies"
   },
   {
@@ -551,7 +557,7 @@
   },
   {
     "Name": "Nayuga, the Thousand-Faced",
-    "Href": "enemies/nayuga_thousand_faced.html",
+    "Href": "creatures/nayuga_thousand_faced.html",
     "Category": "enemies"
   },
   {
@@ -600,7 +606,7 @@
     "Category": "characters"
   },
   {
-    "Name": "Pombeiro’s Seal",
+    "Name": "Pombeiro\u2019s Seal",
     "Href": "artifacts/pombeiro_seal.html",
     "Category": "artifacts"
   },
@@ -611,7 +617,7 @@
   },
   {
     "Name": "Rotling Mass",
-    "Href": "enemies/rotling_mass.html",
+    "Href": "creatures/rotling_mass.html",
     "Category": "enemies"
   },
   {
@@ -656,7 +662,7 @@
   },
   {
     "Name": "Shrouded Acolyte",
-    "Href": "enemies/shrouded_acolyte.html",
+    "Href": "creatures/shrouded_acolyte.html",
     "Category": "enemies"
   },
   {
@@ -671,7 +677,7 @@
   },
   {
     "Name": "Soulbound Herald",
-    "Href": "enemies/soulbound_herald.html",
+    "Href": "creatures/soulbound_herald.html",
     "Category": "enemies"
   },
   {
@@ -729,14 +735,13 @@
     "Href": "enemies/lingering_oath.html",
     "Category": "enemies"
   },
-  {
-    "Name": "The Mawing Echo",
-    "Href": "enemies/mawing_echo.html",
+  {"Name": "Wood Crawler", "Href": "creatures/wood_crawler.html", "Category": "creatures"},\n  {"Name": "The Mawing Echo",
+    "Href": "creatures/mawing_echo.html",
     "Category": "enemies"
   },
   {
     "Name": "The Pale Matron",
-    "Href": "enemies/pale_matron.html",
+    "Href": "creatures/pale_matron.html",
     "Category": "enemies"
   },
   {
@@ -756,16 +761,16 @@
   },
   {
     "Name": "Threadworms",
-    "Href": "enemies/threadworms.html",
+    "Href": "creatures/threadworms.html",
     "Category": "enemies"
   },
   {
-    "Name": "Time Anomalies &amp; Loops",
+    "Name": "Time Anomalies & Loops",
     "Href": "concepts/time_anomalies_and_loops.html",
     "Category": "concepts"
   },
   {
-    "Name": "Time Fan (Toki no Ōgi)",
+    "Name": "Time Fan (Toki no \u014cgi)",
     "Href": "artifacts/time_fan.html",
     "Category": "artifacts"
   },
@@ -781,8 +786,8 @@
   },
   {
     "Name": "Torredasso",
-    "Href": "enemies/torredasso.html",
-    "Category": "enemies"
+    "Href": "artifacts/torredasso.html",
+    "Category": "artifacts"
   },
   {
     "Name": "Tree Resonance Grove",
@@ -826,7 +831,7 @@
   },
   {
     "Name": "Vez'tar the Devouring Secret",
-    "Href": "enemies/vez_tar_devouring_secret.html",
+    "Href": "creatures/vez_tar_devouring_secret.html",
     "Category": "enemies"
   },
   {
@@ -843,6 +848,16 @@
     "Name": "Waterfall Training Grounds",
     "Href": "locations/waterfall_training_grounds.html",
     "Category": "locations"
+  },
+  {
+    "Name": "World Memory",
+    "Href": "concepts/world_memory.html",
+    "Category": "concepts"
+  },
+  {
+    "Name": "Timeline Log",
+    "Href": "concepts/world_memory.html",
+    "Category": "concepts"
   },
   {
     "Name": "Western Continent",
@@ -948,5 +963,34 @@
     "Name": "Lyrakes",
     "Href": "../team/lyrakes.html",
     "Category": "team"
+  },
+  {
+    "Name": "Hirogawa Town Fire",
+    "Href": "events/hirogawa_town_fire.html",
+    "Category": "events"
+  },
+  {
+    "Name": "Great Eclipse",
+    "Href": "overview/great_eclipse.html",
+    "Category": "overview"
+  },
+  {
+    "Name": "Calendar BE/AE",
+    "Href": "overview/calendar_be_ae.html",
+    "Category": "overview"
+  },
+  {
+    "Name": "Relationships Matrix",
+    "Href": "world/relationships_matrix.html",
+    "Category": "world"
+  },
+  {
+    "Name": "Kaze Alfons",
+    "Href": "characters/kaze_alfons.html",
+    "Category": "characters",
+    "Aliases": "Alfons"
   }
 ]
+
+
+
