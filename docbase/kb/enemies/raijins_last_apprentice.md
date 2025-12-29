@@ -1,12 +1,11 @@
 # Raijins Last Apprentice
 
 ## Summary
-(TODO: 2–6 sentence canonical summary.)
+Thunder duelist channeling Raijin forms; swaps between spear and barehand lightning seals. Punishes aggression with parry-shocks.
 
 ## Known facts
-- Enemy page scaffold: intent-driven hostile actor.
+- Phases include quick dashes, charged thrusts, area lightning calls.
+- Weakness: grounding—water/mud fields reduce lightning and open punish windows.
 
 ## Open questions / TODO
-- Add canonical lore: origin, allegiance, region, relation to Eclipse/anomalies.
-- Add AI pattern callouts: approach, attack phases, tells, counters, weak points.
-- Add drops/loot hooks only if already defined elsewhere.
+- Clarify allegiance (true disciple vs. renegade) and duel location; add drops if defined elsewhere.

@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reader Mode</title>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <style>
+  .reader-frame { padding: 12px; background: #f7f1e6; border-radius: 8px; border: 1px solid #d8c9a8; }
+  .reader-layout { display: grid; grid-template-columns: 240px 1fr 220px; gap: 12px; align-items: start; }
+  .reader-sidebar { background: #f9f4ea; border: 1px solid #d8c9a8; border-radius: 8px; padding: 0 8px 8px 8px; max-height: 75vh; overflow-y: auto; position: relative; }
+  .reader-controls { position: sticky; top: 0; background: #f9f4ea; padding: 8px 0 6px 0; z-index: 2; }
+  .reader-list { padding-top: 4px; }
+  .reader-links { background: #f9f4ea; border: 1px solid #d8c9a8; border-radius: 8px; padding: 8px; max-height: 75vh; overflow-y: auto; }
+  .reader-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; font-size: 15px; }
+  .reader-list li { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 6px; border: 1px solid transparent; transition: background-color 0.2s ease; }
+  .reader-list li.active { background: #ede2cf; border-color: #c5b18d; font-weight: 700; }
+  .reader-list a { color: #3a2a1a; text-decoration: none; flex: 1; font-size: 15px; }
+  .reader-list a:hover { text-decoration: underline; }
+  .reader-separator { font-weight: 700; color: #6b5b4a; background: #f0e6d4; border: 1px solid #d8c9a8; border-radius: 6px; padding: 4px; }
+    .reader-order { display: flex; gap: 4px; }
+    .reader-order button { padding: 2px 6px; font-size: 12px; }
+  .reader-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .reader-controls button { font-size: 12px; padding: 4px 8px; }
+  .reader-links h4 { margin: 0 0 6px 0; font-size: 24px; }
+  .reader-links ul { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .reader-links li { margin: 2px 0; }
+  .reader-links a { color: #3a2a1a; text-decoration: none; }
+  .reader-links a:hover { text-decoration: underline; }
+  @media (max-width: 960px) { .reader-layout { grid-template-columns: 1fr; } .reader-sidebar { order: 2; } }
+    .reader-error { color: #8a1f1f; font-weight: 600; margin-top: 8px; }
+    .reader-content { background: #fffdf8; padding: 12px; border-radius: 6px; border: 1px solid #e5d7b8; min-height: 40vh; transition: transform 0.35s ease, box-shadow 0.35s ease; overflow-x: auto; box-sizing: border-box; }
+    .reader-content pre { white-space: pre-wrap; word-break: break-word; }
+    .flip-left { transform: rotateY(-4deg); box-shadow: -8px 0 18px rgba(0,0,0,0.15); }
+    .flip-right { transform: rotateY(4deg); box-shadow: 8px 0 18px rgba(0,0,0,0.15); }
+      .reader-nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+      .turnaround-strip { margin: 12px 0; padding: 8px; border: 1px solid #d8c9a8; border-radius: 6px; background: #f9f4ea; }
+      .turnaround-header { font-weight: 700; margin-bottom: 6px; }
+      .turnaround-rail { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; }
+      .turnaround-rail img { max-height: 240px; border-radius: 4px; border: 1px solid #d8c9a8; cursor: pointer; }
+  </style>
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand" style="display:flex; align-items:center; gap:10px;">
+      <a href="../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+      <a href="https://discord.gg/UqSGTNEp34" aria-label="Discord" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; padding-left:4px;">
+        <svg width="22" height="22" viewBox="0 0 245 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#5865F2" d="M104.4 103.9c-5.7 0-10.2 5-10.2 11.1s4.6 11.1 10.2 11.1c5.7 0 10.3-5 10.2-11.1 0-6.1-4.6-11.1-10.2-11.1zm36.2 0c-5.7 0-10.2 5-10.2 11.1s4.6 11.1 10.2 11.1c5.7 0 10.3-5 10.2-11.1 0-6.1-4.6-11.1-10.2-11.1z"/>
+          <path fill="#5865F2" d="M189.5 20h-134C36.4 20 20 36.4 20 56.5v127c0 20.1 16.4 36.5 35.5 36.5h113.5l-5.3-18.5 12.8 11.9 12 11.1 21.3 19V56.5C210 36.4 193.6 20 174.5 20zm-27.8 137s-2.6-3.1-4.8-5.8c9.5-2.7 13.1-8.6 13.1-8.6-3 2-5.8 3.4-8.3 4.3-3.6 1.5-7 2.4-10.4 3-6.9 1.3-13.2.9-18.6-.1-4.1-.8-7.7-1.9-10.7-3-1.7-.7-3.7-1.6-5.6-3-0.2-0.1-0.3-0.2-0.5-0.3-.1-.1-.2-.1-.3-.2-1.2-.7-1.9-1.2-1.9-1.2s3.5 5.8 12.8 8.5c-2.2 2.8-4.9 6-4.9 6-16.2-.5-22.3-11.1-22.3-11.1 0-23.5 10.5-42.6 10.5-42.6 10.5-7.8 20.5-7.6 20.5-7.6l.7.9c-13.2 3.8-19.3 9.6-19.3 9.6s1.6-.9 4.3-2.1c7.8-3.4 14-4.3 16.5-4.5.4-.1.8-.1 1.2-.1 4.3-.6 9.1-.8 14.1-.2 6.6.8 13.7 2.8 20.9 6.9 0 0-5.8-5.5-18.2-9.3l1-1.1s10-.2 20.5 7.6c0 0 10.5 19.1 10.5 42.6 0 0-6.1 10.6-22.3 11.1z"/>
+        </svg>
+      </a>
+    </div>
+    <nav class="nav-links"></nav>
+  </header>
+
+  <main class="content">
+    <section class="panel reader-frame">
+      <p class="eyebrow">reader</p>
+      <h1>Densetsu Bible</h1>
+      <div class="reader-layout">
+        <aside class="reader-sidebar">
+          <div class="reader-controls">
+            <span>Pages</span>
+            <div style="display:flex; gap:6px;">
+              <button id="reader-rename" type="button">Rename</button>
+              <button id="reader-edit-toggle" type="button">Reorder</button>
+            </div>
+          </div>
+          <ul id="reader-list" class="reader-list"></ul>
+        </aside>
+        <div>
+          <div class="reader-nav">
+            <button id="reader-prev">Prev</button>
+            <button id="reader-next">Next</button>
+            <span id="reader-pos"></span>
+          </div>
+          <div id="reader-error" class="reader-error" role="alert"></div>
+          <div id="reader-content" class="reader-content"></div>
+        </div>
+        
+        <aside class="reader-links">
+          <h4>Mentioned here</h4>
+          <div id="reader-links-body"><p style="margin:0; color:#6b5b4a;">None detected.</p></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/site.js"></script>
+  <script>
+    (() => {
+      const prevBtn = document.getElementById('reader-prev');
+      const nextBtn = document.getElementById('reader-next');
+      const posLabel = document.getElementById('reader-pos');
+      const errorBox = document.getElementById('reader-error');
+      const container = document.getElementById('reader-content');
+      const listEl = document.getElementById('reader-list');
+      const editToggle = document.getElementById('reader-edit-toggle');
+      const renameBtn = document.getElementById('reader-rename');
+      const linksBody = document.getElementById('reader-links-body');
+      const navBar = document.querySelector('.reader-nav');
+
+      // Jump-to-page control
+      const jumpWrap = document.createElement('div');
+      jumpWrap.style.display = 'flex';
+      jumpWrap.style.alignItems = 'center';
+      jumpWrap.style.gap = '4px';
+      const jumpLabel = document.createElement('span');
+      jumpLabel.textContent = 'Jump';
+      jumpLabel.style.fontSize = '10px';
+      const jumpInput = document.createElement('input');
+      jumpInput.type = 'number';
+      jumpInput.min = '1';
+      jumpInput.style.width = '60px';
+      jumpInput.style.fontSize = '10px';
+      jumpInput.placeholder = '#';
+      jumpWrap.appendChild(jumpLabel);
+      jumpWrap.appendChild(jumpInput);
+      navBar?.appendChild(jumpWrap);
+
+      const saveJsonEndpoint = ((window.SAVE_ENDPOINT || 'http://localhost:3000/__save').replace(/\/__save.*$/, '')) + '/__save-json';
+      const LAST_PAGE_KEY = 'reader:lastPage';
+
+      let sitemapEntries = [];
+      let navEntries = [];
+      let currentNavIndex = -1;
+      let editMode = false;
+      let lexicon = [];
+      const titleCache = new Map();
+
+      const titleFromPath = (p = '') => {
+        const clean = (p.split('/').pop() || '').replace(/\.html?$/i, '');
+        return clean.replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      };
+
+      const slugFromUrl = (u = '') => (u.split('/').pop() || '').replace(/\.html?$/i, '').toLowerCase();
+      const stripTagPrefix = (label = '') => label.replace(/^\[[^\]]+\]\s*/, '').trim();
+
+      const computeDisplayLabel = (idx) => {
+        const entry = sitemapEntries[idx];
+        if (!entry || entry.isSep) return entry?.label || '';
+        const base = stripTagPrefix(entry.label || titleFromPath(entry.url));
+        const currentSlug = slugFromUrl(entry.url);
+        let parentLabel = '';
+        for (let j = idx - 1; j >= 0; j -= 1) {
+          const prev = sitemapEntries[j];
+          if (!prev) continue;
+          if (prev.isSep) break; // stay within the current section
+          if (!prev.url) continue;
+          const parentSlug = slugFromUrl(prev.url);
+          if (parentSlug && parentSlug !== currentSlug && currentSlug.includes(parentSlug)) {
+            parentLabel = stripTagPrefix(prev.label || titleFromPath(prev.url));
+            break;
+          }
+        }
+        if (parentLabel && !base.toLowerCase().includes(parentLabel.toLowerCase())) {
+          return `${parentLabel}: ${base}`;
+        }
+        return base;
+      };
+
+      const persistList = async () => {
+        if (location.protocol === 'file:' || !sitemapEntries.length) return;
+        const data = sitemapEntries.map(e => {
+          if (e.isSep) return `# ${e.label || ''}`;
+          if (e.label) return { url: e.url, label: e.label };
+          return e.url;
+        });
+        try {
+          await fetch(saveJsonEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: 'pages/retraissance/reader/pages-list.json', data })
+          });
+        } catch (err) {
+          console.warn('Failed to persist pages-list.json', err);
+        }
+      };
+
+      const renderList = () => {
+        if (!listEl) return;
+        listEl.innerHTML = '';
+        let sectionIdx = 0;
+        let groupIdx = 0; // maintain backward compatibility for padding logic
+        const palette = [
+          'rgba(170, 120, 90, 0.18)',  // Time/Cosmology
+          'rgba(120, 150, 95, 0.18)',  // Power/Magic
+          'rgba(90, 130, 170, 0.18)',  // World/Geography
+          'rgba(150, 120, 160, 0.18)', // Cultures/Factions
+          'rgba(170, 140, 70, 0.18)',  // Events/History
+          'rgba(110, 110, 110, 0.18)', // People/Creatures
+          'rgba(70, 120, 140, 0.18)',  // Artifacts/Concepts
+          'rgba(140, 80, 80, 0.18)',   // Enemies
+          'rgba(80, 120, 80, 0.18)'    // Engine/Other
+        ];
+        const romanToIdx = (label = '') => {
+          const m = label.match(/^#\s*([IVXL]+)\./i);
+          if (!m) return null;
+          const map = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 5, VIII: 6, IX: 6, X: 6, XI: 7, XII: 8 };
+          return map[m[1].toUpperCase()] ?? null;
+        };
+        const parentKeywords = ['geography', 'continent', 'independent realms', 'realms'];
+        const topCountries = new Set([
+          'Hirogawa', 'Yukigami', 'Seigetsu Empire', 'Crimson Dynasty',
+          'Verdathal', 'Galport', 'Eddara', 'Eresh Emirate', 'Varthum',
+          'Kojimigakure', 'Mycomind Covenant'
+        ]);
+        let currentCountry = null;
+        sitemapEntries.forEach((entry, idx) => {
+          const li = document.createElement('li');
+          if (entry.isSep) {
+            const romanIdx = romanToIdx(entry.label || '');
+            if (romanIdx !== null) sectionIdx = romanIdx;
+            else if ((entry.label || '').toLowerCase().includes('geography')) sectionIdx = 2; // force geography group to match its children
+            const paletteIdx = Math.max(sectionIdx, 0) % palette.length;
+            const color = palette[paletteIdx];
+            li.className = 'reader-separator';
+            li.style.background = color;
+            li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
+            li.textContent = entry.label || '-';
+            listEl.appendChild(li);
+            currentCountry = null;
+            return;
+          }
+          const paletteIdx = Math.max(sectionIdx, 0) % palette.length;
+          const color = palette[paletteIdx];
+          li.style.background = color;
+          li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
+          const navIdx = navEntries.findIndex(n => n._idx === idx);
+          if (navIdx === currentNavIndex) li.classList.add('active');
+          const link = document.createElement('a');
+          link.href = entry.url;
+          const label = computeDisplayLabel(idx);
+          const isParent = parentKeywords.some(k => (label || '').toLowerCase().includes(k));
+          const isLocation = (entry.url || '').includes('/locations/');
+          const isChild = (groupIdx >= 0 && !entry.isSep && !isParent) || isLocation;
+          let padding = '4px';
+          if (isLocation) {
+            if (topCountries.has(label)) {
+              currentCountry = label;
+              padding = '12px';
+            } else {
+              padding = currentCountry ? '20px' : '12px';
+            }
+          } else if (isChild) {
+            padding = '12px';
+            currentCountry = null;
+          } else {
+            currentCountry = null;
+          }
+          link.textContent = label;
+          link.style.paddingLeft = padding;
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            goToNavIndex(navIdx, navIdx > currentNavIndex ? 'next' : 'prev');
+          });
+          li.appendChild(link);
+          if (editMode && location.protocol !== 'file:') {
+            const ctrl = document.createElement('div');
+            ctrl.className = 'reader-order';
+            const up = document.createElement('button');
+            up.textContent = '↑';
+            up.disabled = idx === 0;
+            up.addEventListener('click', (e) => { e.stopPropagation(); moveEntry(idx, -1); });
+            const down = document.createElement('button');
+            down.textContent = '↓';
+            down.disabled = idx === sitemapEntries.length - 1;
+            down.addEventListener('click', (e) => { e.stopPropagation(); moveEntry(idx, 1); });
+            ctrl.appendChild(up);
+            ctrl.appendChild(down);
+            li.appendChild(ctrl);
+          }
+          listEl.appendChild(li);
+        });
+      };
+
+      const rebuildNav = () => {
+        navEntries = sitemapEntries
+          .map((e, idx) => {
+            if (e.isSep) return null;
+            const label = computeDisplayLabel(idx);
+            return { url: e.url, label, _idx: idx };
+          })
+          .filter(Boolean);
+        if (currentNavIndex >= navEntries.length) currentNavIndex = navEntries.length - 1;
+      };
+
+      const moveEntry = (idx, delta) => {
+        const ni = idx + delta;
+        if (ni < 0 || ni >= sitemapEntries.length) return;
+        const tmp = sitemapEntries[idx];
+        sitemapEntries[idx] = sitemapEntries[ni];
+        sitemapEntries[ni] = tmp;
+        rebuildNav();
+        renderList();
+        updatePos();
+        persistList();
+      };
+
+      const sanitize = (doc) => {
+        doc.querySelectorAll('.side-strip, .turnaround-strip').forEach(el => el.remove());
+        const main = doc.querySelector('main') || doc.body;
+        main.querySelectorAll('script,.edit-bar,.pager,.side-strip,.turnaround-strip').forEach(el => el.remove());
+        return main.innerHTML;
+      };
+
+      const injectTurnaround = async (pageUrl, scope) => {
+        const path = (() => {
+          try { return new URL(pageUrl, location.href).pathname; } catch (_) { return ''; }
+        })();
+        const match = path.match(/\/retraissance\/densetsu\/universe\/(characters|creatures|enemies)\/([^/]+)\.html$/i);
+        if (!match) return;
+        const section = match[1];
+        const slug = match[2];
+        const containerEl = scope || document;
+        containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
+        const baseMedia = `/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/`;
+        const names = ['turnaround', 'turnaround01', 'turnaround_01', 'turn1', 'turn', 'sheet', 'sheet_01'];
+        for (let i = 1; i <= 12; i += 1) {
+          const pad = i.toString().padStart(2, '0');
+          names.push(`turnaround${pad}`, `turnaround${i}`, `sheet${pad}`, `sheet${i}`);
+        }
+        const exts = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+        const probes = [];
+        names.forEach(n => exts.forEach(ext => probes.push(`${baseMedia}${n}.${ext}`)));
+        const found = [];
+        const probeImg = (src) => new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => resolve(src);
+          img.onerror = () => resolve(null);
+          img.src = src;
+        });
+        const results = await Promise.all(probes.map(probeImg));
+        results.filter(Boolean).some(src => {
+          if (!found.includes(src)) found.push(src);
+          return found.length >= 6;
+        });
+        if (!found.length) return;
+        const panel = containerEl.querySelector('.panel') || containerEl.querySelector('main') || containerEl.body || containerEl;
+        const wrap = document.createElement('div');
+        wrap.className = 'turnaround-strip';
+        const header = document.createElement('div');
+        header.className = 'turnaround-header';
+        header.textContent = 'Appearance';
+        wrap.appendChild(header);
+        const rail = document.createElement('div');
+        rail.className = 'turnaround-rail';
+        found.forEach(src => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = 'Appearance frame';
+          img.addEventListener('click', () => window.open(src, '_blank'));
+          rail.appendChild(img);
+        });
+        wrap.appendChild(rail);
+        const anchor = panel.querySelector('h1') || panel.firstChild;
+        if (anchor && anchor.parentNode === panel) {
+          panel.insertBefore(wrap, anchor.nextSibling);
+        } else {
+          panel.prepend(wrap);
+        }
+      };
+
+      const applyFlip = (dir) => {
+        container.classList.remove('flip-left', 'flip-right');
+        void container.offsetWidth;
+        container.classList.add(dir === 'next' ? 'flip-right' : 'flip-left');
+        setTimeout(() => container.classList.remove('flip-left', 'flip-right'), 350);
+      };
+
+      const loadPage = async (url, dir) => {
+        errorBox.textContent = '';
+        container.innerHTML = 'Loading...';
+        try {
+          const resp = await fetch(url, { cache: 'no-cache' });
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const text = await resp.text();
+          const doc = new DOMParser().parseFromString(text, 'text/html');
+          container.innerHTML = sanitize(doc);
+          applyAutoLinks(container);
+          await injectTurnaround(url, container);
+          collectLinks();
+          if (dir) applyFlip(dir);
+          try { localStorage.setItem(LAST_PAGE_KEY, url); } catch (_) { /* ignore */ }
+        } catch (err) {
+          console.error('Reader load failed', err);
+          container.innerHTML = '';
+          errorBox.textContent = `Failed to load page: ${err.message || err}`;
+          renderLinksSidebar([]);
+        }
+      };
+
+      const updatePos = () => {
+        if (currentNavIndex < 0) { posLabel.textContent = ''; return; }
+        posLabel.textContent = `Page ${currentNavIndex + 1} / ${navEntries.length}`;
+        renderList();
+      };
+
+      const goToNavIndex = (i, dir) => {
+        if (i < 0 || i >= navEntries.length) return;
+        currentNavIndex = i;
+        loadPage(navEntries[i].url, dir);
+        updatePos();
+      };
+
+      if (jumpInput) {
+        const jumpTo = () => {
+          const v = parseInt(jumpInput.value, 10);
+          if (Number.isNaN(v)) return;
+          goToNavIndex(v - 1, v - 1 > currentNavIndex ? 'next' : 'prev');
+        };
+        jumpInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            jumpTo();
+          }
+        });
+        jumpInput.addEventListener('change', jumpTo);
+      }
+
+      // Rename current page label
+      if (renameBtn) {
+        renameBtn.addEventListener('click', () => {
+          if (currentNavIndex < 0 || currentNavIndex >= navEntries.length) return;
+          const nav = navEntries[currentNavIndex];
+          if (!nav) return;
+          const entry = sitemapEntries[nav._idx];
+          if (!entry || entry.isSep) return;
+          const currentLabel = computeDisplayLabel(nav._idx);
+          const nextLabel = (window.prompt('Rename page label', currentLabel) || '').trim();
+          if (!nextLabel || nextLabel === currentLabel) return;
+          entry.label = nextLabel;
+          rebuildNav();
+          renderList();
+          persistList();
+        });
+      }
+
+      const loadLexicon = async () => {
+        try {
+          const res = await fetch('/pages/retraissance/densetsu/universe/lexicon-data.json', { cache: 'no-cache' });
+          if (res.ok) lexicon = await res.json();
+        } catch (err) {
+          console.warn('Lexicon load failed', err);
+        }
+      };
+
+      const applyAutoLinks = (scope) => {
+        if (!lexicon || !lexicon.length || !scope) return;
+        const map = {};
+        lexicon.forEach(e => {
+          const key = (e.Name || '').toLowerCase();
+          if (!key || map[key]) return;
+          map[key] = e;
+        });
+        const terms = Object.keys(map).sort((a, b) => b.length - a.length);
+        if (!terms.length) return;
+        const escaped = terms.map(t => t.replace(/[-/\\^$*+?.()|[\\]{}]/g, '\\$&'));
+        const regex = new RegExp(`\\b(${escaped.join('|')})\\b`, 'gi');
+        const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            const parent = node.parentElement;
+            if (parent) {
+              const tag = parent.tagName;
+              if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE' || /^H[1-6]$/.test(tag)) return NodeFilter.FILTER_REJECT;
+              if (parent.closest('.no-autolink, [data-autolink="off"], .link-list')) return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        });
+        const nodes = [];
+        let n;
+        while ((n = walker.nextNode())) nodes.push(n);
+        nodes.forEach(node => {
+          const text = node.nodeValue || '';
+          let match; let last = 0; const frag = document.createDocumentFragment();
+          let changed = false;
+          while ((match = regex.exec(text))) {
+            const term = match[0];
+            const entry = map[term.toLowerCase()];
+            if (!entry) continue;
+            frag.appendChild(document.createTextNode(text.slice(last, match.index)));
+            const a = document.createElement('a');
+            a.href = `/pages/retraissance/densetsu/universe/${entry.Href}`;
+            a.textContent = term;
+            frag.appendChild(a);
+            last = match.index + term.length;
+            changed = true;
+          }
+          if (!changed) return;
+          frag.appendChild(document.createTextNode(text.slice(last)));
+          node.replaceWith(frag);
+        });
+      };
+
+      const normalize = (href) => {
+        if (!href) return null;
+        let h = href.trim();
+        // Absolute URL: collapse to pathname so we avoid duplicating host.
+        if (/^https?:\/\//i.test(h)) {
+          try { h = new URL(h).pathname; } catch (_) { /* fallback below */ }
+        }
+        h = h.replace(/^\/+/, '/');
+        // Collapse any repeated /pages/ prefixes, then ensure a single /pages/ prefix.
+        if (h.startsWith('/pages/')) {
+          return '/pages/' + h.replace(/^\/+/, '').replace(/^(pages\/)+/, '');
+        }
+        if (h.startsWith('/')) return '/pages' + h;
+        return '/pages/' + h.replace(/^\/+/, '');
+      };
+
+      const buildOrderFromFs = async () => {
+        try {
+          const bust = `pages-list.json?v=${Date.now()}`;
+          const resp = await fetch(bust, { cache: 'no-cache' });
+          if (!resp.ok) throw new Error(`pages-list fetch ${resp.status}`);
+          const json = await resp.json();
+          const files = Array.isArray(json) ? json : [];
+          const entries = [];
+          files.forEach(item => {
+            if (typeof item === 'string' && item.trim().startsWith('#')) {
+              entries.push({ isSep: true, label: item.replace(/^#+\s*/, '').trim() });
+              return;
+            }
+            const raw = typeof item === 'string' ? item : (item && item.url) || '';
+            const customLabel = typeof item === 'object' && item ? item.label : null;
+            const url = normalize(raw);
+            if (!url) return;
+            if (!(url.includes('/densetsu/') || url.includes('/reader/bible/'))) return;
+            entries.push({ url, label: customLabel || titleFromPath(url) });
+          });
+          sitemapEntries = entries;
+          rebuildNav();
+        } catch (err) {
+          console.error('pages-list parse failed', err);
+          sitemapEntries = [];
+          navEntries = [];
+          if (errorBox) {
+            errorBox.textContent = `No pages found in sitemap (load failed: ${err.message || err}).`;
+          }
+        }
+      };
+
+      const categoryOrder = [
+        { key: 'overview', label: 'Overview' },
+        { key: 'world', label: 'World' },
+        { key: 'concepts', label: 'Concepts' },
+        { key: 'cultures', label: 'Cultures' },
+        { key: 'events', label: 'Events' },
+        { key: 'locations', label: 'Locations' },
+        { key: 'factions', label: 'Factions' },
+        { key: 'characters', label: 'Characters' },
+        { key: 'creatures', label: 'Creatures' },
+        { key: 'enemies', label: 'Enemies' },
+        { key: 'artifacts', label: 'Artifacts' },
+        { key: 'engine', label: 'Engine' },
+        { key: 'other', label: 'Other' }
+      ];
+
+      // Topic dividers and their target categories.
+      const topicCategory = {
+        '/pages/retraissance/reader/bible/topic_cosmology.html': 'overview',
+        '/pages/retraissance/reader/bible/topic_world_geography.html': 'world',
+        '/pages/retraissance/reader/bible/topic_factions_power.html': 'factions',
+        '/pages/retraissance/reader/bible/topic_people_legends.html': 'characters',
+        '/pages/retraissance/reader/bible/topic_creatures_abominations.html': 'creatures',
+        '/pages/retraissance/reader/bible/topic_artifacts_relics.html': 'artifacts',
+        '/pages/retraissance/reader/bible/topic_engine_gateway.html': 'engine',
+        '/pages/retraissance/reader/bible/topic_engine_appendix.html': 'engine'
+      };
+
+      const categorizeLink = (href) => {
+        if (!href) return null;
+        let path = href;
+        try {
+          path = new URL(href, location.origin).pathname;
+        } catch (_) {
+          return null;
+        }
+        const norm = path.toLowerCase();
+        if (!norm.includes('/pages/')) return null;
+        const test = (segment) => norm.includes(`/universe/${segment}/`) || norm.includes(`/${segment}/`);
+        if (test('overview')) return 'overview';
+        if (test('world')) return 'world';
+        if (test('concepts')) return 'concepts';
+        if (test('cultures')) return 'cultures';
+        if (test('events')) return 'events';
+        if (test('locations')) return 'locations';
+        if (test('factions')) return 'factions';
+        if (test('characters')) return 'characters';
+        if (test('creatures')) return 'creatures';
+        if (test('enemies')) return 'enemies';
+        if (test('artifacts')) return 'artifacts';
+        if (norm.includes('/engine/')) return 'engine';
+        return 'other';
+      };
+
+      const regroupByTopics = async () => { /* no-op: rely on explicit pages list order */ };
+
+      const renderLinksSidebar = (linkItems = []) => {
+        if (!linksBody) return;
+        if (!linkItems.length) {
+          linksBody.innerHTML = '<p style="margin:0; color:#6b5b4a;">None detected.</p>';
+          return;
+        }
+        const grouped = categoryOrder.reduce((acc, c) => { acc[c.key] = []; return acc; }, {});
+        linkItems.forEach(item => {
+          if (!grouped[item.category]) grouped[item.category] = [];
+          grouped[item.category].push(item);
+        });
+        linksBody.innerHTML = '';
+        categoryOrder.forEach(({ key, label }) => {
+          const bucket = grouped[key] || [];
+          if (!bucket.length) return;
+          const h = document.createElement('h3');
+          h.textContent = label;
+          linksBody.appendChild(h);
+          const ul = document.createElement('ul');
+          bucket
+            .sort((a, b) => a.text.localeCompare(b.text))
+            .forEach(item => {
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.href = item.href;
+              a.textContent = item.text;
+              a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const idx = navEntries.findIndex(n => n.url === item.href);
+                if (idx !== -1) {
+                  goToNavIndex(idx, idx > currentNavIndex ? 'next' : 'prev');
+                } else {
+                  window.open(item.href, '_blank');
+                }
+              });
+              li.appendChild(a);
+              ul.appendChild(li);
+            });
+          linksBody.appendChild(ul);
+        });
+      };
+
+      const collectLinks = () => {
+        if (!container) return renderLinksSidebar([]);
+        const anchors = Array.from(container.querySelectorAll('a[href]'));
+        const seen = new Set();
+        const items = [];
+        anchors.forEach(a => {
+          const href = normalize(a.getAttribute('href') || '');
+          if (!href) return;
+          const cat = categorizeLink(href);
+          if (!cat) return;
+          const key = `${cat}|${href}`;
+          if (seen.has(key)) return;
+          seen.add(key);
+          const text = (a.textContent || titleFromPath(href)).trim() || titleFromPath(href);
+          items.push({ href, text, category: cat });
+        });
+        renderLinksSidebar(items);
+      };
+
+      prevBtn.addEventListener('click', () => {
+        if (currentNavIndex > 0) goToNavIndex(currentNavIndex - 1, 'prev');
+      });
+      nextBtn.addEventListener('click', () => {
+        if (currentNavIndex >= 0 && currentNavIndex < navEntries.length - 1) goToNavIndex(currentNavIndex + 1, 'next');
+      });
+      editToggle.addEventListener('click', () => {
+        editMode = !editMode;
+        editToggle.textContent = editMode ? 'Done' : 'Reorder';
+        renderList();
+      });
+      if (location.protocol === 'file:') {
+        editToggle.disabled = true;
+        editToggle.title = 'Run via save server to reorder.';
+      }
+
+      const inferPrefix = (url = '') => {
+        if (url.includes('/reader/bible/topic_') || url.includes('/reader/bible/struct_')) return '';
+        if (url.includes('/locations/')) return '[Location] ';
+        if (url.includes('/characters/')) return '[Character] ';
+        if (url.includes('/creatures/')) return '[Creature] ';
+        if (url.includes('/artifacts/')) return '[Artifact] ';
+        if (url.includes('/enemies/')) return '[Enemy] ';
+        if (url.includes('/factions/')) return '[Faction] ';
+        if (url.includes('/events/')) return '[Event] ';
+        if (url.includes('/concepts/')) return '[Concept] ';
+        if (url.includes('/world/')) return '[World] ';
+        if (url.includes('/cultures/')) return '[Culture] ';
+        if (url.includes('/engine/')) return '[Engine] ';
+        if (url.includes('lexicon')) return '[Lexicon] ';
+        if (url.includes('languages')) return '[Language] ';
+        return '';
+      };
+
+      const resolveTitles = async () => {
+        if (location.protocol === 'file:') return;
+        const updates = [];
+        for (const entry of sitemapEntries) {
+          if (entry.isSep) continue;
+          if (titleCache.has(entry.url)) {
+            entry.label = (titleCache.get(entry.url) || '').replace(/^\[[^\]]+\]\s*/, '');
+            continue;
+          }
+          updates.push((async () => {
+            try {
+              const resp = await fetch(entry.url, { cache: 'no-cache' });
+              if (!resp.ok) return;
+              const text = await resp.text();
+              const doc = new DOMParser().parseFromString(text, 'text/html');
+              const h1 = doc.querySelector('h1');
+              let raw = h1 ? h1.textContent.trim() : '';
+              raw = raw.replace(/^\[[^\]]+\]\s*/, ''); // strip leading tags
+              if (raw) {
+                entry.label = raw;
+                titleCache.set(entry.url, raw);
+              }
+            } catch (_) { /* ignore */ }
+          })());
+        }
+        if (updates.length) {
+          await Promise.allSettled(updates);
+          rebuildNav();
+          renderList();
+        }
+      };
+
+      // Build sitemap order, then auto-load (after lexicon for autolinks)
+      Promise.all([loadLexicon(), buildOrderFromFs()]).then(async () => {
+        await regroupByTopics();
+        renderList();
+        resolveTitles();
+        const params = new URLSearchParams(location.search);
+        const preset = params.get('url');
+        const last = (() => { try { return localStorage.getItem(LAST_PAGE_KEY); } catch (_) { return null; } })();
+        let startIdx = -1;
+        if (preset) startIdx = navEntries.findIndex(n => n.url === preset);
+        if (startIdx === -1 && last) startIdx = navEntries.findIndex(n => n.url === last);
+        if (startIdx === -1 && navEntries.length) startIdx = 0;
+        if (startIdx !== -1) {
+          goToNavIndex(startIdx);
+        } else {
+          container.innerHTML = '';
+          errorBox.textContent = 'No pages found in sitemap.';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,12 +1,11 @@
 # Silkmother
 
 ## Summary
-(TODO: 2–6 sentence canonical summary.)
+Brood matriarch that anchors webs across anomaly seams, tethering victims to repeating moments. Hunts in forest/marsh anomalies, cocooning prey and using silk to hold space in place.
 
 ## Known facts
-- Enemy page scaffold: intent-driven hostile actor.
+- Webs act as anchors; she summons spiderling swarms and enrages with silk-lash when pressured.
+- Fire severs silk; destroying pylons/cocoons interrupts regeneration.
 
 ## Open questions / TODO
-- Add canonical lore: origin, allegiance, region, relation to Eclipse/anomalies.
-- Add AI pattern callouts: approach, attack phases, tells, counters, weak points.
-- Add drops/loot hooks only if already defined elsewhere.
+- Finalize home biome and any faction tie; add drops if defined elsewhere.

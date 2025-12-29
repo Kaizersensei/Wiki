@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../assets/res/LOGO_Retraissance.gif" alt="Retraissance">
+      </a>
+    </div>
+    <nav class="nav-links"></nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">software</p>
+      <h1>Software</h1>
+      <p>Internal/custom software downloads and documentation.</p>
+
+      <div class="filters">
+        <label for="tl-search">Search</label>
+        <input id="tl-search" type="search" placeholder="Search software and tools">
+
+        <label for="tl-tag">Filter tag</label>
+        <select id="tl-tag"><option value="all">All</option></select>
+
+        <label for="tl-sort">Sort</label>
+        <select id="tl-sort">
+          <option value="name">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+        </select>
+      </div>
+
+      <div id="tl-list" class="link-list"></div>
+
+      <div class="callout">
+        <strong>Notes:</strong> keep software/tool names aligned with their media folder slugs under
+        <code>assets/media/tools/&lt;slug&gt;</code> if screenshots/downloads are added.
+      </div>
+    </section>
+  </main>
+
+  <script id="tools-data-json" type="application/json">
+[
+  {
+    "name": "Example Tool",
+    "href": "example_tool.html",
+    "tags": ["E", "cli", "example"]
+  },
+  {
+    "name": "InfiniBoard",
+    "href": "infiniboard.html",
+    "tags": ["I"]
+  }
+]
+  </script>
+
+  <script>
+    const dataEl = document.getElementById('tools-data-json');
+    const initialData = (() => {
+      if (dataEl) {
+        try { return JSON.parse(dataEl.textContent || '[]'); } catch (e) { return []; }
+      }
+      return [];
+    })();
+    const tlData = (initialData.length ? initialData : []).map(d => {
+      const baseTags = Array.from(new Set(d.tags || []));
+      return { ...d, baseTags, tags: baseTags.slice(), name: d.name || '', href: d.href || '' };
+    });
+
+    const tlSearch = document.getElementById('tl-search');
+    const tlTag = document.getElementById('tl-tag');
+    const tlSort = document.getElementById('tl-sort');
+    const tlList = document.getElementById('tl-list');
+
+    const buildFilter = () => {
+      const tagValues = Array.from(new Set(tlData.flatMap(d => d.tags || []))).sort();
+      tlTag.innerHTML = '<option value="all">All</option>' + tagValues.map(v => `<option value="${v}">${v}</option>`).join('');
+    };
+
+    const normalizeHref = (href) => {
+      if (!href) return '#';
+      if (/^https?:/i.test(href)) return href;
+      const clean = href.replace(/^\\/?/, '');
+      return `/pages/retraissance/tools/${clean}`;
+    };
+
+    const render = () => {
+      const q = (tlSearch.value || '').toLowerCase();
+      const tag = tlTag.value;
+      let items = tlData.filter(d => (d.name || '').toLowerCase().includes(q));
+      if (tag !== 'all') items = items.filter(d => (d.tags || []).includes(tag));
+
+      if (tlSort.value === 'name') items.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      else items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+
+      const html = items.length
+        ? '<ul class="link-list">' + items.map(d => `<li><a href="${normalizeHref(d.href)}">${d.name}</a>${(d.tags||[]).map(t => `<span class="meta-chip">${t}</span>`).join('')}</li>`).join('') + '</ul>'
+        : '<p>No software listed.</p>';
+      tlList.innerHTML = html;
+    };
+
+    tlSearch.addEventListener('input', render);
+    tlTag.addEventListener('change', render);
+    tlSort.addEventListener('change', render);
+    buildFilter();
+    render();
+  </script>
+  <script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,12 +1,11 @@
 # Verdance
 
 ## Summary
-(TODO: 2–6 sentence canonical summary.)
+Runaway growth entity that animates roots and vines to overrun arenas; spreads verdant corruption and exposes a core when burned back.
 
 ## Known facts
-- Enemy page scaffold: intent-driven hostile actor.
+- Phases: entangle (movement slow), bloom burst (spore AoE), heartcore expose after burns.
+- Weakness: fire/cleave to clear growth; targeting exposed core stops regrowth and staggers.
 
 ## Open questions / TODO
-- Add canonical lore: origin, allegiance, region, relation to Eclipse/anomalies.
-- Add AI pattern callouts: approach, attack phases, tells, counters, weak points.
-- Add drops/loot hooks only if already defined elsewhere.
+- Place in a specific biome (Verdathal/anomaly groves) and define faction tie/loot if established elsewhere.

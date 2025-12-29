@@ -160,11 +160,6 @@
     "Category": "factions"
   },
   {
-    "Name": "Crimson Dynasty",
-    "Href": "locations/crimson_dynasty.html",
-    "Category": "locations"
-  },
-  {
     "Name": "Crimson Dynasty Titles",
     "Href": "characters/crimson_dynasty_titles.html",
     "Category": "characters"
@@ -215,6 +210,11 @@
     "Category": "locations"
   },
   {
+    "Name": "Eddan Alliance",
+    "Href": "locations/eddara.html",
+    "Category": "locations"
+  },
+  {
     "Name": "Eddara Council of Elders",
     "Href": "factions/eddara_council.html",
     "Category": "factions"
@@ -234,11 +234,6 @@
     "Href": "locations/eresh_emirate.html",
     "Category": "locations",
     "Aliases": "Eresh"
-  },
-  {
-    "Name": "Eresh Emirate",
-    "Href": "factions/eresh_emirate.html",
-    "Category": "factions"
   },
   {
     "Name": "Events & Timeline",
@@ -536,11 +531,6 @@
     "Category": "factions"
   },
   {
-    "Name": "Mycomind Covenant",
-    "Href": "world/mycomind_covenant.html",
-    "Category": "world"
-  },
-  {
     "Name": "Mycomind",
     "Href": "world/mycomind_covenant.html",
     "Category": "world"
@@ -574,11 +564,6 @@
     "Name": "Okashira",
     "Href": "characters/okashira.html",
     "Category": "characters"
-  },
-  {
-    "Name": "Okashira",
-    "Href": "enemies/okashira_boss.html",
-    "Category": "enemies"
   },
   {
     "Name": "Orb Statue (Checkpoint)",
@@ -634,11 +619,6 @@
     "Name": "Seigetsu Empire",
     "Href": "locations/seigetsu_empire.html",
     "Category": "locations"
-  },
-  {
-    "Name": "Seigetsu Empire",
-    "Href": "factions/seigetsu_empire.html",
-    "Category": "factions"
   },
   {
     "Name": "Seigetsu",
@@ -735,7 +715,13 @@
     "Href": "enemies/lingering_oath.html",
     "Category": "enemies"
   },
-  {"Name": "Wood Crawler", "Href": "creatures/wood_crawler.html", "Category": "creatures"},\n  {"Name": "The Mawing Echo",
+  {
+    "Name": "Wood Crawler",
+    "Href": "creatures/wood_crawler.html",
+    "Category": "creatures"
+  },
+  {
+    "Name": "The Mawing Echo",
     "Href": "creatures/mawing_echo.html",
     "Category": "enemies"
   },
@@ -989,8 +975,26 @@
     "Href": "characters/kaze_alfons.html",
     "Category": "characters",
     "Aliases": "Alfons"
+  },
+  {
+    "Name": "Mirror Spire",
+    "Href": "locations/mirror_spire.html",
+    "Category": "locations",
+    "Aliases": "Spire"
+  },
+  {
+    "Name": "Technogarch Civilization",
+    "Href": "factions/technogarch_civilization.html",
+    "Category": "factions",
+    "Aliases": "Technogarchs;Perfect Future"
+  },
+  {
+    "Name": "Kiputer Predictive Engine",
+    "Href": "concepts/kiputer_predictive_engine.html",
+    "Tags": [
+      "concept",
+      "technogarch"
+    ],
+    "Alias": []
   }
 ]
-
-
-

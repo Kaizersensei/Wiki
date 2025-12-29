@@ -13,6 +13,34 @@
   const tagsEndpoint = `${saveBase}/__update-tags`;
   const LEXICON_FALLBACK = Array.isArray(window.UNIVERSE_LEXICON_DATA) ? window.UNIVERSE_LEXICON_DATA : [];
   const CONTROL_SELECTOR = '.inline-remove, .inline-move, .inline-size, .inline-align-group, .inline-remove-media, .inline-edit-media';
+  const isReaderPage = () => (location.pathname || '').replace(/\\/g, '/').includes('/retraissance/reader/');
+
+  const ensureBrandDiscord = () => {
+    const brand = document.querySelector('.brand');
+    if (!brand) return;
+    const pagePath = (location.pathname || '').replace(/\\/g, '/');
+    const parts = pagePath.split('/').filter(Boolean);
+    const idxPages = parts.indexOf('pages');
+    let prefix = '';
+    if (idxPages !== -1) {
+      const depth = Math.max(parts.length - idxPages - 2, 0); // exclude file
+      prefix = '../'.repeat(depth);
+    }
+    const src = `${prefix}retraissance/assets/media/UI/discord.png`;
+    let link = brand.querySelector('a[href*="discord.gg"]');
+    if (!link) {
+      link = document.createElement('a');
+      link.href = 'https://discord.gg/UqSGTNEp34';
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.ariaLabel = 'Discord';
+      link.style.display = 'inline-flex';
+      link.style.alignItems = 'center';
+      link.style.paddingLeft = '4px';
+      brand.appendChild(link);
+    }
+    link.innerHTML = `<img src="${src}" alt="Discord" style="height:22px;width:22px;object-fit:contain;">`;
+  };
 
   const fetchJsonSafe = async (url) => {
     try {
@@ -78,11 +106,11 @@ const buildBreadcrumb = () => {
     // If file://, we cannot fetch neighbors due to CORS; show only Up and disabled prev/next.
     if (location.protocol === 'file:') {
       const prevBtn = document.createElement('button');
-      prevBtn.textContent = '← Prev (serve over http:// to enable)';
+      prevBtn.textContent = '< Prev (serve over http:// to enable)';
       prevBtn.className = 'pager-prev';
       prevBtn.disabled = true;
       const nextBtn = document.createElement('button');
-      nextBtn.textContent = 'Next → (serve over http:// to enable)';
+      nextBtn.textContent = 'Next > (serve over http:// to enable)';
       nextBtn.className = 'pager-next';
       nextBtn.disabled = true;
       nav.appendChild(prevBtn);
@@ -159,8 +187,8 @@ const buildBreadcrumb = () => {
       const idx = items.findIndex(i => (i.href || '').replace(/#.*$/, '') === current);
       const prev = idx > -1 ? (items[idx - 1] || null) : null;
       const next = idx > -1 ? (items[idx + 1] || null) : null;
-      if (prev) nav.appendChild(makeLink(`← ${prev.name}`, prev.href, 'pager-prev'));
-      if (next) nav.appendChild(makeLink(`${next.name} →`, next.href, 'pager-next'));
+      if (prev) nav.appendChild(makeLink(`< ${prev.name}`, prev.href, 'pager-prev'));
+      if (next) nav.appendChild(makeLink(`${next.name} >`, next.href, 'pager-next'));
     }
 
     // Always float on body so header layout is untouched.
@@ -191,18 +219,58 @@ const buildBreadcrumb = () => {
       const depth = Math.max(after.length - 1, 0); // exclude file
       prefix = '../'.repeat(depth);
     }
-    const toolsHref = `${prefix}retraissance/tools/index.html`;
-    const exists = Array.from(nav.querySelectorAll('a')).some(a => (a.getAttribute('href') || '').includes('/tools/index.html') || (a.textContent || '').trim().toLowerCase() === 'tools');
+    const toolsHref = `${prefix}retraissance/software/index.html`;
+    const exists = Array.from(nav.querySelectorAll('a')).some(a => (a.getAttribute('href') || '').includes('/software/index.html') || (a.textContent || '').trim().toLowerCase() === 'software');
     if (exists) return;
     const link = document.createElement('a');
     link.href = toolsHref;
-    link.textContent = 'Tools';
+    link.textContent = 'Software';
     const randomBtn = nav.querySelector('.nav-random');
     if (randomBtn && randomBtn.parentElement === nav) {
       nav.insertBefore(link, randomBtn);
     } else {
       nav.appendChild(link);
     }
+  };
+
+  // Build a consistent condensed navbar (Retraissance & Densetsu dropdowns + Random).
+  const rebuildNavLinks = () => {
+    ensureBrandDiscord();
+    const nav = document.querySelector('.nav-links');
+    if (!nav || nav.dataset.navBuilt) return;
+    const pagePath = (location.pathname || '').replace(/\\/g, '/');
+    const parts = pagePath.split('/').filter(Boolean);
+    const idxPages = parts.indexOf('pages');
+    let prefix = '';
+    if (idxPages !== -1) {
+      const depth = Math.max(parts.length - idxPages - 2, 0); // exclude file
+      prefix = '../'.repeat(depth);
+    }
+    const randomSrc = `${prefix}retraissance/assets/media/ui/random.png`;
+    nav.innerHTML = `
+      <div class="nav-dropdown nav-root">
+        <span class="nav-dropdown-toggle">Retraissance ▾</span>
+        <div class="nav-dropdown-menu">
+          <a href="${prefix}retraissance/index.html">Home</a>
+          <a href="${prefix}retraissance/software/index.html">Software</a>
+          <a href="${prefix}retraissance/team/index.html">Team</a>
+          <a href="${prefix}retraissance/projects/index.html">Projects</a>
+          <a href="${prefix}retraissance/sitemap.html">Site Map</a>
+          <a href="${prefix}retraissance/contacts.html">Contact</a>
+          <a href="${prefix}retraissance/impressum.html">Impressum</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <span class="nav-dropdown-toggle">Densetsu ▾</span>
+        <div class="nav-dropdown-menu">
+          <a href="${prefix}retraissance/reader/index.html">Bible</a>
+          <a href="${prefix}retraissance/densetsu/universe/index.html">Universe Wiki</a>
+          <a href="${prefix}retraissance/densetsu/engine/index.html">Engine Wiki</a>
+        </div>
+      </div>
+      <button class="nav-btn nav-random nav-random-icon" title="Random data page" style="background-image: url('${randomSrc}');">Random</button>
+    `;
+    nav.dataset.navBuilt = '1';
   };
 
   // Lightbox helper for inline images/videos (pseudotag media).
@@ -243,7 +311,7 @@ const buildBreadcrumb = () => {
     root.className = 'nav-dropdown nav-root';
     const toggle = document.createElement('span');
     toggle.className = 'nav-dropdown-toggle';
-    toggle.textContent = 'Retraissance ▾';
+    toggle.textContent = 'Retraissance v';
     const menu = document.createElement('div');
     menu.className = 'nav-dropdown-menu';
 
@@ -464,34 +532,14 @@ const buildBreadcrumb = () => {
         }
         if (remaining) frag.appendChild(document.createTextNode(remaining));
 
-        // Wrap media nodes into inline-media-blocks
-        const rebuilt = document.createDocumentFragment();
-        frag.childNodes.forEach(ch => {
-          if (ch.nodeType === 1 && (ch.tagName === 'IMG' || ch.tagName === 'VIDEO')) {
-            const block = document.createElement('div');
-            block.className = 'inline-media-block';
-            block.contentEditable = 'false';
-            const inner = document.createElement('div');
-            inner.className = 'inline-media-wrap';
-            inner.style.display = 'inline-block';
-            inner.style.maxWidth = '100%';
-            inner.appendChild(ch);
-            block.appendChild(inner);
-            rebuilt.appendChild(block);
-          } else {
-            rebuilt.appendChild(ch);
-          }
-        });
-
+        // Replace the text node with the converted fragment (bare media; controls/wrappers added later)
         const parent = node.parentElement;
-        if (parent && parent.tagName !== 'P' && rebuilt.childNodes.length === 1 && rebuilt.firstChild.classList && rebuilt.firstChild.classList.contains('inline-media-block')) {
-          node.replaceWith(rebuilt);
-        } else if (parent && parent.tagName !== 'P') {
+        if (parent && parent.tagName !== 'P') {
           const wrap = document.createElement('p');
-          while (rebuilt.firstChild) wrap.appendChild(rebuilt.firstChild);
+          while (frag.firstChild) wrap.appendChild(frag.firstChild);
           node.replaceWith(wrap);
         } else {
-          node.replaceWith(rebuilt);
+          node.replaceWith(frag);
         }
       });
 
@@ -521,16 +569,7 @@ const buildBreadcrumb = () => {
           img.classList.add('inline-media-missing');
           img.dataset.missing = '1';
         }
-        const block = document.createElement('div');
-        block.className = 'inline-media-block';
-        block.contentEditable = 'false';
-        const inner = document.createElement('div');
-        inner.className = 'inline-media-wrap';
-        inner.style.display = 'inline-block';
-        inner.style.maxWidth = '100%';
-        inner.appendChild(img);
-        block.appendChild(inner);
-        imgTag.replaceWith(block);
+        imgTag.replaceWith(img);
       });
       scope.querySelectorAll('line').forEach(lineTag => {
         const hr = document.createElement('hr');
@@ -588,7 +627,7 @@ const buildBreadcrumb = () => {
     const safeAlt = (raw.split('/').pop() || 'image').replace(/"/g, '');
     const dataSizeAttr = sizeVal ? ` data-size="${sizeVal}"` : '';
     const dataAlignAttr = alignVal ? ` data-align="${alignVal}"` : '';
-    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}${dataSizeAttr}${dataAlignAttr} style="${widthStyle}${alignStyle}"></div></div>`;
+    return `<img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}${dataSizeAttr}${dataAlignAttr} style="${widthStyle}${alignStyle}">`;
   };
   const renderLineHtml = () => '<hr>';
   const renderBoxHtml = (raw) => {
@@ -603,7 +642,7 @@ const buildBreadcrumb = () => {
     const shouldLoop = /-loop/i.test(attrs || '');
     const ctrlAttr = hasNoControls ? '' : ' controls';
     const loopAttr = shouldLoop ? ' loop' : '';
-    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><video class="inline-video${missing}" src="${url}" data-pseudo="${raw}" autoplay muted playsinline${ctrlAttr}${loopAttr}${missingAttr} style="max-width:100%;display:block;margin:12px auto;max-height:135vh;"></video></div></div>`;
+    return `<video class="inline-video${missing}" src="${url}" data-pseudo="${raw}" autoplay muted playsinline${ctrlAttr}${loopAttr}${missingAttr} style="max-width:100%;display:block;margin:12px auto;max-height:135vh;"></video>`;
   };
 
   // Apply DOM-aware injection then a string fallback to catch any encoded tags.
@@ -1231,7 +1270,10 @@ const buildBreadcrumb = () => {
     insertRightStrip(portrait, audioSrc);
   };
     const enableInlineEdit = () => {
-      const panel = document.querySelector('.panel');
+      const readerView = isReaderPage();
+      const panel = readerView
+        ? document.querySelector('.reader-content') || document.querySelector('.panel')
+        : document.querySelector('main .panel') || document.querySelector('.panel');
       if (!panel) return;
       let editObserver = null;
       let observerPaused = false;
@@ -1278,7 +1320,25 @@ const buildBreadcrumb = () => {
     // Ensure inline pseudotag media are wrapped and have edit controls.
     const ensureMediaControls = () => {
       wrapInlineMedia();
-      const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
+      // Normalize bare images/videos inside the editable panel so controls attach.
+      panel.querySelectorAll('img:not(.inline-image)').forEach(img => {
+        // Skip obvious UI assets (nav/logo)
+        if (img.closest('header') || img.classList.contains('nav-logo')) return;
+        img.classList.add('inline-image');
+        if (!img.dataset.pseudo) {
+          const name = (img.getAttribute('src') || '').split('/').pop() || '';
+          if (name) img.dataset.pseudo = name;
+        }
+      });
+      panel.querySelectorAll('video:not(.inline-video)').forEach(vid => {
+        if (vid.closest('header')) return;
+        vid.classList.add('inline-video');
+        if (!vid.dataset.pseudo) {
+          const name = (vid.getAttribute('src') || '').split('/').pop() || '';
+          if (name) vid.dataset.pseudo = name;
+        }
+      });
+      const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
       mediaNodes.forEach(node => {
         const wrap = node.closest('.inline-media-wrap');
         if (!wrap) return;
@@ -1287,7 +1347,7 @@ const buildBreadcrumb = () => {
           btnDel = document.createElement('button');
           btnDel.type = 'button';
           btnDel.className = 'inline-remove-media';
-          btnDel.textContent = '×';
+          btnDel.textContent = '-';
           btnDel.title = 'Remove media';
           btnDel.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1303,7 +1363,7 @@ const buildBreadcrumb = () => {
           btnEditMedia = document.createElement('button');
           btnEditMedia.type = 'button';
           btnEditMedia.className = 'inline-edit-media';
-          btnEditMedia.textContent = '?';
+          btnEditMedia.textContent = 'Edit';
           btnEditMedia.title = 'Edit media source';
           btnEditMedia.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1382,7 +1442,7 @@ const buildBreadcrumb = () => {
           btnShrink = document.createElement('button');
           btnShrink.type = 'button';
           btnShrink.className = 'inline-size inline-size-down';
-          btnShrink.textContent = '–';
+          btnShrink.textContent = '-';
           btnShrink.title = 'Shrink media';
           btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
           wrap.appendChild(btnShrink);
@@ -1517,8 +1577,8 @@ const buildBreadcrumb = () => {
             moveGroup.appendChild(btn);
           }
         };
-        ensureMoveBtn('inline-move-up', '↑', 'Move media up', 'up');
-        ensureMoveBtn('inline-move-down', '↓', 'Move media down', 'down');
+        ensureMoveBtn('inline-move-up', 'Up', 'Move media up', 'up');
+        ensureMoveBtn('inline-move-down', 'Dn', 'Move media down', 'down');
         let alignGroup = wrap.querySelector('.inline-align-group');
         if (!alignGroup) {
           alignGroup = document.createElement('div');
@@ -1623,7 +1683,7 @@ const buildBreadcrumb = () => {
     mkFmt('B', 'Bold (Ctrl+B)', 'bold');
     mkFmt('I', 'Italic (Ctrl+I)', 'italic');
     mkFmt('U', 'Underline (Ctrl+U)', 'underline');
-    mkFmt('•', 'Toggle bullet list (Ctrl+Shift+8)', 'insertUnorderedList');
+    mkFmt('BL', 'Toggle bullet list (Ctrl+Shift+8)', 'insertUnorderedList');
     mkFmt('L', 'Align left', 'justifyLeft');
     mkFmt('C', 'Align center', 'justifyCenter');
     mkFmt('R', 'Align right', 'justifyRight');
@@ -1733,14 +1793,14 @@ const buildBreadcrumb = () => {
       purgeControlArtifacts();
       btnSave.disabled = !on;
       btnEdit.disabled = on;
-        const targets = panel.querySelectorAll('.markdown, .callout, .panel > h1, .panel > .eyebrow, [data-editable="true"], .editable-text, .panel > p');
-        targets.forEach(el => { el.contentEditable = on; });
-        if (on) {
-          // First re-render any pseudotags entered as text so media controls can attach.
-          try { applyInlineMediaWithFallback(); } catch (err) { console.error('inline media refresh failed', err); }
-          targets.forEach(el => sanitizeEditableElement(el));
-          ensureMediaControls();
-        }
+      const targets = panel.querySelectorAll('.markdown, .callout, .panel > h1, .panel > .eyebrow, [data-editable="true"], .editable-text, .panel > p, .reader-content > *, .reader-content p, .reader-content div');
+      targets.forEach(el => { el.contentEditable = on; });
+      if (on) {
+        // First re-render any pseudotags entered as text so media controls can attach.
+        try { applyInlineMediaWithFallback(); } catch (err) { console.error('inline media refresh failed', err); }
+        targets.forEach(el => sanitizeEditableElement(el));
+        ensureMediaControls();
+      }
 
       // Protect buttons from being edited (typing/cloning/deleting via contentEditable).
       const lockButtons = () => {
@@ -1834,8 +1894,8 @@ const buildBreadcrumb = () => {
           });
         };
 
-        ensureBtn('inline-move-up', '↑', 'Move up', (e) => { e.stopPropagation(); movePair('up'); });
-        ensureBtn('inline-move-down', '↓', 'Move down', (e) => { e.stopPropagation(); movePair('down'); });
+        ensureBtn('inline-move-up', 'Up', 'Move up', (e) => { e.stopPropagation(); movePair('up'); });
+        ensureBtn('inline-move-down', 'Dn', 'Move down', (e) => { e.stopPropagation(); movePair('down'); });
       };
 
       const refreshControls = () => {
@@ -1885,7 +1945,7 @@ const buildBreadcrumb = () => {
             btnDel = document.createElement('button');
             btnDel.type = 'button';
             btnDel.className = 'inline-remove-media';
-            btnDel.textContent = '–';
+            btnDel.textContent = '-';
             btnDel.title = 'Remove media';
             btnDel.addEventListener('click', (e) => {
               e.stopPropagation();
@@ -1899,7 +1959,7 @@ const buildBreadcrumb = () => {
             btnEditMedia = document.createElement('button');
             btnEditMedia.type = 'button';
             btnEditMedia.className = 'inline-edit-media';
-            btnEditMedia.textContent = '✎';
+            btnEditMedia.textContent = 'Edit';
             btnEditMedia.title = 'Edit media source';
             btnEditMedia.addEventListener('click', (e) => {
               e.stopPropagation();
@@ -1975,7 +2035,7 @@ const buildBreadcrumb = () => {
             btnShrink = document.createElement('button');
             btnShrink.type = 'button';
             btnShrink.className = 'inline-size inline-size-down';
-            btnShrink.textContent = '–';
+            btnShrink.textContent = '-';
             btnShrink.title = 'Decrease size (5%)';
             btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
             wrap.appendChild(btnShrink);
@@ -2024,9 +2084,9 @@ const buildBreadcrumb = () => {
               alignGroup.appendChild(b);
             }
           };
-          ensureAlignBtn('inline-align-left', '←', 'left');
-          ensureAlignBtn('inline-align-center', '•', 'center');
-          ensureAlignBtn('inline-align-right', '→', 'right');
+          ensureAlignBtn('inline-align-left', 'L', 'left');
+          ensureAlignBtn('inline-align-center', 'C', 'center');
+          ensureAlignBtn('inline-align-right', 'R', 'right');
           applyAlign(node.dataset.align || 'center');
           // ease clicking overlays by disabling pointer events on media while editing
           if (on) {
@@ -2685,7 +2745,21 @@ const buildBreadcrumb = () => {
     btnAddImage.addEventListener('click', addImageAtCursor);
 
     btnEdit.addEventListener('click', () => setEditable(true));
-    btnSave.addEventListener('click', doSave);
+    btnSave.addEventListener('click', async () => {
+      // In reader mode, push edits to the underlying page instead of the shell.
+      if (isReaderPage() && window.readerSaveCurrent) {
+        btnSave.disabled = true;
+        const ok = await window.readerSaveCurrent();
+        btnSave.disabled = false;
+        if (ok) {
+          btnEdit.disabled = false;
+          document.body.classList.remove('edit-active');
+          return;
+        }
+        return;
+      }
+      doSave();
+    });
     btnCancel.addEventListener('click', () => location.reload(true));
     // ensure we start in view mode even if markup had edit-active
     setEditable(false);
@@ -2710,19 +2784,29 @@ const buildBreadcrumb = () => {
     // Remove any baked edit bars/pagers/side-strips and edit-active flag before initializing.
     stripEditArtifacts();
     document.body.classList.remove('edit-active');
+    const readerView = isReaderPage();
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
-    try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
-    // Fallback: if the toolbar failed to appear, attempt a second pass after a tick.
-    if (!document.querySelector('.edit-bar')) {
-      setTimeout(() => {
-        try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit retry failed', err); }
-      }, 0);
+    if (readerView) {
+      // Only reader mode supports inline editing/tooling now.
+      try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
+      if (!document.querySelector('.edit-bar')) {
+        setTimeout(() => {
+          try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit retry failed', err); }
+        }, 0);
+      }
+    } else {
+      // Outside reader, strip any edit UI and force view-only.
+      document.querySelectorAll(CONTROL_SELECTOR + ', .edit-bar, [contenteditable="true"]').forEach(el => {
+        if (el.classList.contains('edit-bar')) el.remove();
+        else if (el.matches(CONTROL_SELECTOR)) el.remove();
+        else el.removeAttribute('contenteditable');
+      });
+      document.body.classList.remove('edit-active');
     }
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
-    try { setupRetraissanceDropdown(); } catch (err) { console.error('setupRetraissanceDropdown failed', err); }
-    try { ensureToolsNavLink(); } catch (err) { console.error('ensureToolsNavLink failed', err); }
+    try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
 
     // Universe autolink from lexicon data
@@ -2778,6 +2862,7 @@ const buildBreadcrumb = () => {
             if (parent) {
               const tag = parent.tagName;
               if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
+              if (/^H[1-6]$/.test(tag)) return NodeFilter.FILTER_REJECT;
               if (parent.closest('.no-autolink, [data-autolink="off"]')) return NodeFilter.FILTER_REJECT;
               if (parent.closest('.link-list')) return NodeFilter.FILTER_REJECT;
             }
@@ -2817,3 +2902,4 @@ const buildBreadcrumb = () => {
     }
   };
 })();
+

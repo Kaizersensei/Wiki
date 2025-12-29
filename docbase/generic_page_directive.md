@@ -78,6 +78,11 @@ Use this order unless the target content requires changes:
 - Link only when you are confident the target page exists.
 - No broken links.
 - No `localhost` links.
+
+### 4.1 Navigation hygiene (must do when site structure changes)
+- Whenever you add/move/remove pages, refresh navigation artifacts: lexicon/autolink dictionary, regular pager, reader pager (static list), and any index/navigation pages. Treat these updates as part of the change, not follow-up work.
+- Reader mode: keep `pages/retraissance/reader/pages-list.json` in sync with the intended reading order (include reader-only structural pages). Sidebar link harvesting should remain accurate.
+- Never bake navbars or editor UI into pages; rely on the dynamic navbar/pager/editor scaffolding from `site.js`.
 - If a referenced concept lacks a page, keep it unlinked and (optionally) note it under **Notes**.
 
 ---

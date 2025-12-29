@@ -1,0 +1,851 @@
+[
+  "# Front Matter",
+  {
+    "url": "/pages/retraissance/reader/bible/cover.html",
+    "label": "DENSETSU"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/readers_note.html",
+    "label": "Reader's Note"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/core_tenets.html",
+    "label": "Core Tenets"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/terminology_primer.html",
+    "label": "Terminology & Symbols Primer"
+  },
+  "# I. Time, Memory, Cosmology",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_cosmology.html",
+    "label": "Cosmology: Time"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/cosmology_and_epochs.html",
+    "label": "Cosmology & Epochs"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/overview/great_eclipse.html",
+    "label": "The Great Eclipse"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/timeline_orientation.html",
+    "label": "Timeline: Orientation"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/overview/calendar_be_ae.html",
+    "label": "Calendar: BE and AE"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/world_memory.html",
+    "label": "World Memory & Timeline Log"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/kiputer_predictive_engine.html",
+    "label": "Kiputer Predictive Engine"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/time_anomalies_and_loops.html",
+    "label": "Time Anomalies"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/time_rifts.html",
+    "label": "Time Rifts"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/anomalies.html",
+    "label": "Anomalies"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/time_loops.html",
+    "label": "Time Loops"
+  },
+  "# II. Principles of Power",
+  {
+    "url": "/pages/retraissance/densetsu/universe/magic_principles.html",
+    "label": "Magic Principles"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/tech_principles.html",
+    "label": "Tech Principles"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/elements_and_concords.html",
+    "label": "Elements and Ki"
+  },
+  "# III. World & Geography",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_world_geography.html",
+    "label": "World & Geography"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_world.html",
+    "label": "World: Structure"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/world_overview.html",
+    "label": "World Overview"
+  },
+  "# Geography: Land Masses & Realms",
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/world_and_geography.html",
+    "label": "Geography: Land Masses & Realms"
+  },
+  "# Eastern Continent",
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/eastern_continent.html",
+    "label": "Eastern Continent"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/hirogawa.html",
+    "label": "Hirogawa"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/shrine_of_still_flames.html",
+    "label": "Shrine of Still Flames"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/nagamizu_dojo.html",
+    "label": "Nagamizu Dojo"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/ishigane_manor.html",
+    "label": "Ishigane Manor"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/waterfall_training_grounds.html",
+    "label": "Waterfall Training Grounds"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/temple_of_stillness.html",
+    "label": "Temple of Stillness"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/tree_resonance_grove.html",
+    "label": "Tree Resonance Grove"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/crimson_dynasty.html",
+    "label": "Crimson Dynasty"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/seigetsu_empire.html",
+    "label": "Seigetsu Empire"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/yukigami.html",
+    "label": "Yukigami"
+  },
+  "# Western Continent",
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/western_continent.html",
+    "label": "Western Continent"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/galport.html",
+    "label": "Galport"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/eddara.html",
+    "label": "Eddara"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/eresh_emirate.html",
+    "label": "Eresh Emirate"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/mirror_spire.html",
+    "label": "Mirror Spire"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/glitch_in_the_dust.html",
+    "label": "Glitch in the Dust"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/varthum.html",
+    "label": "Varthum"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/mistral_stranded_cove.html",
+    "label": "Mistral Stranded Cove"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/minus_depths.html",
+    "label": "Minus Depths"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/verdathal.html",
+    "label": "Verdathal"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/kaerugan_iron_jungle.html",
+    "label": "Kaerugan: The Iron Jungle"
+  },
+  "# Independent Realms",
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/independent_realms.html",
+    "label": "Independent Realms"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/kojimigakure.html",
+    "label": "Kojimigakure"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/mycomind_covenant.html",
+    "label": "Mycomind Covenant"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/locations/chronobonsai_chamber.html",
+    "label": "Chronobonsai Chamber"
+  },
+  "# IV. Cultures",
+  {
+    "url": "/pages/retraissance/reader/bible/struct_cultures.html",
+    "label": "Cultures"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/cultural_tenets.html",
+    "label": "Cultural Tenets"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/cultures/aokuni.html",
+    "label": "Aokuni Culture"
+  },
+  "# V. Factions & Power",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_factions_power.html",
+    "label": "Factions & Power"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_factions.html",
+    "label": "Factions Overview"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/world/relationships_matrix.html",
+    "label": "Faction Relationships"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/hirogawa_feud.html",
+    "label": "Hirogawa Feud"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/seigetsu_empire.html",
+    "label": "Seigetsu Empire"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/crimson_dynasty.html",
+    "label": "Crimson Dynasty"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/galport_trade_federation.html",
+    "label": "Galport Trade Federation"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/council_of_harbormasters.html",
+    "label": "Council of Harbormasters"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/marella_caravans.html",
+    "label": "Marella Caravans (Blackwater Tidebrokers)"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/verdathal_commonwealth.html",
+    "label": "Verdathal Commonwealth"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/verdant_circle.html",
+    "label": "Verdant Circle"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/water_courts.html",
+    "label": "Water Courts"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/fire_dominion.html",
+    "label": "Fire Dominion"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/eddara_council.html",
+    "label": "Eddara Council of Elders"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/kaerugan_rust_courts.html",
+    "label": "Kaerugan Rust Courts"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/eresh_emirate.html",
+    "label": "Eresh Emirate"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/wakers.html",
+    "label": "Wakers (Eresh)"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/technogarch_civilization.html",
+    "label": "Technogarch Civilization"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/mycomind_covenant.html",
+    "label": "Mycomind Covenant"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/ninth_wave.html",
+    "label": "Ninth Wave"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/twilight_covenant.html",
+    "label": "Twilight Covenant"
+  },
+  "# VI. Events & Timeline",
+  {
+    "url": "/pages/retraissance/reader/bible/struct_events.html",
+    "label": "Events & Timeline"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/events/timeline_index.html",
+    "label": "Timeline Index"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/events/timeline_arcs.html",
+    "label": "Historical Arcs"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/events/hirogawa_town_fire.html",
+    "label": "Hirogawa Town Fire (event)"
+  },
+  "# VII. People & Legends",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_people_legends.html",
+    "label": "People & Legends"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_characters.html",
+    "label": "People & Legends"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/michio.html",
+    "label": "Michio"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/hanzo.html",
+    "label": "Hanzo"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/hitomi.html",
+    "label": "Hitomi"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/bonsai_sage.html",
+    "label": "Bonsai Sage"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/master_nagamizu.html",
+    "label": "Master Nagamizu"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/aoi.html",
+    "label": "Aoi"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/betto.html",
+    "label": "Betto"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/chii.html",
+    "label": "Chii"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/kodomaru.html",
+    "label": "Kodomaru"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/midori.html",
+    "label": "Midori"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/namika.html",
+    "label": "Namika"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/tetsumaru.html",
+    "label": "Tetsumaru"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/kaze.html",
+    "label": "Kaze"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/ishigane.html",
+    "label": "Ishigane"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/hideo_kohiba.html",
+    "label": "Hideo Kohiba"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/okashira.html",
+    "label": "Okashira"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/pombeiro_de_galporta.html",
+    "label": "Pombeiro De Galporta"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/ferdinand_passaro.html",
+    "label": "Ferdinand Passaro"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/king_frog_of_verdathal.html",
+    "label": "King Frog Of Verdathal"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/pta_khaem.html",
+    "label": "Pta-Khaem (Dream King of Eresh)"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/saul_azar.html",
+    "label": "Saul Azar"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/king_elmanu_ii.html",
+    "label": "King Elmanu II"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/manolo_marella.html",
+    "label": "Manolo Marella"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/dog_elder_of_eddara.html",
+    "label": "Dog Elder Of Eddara"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/shion.html",
+    "label": "Shion"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/pip.html",
+    "label": "Pip"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/kyo.html",
+    "label": "Kyo"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/kuro.html",
+    "label": "Kuro"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/amelia.html",
+    "label": "Amelia"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/aya.html",
+    "label": "Aya"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/bob.html",
+    "label": "Bob"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/aka.html",
+    "label": "Aka"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/solid_the_snake.html",
+    "label": "Solid the Snake"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/tera.html",
+    "label": "Tera"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/fenrir.html",
+    "label": "Fenrir"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/petrus_avales_barcal.html",
+    "label": "Petrus Avales Barcal"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/don_bastion.html",
+    "label": "Don Bastion"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/characters/nagamizu.html",
+    "label": "Nagamizu"
+  },
+  "# VIII. Creatures & Abominations",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_creatures_abominations.html",
+    "label": "Creatures & Abominations"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_creatures.html",
+    "label": "Creatures & Abominations"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/aquatic_fauna.html",
+    "label": "Aquatic Fauna"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/forest_fauna.html",
+    "label": "Forest Fauna"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/desert_fauna.html",
+    "label": "Desert Fauna"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/mycomind_fauna.html",
+    "label": "Mycomind Fauna"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/mount_class_creatures.html",
+    "label": "Mount-Class Creatures"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/corrupted_creatures.html",
+    "label": "Corrupted Creatures"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/aurex_the_last_basilisk.html",
+    "label": "Aurex The Last Basilisk"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/cave_rat.html",
+    "label": "Cave Rat"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/celadon_cranes.html",
+    "label": "Celadon Cranes"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/chime_priestess.html",
+    "label": "Chime Priestess"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/chitter_vineserpent.html",
+    "label": "Chitter Vineserpent"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/cinder_wretches.html",
+    "label": "Cinder Wretches"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/echo_of_the_first_betrayer.html",
+    "label": "Echo of the First Betrayer"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/eclipse_bound.html",
+    "label": "Eclipse Bound"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/gravemind_root.html",
+    "label": "Gravemind Root"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/grizzleback.html",
+    "label": "Grizzleback"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/hagane_snail.html",
+    "label": "Hagane Snail"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/the_hollow_fang.html",
+    "label": "The Hollow Fang"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/king_of_nothing.html",
+    "label": "King of Nothing"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/komo_earth_dreamer.html",
+    "label": "Komo the Earth Dreamer"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/lantern_moths.html",
+    "label": "Lantern Moths"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/the_mawing_echo.html",
+    "label": "The Mawing Echo"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/mire_crawler.html",
+    "label": "Mire Crawler"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/mirrorspawn.html",
+    "label": "Mirrorspawn"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/mist_hounds.html",
+    "label": "Mist Hounds"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/mossbound_goats.html",
+    "label": "Mossbound Goats"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/nayuga_the_thousand_faced.html",
+    "label": "Nayuga The Thousand Faced"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/the_pale_matron.html",
+    "label": "The Pale Matron"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/the_river_crown.html",
+    "label": "The River Crown"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/rotling_mass.html",
+    "label": "Rotling Mass"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/sand_whiptail.html",
+    "label": "Sand Whiptail"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/shard_beetle.html",
+    "label": "Shard Beetle"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/shrouded_acolyte.html",
+    "label": "Shrouded Acolyte"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/shyr_aani_the_skybreaker.html",
+    "label": "Shyr Aani The Skybreaker"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/soulbound_herald.html",
+    "label": "Soulbound Herald"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/threadworms.html",
+    "label": "Threadworms"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/vez_tar_the_devouring_secret.html",
+    "label": "Vez Tar The Devouring Secret"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/wood_crawler.html",
+    "label": "Wood Crawler"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/creatures/wyrm_pup.html",
+    "label": "Wyrm Pup"
+  },
+  "# IX. Artifacts & Relics",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_artifacts_relics.html",
+    "label": "Artifacts & Relics"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_artifacts.html",
+    "label": "Artifacts & Relics"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/artifacts_registry.html",
+    "label": "Artifacts Registry"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/echo_song.html",
+    "label": "Echo-Song"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/infinitree_bark_shard.html",
+    "label": "Infinitree Bark Shard"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/kaze_anthem.html",
+    "label": "Kaze’s Anthem"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/kiputer_predictive_engine.html",
+    "label": "Kiputer Predictive Engine"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/marella_sea_horn.html",
+    "label": "Marella Sea Horn"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/pombeiro_seal.html",
+    "label": "Pombeiro’s Seal"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/relic_sword_alfons.html",
+    "label": "Alfons’s Relic Sword"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/time_fan.html",
+    "label": "Time Fan (Toki no Ōgi)"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/artifacts/torredasso.html",
+    "label": "Torredasso"
+  },
+  "# X. Concepts & Systems",
+  {
+    "url": "/pages/retraissance/reader/bible/struct_concepts.html",
+    "label": "Concepts & Principles"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/chronobonsai_checkpoint.html",
+    "label": "Chronobonsai (Checkpoint)"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/gong_arch_checkpoint.html",
+    "label": "Gong Arch (Checkpoint)"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/infinitree.html",
+    "label": "Infinitree"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/concepts/orb_statue_checkpoint.html",
+    "label": "Orb Statue (Checkpoint)"
+  },
+  "# XI. Enemies & Antagonists",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_antagonists.html",
+    "label": "Antagonists"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_enemies.html",
+    "label": "Enemies"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/ashen_kite.html",
+    "label": "Ashen Kite"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/bandit.html",
+    "label": "Bandit"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_false_heaven.html",
+    "label": "The False Heaven"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_folded_general.html",
+    "label": "The Folded General"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_forgotten_shell.html",
+    "label": "The Forgotten Shell"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_gilded_ghost.html",
+    "label": "The Gilded Ghost"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/god_eater_scarab.html",
+    "label": "God-Eater Scarab"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/grove_tyrant.html",
+    "label": "Grove Tyrant"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/karma_engine.html",
+    "label": "Karma Engine"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/lady_of_thorns.html",
+    "label": "Lady of Thorns"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_lingering_oath.html",
+    "label": "The Lingering Oath"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/michio_the_echowalker.html",
+    "label": "Michio The Echowalker"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/ninja_grunts.html",
+    "label": "Ninja Grunts"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/okashira.html",
+    "label": "Okashira"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_plague_pilgrim.html",
+    "label": "The Plague Pilgrim"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/raijin_last_apprentice.html",
+    "label": "Raijin Last Apprentice"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/silkmother.html",
+    "label": "Silkmother"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/stonelash_hydra.html",
+    "label": "Stonelash Hydra"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/verdance.html",
+    "label": "Verdance"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/the_womb_whale.html",
+    "label": "The Womb Whale"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/enemies/yama_binder.html",
+    "label": "Yama-Binder"
+  },
+  "# XII. Engine Appendix",
+  {
+    "url": "/pages/retraissance/reader/bible/topic_engine_appendix.html",
+    "label": "Appendix: Engine & Technical"
+  },
+  {
+    "url": "/pages/retraissance/reader/bible/struct_engine.html",
+    "label": "Engine Systems & Tools"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/actor-system/index.html",
+    "label": "Actor-System"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/fsm/index.html",
+    "label": "Fsm"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/input-movement/index.html",
+    "label": "Input-Movement"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/stats-combat/index.html",
+    "label": "Stats-Combat"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/runtime/index.html",
+    "label": "Runtime"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/data-authoring/index.html",
+    "label": "Data-Authoring"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/editor/index.html",
+    "label": "Editor"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/integrations/index.html",
+    "label": "Integrations"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/engine/tools/index.html",
+    "label": "Tools"
+  }
+]

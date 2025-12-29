@@ -16,6 +16,12 @@ const path = require('path');
 const PORT = process.env.PORT || 3000;
 const ROOT = process.cwd();
 const TAG_FILE_DEFAULT = path.join(ROOT, 'pages', 'retraissance', 'assets', 'tags.json');
+const JSON_SAVE_ROOT = ROOT;
+let CYBERSPACEGOD = false;
+
+const cyberLog = (msg) => {
+  if (CYBERSPACEGOD) console.log(`[CSG] ${msg}`);
+};
 
 const send = (res, code, body, headers = {}) => {
   res.writeHead(code, {
@@ -32,6 +38,25 @@ const send = (res, code, body, headers = {}) => {
 const ensureDir = (p) => fs.mkdirSync(p, { recursive: true });
 const writeFile = (p, content) => fs.writeFileSync(p, content, 'utf8');
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+const listHtmlTree = (baseDirRel) => {
+  const base = path.join(ROOT, baseDirRel);
+  const results = [];
+  const walk = (dir) => {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const ent of entries) {
+      if (ent.name.startsWith('.')) continue;
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) walk(full);
+      else if (ent.isFile() && ent.name.toLowerCase().endsWith('.html')) {
+        const rel = relFromBase(full);
+        results.push(rel.replace(/\\/g, '/'));
+      }
+    }
+  };
+  walk(base);
+  results.sort((a, b) => a.localeCompare(b));
+  return results;
+};
 
 const CONTENT_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -576,12 +601,14 @@ const serveStatic = (req, res, pathname) => {
 const server = http.createServer((req, res) => {
   const parsed = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const { pathname } = parsed;
+  cyberLog(`request ${req.method} ${pathname}`);
 
   if (req.method === 'OPTIONS') {
     return send(res, 204);
   }
 
   if (req.method === 'POST' && pathname === '/__save') {
+    cyberLog('handler __save @157');
     let raw = '';
     req.on('data', chunk => { raw += chunk; });
     req.on('end', () => {
@@ -600,7 +627,30 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.method === 'POST' && pathname === '/__save-json') {
+    cyberLog('handler __save-json @184');
+    let raw = '';
+    req.on('data', chunk => { raw += chunk; });
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(raw || '{}');
+        const relPath = (payload.path || '').replace(/^[\\/]+/, '');
+        if (!relPath || !relPath.toLowerCase().endsWith('.json')) return send(res, 400, { error: 'Missing/invalid path (json only)' });
+        const target = path.normalize(path.join(ROOT, relPath));
+        if (!target.startsWith(ROOT)) return send(res, 400, { error: 'Invalid path' });
+        const data = payload.data !== undefined ? payload.data : (payload.json !== undefined ? payload.json : payload.content);
+        ensureDir(path.dirname(target));
+        writeFile(target, JSON.stringify(data, null, 2));
+        send(res, 200, { ok: true, path: relFromBase(target) });
+      } catch (err) {
+        send(res, 400, { error: err.message });
+      }
+    });
+    return;
+  }
+
   if (req.method === 'POST' && pathname === '/__create') {
+    cyberLog('handler __create @213');
     let raw = '';
     req.on('data', chunk => { raw += chunk; });
     req.on('end', () => {
@@ -631,6 +681,7 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === 'POST' && pathname === '/__delete') {
+    cyberLog('handler __delete @250');
     let raw = '';
     req.on('data', chunk => { raw += chunk; });
     req.on('end', () => {
@@ -660,6 +711,7 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === 'POST' && pathname === '/__update-tags') {
+    cyberLog('handler __update-tags @286');
     let raw = '';
     req.on('data', chunk => { raw += chunk; });
     req.on('end', () => {
@@ -692,6 +744,45 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // GET /__tree?root=pages/retraissance/densetsu
+  if (req.method === 'GET' && pathname === '/__tree') {
+    cyberLog('handler __tree @322');
+    const rootParam = parsed.query.root || 'pages/retraissance/densetsu';
+    try {
+      const list = listHtmlTree(rootParam);
+      send(res, 200, { files: list });
+    } catch (err) {
+      send(res, 500, { error: err.message || 'tree failed' });
+    }
+    return;
+  }
+
+  // Serve bookify reader bundle at /bookify/*
+  if (req.method === 'GET' && pathname.startsWith('/bookify')) {
+    cyberLog('handler bookify @339');
+    const subPath = pathname.replace(/^\/bookify/, '').replace(/^\/+/, '');
+    const base = path.join(ROOT, 'docbase', 'bookify-web', 'dist');
+    let target = path.normalize(path.join(base, subPath || ''));
+    if (!target.startsWith(base)) return send(res, 403, { error: 'Forbidden' });
+    let stat;
+    try { stat = fs.statSync(target); } catch (e) { stat = null; }
+    if (stat && stat.isDirectory()) {
+      target = path.join(target, 'index.html');
+    }
+    if (!fs.existsSync(target)) {
+      // Fallback to index.html for SPA routing
+      target = path.join(base, 'index.html');
+    }
+    const ext = path.extname(target).toLowerCase();
+    const type = CONTENT_TYPES[ext] || 'application/octet-stream';
+    res.writeHead(200, {
+      'Content-Type': type,
+      'Access-Control-Allow-Origin': '*'
+    });
+    fs.createReadStream(target).pipe(res);
+    return;
+  }
+
   // Static serving fallback
   if (req.method === 'GET') {
     if (serveStatic(req, res, pathname)) return;
@@ -700,6 +791,32 @@ const server = http.createServer((req, res) => {
   send(res, 404, { error: 'Not found' });
 });
 
-server.listen(PORT, () => {
-  console.log(`Dev save server listening on http://localhost:${PORT}/__save`);
-});
+const startServer = () => {
+  server.listen(PORT, () => {
+    console.log(`Dev save server listening on http://localhost:${PORT}/__save`);
+    if (CYBERSPACEGOD) console.log('CyberSpaceGod mode is ON');
+  });
+};
+
+if (process.stdin.isTTY) {
+  try {
+    const readline = require('readline');
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const timer = setTimeout(() => {
+      rl.close();
+      CYBERSPACEGOD = false;
+      startServer();
+    }, 10000);
+    rl.question('Activate CyberSpaceGod mode? (y/N) ', (answer) => {
+      clearTimeout(timer);
+      CYBERSPACEGOD = /^y(es)?$/i.test(answer.trim());
+      rl.close();
+      startServer();
+    });
+  } catch (err) {
+    CYBERSPACEGOD = false;
+    startServer();
+  }
+} else {
+  startServer();
+}
