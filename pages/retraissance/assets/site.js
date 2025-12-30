@@ -1009,7 +1009,19 @@ const buildBreadcrumb = () => {
             return abs;
           } catch (_) { return null; }
         }).filter(Boolean);
-        const all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromReader, ...fromGlobalLex, ...fromFallback];
+        let all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromReader, ...fromGlobalLex, ...fromFallback];
+
+        // If still empty (seen on reader mode), fall back to any links already in the reader list.
+        if (!all.length && isReaderPage()) {
+          const readerLinks = Array.from(document.querySelectorAll('#reader-list a'))
+            .map(a => {
+              try { return new URL(a.getAttribute('href') || '', location.href).href; }
+              catch (_) { return null; }
+            })
+            .filter(Boolean);
+          all = readerLinks;
+        }
+
         const uniq = Array.from(new Set(all));
         if (!uniq.length) {
           alert('No data pages found for random navigation. Ensure lexicon-data.json is reachable over http.');
