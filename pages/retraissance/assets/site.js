@@ -20,6 +20,9 @@
     const idx = p.indexOf('/pages/');
     return idx >= 0 ? p.slice(0, idx) : '';
   })();
+  // Editor can be disabled by dropping a flag file at repo root (not tracked).
+  const EDITOR_FLAG = `${BASE_PREFIX}/disable-editor.flag`;
+  let editorDisabled = false;
 
   const ensureBrandDiscord = () => {
     const brand = document.querySelector('.brand');
@@ -2729,12 +2732,22 @@ const buildBreadcrumb = () => {
     const ensureEditUI = () => {
       try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
     };
-    ensureEditUI();
-    // Retry a couple times in case content loads slowly.
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
-    // Always start view-only.
-    document.body.classList.remove('edit-active');
+    const initEdit = () => {
+      if (editorDisabled) {
+        document.body.classList.remove('edit-active');
+        stripEditArtifacts();
+        return;
+      }
+      ensureEditUI();
+      setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
+      setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
+      document.body.classList.remove('edit-active');
+    };
+
+    // Check for editor-disable flag (HEAD fetch). If it exists, skip edit UI.
+    fetch(EDITOR_FLAG, { method: 'HEAD' }).then(res => {
+      editorDisabled = res.ok;
+    }).catch(() => { editorDisabled = false; }).finally(initEdit);
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }

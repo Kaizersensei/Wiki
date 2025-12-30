@@ -450,6 +450,24 @@
         setTimeout(() => container.classList.remove('flip-left', 'flip-right'), 350);
       };
 
+      const fixMediaSources = () => {
+        if (!container) return;
+        const normSrc = (src) => {
+          if (!src) return src;
+          let path = src;
+          try { path = new URL(src, location.origin).pathname; } catch (_) { /* fallback */ }
+          path = path.replace(/^\/+/, '/');
+          if (path.startsWith('/pages/')) return `${PAGES_PREFIX}${path}`;
+          if (path.startsWith('/assets/')) return `${PAGES_PREFIX}/pages/retraissance${path}`;
+          return src;
+        };
+        container.querySelectorAll('img, video, audio, source').forEach(el => {
+          const src = el.getAttribute('src');
+          const fixed = normSrc(src);
+          if (fixed && fixed !== src) el.setAttribute('src', fixed);
+        });
+      };
+
       const loadPage = async (url, dir) => {
         errorBox.textContent = '';
         container.innerHTML = 'Loading...';
@@ -461,6 +479,7 @@
           container.innerHTML = sanitize(doc);
           applyAutoLinks(container);
           await injectTurnaround(url, container);
+          fixMediaSources();
           collectLinks();
           if (dir) applyFlip(dir);
           try { localStorage.setItem(LAST_PAGE_KEY, url); } catch (_) { /* ignore */ }
