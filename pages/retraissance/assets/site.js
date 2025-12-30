@@ -23,7 +23,7 @@
   const IS_HOST_READONLY = /github\.io$/i.test(location.hostname);
   // Editor can be disabled by dropping a flag file at repo root (not tracked).
   const EDITOR_FLAG = `${BASE_PREFIX}/disable-editor.flag`;
-  let editorDisabled = false;
+  let editorDisabled = true; // start disabled by default (enable only locally when flag absent)
 
   const ensureBrandDiscord = () => {
     const brand = document.querySelector('.brand');
