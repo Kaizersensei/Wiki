@@ -14,6 +14,12 @@
   const LEXICON_FALLBACK = Array.isArray(window.UNIVERSE_LEXICON_DATA) ? window.UNIVERSE_LEXICON_DATA : [];
   const CONTROL_SELECTOR = '.inline-remove, .inline-move, .inline-size, .inline-align-group, .inline-remove-media, .inline-edit-media';
   const isReaderPage = () => (location.pathname || '').replace(/\\/g, '/').includes('/retraissance/reader/');
+  // Base prefix (e.g., /Wiki) so we can build correct absolute paths on GitHub Pages.
+  const BASE_PREFIX = (() => {
+    const p = (location.pathname || '').replace(/\\/g, '/');
+    const idx = p.indexOf('/pages/');
+    return idx >= 0 ? p.slice(0, idx) : '';
+  })();
 
   const ensureBrandDiscord = () => {
     const brand = document.querySelector('.brand');
@@ -67,7 +73,7 @@ const buildBreadcrumb = () => {
     if ((segments.length === 1 && /index\.html?$/i.test(segments[0])) || (segments.length <= 2 && segments[0] === 'retraissance' && /index\.html?$/i.test(segments[1] || ''))) return;
     const makeLabel = (s) => s.replace(/\.html?$/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     const crumbs = [];
-    let accum = '/pages';
+    let accum = `${BASE_PREFIX}/pages`;
     segments.forEach((seg) => {
       const isFile = /\.html?$/i.test(seg);
       const label = isFile && h1 ? (h1.textContent.trim() || makeLabel(seg)) : makeLabel(seg);
@@ -364,11 +370,12 @@ const buildBreadcrumb = () => {
     };
 
     if (trimmed.startsWith('/assets/')) {
-      const full = `/pages/retraissance${trimmed}`;
+      const full = `${BASE_PREFIX}/pages/retraissance${trimmed}`;
       return isFile ? resolveLocal(full) : `${location.origin}${full}`;
     }
     if (trimmed.startsWith('/pages/')) {
-      return isFile ? resolveLocal(trimmed) : `${location.origin}${trimmed}`;
+      const full = `${BASE_PREFIX}${trimmed}`;
+      return isFile ? resolveLocal(full) : `${location.origin}${full}`;
     }
 
     // If it's just a filename (no slash), try to auto-resolve against the page's media folder.
@@ -382,34 +389,34 @@ const buildBreadcrumb = () => {
       // Reader pages (Bible / reader mode)
       if (/\/retraissance\/reader\//.test(pagePath)) {
         const base = dir.replace('/pages/retraissance/reader/', '/pages/retraissance/reader/media/');
-        candidates.push(`${base}${slug}/${trimmed}`);
-        candidates.push(`${base}${trimmed}`);
+        candidates.push(`${BASE_PREFIX}${base}${slug}/${trimmed}`);
+        candidates.push(`${BASE_PREFIX}${base}${trimmed}`);
       }
 
       // Team pages
       if (/\/retraissance\/team\//.test(pagePath)) {
-        candidates.push(`/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
+        candidates.push(`${BASE_PREFIX}/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
       }
 
       // Universe pages: derive media dir from page dir
       const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/(.+\/)[^/]+$/);
       if (uniMatch) {
         const pageDir = uniMatch[1]; // e.g. world/ or overview/
-        const mediaBase = `/pages/retraissance/densetsu/assets/media/universe/${pageDir}`;
+        const mediaBase = `${BASE_PREFIX}/pages/retraissance/densetsu/assets/media/universe/${pageDir}`;
         candidates.push(`${mediaBase}${slug}/${trimmed}`);
         candidates.push(`${mediaBase}${trimmed}`);
       }
 
       // Engine/tools fallback
       if (/\/retraissance\/densetsu\/engine\//.test(pagePath)) {
-        const mediaBase = dir.replace('/pages/retraissance/densetsu/engine/', '/pages/retraissance/densetsu/assets/media/engine/');
+        const mediaBase = dir.replace('/pages/retraissance/densetsu/engine/', `${BASE_PREFIX}/pages/retraissance/densetsu/assets/media/engine/`);
         candidates.push(`${mediaBase}${slug}/${trimmed}`);
         candidates.push(`${mediaBase}${trimmed}`);
       }
 
       // Generic assets fallback
-      candidates.push(`/pages/retraissance/assets/media/${slug}/${trimmed}`);
-      candidates.push(`/pages/retraissance/assets/media/${trimmed}`);
+      candidates.push(`${BASE_PREFIX}/pages/retraissance/assets/media/${slug}/${trimmed}`);
+      candidates.push(`${BASE_PREFIX}/pages/retraissance/assets/media/${trimmed}`);
 
       const first = candidates.find(Boolean);
       if (first) return isFile ? resolveLocal(first) : `${location.origin}${first}`;
@@ -939,10 +946,10 @@ const buildBreadcrumb = () => {
     };
 
     const gatherFromGlobalLexicon = async () => {
-      const rootLex = await fetchJsonSafe(`${location.origin}/pages/retraissance/densetsu/universe/lexicon-data.json`);
+      const rootLex = await fetchJsonSafe(`${location.origin}${BASE_PREFIX}/pages/retraissance/densetsu/universe/lexicon-data.json`);
       const list = Array.isArray(rootLex) ? rootLex : [];
       const targets = [];
-      list.forEach(e => addCandidate(targets, e.Href, `${location.origin}/pages/retraissance/densetsu/universe/`));
+      list.forEach(e => addCandidate(targets, e.Href, `${location.origin}${BASE_PREFIX}/pages/retraissance/densetsu/universe/`));
       return targets;
     };
 
