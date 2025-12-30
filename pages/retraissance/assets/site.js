@@ -376,22 +376,37 @@ const buildBreadcrumb = () => {
     if (isBareName) {
       const pagePath = (location.pathname || '').replace(/\\/g, '/');
       const slug = (pagePath.split('/').pop() || '').replace(/\.html?$/i, '');
+      const dir = pagePath.replace(/[^/]+$/, ''); // trailing slash kept
       const candidates = [];
+
+      // Reader pages (Bible / reader mode)
+      if (/\/retraissance\/reader\//.test(pagePath)) {
+        const base = dir.replace('/pages/retraissance/reader/', '/pages/retraissance/reader/media/');
+        candidates.push(`${base}${slug}/${trimmed}`);
+        candidates.push(`${base}${trimmed}`);
+      }
+
       // Team pages
       if (/\/retraissance\/team\//.test(pagePath)) {
         candidates.push(`/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
       }
-      // Universe pages
-      const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/([^/]+)\//);
+
+      // Universe pages: derive media dir from page dir
+      const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/(.+\/)[^/]+$/);
       if (uniMatch) {
-        const section = uniMatch[1];
-        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/${trimmed}`);
-        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${slug}/${trimmed}`);
+        const pageDir = uniMatch[1]; // e.g. world/ or overview/
+        const mediaBase = `/pages/retraissance/densetsu/assets/media/universe/${pageDir}`;
+        candidates.push(`${mediaBase}${slug}/${trimmed}`);
+        candidates.push(`${mediaBase}${trimmed}`);
       }
+
       // Engine/tools fallback
       if (/\/retraissance\/densetsu\/engine\//.test(pagePath)) {
-        candidates.push(`/pages/retraissance/densetsu/assets/media/engine/${slug}/${trimmed}`);
+        const mediaBase = dir.replace('/pages/retraissance/densetsu/engine/', '/pages/retraissance/densetsu/assets/media/engine/');
+        candidates.push(`${mediaBase}${slug}/${trimmed}`);
+        candidates.push(`${mediaBase}${trimmed}`);
       }
+
       // Generic assets fallback
       candidates.push(`/pages/retraissance/assets/media/${slug}/${trimmed}`);
       candidates.push(`/pages/retraissance/assets/media/${trimmed}`);
@@ -532,14 +547,35 @@ const buildBreadcrumb = () => {
         }
         if (remaining) frag.appendChild(document.createTextNode(remaining));
 
-        // Replace the text node with the converted fragment (bare media; controls/wrappers added later)
+        // Wrap media nodes into inline-media-blocks
+        const rebuilt = document.createDocumentFragment();
+        frag.childNodes.forEach(ch => {
+          if (ch.nodeType === 1 && (ch.tagName === 'IMG' || ch.tagName === 'VIDEO')) {
+            const block = document.createElement('div');
+            block.className = 'inline-media-block';
+            block.contentEditable = 'false';
+            const inner = document.createElement('div');
+            inner.className = 'inline-media-wrap';
+            inner.style.display = 'inline-block';
+            inner.style.maxWidth = '100%';
+            inner.appendChild(ch);
+            block.appendChild(inner);
+            rebuilt.appendChild(block);
+          } else {
+            rebuilt.appendChild(ch);
+          }
+        });
+
+        // Replace the text node with the converted fragment (controls get added later)
         const parent = node.parentElement;
-        if (parent && parent.tagName !== 'P') {
+        if (parent && parent.tagName !== 'P' && rebuilt.childNodes.length === 1 && rebuilt.firstChild.classList && rebuilt.firstChild.classList.contains('inline-media-block')) {
+          node.replaceWith(rebuilt);
+        } else if (parent && parent.tagName !== 'P') {
           const wrap = document.createElement('p');
-          while (frag.firstChild) wrap.appendChild(frag.firstChild);
+          while (rebuilt.firstChild) wrap.appendChild(rebuilt.firstChild);
           node.replaceWith(wrap);
         } else {
-          node.replaceWith(frag);
+          node.replaceWith(rebuilt);
         }
       });
 
@@ -569,7 +605,16 @@ const buildBreadcrumb = () => {
           img.classList.add('inline-media-missing');
           img.dataset.missing = '1';
         }
-        imgTag.replaceWith(img);
+        const block = document.createElement('div');
+        block.className = 'inline-media-block';
+        block.contentEditable = 'false';
+        const inner = document.createElement('div');
+        inner.className = 'inline-media-wrap';
+        inner.style.display = 'inline-block';
+        inner.style.maxWidth = '100%';
+        inner.appendChild(img);
+        block.appendChild(inner);
+        imgTag.replaceWith(block);
       });
       scope.querySelectorAll('line').forEach(lineTag => {
         const hr = document.createElement('hr');
@@ -627,7 +672,7 @@ const buildBreadcrumb = () => {
     const safeAlt = (raw.split('/').pop() || 'image').replace(/"/g, '');
     const dataSizeAttr = sizeVal ? ` data-size="${sizeVal}"` : '';
     const dataAlignAttr = alignVal ? ` data-align="${alignVal}"` : '';
-    return `<img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}${dataSizeAttr}${dataAlignAttr} style="${widthStyle}${alignStyle}">`;
+    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><img class="inline-image${missing}" src="${url}" alt="${safeAlt}" data-pseudo="${raw}"${missingAttr}${dataSizeAttr}${dataAlignAttr} style="${widthStyle}${alignStyle}"></div></div>`;
   };
   const renderLineHtml = () => '<hr>';
   const renderBoxHtml = (raw) => {
@@ -642,7 +687,7 @@ const buildBreadcrumb = () => {
     const shouldLoop = /-loop/i.test(attrs || '');
     const ctrlAttr = hasNoControls ? '' : ' controls';
     const loopAttr = shouldLoop ? ' loop' : '';
-    return `<video class="inline-video${missing}" src="${url}" data-pseudo="${raw}" autoplay muted playsinline${ctrlAttr}${loopAttr}${missingAttr} style="max-width:100%;display:block;margin:12px auto;max-height:135vh;"></video>`;
+    return `<div class="inline-media-block" contenteditable="false"><div class="inline-media-wrap" style="display:inline-block;max-width:100%;"><video class="inline-video${missing}" src="${url}" data-pseudo="${raw}" autoplay muted playsinline${ctrlAttr}${loopAttr}${missingAttr} style="max-width:100%;display:block;margin:12px auto;max-height:135vh;"></video></div></div>`;
   };
 
   // Apply DOM-aware injection then a string fallback to catch any encoded tags.
@@ -1270,10 +1315,7 @@ const buildBreadcrumb = () => {
     insertRightStrip(portrait, audioSrc);
   };
     const enableInlineEdit = () => {
-      const readerView = isReaderPage();
-      const panel = readerView
-        ? document.querySelector('.reader-content') || document.querySelector('.panel')
-        : document.querySelector('main .panel') || document.querySelector('.panel');
+      const panel = document.querySelector('.panel');
       if (!panel) return;
       let editObserver = null;
       let observerPaused = false;
@@ -1320,25 +1362,7 @@ const buildBreadcrumb = () => {
     // Ensure inline pseudotag media are wrapped and have edit controls.
     const ensureMediaControls = () => {
       wrapInlineMedia();
-      // Normalize bare images/videos inside the editable panel so controls attach.
-      panel.querySelectorAll('img:not(.inline-image)').forEach(img => {
-        // Skip obvious UI assets (nav/logo)
-        if (img.closest('header') || img.classList.contains('nav-logo')) return;
-        img.classList.add('inline-image');
-        if (!img.dataset.pseudo) {
-          const name = (img.getAttribute('src') || '').split('/').pop() || '';
-          if (name) img.dataset.pseudo = name;
-        }
-      });
-      panel.querySelectorAll('video:not(.inline-video)').forEach(vid => {
-        if (vid.closest('header')) return;
-        vid.classList.add('inline-video');
-        if (!vid.dataset.pseudo) {
-          const name = (vid.getAttribute('src') || '').split('/').pop() || '';
-          if (name) vid.dataset.pseudo = name;
-        }
-      });
-      const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+      const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
       mediaNodes.forEach(node => {
         const wrap = node.closest('.inline-media-wrap');
         if (!wrap) return;
@@ -1347,7 +1371,7 @@ const buildBreadcrumb = () => {
           btnDel = document.createElement('button');
           btnDel.type = 'button';
           btnDel.className = 'inline-remove-media';
-          btnDel.textContent = '-';
+          btnDel.textContent = 'Del';
           btnDel.title = 'Remove media';
           btnDel.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1363,7 +1387,7 @@ const buildBreadcrumb = () => {
           btnEditMedia = document.createElement('button');
           btnEditMedia.type = 'button';
           btnEditMedia.className = 'inline-edit-media';
-          btnEditMedia.textContent = 'Edit';
+          btnEditMedia.textContent = '?';
           btnEditMedia.title = 'Edit media source';
           btnEditMedia.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1442,7 +1466,7 @@ const buildBreadcrumb = () => {
           btnShrink = document.createElement('button');
           btnShrink.type = 'button';
           btnShrink.className = 'inline-size inline-size-down';
-          btnShrink.textContent = '-';
+          btnShrink.textContent = 'sml';
           btnShrink.title = 'Shrink media';
           btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
           wrap.appendChild(btnShrink);
@@ -1452,7 +1476,7 @@ const buildBreadcrumb = () => {
           btnGrow = document.createElement('button');
           btnGrow.type = 'button';
           btnGrow.className = 'inline-size inline-size-up';
-          btnGrow.textContent = '+';
+          btnGrow.textContent = 'big';
           btnGrow.title = 'Grow media';
           btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
           wrap.appendChild(btnGrow);
@@ -1671,6 +1695,85 @@ const buildBreadcrumb = () => {
       b.addEventListener('click', () => execCmd(cmd));
       formatRow.appendChild(b);
     };
+    const adjustHeading = (delta) => {
+      const sel = window.getSelection ? window.getSelection() : null;
+      const editableRoot = panel || document.body;
+      if (!editableRoot) return;
+      let range = sel && sel.rangeCount ? sel.getRangeAt(0) : null;
+      // If selection is outside the editable root (or missing), place a caret at the start.
+      if (!range || !editableRoot.contains(range.commonAncestorContainer)) {
+        range = document.createRange();
+        if (editableRoot.firstChild) {
+          range.setStart(editableRoot.firstChild, 0);
+        } else {
+          const p = document.createElement('p');
+          p.textContent = ' ';
+          editableRoot.appendChild(p);
+          range.setStart(p.firstChild, 0);
+        }
+        range.collapse(true);
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }
+      let node = range.commonAncestorContainer;
+      if (node && node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+      if (node && editableRoot && !editableRoot.contains(node)) {
+        node = editableRoot.querySelector('h1,h2,h3,h4,h5,h6,p,li');
+      }
+      const allowed = 'h1,h2,h3,h4,h5,h6,p,li';
+      let block = node && node.closest ? node.closest(allowed) : null;
+      if (!block && editableRoot.contains(node)) {
+        // wrap selection in a paragraph so we can adjust it
+        const wrap = document.createElement('p');
+        wrap.appendChild(range.extractContents());
+        range.insertNode(wrap);
+        block = wrap;
+        sel.removeAllRanges();
+        const after = document.createRange();
+        after.setStartAfter(wrap);
+        after.collapse(true);
+        sel.addRange(after);
+      }
+      if (!block || !editableRoot.contains(block)) return;
+
+      const tag = block.tagName ? block.tagName.toLowerCase() : '';
+      const isHeading = /^h[1-6]$/.test(tag);
+      const current = isHeading ? parseInt(tag.replace(/\D/g, ''), 10) : 0; // 0 means paragraph/other
+      let next = isHeading ? current + delta : (delta > 0 ? 2 : 0);
+      if (next < 0) next = 0;
+      if (next > 6) next = 6;
+      if (isHeading && next === current) return;
+      if (!isHeading && next === 0) return; // nothing to do
+
+      const newEl = next >= 1 ? document.createElement(`h${next}`) : document.createElement('p');
+      // preserve id/class/style to avoid formatting loss
+      ['id', 'class', 'style'].forEach(attr => {
+        if (block.hasAttribute && block.hasAttribute(attr)) newEl.setAttribute(attr, block.getAttribute(attr));
+      });
+      while (block.firstChild) newEl.appendChild(block.firstChild);
+      block.parentNode.replaceChild(newEl, block);
+
+      try {
+        const newRange = document.createRange();
+        newRange.selectNodeContents(newEl);
+        newRange.collapse(false);
+        // Only apply selection if the new element is attached to the document and inside the editable root.
+        if (sel && newEl.isConnected && editableRoot.contains(newEl)) {
+          sel.removeAllRanges();
+          // Only add range if the node is still in the document
+          if (document.body.contains(newEl)) {
+            sel.addRange(newRange);
+          }
+        }
+      } catch (_) { /* ignore caret errors */ }
+
+      wrapInlineMedia();
+      sanitizeSelectionContext();
+      if (typeof markDirty === 'function') markDirty();
+      else btnSave.disabled = false;
+    };
     const addCustomBtn = (label, title, handler) => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -1687,6 +1790,8 @@ const buildBreadcrumb = () => {
     mkFmt('L', 'Align left', 'justifyLeft');
     mkFmt('C', 'Align center', 'justifyCenter');
     mkFmt('R', 'Align right', 'justifyRight');
+    addCustomBtn('H-', 'Decrease heading level', () => adjustHeading(-1));
+    addCustomBtn('H+', 'Increase heading level', () => adjustHeading(1));
     const applyTextBox = () => {
       const editableRoot = panel.querySelector('.markdown') || panel;
       setEditable(true);
@@ -1765,8 +1870,13 @@ const buildBreadcrumb = () => {
     bar.appendChild(btnSave);
     bar.appendChild(btnCancel);
     document.body.appendChild(bar);
+    try { ensureMediaControls(); wrapInlineMedia(); } catch (_) { /* best effort */ }
 
     const targetRoot = panel.querySelector('.markdown') || panel;
+    const markDirty = () => {
+      btnSave.disabled = false;
+      document.body.classList.add('edit-active');
+    };
     const saveSelectionIfEditable = () => {
       const sel = window.getSelection && window.getSelection();
       if (!sel || !sel.rangeCount) return;
@@ -1793,7 +1903,8 @@ const buildBreadcrumb = () => {
       purgeControlArtifacts();
       btnSave.disabled = !on;
       btnEdit.disabled = on;
-      const targets = panel.querySelectorAll('.markdown, .callout, .panel > h1, .panel > .eyebrow, [data-editable="true"], .editable-text, .panel > p, .reader-content > *, .reader-content p, .reader-content div');
+      // Make the relevant content inside the panel editable (headings + main text areas only)
+      const targets = panel.querySelectorAll('.markdown, .callout, .panel > h1, .panel > .eyebrow, [data-editable=\"true\"], .editable-text, .panel > p');
       targets.forEach(el => { el.contentEditable = on; });
       if (on) {
         // First re-render any pseudotags entered as text so media controls can attach.
@@ -1936,188 +2047,6 @@ const buildBreadcrumb = () => {
       } else {
         ensureMediaControls();
       }
-        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
-        mediaNodes.forEach(node => {
-          const wrap = node.closest('.inline-media-wrap');
-          if (!wrap) return;
-          let btnDel = wrap.querySelector('.inline-remove-media');
-          if (!btnDel) {
-            btnDel = document.createElement('button');
-            btnDel.type = 'button';
-            btnDel.className = 'inline-remove-media';
-            btnDel.textContent = '-';
-            btnDel.title = 'Remove media';
-            btnDel.addEventListener('click', (e) => {
-              e.stopPropagation();
-              wrap.remove();
-              btnSave.disabled = false;
-            });
-            wrap.appendChild(btnDel);
-          }
-          let btnEditMedia = wrap.querySelector('.inline-edit-media');
-          if (!btnEditMedia) {
-            btnEditMedia = document.createElement('button');
-            btnEditMedia.type = 'button';
-            btnEditMedia.className = 'inline-edit-media';
-            btnEditMedia.textContent = 'Edit';
-            btnEditMedia.title = 'Edit media source';
-            btnEditMedia.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const current = node.getAttribute('src') || node.dataset.pseudo || '';
-              const loopAttr = node.loop ? ' -loop' : '';
-              const ncAttr = node.controls === false ? ' -nocontrols' : '';
-              const runPicker = () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = node.tagName === 'VIDEO' ? 'video/*,audio/*' : 'image/*,video/*,audio/*';
-                input.addEventListener('change', () => {
-                  const file = input.files && input.files[0];
-                  if (!file) return;
-                  const name = file.name;
-                  node.dataset.pseudo = name;
-                  node.src = resolvePseudoUrl(name);
-                  node.classList.remove('inline-media-missing');
-                  node.removeAttribute('data-missing');
-                  if (node.tagName === 'VIDEO') {
-                    try { node.load(); node.play(); } catch (_) { /* ignore */ }
-                  }
-                  btnSave.disabled = false;
-                }, { once: true });
-                input.click();
-              };
-              const raw = prompt('Media source (you can include -loop and -nocontrols):', `${current}${loopAttr}${ncAttr}`);
-              if (!raw) {
-                runPicker();
-                return;
-              }
-              const hasLoop = /-loop/.test(raw);
-              const noControls = /-nocontrols/.test(raw);
-              const cleaned = raw.replace(/-loop/gi, '').replace(/-nocontrols/gi, '').trim();
-              node.dataset.pseudo = cleaned;
-              node.src = resolvePseudoUrl(cleaned);
-              if (!cleaned) {
-                node.classList.add('inline-media-missing');
-                node.dataset.missing = '1';
-              } else {
-                node.classList.remove('inline-media-missing');
-                node.removeAttribute('data-missing');
-              }
-              if (node.tagName === 'VIDEO') {
-                node.loop = hasLoop;
-                if (hasLoop) node.setAttribute('loop', '');
-                else node.removeAttribute('loop');
-                node.controls = !noControls;
-                if (noControls) node.setAttribute('controls', 'false');
-                else node.setAttribute('controls', 'true');
-                try { node.load(); node.play(); } catch (_) { /* ignore */ }
-              }
-              btnSave.disabled = false;
-            });
-            wrap.appendChild(btnEditMedia);
-          }
-          const adjustSize = (delta) => {
-            const base = node.dataset.sizePercent
-              ? parseFloat(node.dataset.sizePercent)
-              : (node.style.width && node.style.width.endsWith('%'))
-                ? parseFloat(node.style.width)
-                : 100;
-            const next = Math.min(200, Math.max(10, base + delta));
-            node.dataset.sizePercent = String(next);
-            node.style.width = `${next}%`;
-            btnSave.disabled = false;
-          };
-          // initialize dataset size from existing width once
-          if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
-            node.dataset.sizePercent = String(parseFloat(node.style.width));
-          }
-          let btnShrink = wrap.querySelector('.inline-size-down');
-          if (!btnShrink) {
-            btnShrink = document.createElement('button');
-            btnShrink.type = 'button';
-            btnShrink.className = 'inline-size inline-size-down';
-            btnShrink.textContent = '-';
-            btnShrink.title = 'Decrease size (5%)';
-            btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
-            wrap.appendChild(btnShrink);
-          }
-          let btnGrow = wrap.querySelector('.inline-size-up');
-          if (!btnGrow) {
-            btnGrow = document.createElement('button');
-            btnGrow.type = 'button';
-            btnGrow.className = 'inline-size inline-size-up';
-            btnGrow.textContent = '+';
-            btnGrow.title = 'Increase size (5%)';
-            btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
-            wrap.appendChild(btnGrow);
-          }
-          const applyAlign = (val) => {
-            node.dataset.align = val;
-            node.style.display = 'block';
-            node.style.marginTop = node.style.marginTop || '12px';
-            node.style.marginBottom = node.style.marginBottom || '12px';
-            if (val === 'left') {
-              node.style.marginLeft = '0';
-              node.style.marginRight = 'auto';
-            } else if (val === 'right') {
-              node.style.marginLeft = 'auto';
-              node.style.marginRight = '0';
-            } else {
-              node.style.marginLeft = 'auto';
-              node.style.marginRight = 'auto';
-            }
-            btnSave.disabled = false;
-          };
-          const alignGroup = wrap.querySelector('.inline-align-group') || (() => {
-            const g = document.createElement('div');
-            g.className = 'inline-align-group';
-            wrap.appendChild(g);
-            return g;
-          })();
-          const ensureAlignBtn = (cls, label, val) => {
-            let b = alignGroup.querySelector(`.${cls}`);
-            if (!b) {
-              b = document.createElement('button');
-              b.type = 'button';
-              b.className = `inline-align ${cls}`;
-              b.textContent = label;
-              b.addEventListener('click', (e) => { e.stopPropagation(); applyAlign(val); });
-              alignGroup.appendChild(b);
-            }
-          };
-          ensureAlignBtn('inline-align-left', 'L', 'left');
-          ensureAlignBtn('inline-align-center', 'C', 'center');
-          ensureAlignBtn('inline-align-right', 'R', 'right');
-          applyAlign(node.dataset.align || 'center');
-          // ease clicking overlays by disabling pointer events on media while editing
-          if (on) {
-            node.dataset._pe = node.style.pointerEvents || '';
-            node.style.pointerEvents = 'none';
-          }
-        });
-
-      if (!on) {
-        // restore pointer events on media
-        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
-        mediaNodes.forEach(node => {
-          if (node.dataset && node.dataset._pe !== undefined) {
-            node.style.pointerEvents = node.dataset._pe;
-            delete node.dataset._pe;
-          } else {
-            node.style.pointerEvents = '';
-          }
-        });
-        if (window.getSelection) {
-          const sel = window.getSelection();
-          if (sel) sel.removeAllRanges();
-        }
-      } else {
-        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
-        mediaNodes.forEach(node => {
-          node.dataset._pe = node.style.pointerEvents || '';
-          node.style.pointerEvents = 'none';
-        });
-      }
-
       if (editObserver) {
         editObserver.disconnect();
         editObserver = null;
@@ -2684,8 +2613,7 @@ const buildBreadcrumb = () => {
       afterBlockRange.setStartAfter(block);
       afterBlockRange.collapse(true);
       lastRange = afterBlockRange.cloneRange();
-      document.body.classList.add('edit-active');
-      btnSave.disabled = false;
+      markDirty();
     };
     btnAddHeading.addEventListener('click', addHeadingBlock);
 
@@ -2739,12 +2667,14 @@ const buildBreadcrumb = () => {
 
       placeNode(block);
       try { applyInlineMediaWithFallback(); ensureMediaControls(); } catch (_) {}
-      const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-      if (saveBtn) saveBtn.disabled = false;
+      markDirty();
     };
     btnAddImage.addEventListener('click', addImageAtCursor);
 
-    btnEdit.addEventListener('click', () => setEditable(true));
+    btnEdit.addEventListener('click', () => {
+      setEditable(true);
+      try { ensureMediaControls(); wrapInlineMedia(); } catch (_) { /* best effort */ }
+    });
     btnSave.addEventListener('click', async () => {
       // In reader mode, push edits to the underlying page instead of the shell.
       if (isReaderPage() && window.readerSaveCurrent) {
@@ -2788,23 +2718,16 @@ const buildBreadcrumb = () => {
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
-    if (readerView) {
-      // Only reader mode supports inline editing/tooling now.
+    // Build edit UI for all pages; edit mode stays off by default.
+    const ensureEditUI = () => {
       try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
-      if (!document.querySelector('.edit-bar')) {
-        setTimeout(() => {
-          try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit retry failed', err); }
-        }, 0);
-      }
-    } else {
-      // Outside reader, strip any edit UI and force view-only.
-      document.querySelectorAll(CONTROL_SELECTOR + ', .edit-bar, [contenteditable="true"]').forEach(el => {
-        if (el.classList.contains('edit-bar')) el.remove();
-        else if (el.matches(CONTROL_SELECTOR)) el.remove();
-        else el.removeAttribute('contenteditable');
-      });
-      document.body.classList.remove('edit-active');
-    }
+    };
+    ensureEditUI();
+    // Retry a couple times in case content loads slowly.
+    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
+    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
+    // Always start view-only.
+    document.body.classList.remove('edit-active');
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
@@ -2902,4 +2825,3 @@ const buildBreadcrumb = () => {
     }
   };
 })();
-

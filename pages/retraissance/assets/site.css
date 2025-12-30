@@ -805,7 +805,6 @@ details.meta-toggle .meta-grid {
   line-height: 1.1;
   min-width: 32px;
   min-height: 26px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -827,6 +826,9 @@ details.meta-toggle .meta-grid {
   justify-content: center;
 }
 .edit-active .inline-move-group {
+  display: inline-flex;
+}
+.edit-active .inline-move {
   display: inline-flex;
 }
 .inline-move:hover {

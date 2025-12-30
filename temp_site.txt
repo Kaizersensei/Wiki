@@ -1300,7 +1300,14 @@ const buildBreadcrumb = () => {
     insertRightStrip(portrait, audioSrc);
   };
     const enableInlineEdit = () => {
-      const panel = document.querySelector('.panel');
+      const readerView = isReaderPage();
+      const panel =
+        document.querySelector('.panel[contenteditable="true"]') ||
+        (readerView ? document.querySelector('.reader-content .panel[contenteditable="true"]') : null) ||
+        (readerView ? document.querySelector('.reader-content .panel') : null) ||
+        document.querySelector('main .panel:last-of-type') ||
+        document.querySelector('main .panel') ||
+        document.querySelector('.panel');
       if (!panel) return;
       let editObserver = null;
       let observerPaused = false;
@@ -1347,7 +1354,7 @@ const buildBreadcrumb = () => {
     // Ensure inline pseudotag media are wrapped and have edit controls.
     const ensureMediaControls = () => {
       wrapInlineMedia();
-      const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
+      const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
       mediaNodes.forEach(node => {
         const wrap = node.closest('.inline-media-wrap');
         if (!wrap) return;
@@ -1356,14 +1363,13 @@ const buildBreadcrumb = () => {
           btnDel = document.createElement('button');
           btnDel.type = 'button';
           btnDel.className = 'inline-remove-media';
-          btnDel.textContent = 'Del';
+          btnDel.textContent = '-';
           btnDel.title = 'Remove media';
           btnDel.addEventListener('click', (e) => {
             e.stopPropagation();
             const block = wrap.closest('.inline-media-block');
             if (block) block.remove(); else wrap.remove();
-            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-            if (saveBtn) saveBtn.disabled = false;
+            markDirty();
           });
           wrap.appendChild(btnDel);
         }
@@ -1372,7 +1378,7 @@ const buildBreadcrumb = () => {
           btnEditMedia = document.createElement('button');
           btnEditMedia.type = 'button';
           btnEditMedia.className = 'inline-edit-media';
-          btnEditMedia.textContent = '?';
+          btnEditMedia.textContent = 'Edit';
           btnEditMedia.title = 'Edit media source';
           btnEditMedia.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1394,8 +1400,7 @@ const buildBreadcrumb = () => {
                 if (node.tagName === 'VIDEO') {
                   try { node.load(); node.play(); } catch (_) { /* ignore */ }
                 }
-                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-                if (saveBtn) saveBtn.disabled = false;
+                markDirty();
               }, { once: true });
               input.click();
             };
@@ -1425,8 +1430,7 @@ const buildBreadcrumb = () => {
               else node.setAttribute('controls', 'true');
               try { node.load(); node.play(); } catch (_) { /* ignore */ }
             }
-            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-            if (saveBtn) saveBtn.disabled = false;
+            markDirty();
           });
           wrap.appendChild(btnEditMedia);
         }
@@ -1440,8 +1444,7 @@ const buildBreadcrumb = () => {
           node.dataset.sizePercent = String(next);
           node.dataset.size = String(next);
           node.style.width = `${next}%`;
-          const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-          if (saveBtn) saveBtn.disabled = false;
+          markDirty();
         };
         if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
           node.dataset.sizePercent = String(parseFloat(node.style.width));
@@ -1451,7 +1454,7 @@ const buildBreadcrumb = () => {
           btnShrink = document.createElement('button');
           btnShrink.type = 'button';
           btnShrink.className = 'inline-size inline-size-down';
-          btnShrink.textContent = 'sml';
+          btnShrink.textContent = '-';
           btnShrink.title = 'Shrink media';
           btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
           wrap.appendChild(btnShrink);
@@ -1461,7 +1464,7 @@ const buildBreadcrumb = () => {
           btnGrow = document.createElement('button');
           btnGrow.type = 'button';
           btnGrow.className = 'inline-size inline-size-up';
-          btnGrow.textContent = 'big';
+          btnGrow.textContent = '+';
           btnGrow.title = 'Grow media';
           btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
           wrap.appendChild(btnGrow);
@@ -1518,8 +1521,7 @@ const buildBreadcrumb = () => {
 
               if (!start || !start.parentElement) {
                 if (!fallbackMoveBlock()) return;
-                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-                if (saveBtn) saveBtn.disabled = false;
+                markDirty();
                 return;
               }
 
@@ -1579,9 +1581,10 @@ const buildBreadcrumb = () => {
               if (!moved) {
                 // If no neighboring section to swap with, try local block move as fallback.
                 if (!fallbackMoveBlock()) return;
+                markDirty();
+                return;
               }
-              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-              if (saveBtn) saveBtn.disabled = false;
+              markDirty();
             });
             moveGroup.appendChild(btn);
           }
@@ -1602,8 +1605,7 @@ const buildBreadcrumb = () => {
               const block = wrap.closest('.inline-media-block') || wrap.parentElement;
               if (block) block.style.textAlign = value;
               node.dataset.align = value;
-              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-              if (saveBtn) saveBtn.disabled = false;
+              markDirty();
             });
             alignGroup.appendChild(b);
           };
@@ -2032,6 +2034,179 @@ const buildBreadcrumb = () => {
       } else {
         ensureMediaControls();
       }
+        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+        mediaNodes.forEach(node => {
+          const wrap = node.closest('.inline-media-wrap');
+          if (!wrap) return;
+          let btnDel = wrap.querySelector('.inline-remove-media');
+          if (!btnDel) {
+            btnDel = document.createElement('button');
+            btnDel.type = 'button';
+            btnDel.className = 'inline-remove-media';
+            btnDel.textContent = '-';
+            btnDel.title = 'Remove media';
+            btnDel.addEventListener('click', (e) => {
+              e.stopPropagation();
+              wrap.remove();
+              btnSave.disabled = false;
+            });
+            wrap.appendChild(btnDel);
+          }
+          let btnEditMedia = wrap.querySelector('.inline-edit-media');
+          if (!btnEditMedia) {
+            btnEditMedia = document.createElement('button');
+            btnEditMedia.type = 'button';
+            btnEditMedia.className = 'inline-edit-media';
+            btnEditMedia.textContent = 'Edit';
+            btnEditMedia.title = 'Edit media source';
+            btnEditMedia.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const current = node.getAttribute('src') || node.dataset.pseudo || '';
+              const loopAttr = node.loop ? ' -loop' : '';
+              const ncAttr = node.controls === false ? ' -nocontrols' : '';
+              const runPicker = () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = node.tagName === 'VIDEO' ? 'video/*,audio/*' : 'image/*,video/*,audio/*';
+                input.addEventListener('change', () => {
+                  const file = input.files && input.files[0];
+                  if (!file) return;
+                  const name = file.name;
+                  node.dataset.pseudo = name;
+                  node.src = resolvePseudoUrl(name);
+                  node.classList.remove('inline-media-missing');
+                  node.removeAttribute('data-missing');
+                  if (node.tagName === 'VIDEO') {
+                    try { node.load(); node.play(); } catch (_) { /* ignore */ }
+                  }
+                  btnSave.disabled = false;
+                }, { once: true });
+                input.click();
+              };
+              const raw = prompt('Media source (you can include -loop and -nocontrols):', `${current}${loopAttr}${ncAttr}`);
+              if (!raw) {
+                runPicker();
+                return;
+              }
+              const hasLoop = /-loop/.test(raw);
+              const noControls = /-nocontrols/.test(raw);
+              const cleaned = raw.replace(/-loop/gi, '').replace(/-nocontrols/gi, '').trim();
+              node.dataset.pseudo = cleaned;
+              node.src = resolvePseudoUrl(cleaned);
+              if (!cleaned) {
+                node.classList.add('inline-media-missing');
+                node.dataset.missing = '1';
+              } else {
+                node.classList.remove('inline-media-missing');
+                node.removeAttribute('data-missing');
+              }
+              if (node.tagName === 'VIDEO') {
+                node.loop = hasLoop;
+                if (hasLoop) node.setAttribute('loop', '');
+                else node.removeAttribute('loop');
+                node.controls = !noControls;
+                if (noControls) node.setAttribute('controls', 'false');
+                else node.setAttribute('controls', 'true');
+                try { node.load(); node.play(); } catch (_) { /* ignore */ }
+              }
+              btnSave.disabled = false;
+            });
+            wrap.appendChild(btnEditMedia);
+          }
+          const adjustSize = (delta) => {
+            const base = node.dataset.sizePercent
+              ? parseFloat(node.dataset.sizePercent)
+              : (node.style.width && node.style.width.endsWith('%'))
+                ? parseFloat(node.style.width)
+                : 100;
+            const next = Math.min(200, Math.max(10, base + delta));
+            node.dataset.sizePercent = String(next);
+            node.style.width = `${next}%`;
+            btnSave.disabled = false;
+          };
+          // initialize dataset size from existing width once
+          if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
+            node.dataset.sizePercent = String(parseFloat(node.style.width));
+          }
+          let btnShrink = wrap.querySelector('.inline-size-down');
+          if (!btnShrink) {
+            btnShrink = document.createElement('button');
+            btnShrink.type = 'button';
+            btnShrink.className = 'inline-size inline-size-down';
+            btnShrink.textContent = '-';
+            btnShrink.title = 'Decrease size (5%)';
+            btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
+            wrap.appendChild(btnShrink);
+          }
+          let btnGrow = wrap.querySelector('.inline-size-up');
+          if (!btnGrow) {
+            btnGrow = document.createElement('button');
+            btnGrow.type = 'button';
+            btnGrow.className = 'inline-size inline-size-up';
+            btnGrow.textContent = '+';
+            btnGrow.title = 'Increase size (5%)';
+            btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
+            wrap.appendChild(btnGrow);
+          }
+          const applyAlign = (val) => {
+            node.dataset.align = val;
+            const holder = wrap.parentElement || wrap;
+            if (holder && holder.style) {
+              holder.style.textAlign = val;
+            }
+            btnSave.disabled = false;
+          };
+          const alignGroup = wrap.querySelector('.inline-align-group') || (() => {
+            const g = document.createElement('div');
+            g.className = 'inline-align-group';
+            wrap.appendChild(g);
+            return g;
+          })();
+          const ensureAlignBtn = (cls, label, val) => {
+            let b = alignGroup.querySelector(`.${cls}`);
+            if (!b) {
+              b = document.createElement('button');
+              b.type = 'button';
+              b.className = `inline-align ${cls}`;
+              b.textContent = label;
+              b.addEventListener('click', (e) => { e.stopPropagation(); applyAlign(val); });
+              alignGroup.appendChild(b);
+            }
+          };
+          ensureAlignBtn('inline-align-left', 'L', 'left');
+          ensureAlignBtn('inline-align-center', 'C', 'center');
+          ensureAlignBtn('inline-align-right', 'R', 'right');
+          applyAlign(node.dataset.align || 'center');
+          // ease clicking overlays by disabling pointer events on media while editing
+          if (on) {
+            node.dataset._pe = node.style.pointerEvents || '';
+            node.style.pointerEvents = 'none';
+          }
+        });
+
+      if (!on) {
+        // restore pointer events on media
+        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+        mediaNodes.forEach(node => {
+          if (node.dataset && node.dataset._pe !== undefined) {
+            node.style.pointerEvents = node.dataset._pe;
+            delete node.dataset._pe;
+          } else {
+            node.style.pointerEvents = '';
+          }
+        });
+        if (window.getSelection) {
+          const sel = window.getSelection();
+          if (sel) sel.removeAllRanges();
+        }
+      } else {
+        const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
+        mediaNodes.forEach(node => {
+          node.dataset._pe = node.style.pointerEvents || '';
+          node.style.pointerEvents = 'none';
+        });
+      }
+
       if (editObserver) {
         editObserver.disconnect();
         editObserver = null;
@@ -2423,390 +2598,3 @@ const buildBreadcrumb = () => {
           node.replaceWith(p);
           p.appendChild(node);
           return true;
-        };
-        scopes.forEach(scope => {
-          scope.querySelectorAll('img.inline-image').forEach(img => {
-            const pseudo = img.dataset.pseudo || '';
-            if (!pseudo.trim()) return;
-            const size = img.dataset.size || img.dataset.sizePercent || (img.style.width && img.style.width.endsWith('%') ? img.style.width.replace('%','') : '');
-            const parentAlign = (img.closest('.inline-media-block') || {}).style && (img.closest('.inline-media-block') || {}).style.textAlign;
-            const align = img.dataset.align || (parentAlign ? (parentAlign === 'left' || parentAlign === 'right' ? parentAlign : 'center') : '');
-            const cleanImg = document.createElement('img');
-            cleanImg.className = 'inline-image';
-            cleanImg.dataset.pseudo = pseudo.trim();
-            if (size) cleanImg.dataset.size = size;
-            if (align) cleanImg.dataset.align = align;
-            if (size) cleanImg.style.width = `${size}${size.includes('%') ? '' : '%'}`;
-            if (align === 'left') cleanImg.style.margin = '12px auto 12px 0';
-            else if (align === 'right') cleanImg.style.margin = '12px 0 12px auto';
-            else cleanImg.style.margin = '12px auto';
-            cleanImg.src = resolvePseudoUrl(pseudo.trim());
-            const block = img.closest('.inline-media-block');
-            if (block) {
-              block.replaceWith(cleanImg);
-            } else {
-              if (!wrapIfBare(cleanImg)) img.replaceWith(cleanImg);
-            }
-          });
-          scope.querySelectorAll('video.inline-video').forEach(vid => {
-            const pseudo = vid.dataset.pseudo || '';
-            if (!pseudo.trim()) return;
-            const attrs = [];
-            if (!vid.controls) attrs.push('-nocontrols');
-            if (vid.loop) attrs.push('-loop');
-            const cleanVid = document.createElement('video');
-            cleanVid.className = 'inline-video';
-            cleanVid.dataset.pseudo = pseudo.trim();
-            if (attrs.length) cleanVid.dataset.attrs = attrs.join(' ');
-            cleanVid.src = resolvePseudoUrl(pseudo.trim());
-            cleanVid.autoplay = true;
-            cleanVid.muted = true;
-            cleanVid.playsInline = true;
-            cleanVid.setAttribute('playsinline', '');
-            if (attrs.includes('-loop')) { cleanVid.loop = true; cleanVid.setAttribute('loop', ''); }
-            if (attrs.includes('-nocontrols')) cleanVid.controls = false;
-            else cleanVid.controls = true;
-            cleanVid.style.maxWidth = '100%';
-            cleanVid.style.display = 'block';
-            cleanVid.style.margin = '12px auto';
-            const block = vid.closest('.inline-media-block');
-            if (block) {
-              block.replaceWith(cleanVid);
-            } else {
-              if (!wrapIfBare(cleanVid)) vid.replaceWith(cleanVid);
-            }
-          });
-        });
-      };
-
-      // Normalize path to be relative to repo root (start at pages/retraissance/...).
-      const pagePath = (location.pathname || '').replace(/\\/g, '/');
-      const relMatch = pagePath.match(/(pages\/retraissance\/.*)$/);
-      const normPath = relMatch ? relMatch[1] : pagePath.replace(/^\/+/, '');
-
-      // Ensure any text pseudotags are rendered so we can convert them back cleanly.
-      try { applyInlineMediaWithFallback(); } catch (_) {}
-      // Apply conversion before stripping edit artifacts to preserve tags (now into native media tags).
-      restorePseudotags();
-      stripEditArtifacts();
-      const payload = {
-        path: normPath || (location.pathname || '').replace(/^\//, ''),
-        html: document.documentElement.outerHTML
-      };
-      try {
-        const res = await fetch(saveEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          mode: 'cors'
-        });
-        if (!res.ok) throw new Error(`Save failed ${res.status}`);
-        setEditable(false);
-        btnEdit.disabled = false;
-        location.reload(true);
-      } catch (err) {
-        btnSave.disabled = false;
-        btnEdit.disabled = false;
-        console.error('Save failed', err, payload);
-        alert(`Save failed: ${err.message}\nEnsure dev save server is running: node scripts/dev-save-server.js`);
-      }
-    };
-
-    btnNew.addEventListener('click', promptCreatePage);
-    btnDelete.addEventListener('click', promptDeletePage);
-
-    const addHeadingBlock = () => {
-      setEditable(true);
-      const target = panel.querySelector('.markdown') || panel;
-      const heading = prompt('Heading text:', 'New Section');
-      if (!heading) return;
-      const h2 = document.createElement('h2');
-      h2.textContent = heading;
-      const block = document.createElement('div');
-      block.className = 'callout';
-      block.innerHTML = '<p>TBD.</p>';
-
-      const sel = window.getSelection && window.getSelection();
-      let range = null;
-      if (lastRange && target.contains(lastRange.commonAncestorContainer)) {
-        range = lastRange.cloneRange();
-      } else if (sel && sel.rangeCount && target.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-        range = sel.getRangeAt(0).cloneRange();
-      }
-      const frag = document.createDocumentFragment();
-      frag.appendChild(h2);
-      frag.appendChild(block);
-
-      const findPanelChild = (node) => {
-        let n = node;
-        if (n && n.nodeType === Node.TEXT_NODE) n = n.parentElement;
-        while (n && n !== target && n.parentElement !== target) {
-          n = n.parentElement;
-        }
-        return (n && n.parentElement === target) ? n : null;
-      };
-
-      const insertAfter = (ref, fragment) => {
-        if (ref && ref.nextSibling) target.insertBefore(fragment, ref.nextSibling);
-        else target.appendChild(fragment);
-      };
-
-      const isEmptyBlock = (el) => {
-        if (!el) return false;
-        if (el.querySelector && el.querySelector('img, video, hr')) return false;
-        const text = (el.textContent || '').trim();
-        return text.length === 0;
-      };
-
-      const withinTarget = range && target.contains(range.commonAncestorContainer);
-      if (withinTarget) {
-        const panelChild = findPanelChild(range.commonAncestorContainer);
-        if (panelChild) {
-          // if current block is empty, replace it; else find next empty block; else insert after.
-          if (isEmptyBlock(panelChild)) {
-            target.insertBefore(frag, panelChild);
-            panelChild.remove();
-          } else {
-            let cursor = panelChild.nextElementSibling;
-            let placed = false;
-            while (cursor) {
-              if (isEmptyBlock(cursor)) {
-                target.insertBefore(frag, cursor);
-                cursor.remove();
-                placed = true;
-                break;
-              }
-              cursor = cursor.nextElementSibling;
-            }
-            if (!placed) insertAfter(panelChild, frag);
-          }
-        } else {
-          target.appendChild(frag);
-        }
-        if (sel) {
-          const after = document.createRange();
-          after.setStartAfter(block);
-          after.collapse(true);
-          sel.removeAllRanges();
-          sel.addRange(after);
-        }
-      } else {
-        target.appendChild(frag);
-      }
-      // remember new position after insertion
-      const afterBlockRange = document.createRange();
-      afterBlockRange.setStartAfter(block);
-      afterBlockRange.collapse(true);
-      lastRange = afterBlockRange.cloneRange();
-      markDirty();
-    };
-    btnAddHeading.addEventListener('click', addHeadingBlock);
-
-    const addImageAtCursor = () => {
-      setEditable(true);
-      const pseudo = prompt('Image filename (from media folder or URL):', '') || '';
-      if (!pseudo.trim()) return;
-      const size = prompt('Width percent (10-200):', '100') || '100';
-      const align = (prompt('Align (left/center/right):', 'center') || 'center').toLowerCase();
-      const img = document.createElement('img');
-      img.className = 'inline-image';
-      img.dataset.pseudo = pseudo.trim();
-      img.dataset.size = size.trim();
-      img.dataset.align = ['left','right','center'].includes(align) ? align : 'center';
-      img.src = resolvePseudoUrl(pseudo.trim());
-      img.style.width = `${size}${size.includes('%') ? '' : '%'}`;
-      if (img.dataset.align === 'left') img.style.margin = '12px auto 12px 0';
-      else if (img.dataset.align === 'right') img.style.margin = '12px 0 12px auto';
-      else img.style.margin = '12px auto';
-      img.style.display = 'block';
-
-      // wrap immediately to ensure consistent layout
-      const wrap = document.createElement('div');
-      wrap.className = 'inline-media-wrap';
-      wrap.style.display = 'inline-block';
-      wrap.style.maxWidth = '100%';
-      const block = document.createElement('div');
-      block.className = 'inline-media-block';
-      block.style.textAlign = img.dataset.align || 'center';
-      block.contentEditable = 'false';
-      wrap.appendChild(img);
-      block.appendChild(wrap);
-
-      const target = panel.querySelector('.markdown') || panel;
-      const sel = window.getSelection && window.getSelection();
-      let range = null;
-      if (lastRange && target.contains(lastRange.commonAncestorContainer)) {
-        range = lastRange.cloneRange();
-      } else if (sel && sel.rangeCount && target.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-        range = sel.getRangeAt(0).cloneRange();
-      }
-
-      const placeNode = (node) => {
-        if (range) {
-          range.deleteContents();
-          range.insertNode(node);
-        } else {
-          target.appendChild(node);
-        }
-      };
-
-      placeNode(block);
-      try { applyInlineMediaWithFallback(); ensureMediaControls(); } catch (_) {}
-      markDirty();
-    };
-    btnAddImage.addEventListener('click', addImageAtCursor);
-
-    btnEdit.addEventListener('click', () => {
-      setEditable(true);
-      try { ensureMediaControls(); wrapInlineMedia(); } catch (_) { /* best effort */ }
-    });
-    btnSave.addEventListener('click', async () => {
-      // In reader mode, push edits to the underlying page instead of the shell.
-      if (isReaderPage() && window.readerSaveCurrent) {
-        btnSave.disabled = true;
-        const ok = await window.readerSaveCurrent();
-        btnSave.disabled = false;
-        if (ok) {
-          btnEdit.disabled = false;
-          document.body.classList.remove('edit-active');
-          return;
-        }
-        return;
-      }
-      doSave();
-    });
-    btnCancel.addEventListener('click', () => location.reload(true));
-    // ensure we start in view mode even if markup had edit-active
-    setEditable(false);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        if (!btnSave.disabled) doSave();
-      }
-      if (e.ctrlKey && e.shiftKey && (e.key === '8' || e.key === '*')) {
-        e.preventDefault();
-        execCmd('insertUnorderedList');
-      }
-      if (e.key === 'Escape' && document.body.classList.contains('edit-active')) {
-        e.preventDefault();
-        location.reload(true);
-      }
-    });
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    // Remove any baked edit bars/pagers/side-strips and edit-active flag before initializing.
-    stripEditArtifacts();
-    document.body.classList.remove('edit-active');
-    const readerView = isReaderPage();
-    try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
-    try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
-    try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
-    // Build edit UI for all pages; edit mode stays off by default.
-    const ensureEditUI = () => {
-      try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
-    };
-    ensureEditUI();
-    // Retry a couple times in case content loads slowly.
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
-    // Always start view-only.
-    document.body.classList.remove('edit-active');
-    try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
-    try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
-    try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
-
-    // Universe autolink from lexicon data
-    const pagePath = (location.pathname || '').replace(/\\\\/g, '/');
-    const universeIdx = pagePath.indexOf('/densetsu/universe');
-    if (universeIdx !== -1) {
-      const base = pagePath.substring(0, universeIdx + '/densetsu/universe/'.length);
-      const lexUrl = `${base}lexicon-data.json`;
-      const maxLinks = 200;
-
-      const apply = (data) => {
-        if (!Array.isArray(data) || !data.length) return;
-        const map = {};
-        data.forEach(e => {
-          const key = (e.Name || '').toLowerCase();
-          if (!key || map[key]) return;
-          map[key] = e;
-        });
-        const terms = Object.keys(map).sort((a, b) => b.length - a.length);
-        if (!terms.length) return;
-        const escaped = terms.map(t => t.replace(/[-/\\^$*+?.()|[\\]{}]/g, '\\\\$&'));
-        const regex = new RegExp(`\\b(${escaped.join('|')})\\b`, 'gi');
-        const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
-        let linksMade = 0;
-
-        const linkTextNode = (node) => {
-          if (!node || !node.nodeValue || !node.nodeValue.trim()) return;
-          const text = node.nodeValue;
-          let match;
-          let last = 0;
-          const frag = document.createDocumentFragment();
-          while ((match = regex.exec(text)) && linksMade < maxLinks) {
-            const term = match[0];
-            const entry = map[term.toLowerCase()];
-            if (!entry) continue;
-            frag.appendChild(document.createTextNode(text.slice(last, match.index)));
-            const a = document.createElement('a');
-            a.href = `${base}${entry.Href}`;
-            a.textContent = term;
-            a.className = 'auto-link';
-            frag.appendChild(a);
-            last = match.index + term.length;
-            linksMade += 1;
-          }
-          if (linksMade >= maxLinks || last === 0) return;
-          frag.appendChild(document.createTextNode(text.slice(last)));
-          node.replaceWith(frag);
-        };
-
-        const walkerFilter = {
-          acceptNode(node) {
-            const parent = node.parentElement;
-            if (parent) {
-              const tag = parent.tagName;
-              if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
-              if (/^H[1-6]$/.test(tag)) return NodeFilter.FILTER_REJECT;
-              if (parent.closest('.no-autolink, [data-autolink="off"]')) return NodeFilter.FILTER_REJECT;
-              if (parent.closest('.link-list')) return NodeFilter.FILTER_REJECT;
-            }
-            return NodeFilter.FILTER_ACCEPT;
-          }
-        };
-
-        scopes.forEach(scope => {
-          const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, walkerFilter);
-          const nodes = [];
-          let n;
-          while ((n = walker.nextNode()) && linksMade < maxLinks) nodes.push(n);
-          nodes.forEach(node => {
-            if (/pending canonical content/i.test(node.nodeValue || '')) return;
-            linkTextNode(node);
-          });
-        });
-      };
-
-      fetch(lexUrl).then(r => r.json()).then(data => {
-        if (Array.isArray(data) && data.length) apply(data);
-        else apply(LEXICON_FALLBACK);
-      }).catch(() => apply(LEXICON_FALLBACK));
-    }
-
-    // Inline media tokens (images/videos) everywhere
-    try { applyInlineMediaWithFallback(); } catch (err) { console.error('inline media inject failed', err); }
-    try { cleanupInlineMediaWrappers(); } catch (err) { console.error('media wrapper cleanup failed', err); }
-  });
-
-  window.wikiUi = {
-    endpoints: {
-      save: saveEndpoint,
-      create: createEndpoint,
-      delete: deleteEndpoint,
-      tags: tagsEndpoint,
-    }
-  };
-})();
