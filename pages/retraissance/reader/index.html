@@ -198,6 +198,10 @@
 
       const saveJsonEndpoint = ((window.SAVE_ENDPOINT || 'http://localhost:3000/__save').replace(/\/__save.*$/, '')) + '/__save-json';
       const LAST_PAGE_KEY = 'reader:lastPage';
+      const EDITOR_FLAG = `${PAGES_PREFIX}/disable-editor.flag`;
+
+      // Clear baked content to avoid mixed-content image loads before JS fixes paths.
+      if (container) container.innerHTML = '';
 
       let sitemapEntries = [];
       let navEntries = [];
@@ -206,6 +210,7 @@
       let lexicon = [];
       let searchQuery = '';
       const titleCache = new Map();
+      let readerEditorDisabled = false;
 
       const titleFromPath = (p = '') => {
         const clean = (p.split('/').pop() || '').replace(/\.html?$/i, '');
@@ -569,6 +574,18 @@
         searchInput.addEventListener('input', onSearch);
       }
 
+      const disableEditorUI = () => {
+        readerEditorDisabled = true;
+        document.body.classList.remove('edit-active', 'reader-editing');
+        if (editToggle) { editToggle.disabled = true; editToggle.textContent = 'Reorder'; }
+        if (renameBtn) { renameBtn.disabled = true; }
+      };
+
+      // Check flag to disable reader edit/reorder/rename on public deploys.
+      fetch(EDITOR_FLAG, { method: 'HEAD' }).then(res => {
+        if (res.ok) disableEditorUI();
+      }).catch(() => { /* ignore */ });
+
       if (jumpInput) {
         const jumpTo = () => {
           const v = parseInt(jumpInput.value, 10);
@@ -832,6 +849,7 @@
         if (currentNavIndex >= 0 && currentNavIndex < navEntries.length - 1) goToNavIndex(currentNavIndex + 1, 'next');
       });
       editToggle.addEventListener('click', () => {
+        if (readerEditorDisabled) return;
         editMode = !editMode;
         editToggle.textContent = editMode ? 'Done' : 'Reorder';
         document.body.classList.toggle('reader-editing', editMode);
