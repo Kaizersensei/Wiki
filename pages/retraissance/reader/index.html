@@ -100,7 +100,7 @@
 
   <main class="content">
     <section class="panel reader-frame">
-      <nav class="breadcrumb"><a href="/pages/retraissance/index.html">Retraissance</a> / <a href="/pages/retraissance/reader/index.html">Reader</a> / <a href="/pages/retraissance/reader/index.html">Densetsu Bible</a></nav>
+      <nav class="breadcrumb"><a href="#" data-bc="home">Retraissance</a> / <a href="#" data-bc="reader">Reader</a> / <a href="#" data-bc="bible">Densetsu Bible</a></nav>
       <h1>Densetsu Bible</h1>
       <div class="reader-layout">
         <aside class="reader-sidebar">
@@ -164,6 +164,19 @@
       const linksBody = document.getElementById('reader-links-body');
       const navBar = document.querySelector('.reader-nav');
       const searchInput = document.getElementById('reader-search');
+      // Base prefix so paths work on GitHub Pages (served under /<repo>/...).
+      const pagePath = (location.pathname || '').replace(/\\/g, '/');
+      const PAGES_PREFIX = (() => {
+        const idx = pagePath.indexOf('/pages/');
+        return idx >= 0 ? pagePath.slice(0, idx) : '';
+      })();
+      // Fix breadcrumb hrefs at runtime to respect prefix.
+      document.querySelectorAll('.breadcrumb a[data-bc]').forEach(a => {
+        const key = a.dataset.bc;
+        if (key === 'home') a.href = `${PAGES_PREFIX}/pages/retraissance/index.html`;
+        else if (key === 'reader') a.href = `${PAGES_PREFIX}/pages/retraissance/reader/index.html`;
+        else if (key === 'bible') a.href = `${PAGES_PREFIX}/pages/retraissance/reader/index.html`;
+      });
 
       // Jump-to-page control
       const jumpWrap = document.createElement('div');
@@ -613,10 +626,11 @@
         h = h.replace(/^\/+/, '/');
         // Collapse any repeated /pages/ prefixes, then ensure a single /pages/ prefix.
         if (h.startsWith('/pages/')) {
-          return '/pages/' + h.replace(/^\/+/, '').replace(/^(pages\/)+/, '');
+          const cleaned = '/pages/' + h.replace(/^\/+/, '').replace(/^(pages\/)+/, '');
+          return `${PAGES_PREFIX}${cleaned}`;
         }
-        if (h.startsWith('/')) return '/pages' + h;
-        return '/pages/' + h.replace(/^\/+/, '');
+        if (h.startsWith('/')) return `${PAGES_PREFIX}/pages${h}`;
+        return `${PAGES_PREFIX}/pages/` + h.replace(/^\/+/, '');
       };
 
       const buildOrderFromFs = async () => {
@@ -815,7 +829,7 @@
           }
           updates.push((async () => {
             try {
-              const resp = await fetch(entry.url, { cache: 'no-cache' });
+            const resp = await fetch(entry.url, { cache: 'no-cache' });
               if (!resp.ok) return;
               const text = await resp.text();
               const doc = new DOMParser().parseFromString(text, 'text/html');

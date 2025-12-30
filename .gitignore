@@ -9,3 +9,14 @@ directive/WikiArchitecture.txt
 directive/plans/retraissance-wiki-structure.md
 directive/plans/wiki-new-categories.md
 directive/plans/wiki-structure-topics.md
+
+# Local dev artifacts / scratch
+node_modules/
+temp_*.js
+temp_*.txt
+temp_*.md
+snap*
+diff_site.txt
+pages/retraissance/densetsu/assets/media/.tosort/
+*.snapshot.js
+snapshots/
