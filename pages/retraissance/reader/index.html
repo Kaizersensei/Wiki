@@ -502,29 +502,6 @@
         renderList();
       };
 
-      const fixMediaSources = () => {
-        if (!container) return;
-        const normSrc = (src) => {
-          if (!src) return src;
-          let path = src;
-          try { path = new URL(src, location.origin).pathname; } catch (_) { /* fallback */ }
-          // Strip duplicate /pages/ and prepend prefix.
-          path = path.replace(/^\/+/, '/');
-          if (path.startsWith('/pages/')) {
-            return `${PAGES_PREFIX}${path}`;
-          }
-          if (path.startsWith('/assets/')) {
-            return `${PAGES_PREFIX}/pages/retraissance${path}`;
-          }
-          return src;
-        };
-        container.querySelectorAll('img, video, audio, source').forEach(el => {
-          const src = el.getAttribute('src');
-          const fixed = normSrc(src);
-          if (fixed && fixed !== src) el.setAttribute('src', fixed);
-        });
-      };
-
       const goToNavIndex = (i, dir) => {
         if (i < 0 || i >= navEntries.length) return;
         currentNavIndex = i;
