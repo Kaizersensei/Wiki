@@ -968,8 +968,20 @@ const buildBreadcrumb = () => {
       return targets;
     };
 
-    if (!btn.dataset.randInit) {
-      btn.dataset.randInit = '1';
+    const gatherFromReaderList = async () => {
+      // Use the Bible reader pages list as a broad fallback.
+      const url = `${BASE_PREFIX}/pages/retraissance/reader/pages-list.json`;
+      const json = await fetchJsonSafe(url);
+      if (!Array.isArray(json)) return [];
+      const targets = [];
+      json.forEach(entry => {
+        if (entry && entry.url) addCandidate(targets, `${BASE_PREFIX}${entry.url}`);
+      });
+      return targets;
+    };
+
+    if (!btn.dataset.randBound) {
+      btn.dataset.randBound = '1';
       btn.addEventListener('click', async () => {
         if (isFile) {
           alert('Random page requires http://localhost:3000 (file:// blocks fetch).');
@@ -989,6 +1001,7 @@ const buildBreadcrumb = () => {
         const fromIndex = await gatherFromIndex();
         const fromLex = await gatherFromLexicon();
         const fromTags = await gatherFromTags();
+        const fromReader = await gatherFromReaderList();
         const fromGlobalLex = await gatherFromGlobalLexicon();
         const fromFallback = (LEXICON_FALLBACK || []).map(e => {
           try {
@@ -996,7 +1009,7 @@ const buildBreadcrumb = () => {
             return abs;
           } catch (_) { return null; }
         }).filter(Boolean);
-        const all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromGlobalLex, ...fromFallback];
+        const all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromReader, ...fromGlobalLex, ...fromFallback];
         const uniq = Array.from(new Set(all));
         if (!uniq.length) {
           alert('No data pages found for random navigation. Ensure lexicon-data.json is reachable over http.');
