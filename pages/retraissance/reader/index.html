@@ -152,6 +152,7 @@
         const idx = pagePath.indexOf('/pages/');
         return idx >= 0 ? pagePath.slice(0, idx) : '';
       })();
+      const READONLY_HOST = /github\.io$/i.test(location.hostname);
       // Fix breadcrumb hrefs at runtime to respect prefix.
       document.querySelectorAll('.breadcrumb a[data-bc]').forEach(a => {
         const key = a.dataset.bc;
@@ -541,9 +542,13 @@
       };
 
       // Check flag to disable reader edit/reorder/rename on public deploys.
-      fetch(EDITOR_FLAG, { method: 'HEAD' }).then(res => {
-        if (res.ok) disableEditorUI();
-      }).catch(() => { /* ignore */ });
+      if (READONLY_HOST) {
+        disableEditorUI();
+      } else {
+        fetch(EDITOR_FLAG, { method: 'HEAD' }).then(res => {
+          if (res.ok) disableEditorUI();
+        }).catch(() => { /* ignore */ });
+      }
 
       if (jumpInput) {
         const jumpTo = () => {

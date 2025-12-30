@@ -20,6 +20,7 @@
     const idx = p.indexOf('/pages/');
     return idx >= 0 ? p.slice(0, idx) : '';
   })();
+  const IS_HOST_READONLY = /github\.io$/i.test(location.hostname);
   // Editor can be disabled by dropping a flag file at repo root (not tracked).
   const EDITOR_FLAG = `${BASE_PREFIX}/disable-editor.flag`;
   let editorDisabled = false;
@@ -2733,7 +2734,7 @@ const buildBreadcrumb = () => {
       try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
     };
     const initEdit = () => {
-      if (editorDisabled) {
+      if (editorDisabled || IS_HOST_READONLY) {
         document.body.classList.remove('edit-active');
         stripEditArtifacts();
         return;
