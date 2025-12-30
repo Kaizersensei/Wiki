@@ -255,7 +255,7 @@ const buildBreadcrumb = () => {
       const depth = Math.max(parts.length - idxPages - 2, 0); // exclude file
       prefix = '../'.repeat(depth);
     }
-    const randomSrc = `${prefix}retraissance/assets/media/ui/random.png`;
+    const randomSrc = `${prefix}retraissance/assets/media/UI/random.png`;
     nav.innerHTML = `
       <div class="nav-dropdown nav-root">
         <span class="nav-dropdown-toggle">Retraissance ▾</span>

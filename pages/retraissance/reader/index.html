@@ -121,25 +121,7 @@
             <span id="reader-pos">Page 3 / 208</span>
           </div>
           <div id="reader-error" class="reader-error" role="alert"></div>
-          <div id="reader-content" class="reader-content">
-    <section class="panel" contenteditable="true">
-      <p>Bible View</p>
-      [Primer] Core Tenets
-      
-        <div class="inline-media-wrap" style="display: inline-block; max-width: 100%;"><img class="inline-image" data-pseudo="core_tenets-hero.png" data-size="99.99845627178698" data-align="center" src="http://localhost:3000/pages/retraissance/assets/media/index/core_tenets-hero.png" style="width: 99.9985%; margin: 12px auto;"><div class="inline-move-group"></div></div>
-        Dr Sappo lectures about time anomalies in Eddara (post-ending scene, Nano Banana concept).<div><br>
-      
-      <ol>
-        <li><strong>Time is layered:</strong> timeline logs, <a href="/pages/retraissance/densetsu/universe/concepts/world_memory.html">world memory</a>, and personal recall rarely align.</li>
-        <li><strong>Power has a cost:</strong> every Concord, craft, or device binds itself to a debt.</li>
-        <li><strong>Legends converge:</strong> myths recur because the <a href="/pages/retraissance/densetsu/universe/world/index.html">world</a> rehearses what it fears and needs.</li>
-        <li><strong>Choice echoes:</strong> small acts resonate through Concords, lands, and even <a href="/pages/retraissance/densetsu/universe/concepts/anomalies.html">anomalies</a>.</li>
-        <li><strong>Boundaries leak:</strong> realms touch; <a href="/pages/retraissance/densetsu/universe/concepts/anomalies.html">anomalies</a>, covenants, and spires expose the seams.</li>
-        <li><strong>Silence is data:</strong> what is missing (burned, sealed, looped) is itself a signal.</li>
-        <li><strong>Nothing is alone:</strong> every entity is entangled—by root, oath, code, or circuit.</li>
-      </ol>
-    </div></section>
-  </div>
+          <div id="reader-content" class="reader-content"></div>
         </div>
         
         <aside class="reader-links">
@@ -455,7 +437,7 @@
         setTimeout(() => container.classList.remove('flip-left', 'flip-right'), 350);
       };
 
-      const fixMediaSources = () => {
+      const readerFixMediaSources = () => {
         if (!container) return;
         const normSrc = (src) => {
           if (!src) return src;
@@ -484,7 +466,7 @@
           container.innerHTML = sanitize(doc);
           applyAutoLinks(container);
           await injectTurnaround(url, container);
-          fixMediaSources();
+          readerFixMediaSources();
           collectLinks();
           if (dir) applyFlip(dir);
           try { localStorage.setItem(LAST_PAGE_KEY, url); } catch (_) { /* ignore */ }
@@ -506,7 +488,7 @@
         if (i < 0 || i >= navEntries.length) return;
         currentNavIndex = i;
         loadPage(navEntries[i].url, dir);
-        fixMediaSources();
+        readerFixMediaSources();
         updatePos();
       };
 
