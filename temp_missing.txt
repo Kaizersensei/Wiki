@@ -1,8 +1,0 @@
-characters: akamatsu_hitomi
-characters: nagamizu_sensei
-creatures: aquamatic_fauna
-enemies: mirorspawn
-enemies: torredasso
-universe: languages_writing
-universe: lexicon
-universe: universe_overview
