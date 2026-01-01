@@ -11,8 +11,8 @@
   .reader-list { padding-top: 4px; }
   .reader-links { background: #f9f4ea; border: 1px solid #d8c9a8; border-radius: 8px; padding: 8px; max-height: 75vh; overflow-y: auto; }
   .reader-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; font-size: 15px; }
-  .reader-list li { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 6px; border: 1px solid transparent; transition: background-color 0.2s ease; }
-  .reader-list li.active { background: #ede2cf; border-color: #c5b18d; font-weight: 700; }
+  .reader-list li { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 6px; border: 1px solid transparent; transition: background-color 0.2s ease, border-color 0.2s ease; }
+  .reader-list li.active { background: #e5d7b8; border-color: #b89c6a; font-weight: 800; }
   .reader-list a { color: #3a2a1a; text-decoration: none; flex: 1; font-size: 15px; }
   .reader-list a:hover { text-decoration: underline; }
   .reader-separator { font-weight: 700; color: #6b5b4a; background: #f0e6d4; border: 1px solid #d8c9a8; border-radius: 6px; padding: 4px; }
@@ -293,7 +293,13 @@
           li.style.background = color;
           li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
           const navIdx = navEntries.findIndex(n => n._idx === idx);
-          if (navIdx === currentNavIndex) li.classList.add('active');
+          if (navIdx === currentNavIndex) {
+            li.classList.add('active');
+            // Bring current page into view without jank
+            setTimeout(() => {
+              try { li.scrollIntoView({ block: 'center', behavior: 'auto' }); } catch (_) {}
+            }, 0);
+          }
           const link = document.createElement('a');
           link.href = entry.url;
           const isParent = parentKeywords.some(k => (label || '').toLowerCase().includes(k));
@@ -486,6 +492,7 @@
         loadPage(navEntries[i].url, dir);
         readerFixMediaSources();
         updatePos();
+        renderList();
       };
 
       // Reader-aware save: push edited content back into the underlying page.
