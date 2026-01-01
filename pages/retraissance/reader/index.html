@@ -387,6 +387,26 @@
         containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
         // Build a path relative to the current reader URL so repo prefixes (e.g., /Wiki) are preserved.
         const baseMedia = new URL(`../densetsu/assets/media/universe/${section}/${slug}/`, location.href).pathname;
+
+        // Try manifest first
+        let items = [];
+        try {
+          const manifestUrl = `${baseMedia}media.json`;
+          const res = await fetch(manifestUrl, { cache: 'no-cache' });
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              items = data.filter(e => e && (e.src || e.file || e.path)).map(e => ({
+                src: `${baseMedia}${e.src || e.file || e.path}`,
+                title: e.title || ''
+              }));
+            }
+          }
+        } catch (_) { /* ignore */ }
+        if (items.length) {
+          insertTurnaround(containerEl.querySelector('.panel') || containerEl, items.map(i => ({ src: i.src, title: i.title })));
+          return;
+        }
         const names = [
           // Primary turnaround candidates
           'turnaround', 'turnaround01', 'turnaround_01', 'turn', 'turn1',
