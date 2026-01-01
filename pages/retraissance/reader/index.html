@@ -451,6 +451,10 @@
             path = u.pathname;
           } catch (_) { /* fallback */ }
           path = path.replace(/^\/+/, '/');
+          // Fix common mis-resolutions from deep reader pages (e.g., ../../../assets -> /pages/assets)
+          if (path.startsWith('/pages/assets/')) {
+            path = path.replace('/pages/assets/', '/pages/retraissance/assets/');
+          }
           if (path.startsWith('/pages/')) return `${PAGES_PREFIX}${path}`;
           if (path.startsWith('/assets/')) return `${PAGES_PREFIX}/pages/retraissance${path}`;
           return src;
