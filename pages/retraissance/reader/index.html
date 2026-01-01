@@ -510,6 +510,8 @@
           const doc = new DOMParser().parseFromString(text, 'text/html');
           currentPageUrl = target;
           container.innerHTML = sanitize(doc);
+          // Strip any baked editor artifacts that might be present in source pages.
+          container.querySelectorAll('.inline-move-group, .inline-remove-media, .inline-edit-media, .inline-size, .inline-align-group, .inline-remove, .inline-move').forEach(el => el.remove());
           applyAutoLinks(container);
           await injectTurnaround(url, container);
           readerFixMediaSources();

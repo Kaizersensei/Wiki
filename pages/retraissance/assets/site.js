@@ -757,7 +757,12 @@ const buildBreadcrumb = () => {
         if (fixed && fixed !== raw) el.setAttribute('src', fixed);
       });
     };
+    const readerMode = isReaderPage();
     scopes.forEach(scope => {
+      // Always normalize any existing media (fixes baked localhost paths).
+      normalizeExistingMedia(scope);
+      // In reader mode, skip all pseudotag rewriting and wrapper logic to avoid path churn.
+      if (readerMode) return;
       try { applyInlineMedia(); } catch (err) { console.error('applyInlineMedia failed', err); }
 
       let html = scope.innerHTML;
@@ -897,18 +902,12 @@ const buildBreadcrumb = () => {
   };
 
   const cleanupInlineMediaWrappers = () => {
-    if (document.body.classList.contains('edit-active')) return;
-    document.querySelectorAll('.inline-media-wrap').forEach(wrap => {
-      const parent = wrap.parentElement;
-      if (parent) {
-        while (wrap.firstChild) parent.insertBefore(wrap.firstChild, wrap);
-        wrap.remove();
-      }
-    });
+    // No-op: we keep wrappers intact to avoid stripping media in view/reader modes.
+    return;
   };
 
   const stripEditArtifacts = () => {
-    document.querySelectorAll(`${CONTROL_SELECTOR}, .pager-floating, .edit-bar, .side-strip`).forEach(el => el.remove());
+    document.querySelectorAll(`${CONTROL_SELECTOR}, .inline-move-group, .pager-floating, .edit-bar, .side-strip`).forEach(el => el.remove());
     document.querySelectorAll('[contenteditable]').forEach(el => {
       el.removeAttribute('contenteditable');
     });
@@ -1406,324 +1405,10 @@ const buildBreadcrumb = () => {
     insertRightStrip(portrait, audioSrc);
   };
     const enableInlineEdit = () => {
-      const panel = document.querySelector('.panel');
-      if (!panel) return;
-      let editObserver = null;
-      let observerPaused = false;
-    const removeControlOverlays = () => panel.querySelectorAll(CONTROL_SELECTOR).forEach(el => el.remove());
-
-    const bar = document.createElement('div');
-    bar.className = 'edit-bar';
-
-    const wrapInlineMedia = () => {
-      const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
-      mediaNodes.forEach(node => {
-        let wrap = node.closest('.inline-media-wrap');
-        if (!wrap) {
-          wrap = document.createElement('div');
-          wrap.className = 'inline-media-wrap';
-          wrap.style.display = 'inline-block';
-          wrap.style.maxWidth = '100%';
-          const parent = node.parentElement;
-          parent.insertBefore(wrap, node);
-          wrap.appendChild(node);
-        } else if (!wrap.style.display) {
-          wrap.style.display = 'inline-block';
-          wrap.style.maxWidth = '100%';
-        }
-        // normalize stored size once per media
-        if (!node.dataset.sizePercent) {
-          const parent = node.parentElement;
-          let pct = 100;
-          if (parent && parent.getBoundingClientRect().width) {
-            const w = node.getBoundingClientRect().width || 0;
-            const pw = parent.getBoundingClientRect().width || 1;
-            pct = Math.min(200, Math.max(10, (w / pw) * 100));
-          } else if (node.style.width && node.style.width.endsWith('%')) {
-            pct = parseFloat(node.style.width);
-          }
-          node.dataset.sizePercent = String(pct);
-          node.style.width = `${pct}%`;
-        } else {
-          node.style.width = `${parseFloat(node.dataset.sizePercent || '100')}%`;
-        }
-      });
-    };
-
-    // Ensure inline pseudotag media are wrapped and have edit controls.
-    const ensureMediaControls = () => {
-      // In view mode, strip any lingering inline controls and bail.
-      if (!document.body.classList.contains('edit-active')) {
-        document.querySelectorAll('.inline-remove-media, .inline-edit-media, .inline-size, .inline-align, .inline-move-group, .inline-align-group').forEach(btn => btn.remove());
-        return;
-      }
-      wrapInlineMedia();
-      const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
-      mediaNodes.forEach(node => {
-        const wrap = node.closest('.inline-media-wrap');
-        if (!wrap) return;
-        let btnDel = wrap.querySelector('.inline-remove-media');
-        if (!btnDel) {
-          btnDel = document.createElement('button');
-          btnDel.type = 'button';
-          btnDel.className = 'inline-remove-media';
-          btnDel.textContent = 'Del';
-          btnDel.title = 'Remove media';
-          btnDel.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const block = wrap.closest('.inline-media-block');
-            if (block) block.remove(); else wrap.remove();
-            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-            if (saveBtn) saveBtn.disabled = false;
-          });
-          wrap.appendChild(btnDel);
-        }
-        let btnEditMedia = wrap.querySelector('.inline-edit-media');
-        if (!btnEditMedia) {
-          btnEditMedia = document.createElement('button');
-          btnEditMedia.type = 'button';
-          btnEditMedia.className = 'inline-edit-media';
-          btnEditMedia.textContent = '?';
-          btnEditMedia.title = 'Edit media source';
-          btnEditMedia.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const current = node.getAttribute('src') || node.dataset.pseudo || '';
-            const loopAttr = node.loop ? ' -loop' : '';
-            const ncAttr = node.controls === false ? ' -nocontrols' : '';
-            const runPicker = () => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = node.tagName === 'VIDEO' ? 'video/*,audio/*' : 'image/*,video/*,audio/*';
-              input.addEventListener('change', () => {
-                const file = input.files && input.files[0];
-                if (!file) return;
-                const name = file.name;
-                node.dataset.pseudo = name;
-                node.src = resolvePseudoUrl(name);
-                node.classList.remove('inline-media-missing');
-                node.removeAttribute('data-missing');
-                if (node.tagName === 'VIDEO') {
-                  try { node.load(); node.play(); } catch (_) { /* ignore */ }
-                }
-                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-                if (saveBtn) saveBtn.disabled = false;
-              }, { once: true });
-              input.click();
-            };
-            const raw = prompt('Media source (you can include -loop and -nocontrols):', `${current}${loopAttr}${ncAttr}`);
-            if (!raw) {
-              runPicker();
-              return;
-            }
-            const hasLoop = /-loop/.test(raw);
-            const noControls = /-nocontrols/.test(raw);
-            const cleaned = raw.replace(/-loop/gi, '').replace(/-nocontrols/gi, '').trim();
-            node.dataset.pseudo = cleaned;
-            node.src = resolvePseudoUrl(cleaned);
-            if (!cleaned) {
-              node.classList.add('inline-media-missing');
-              node.dataset.missing = '1';
-            } else {
-              node.classList.remove('inline-media-missing');
-              node.removeAttribute('data-missing');
-            }
-            if (node.tagName === 'VIDEO') {
-              node.loop = hasLoop;
-              if (hasLoop) node.setAttribute('loop', '');
-              else node.removeAttribute('loop');
-              node.controls = !noControls;
-              if (noControls) node.setAttribute('controls', 'false');
-              else node.setAttribute('controls', 'true');
-              try { node.load(); node.play(); } catch (_) { /* ignore */ }
-            }
-            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-            if (saveBtn) saveBtn.disabled = false;
-          });
-          wrap.appendChild(btnEditMedia);
-        }
-        const adjustSize = (delta) => {
-          const base = node.dataset.sizePercent
-            ? parseFloat(node.dataset.sizePercent)
-            : (node.style.width && node.style.width.endsWith('%'))
-              ? parseFloat(node.style.width)
-              : 100;
-          const next = Math.min(200, Math.max(10, base + delta));
-          node.dataset.sizePercent = String(next);
-          node.dataset.size = String(next);
-          node.style.width = `${next}%`;
-          const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-          if (saveBtn) saveBtn.disabled = false;
-        };
-        if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
-          node.dataset.sizePercent = String(parseFloat(node.style.width));
-        }
-        let btnShrink = wrap.querySelector('.inline-size-down');
-        if (!btnShrink) {
-          btnShrink = document.createElement('button');
-          btnShrink.type = 'button';
-          btnShrink.className = 'inline-size inline-size-down';
-          btnShrink.textContent = 'sml';
-          btnShrink.title = 'Shrink media';
-          btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
-          wrap.appendChild(btnShrink);
-        }
-        let btnGrow = wrap.querySelector('.inline-size-up');
-        if (!btnGrow) {
-          btnGrow = document.createElement('button');
-          btnGrow.type = 'button';
-          btnGrow.className = 'inline-size inline-size-up';
-          btnGrow.textContent = 'big';
-          btnGrow.title = 'Grow media';
-          btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
-          wrap.appendChild(btnGrow);
-        }
-        // Move controls for media blocks
-        let moveGroup = wrap.querySelector('.inline-move-group');
-        if (!moveGroup) {
-          moveGroup = document.createElement('div');
-          moveGroup.className = 'inline-move-group';
-          wrap.appendChild(moveGroup);
-        }
-        const ensureMoveBtn = (cls, label, title, dir) => {
-          let btn = moveGroup.querySelector(`.${cls}`);
-          if (!btn) {
-            btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `inline-move ${cls}`;
-            btn.textContent = label;
-            btn.title = title;
-            btn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const block = wrap.closest('.inline-media-block');
-              if (!block) return;
-              const markdown = panel.querySelector('.markdown') || panel;
-
-              // Find the start of the current section (nearest preceding h2/h3/h4 within markdown).
-              const findSectionStart = (el) => {
-                let cursor = el;
-                while (cursor && cursor !== markdown) {
-                  if (cursor.tagName && /^H[234]$/i.test(cursor.tagName)) return cursor;
-                  if (cursor.previousElementSibling) {
-                    cursor = cursor.previousElementSibling;
-                    if (cursor && cursor.tagName && /^H[234]$/i.test(cursor.tagName)) return cursor;
-                  } else {
-                    cursor = cursor.parentElement;
-                  }
-                }
-                // fallback: nearest direct child of markdown
-                let fallback = el;
-                while (fallback && fallback.parentElement !== markdown) fallback = fallback.parentElement;
-                return fallback;
-              };
-
-              const start = findSectionStart(block);
-              const fallbackMoveBlock = () => {
-                const parent = block.parentElement;
-                if (!parent) return false;
-                const sibling = dir === 'up' ? block.previousElementSibling : block.nextElementSibling;
-                if (!sibling) return false;
-                if (dir === 'up') parent.insertBefore(block, sibling);
-                else parent.insertBefore(block, sibling.nextSibling);
-                return true;
-              };
-
-              if (!start || !start.parentElement) {
-                if (!fallbackMoveBlock()) return;
-                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-                if (saveBtn) saveBtn.disabled = false;
-                return;
-              }
-
-              const collectSection = (startNode) => {
-                const nodes = [];
-                let n = startNode;
-                while (n) {
-                  nodes.push(n);
-                  const next = n.nextElementSibling;
-                  if (next && next.tagName && /^H[234]$/i.test(next.tagName)) break;
-                  n = next;
-                }
-                return nodes;
-              };
-
-              const sectionNodes = collectSection(start);
-              const parent = start.parentElement;
-
-              const findPrevSectionStart = () => {
-                let n = start.previousElementSibling;
-                while (n) {
-                  if (n.tagName && /^H[234]$/i.test(n.tagName)) return n;
-                  n = n.previousElementSibling;
-                }
-                return null;
-              };
-              const findNextSectionStart = () => {
-                let n = sectionNodes[sectionNodes.length - 1].nextElementSibling;
-                while (n) {
-                  if (n.tagName && /^H[234]$/i.test(n.tagName)) return n;
-                  n = n.nextElementSibling;
-                }
-                return null;
-              };
-
-              const moveSectionUp = () => {
-                const prevStart = findPrevSectionStart();
-                if (!prevStart) return false;
-                const frag = document.createDocumentFragment();
-                sectionNodes.forEach(node => frag.appendChild(node));
-                parent.insertBefore(frag, prevStart);
-                return true;
-              };
-              const moveSectionDown = () => {
-                const nextStart = findNextSectionStart();
-                if (!nextStart) return false;
-                // insert after the next section group
-                const nextGroup = collectSection(nextStart);
-                const anchor = nextGroup[nextGroup.length - 1].nextSibling;
-                const frag = document.createDocumentFragment();
-                sectionNodes.forEach(node => frag.appendChild(node));
-                parent.insertBefore(frag, anchor);
-                return true;
-              };
-
-              const moved = dir === 'up' ? moveSectionUp() : moveSectionDown();
-              if (!moved) {
-                // If no neighboring section to swap with, try local block move as fallback.
-                if (!fallbackMoveBlock()) return;
-              }
-              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-              if (saveBtn) saveBtn.disabled = false;
-            });
-            moveGroup.appendChild(btn);
-          }
-        };
-        ensureMoveBtn('inline-move-up', 'Up', 'Move media up', 'up');
-        ensureMoveBtn('inline-move-down', 'Dn', 'Move media down', 'down');
-        let alignGroup = wrap.querySelector('.inline-align-group');
-        if (!alignGroup) {
-          alignGroup = document.createElement('div');
-          alignGroup.className = 'inline-align-group';
-          const makeAlignBtn = (label, value) => {
-            const b = document.createElement('button');
-            b.type = 'button';
-            b.className = 'inline-align';
-            b.textContent = label;
-            b.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const block = wrap.closest('.inline-media-block') || wrap.parentElement;
-              if (block) block.style.textAlign = value;
-              node.dataset.align = value;
-              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-              if (saveBtn) saveBtn.disabled = false;
-            });
-            alignGroup.appendChild(b);
-          };
-          makeAlignBtn('L', 'left');
-          makeAlignBtn('C', 'center');
-          makeAlignBtn('R', 'right');
-          wrap.appendChild(alignGroup);
-        }
-      });
+      // Editing is disabled in the current build; ensure no edit artifacts remain.
+      stripEditArtifacts();
+      document.body.classList.remove('edit-active');
+      return;
     };
 
     const selectionTouchesMediaBlock = () => {
