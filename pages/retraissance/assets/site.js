@@ -1317,7 +1317,7 @@ const buildBreadcrumb = () => {
     const cover = await findFirstMedia(baseMedia, slug, ['cover', 'cover01', 'cover_01'], imgExts);
     insertCover(panel, cover);
 
-    // Turnaround: manifest order if present, else probe predictable names.
+    // Turnaround: manifest order if present, else probe a small, sane set of names to avoid 404 storms.
     let turnItems = [];
     const manifestUrl = `${baseMedia}${slug}/media.json`;
     try {
@@ -1333,14 +1333,11 @@ const buildBreadcrumb = () => {
       }
     } catch (err) { /* ignore */ }
     if (!turnItems.length) {
-      const names = ['turnaround', 'turnaround_01', 'turn1', 'turn', 'sheet', 'sheet_01'];
-      for (let i = 1; i <= 12; i += 1) {
-        const pad = i.toString().padStart(2, '0');
-        names.push(`turnaround${pad}`);
-        names.push(`turnaround${i}`);
-        names.push(`sheet${pad}`);
-        names.push(`sheet${i}`);
-      }
+      const names = [
+        'turnaround', 'turnaround01', 'turnaround_01',
+        'turn', 'turn1',
+        'sheet', 'sheet01', 'sheet_01', 'sheet1'
+      ];
       turnItems = await probeMedia(baseMedia, slug, names, imgExts);
     }
     if (turnItems.length) insertTurnaround(panel, turnItems);

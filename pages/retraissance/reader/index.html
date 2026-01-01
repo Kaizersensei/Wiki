@@ -386,11 +386,14 @@
         const containerEl = scope || document;
         containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
         const baseMedia = `/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/`;
-        const names = ['turnaround', 'turnaround01', 'turnaround_01', 'turn1', 'turn', 'sheet', 'sheet_01'];
-        for (let i = 1; i <= 12; i += 1) {
-          const pad = i.toString().padStart(2, '0');
-          names.push(`turnaround${pad}`, `turnaround${i}`, `sheet${pad}`, `sheet${i}`);
-        }
+        const names = [
+          // Primary turnaround candidates
+          'turnaround', 'turnaround01', 'turnaround_01', 'turn', 'turn1',
+          // Common single images that can stand in
+          'image01', 'img01', 'image00', 'img00', 'portrait',
+          // Optional sheet variants
+          'sheet', 'sheet01', 'sheet_01', 'sheet1'
+        ];
         const exts = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
         const probes = [];
         names.forEach(n => exts.forEach(ext => probes.push(`${baseMedia}${n}.${ext}`)));
