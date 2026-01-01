@@ -439,13 +439,15 @@
         setTimeout(() => container.classList.remove('flip-left', 'flip-right'), 350);
       };
 
+      let currentPageUrl = '';
+
       const readerFixMediaSources = () => {
         if (!container) return;
         const normSrc = (src) => {
           if (!src) return src;
           let path = src;
           try {
-            const u = new URL(src, location.href);
+            const u = new URL(src, currentPageUrl || location.href);
             path = u.pathname;
           } catch (_) { /* fallback */ }
           path = path.replace(/^\/+/, '/');
@@ -468,6 +470,7 @@
           if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
           const text = await resp.text();
           const doc = new DOMParser().parseFromString(text, 'text/html');
+          currentPageUrl = url;
           container.innerHTML = sanitize(doc);
           applyAutoLinks(container);
           await injectTurnaround(url, container);
