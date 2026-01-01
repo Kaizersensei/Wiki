@@ -385,7 +385,7 @@
         const slug = match[2];
         const containerEl = scope || document;
         containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
-        const baseMedia = `/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/`;
+        const baseMedia = `${PAGES_PREFIX}/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/`;
         const names = [
           // Primary turnaround candidates
           'turnaround', 'turnaround01', 'turnaround_01', 'turn', 'turn1',
