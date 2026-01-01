@@ -192,7 +192,7 @@
     "label": "Kojimigakure"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/locations/mycomind_covenant.html",
+    "url": "/pages/retraissance/densetsu/universe/factions/mycomind_covenant.html",
     "label": "Mycomind Covenant"
   },
   {
@@ -509,7 +509,7 @@
     "label": "Corrupted Creatures"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/aurex_the_last_basilisk.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/aurex_last_basilisk.html",
     "label": "Aurex The Last Basilisk"
   },
   {
@@ -553,7 +553,7 @@
     "label": "Hagane Snail"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/the_hollow_fang.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/hollow_fang.html",
     "label": "The Hollow Fang"
   },
   {
@@ -569,7 +569,7 @@
     "label": "Lantern Moths"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/the_mawing_echo.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/mawing_echo.html",
     "label": "The Mawing Echo"
   },
   {
@@ -589,15 +589,15 @@
     "label": "Mossbound Goats"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/nayuga_the_thousand_faced.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/nayuga_thousand_faced.html",
     "label": "Nayuga The Thousand Faced"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/the_pale_matron.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/pale_matron.html",
     "label": "The Pale Matron"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/the_river_crown.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/river_crown.html",
     "label": "The River Crown"
   },
   {
@@ -617,7 +617,7 @@
     "label": "Shrouded Acolyte"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/shyr_aani_the_skybreaker.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/shyraani_skybreaker.html",
     "label": "Shyr Aani The Skybreaker"
   },
   {
@@ -629,7 +629,7 @@
     "label": "Threadworms"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/creatures/vez_tar_the_devouring_secret.html",
+    "url": "/pages/retraissance/densetsu/universe/creatures/vez_tar_devouring_secret.html",
     "label": "Vez Tar The Devouring Secret"
   },
   {
@@ -728,19 +728,19 @@
     "label": "Bandit"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_false_heaven.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/false_heaven.html",
     "label": "The False Heaven"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_folded_general.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/folded_general.html",
     "label": "The Folded General"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_forgotten_shell.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/forgotten_shell.html",
     "label": "The Forgotten Shell"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_gilded_ghost.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/gilded_ghost.html",
     "label": "The Gilded Ghost"
   },
   {
@@ -760,11 +760,11 @@
     "label": "Lady of Thorns"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_lingering_oath.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/lingering_oath.html",
     "label": "The Lingering Oath"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/michio_the_echowalker.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/michio_echowalker.html",
     "label": "Michio The Echowalker"
   },
   {
@@ -772,15 +772,15 @@
     "label": "Ninja Grunts"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/okashira.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/okashira_boss.html",
     "label": "Okashira"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_plague_pilgrim.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/plague_pilgrim.html",
     "label": "The Plague Pilgrim"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/raijin_last_apprentice.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/raijins_last_apprentice.html",
     "label": "Raijin Last Apprentice"
   },
   {
@@ -796,7 +796,7 @@
     "label": "Verdance"
   },
   {
-    "url": "/pages/retraissance/densetsu/universe/enemies/the_womb_whale.html",
+    "url": "/pages/retraissance/densetsu/universe/enemies/womb_whale.html",
     "label": "The Womb Whale"
   },
   {
