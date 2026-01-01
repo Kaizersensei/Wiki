@@ -454,12 +454,24 @@
             path = u.pathname;
           } catch (_) { /* fallback */ }
           path = path.replace(/^\/+/, '/');
-          // Fix common mis-resolutions from deep reader pages (e.g., ../../../assets -> /pages/assets)
+
+          // Normalize various common bases to the GH-friendly /<prefix>/pages/... form
           if (path.startsWith('/pages/assets/')) {
             path = path.replace('/pages/assets/', '/pages/retraissance/assets/');
           }
-          if (path.startsWith('/pages/')) return `${PAGES_PREFIX}${path}`;
-          if (path.startsWith('/assets/')) return `${PAGES_PREFIX}/pages/retraissance${path}`;
+          if (path.startsWith('/pages/')) {
+            return `${PAGES_PREFIX}${path}`;
+          }
+          if (path.startsWith('/retraissance/assets/')) {
+            return `${PAGES_PREFIX}/pages${path}`;
+          }
+          if (path.startsWith('/retraissance/')) {
+            return `${PAGES_PREFIX}/pages${path}`;
+          }
+          if (path.startsWith('/assets/')) {
+            return `${PAGES_PREFIX}/pages/retraissance${path}`;
+          }
+          // Fallback: keep original src
           return src;
         };
         container.querySelectorAll('img, video, audio, source').forEach(el => {
