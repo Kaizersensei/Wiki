@@ -466,15 +466,22 @@
         });
       };
 
+      // Optional static map to force correct reader-facing URLs -> underlying content URLs
+      const readerUrlMap = {
+        // add overrides here if a reader URL differs from its real path
+        // e.g. '/pages/retraissance/densetsu/universe/world/world_and_geography.html': '/pages/retraissance/densetsu/universe/world/world_and_geography.html'
+      };
+
       const loadPage = async (url, dir) => {
         errorBox.textContent = '';
         container.innerHTML = 'Loading...';
         try {
-          const resp = await fetch(url, { cache: 'no-cache' });
+          const target = readerUrlMap[url] || url;
+          const resp = await fetch(target, { cache: 'no-cache' });
           if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
           const text = await resp.text();
           const doc = new DOMParser().parseFromString(text, 'text/html');
-          currentPageUrl = url;
+          currentPageUrl = target;
           container.innerHTML = sanitize(doc);
           applyAutoLinks(container);
           await injectTurnaround(url, container);
