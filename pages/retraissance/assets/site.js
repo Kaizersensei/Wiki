@@ -1440,6 +1440,11 @@ const buildBreadcrumb = () => {
 
     // Ensure inline pseudotag media are wrapped and have edit controls.
     const ensureMediaControls = () => {
+      // In view mode, strip any lingering inline controls and bail.
+      if (!document.body.classList.contains('edit-active')) {
+        document.querySelectorAll('.inline-remove-media, .inline-edit-media, .inline-size, .inline-align, .inline-move-group, .inline-align-group').forEach(btn => btn.remove());
+        return;
+      }
       wrapInlineMedia();
       const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
       mediaNodes.forEach(node => {
