@@ -385,7 +385,8 @@
         const slug = match[2];
         const containerEl = scope || document;
         containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
-        const baseMedia = `${PAGES_PREFIX}/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/`;
+        // Build a path relative to the current reader URL so repo prefixes (e.g., /Wiki) are preserved.
+        const baseMedia = new URL(`../densetsu/assets/media/universe/${section}/${slug}/`, location.href).pathname;
         const names = [
           // Primary turnaround candidates
           'turnaround', 'turnaround01', 'turnaround_01', 'turn', 'turn1',
