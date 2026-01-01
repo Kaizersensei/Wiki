@@ -444,7 +444,10 @@
         const normSrc = (src) => {
           if (!src) return src;
           let path = src;
-          try { path = new URL(src, location.origin).pathname; } catch (_) { /* fallback */ }
+          try {
+            const u = new URL(src, location.href);
+            path = u.pathname;
+          } catch (_) { /* fallback */ }
           path = path.replace(/^\/+/, '/');
           if (path.startsWith('/pages/')) return `${PAGES_PREFIX}${path}`;
           if (path.startsWith('/assets/')) return `${PAGES_PREFIX}/pages/retraissance${path}`;

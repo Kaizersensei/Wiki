@@ -365,7 +365,18 @@ const buildBreadcrumb = () => {
   const resolvePseudoUrl = (url) => {
     const trimmed = (url || '').trim();
     if (!trimmed) return '';
-    if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
+    if (/^(https?:)?\/\//i.test(trimmed)) {
+      try {
+        const u = new URL(trimmed, location.href);
+        const path = u.pathname.replace(/^\/+/, '/');
+        // Normalize dev/localhost absolute links into repo paths
+        if (path.startsWith('/pages/')) return `${location.origin}${BASE_PREFIX}${path}`;
+        if (path.startsWith('/assets/')) return `${location.origin}${BASE_PREFIX}/pages/retraissance${path}`;
+        return `${location.origin}${path}`;
+      } catch (_) {
+        return trimmed;
+      }
+    }
     const isFile = (location.protocol === 'file:');
 
     const resolveLocal = (p) => {
