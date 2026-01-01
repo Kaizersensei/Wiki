@@ -11,9 +11,11 @@
   const createEndpoint = `${saveBase}/__create`;
   const deleteEndpoint = `${saveBase}/__delete`;
   const tagsEndpoint = `${saveBase}/__update-tags`;
+  const VERSION_KEY = 'retraissance:cache-signature';
   const LEXICON_FALLBACK = Array.isArray(window.UNIVERSE_LEXICON_DATA) ? window.UNIVERSE_LEXICON_DATA : [];
   const CONTROL_SELECTOR = '.inline-remove, .inline-move, .inline-size, .inline-align-group, .inline-remove-media, .inline-edit-media';
   const isReaderPage = () => (location.pathname || '').replace(/\\/g, '/').includes('/retraissance/reader/');
+  const IS_FILE = location.protocol === 'file:';
   // Base prefix (e.g., /Wiki) so we can build correct absolute paths on GitHub Pages.
   const BASE_PREFIX = (() => {
     const p = (location.pathname || '').replace(/\\/g, '/');
@@ -60,6 +62,39 @@
     } catch (_) {
       return null;
     }
+  };
+
+  // Simple cache signature checker: compares server last-modified/etag and reloads if changed.
+  const checkCacheSignature = async () => {
+    if (IS_FILE) return;
+    const assets = [
+      `${BASE_PREFIX}/pages/retraissance/assets/site.js`,
+      `${BASE_PREFIX}/pages/retraissance/assets/site.css`,
+      `${BASE_PREFIX}/pages/retraissance/reader/index.html`
+    ];
+    const sigParts = [];
+    for (const url of assets) {
+      try {
+        const res = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+        if (!res.ok) continue;
+        const etag = res.headers.get('etag') || '';
+        const lm = res.headers.get('last-modified') || '';
+        sigParts.push(`${url}:${etag}:${lm}`);
+      } catch (_) {
+        /* ignore */
+      }
+    }
+    if (!sigParts.length) return;
+    const sig = sigParts.join('|');
+    let prev = null;
+    try { prev = localStorage.getItem(VERSION_KEY); } catch (_) { /* ignore */ }
+    if (prev && prev !== sig) {
+      try { localStorage.setItem(VERSION_KEY, sig); } catch (_) { /* ignore */ }
+      // Hard refresh to pull newest assets.
+      location.reload(true);
+      return;
+    }
+    try { localStorage.setItem(VERSION_KEY, sig); } catch (_) { /* ignore */ }
   };
 
 const buildBreadcrumb = () => {
@@ -2759,6 +2794,7 @@ const buildBreadcrumb = () => {
     stripEditArtifacts();
     document.body.classList.remove('edit-active');
     const readerView = isReaderPage();
+    try { checkCacheSignature(); } catch (err) { console.error('cache signature check failed', err); }
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
