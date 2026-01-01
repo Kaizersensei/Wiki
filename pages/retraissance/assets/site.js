@@ -2500,16 +2500,14 @@ const buildBreadcrumb = () => {
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
-    // Build edit UI for all pages; edit mode stays off by default.
+    // Editing fully disabled.
     const ensureEditUI = () => {};
     const initEdit = () => {
       document.body.classList.remove('edit-active');
       stripEditArtifacts();
       return;
     };
-
-    // Check for editor-disable flag (HEAD fetch). If it exists, skip edit UI.
-    fetch(EDITOR_FLAG, { method: 'HEAD' }).catch(() => {}).finally(initEdit);
+    initEdit();
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
