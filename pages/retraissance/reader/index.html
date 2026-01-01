@@ -469,7 +469,7 @@
         if (!container) return;
         const normSrc = (src) => {
           if (!src) return src;
-          let path = src;
+          let path = src.replace(/^https?:\/\/localhost(?::\d+)?/i, '');
           try {
             const u = new URL(src, currentPageUrl || location.href);
             path = u.pathname;
@@ -477,21 +477,12 @@
           path = path.replace(/^\/+/, '/');
 
           // Normalize various common bases to the GH-friendly /<prefix>/pages/... form
-          if (path.startsWith('/pages/assets/')) {
-            path = path.replace('/pages/assets/', '/pages/retraissance/assets/');
-          }
-          if (path.startsWith('/pages/')) {
-            return `${PAGES_PREFIX}${path}`;
-          }
-          if (path.startsWith('/retraissance/assets/')) {
-            return `${PAGES_PREFIX}/pages${path}`;
-          }
-          if (path.startsWith('/retraissance/')) {
-            return `${PAGES_PREFIX}/pages${path}`;
-          }
-          if (path.startsWith('/assets/')) {
-            return `${PAGES_PREFIX}/pages/retraissance${path}`;
-          }
+          if (path.startsWith('/pages/assets/')) path = path.replace('/pages/assets/', '/pages/retraissance/assets/');
+          const alreadyPrefixed = PAGES_PREFIX && path.startsWith(PAGES_PREFIX);
+          if (path.startsWith('/pages/')) return alreadyPrefixed ? path : `${PAGES_PREFIX}${path}`;
+          if (path.startsWith('/retraissance/assets/')) return `${PAGES_PREFIX}/pages${path}`;
+          if (path.startsWith('/retraissance/')) return `${PAGES_PREFIX}/pages${path}`;
+          if (path.startsWith('/assets/')) return `${PAGES_PREFIX}/pages/retraissance${path}`;
           // Fallback: keep original src
           return src;
         };
