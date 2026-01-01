@@ -750,6 +750,13 @@ const buildBreadcrumb = () => {
   // Apply DOM-aware injection then a string fallback to catch any encoded tags.
   const applyInlineMediaWithFallback = () => {
     const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
+    const normalizeExistingMedia = (scope) => {
+      scope.querySelectorAll('img[src], video[src], audio[src], source[src]').forEach(el => {
+        const raw = el.getAttribute('src');
+        const fixed = resolvePseudoUrl(raw);
+        if (fixed && fixed !== raw) el.setAttribute('src', fixed);
+      });
+    };
     scopes.forEach(scope => {
       try { applyInlineMedia(); } catch (err) { console.error('applyInlineMedia failed', err); }
 
@@ -786,6 +793,8 @@ const buildBreadcrumb = () => {
         const rendered = temp.firstChild;
         tag.replaceWith(rendered);
       });
+      // Normalize any existing media sources (handles baked absolute localhost paths).
+      normalizeExistingMedia(scope);
       // As a last resort, convert text nodes that still contain pseudo markup.
       const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
         acceptNode(node) {
@@ -2804,25 +2813,15 @@ const buildBreadcrumb = () => {
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
     // Build edit UI for all pages; edit mode stays off by default.
-    const ensureEditUI = () => {
-      try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
-    };
+    const ensureEditUI = () => {};
     const initEdit = () => {
-      if (editorDisabled || IS_HOST_READONLY) {
-        document.body.classList.remove('edit-active');
-        stripEditArtifacts();
-        return;
-      }
-      ensureEditUI();
-      setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
-      setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
       document.body.classList.remove('edit-active');
+      stripEditArtifacts();
+      return;
     };
 
     // Check for editor-disable flag (HEAD fetch). If it exists, skip edit UI.
-    fetch(EDITOR_FLAG, { method: 'HEAD' }).then(res => {
-      editorDisabled = res.ok;
-    }).catch(() => { editorDisabled = false; }).finally(initEdit);
+    fetch(EDITOR_FLAG, { method: 'HEAD' }).catch(() => {}).finally(initEdit);
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
