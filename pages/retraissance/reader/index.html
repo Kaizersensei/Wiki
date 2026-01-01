@@ -583,14 +583,15 @@
         });
       }
 
-      const loadLexicon = async () => {
-        try {
-          const res = await fetch('/pages/retraissance/densetsu/universe/lexicon-data.json', { cache: 'no-cache' });
-          if (res.ok) lexicon = await res.json();
-        } catch (err) {
-          console.warn('Lexicon load failed', err);
-        }
-      };
+        const loadLexicon = async () => {
+          try {
+            const lexUrl = `${PAGES_PREFIX}/pages/retraissance/densetsu/universe/lexicon-data.json`;
+            const res = await fetch(lexUrl, { cache: 'no-cache' });
+            if (res.ok) lexicon = await res.json();
+          } catch (err) {
+            console.warn('Lexicon load failed', err);
+          }
+        };
 
       const applyAutoLinks = (scope) => {
         if (!lexicon || !lexicon.length || !scope) return;
