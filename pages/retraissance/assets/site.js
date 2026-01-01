@@ -909,6 +909,9 @@ const buildBreadcrumb = () => {
 
   const stripEditArtifacts = () => {
     document.querySelectorAll(`${CONTROL_SELECTOR}, .pager-floating, .edit-bar, .side-strip`).forEach(el => el.remove());
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.removeAttribute('contenteditable');
+    });
     cleanupInlineMediaWrappers();
   };
 
