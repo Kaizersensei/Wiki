@@ -108,13 +108,23 @@
   };
 
   const ensureFavicon = () => {
-    let link = document.querySelector('link[rel*=\"icon\"]');
+    let link = document.querySelector('link[rel*="icon"]');
     if (!link) {
       link = document.createElement('link');
       link.rel = 'icon';
-    document.head.appendChild(link);
+      document.head.appendChild(link);
     }
     link.href = withBasePrefix('/favicon.ico');
+  };
+
+  const fixReaderAnchors = () => {
+    if (!isReaderPage()) return;
+    const anchors = document.querySelectorAll('#reader-list a, .reader-links a');
+    anchors.forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || /^https?:/i.test(href)) return;
+      a.setAttribute('href', withBasePrefix(href));
+    });
   };
 
   // ---------- Image click-to-zoom ----------
@@ -2883,6 +2893,7 @@ const buildBreadcrumb = () => {
     try { initImageZoom(); } catch (err) { console.error('initImageZoom failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
+    try { fixReaderAnchors(); } catch (err) { console.error('fixReaderAnchors failed', err); }
     // Editing is disabled by default; optional on-demand enablement lives in editor-tools.js
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
