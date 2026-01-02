@@ -112,9 +112,74 @@
     if (!link) {
       link = document.createElement('link');
       link.rel = 'icon';
-      document.head.appendChild(link);
+    document.head.appendChild(link);
     }
     link.href = withBasePrefix('/favicon.ico');
+  };
+
+  // ---------- Image click-to-zoom ----------
+  const ensureZoomStyle = () => {
+    const existing = document.getElementById('image-zoom-style');
+    if (existing) return;
+    const style = document.createElement('style');
+    style.id = 'image-zoom-style';
+    style.textContent = `
+      .image-zoom-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.75);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+      .image-zoom-overlay.active { display: flex; }
+      .image-zoom-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+        border-radius: 8px;
+        background: #fff;
+        cursor: zoom-out;
+      }
+    `;
+    document.head.appendChild(style);
+  };
+
+  const openZoom = (src, alt = '') => {
+    ensureZoomStyle();
+    let overlay = document.querySelector('.image-zoom-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'image-zoom-overlay';
+      overlay.innerHTML = `<img alt="">`;
+      overlay.addEventListener('click', () => overlay.classList.remove('active'));
+      document.body.appendChild(overlay);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') overlay.classList.remove('active');
+      });
+    }
+    const img = overlay.querySelector('img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.classList.add('active');
+  };
+
+  const initImageZoom = () => {
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLElement)) return;
+      const img = target.closest('img');
+      if (!img) return;
+      if (img.dataset.nozoom === 'true') return;
+      if (img.classList.contains('nav-logo') || img.closest('.nav-logo') || img.closest('.brand') || img.closest('.nav-links')) return;
+      const src = img.currentSrc || img.src;
+      if (!src) return;
+      e.preventDefault();
+      openZoom(src, img.alt || '');
+    });
   };
 
   // Lightweight cache/version checker: if any watched asset (including the current page) changes, force a hard reload.
@@ -2815,6 +2880,7 @@ const buildBreadcrumb = () => {
     try { fixPageMediaSources(); } catch (err) { console.error('fixPageMediaSources failed', err); }
     try { checkCacheSignature(); } catch (err) { console.error('cache signature check failed', err); }
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
+    try { initImageZoom(); } catch (err) { console.error('initImageZoom failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
     // Editing is disabled by default; optional on-demand enablement lives in editor-tools.js
