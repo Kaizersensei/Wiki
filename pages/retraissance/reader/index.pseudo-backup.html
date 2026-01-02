@@ -317,7 +317,7 @@
         const slug = match[2];
         const containerEl = scope || document;
         containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
-        const baseMedia = `/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/`;
+        const baseMedia = `/pages/retraissance/assets/media/universe/${section}/${slug}/`;
         const names = ['turnaround', 'turnaround01', 'turnaround_01', 'turn1', 'turn', 'sheet', 'sheet_01'];
         for (let i = 1; i <= 12; i += 1) {
           const pad = i.toString().padStart(2, '0');

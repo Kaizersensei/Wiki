@@ -22,6 +22,7 @@
     const idx = p.indexOf('/pages/');
     return idx >= 0 ? p.slice(0, idx) : '';
   })();
+  const MEDIA_ROOT = `${BASE_PREFIX}/pages/retraissance/assets/media/`;
 
   const withBasePrefix = (p = '') => {
     if (!p) return p;
@@ -29,6 +30,36 @@
     if (p.startsWith(BASE_PREFIX)) return p;
     if (p.startsWith('/')) return `${BASE_PREFIX}${p}`;
     return `${BASE_PREFIX}/${p}`.replace(/\/{2,}/g, '/');
+  };
+
+  // Normalize media sources on regular pages so absolute /pages paths pick up the correct /<repo>/ prefix.
+  const fixPageMediaSources = () => {
+    const normalize = (src) => {
+      if (!src) return src;
+      // Allow full remote URLs except localhost dev, which we strip.
+      if (/^https?:\/\//i.test(src)) {
+        if (/localhost/i.test(src)) {
+          try {
+            const u = new URL(src);
+            return withBasePrefix(u.pathname);
+          } catch (_) {
+            return src;
+          }
+        }
+        return src;
+      }
+      try {
+        const u = new URL(src, location.href);
+        return withBasePrefix(u.pathname);
+      } catch (_) {
+        return withBasePrefix(src);
+      }
+    };
+    document.querySelectorAll('img, video, audio, source').forEach(el => {
+      const src = el.getAttribute('src');
+      const fixed = normalize(src);
+      if (fixed && fixed !== src) el.setAttribute('src', fixed);
+    });
   };
 
   const ensureBrandDiscord = () => {
@@ -437,25 +468,28 @@ const buildBreadcrumb = () => {
       const candidates = [];
       // Team pages
       if (/\/retraissance\/team\//.test(pagePath)) {
-        candidates.push(`/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
+        candidates.push(`${MEDIA_ROOT}team/${slug}/${trimmed}`);
       }
       // Universe pages
       const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/([^/]+)\//);
       if (uniMatch) {
         const section = uniMatch[1];
-        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/${trimmed}`);
-        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${slug}/${trimmed}`);
+        candidates.push(`${MEDIA_ROOT}universe/${section}/${slug}/${trimmed}`);
+        candidates.push(`${MEDIA_ROOT}universe/${slug}/${trimmed}`);
       }
       // Engine/tools fallback
       if (/\/retraissance\/densetsu\/engine\//.test(pagePath)) {
-        candidates.push(`/pages/retraissance/densetsu/assets/media/engine/${slug}/${trimmed}`);
+        candidates.push(`${MEDIA_ROOT}engine/${slug}/${trimmed}`);
       }
       // Generic assets fallback
-      candidates.push(`/pages/retraissance/assets/media/${slug}/${trimmed}`);
-      candidates.push(`/pages/retraissance/assets/media/${trimmed}`);
+      candidates.push(`${MEDIA_ROOT}${slug}/${trimmed}`);
+      candidates.push(`${MEDIA_ROOT}${trimmed}`);
 
       const first = candidates.find(Boolean);
-      if (first) return isFile ? resolveLocal(first) : `${location.origin}${first}`;
+      if (first) {
+        const withPrefix = withBasePrefix(first);
+        return isFile ? resolveLocal(withPrefix) : withPrefix;
+      }
     }
 
     // Fallback to relative resolution
@@ -1287,27 +1321,19 @@ const buildBreadcrumb = () => {
     const pagePath = (location.pathname || '').replace(/\\/g, '/');
     const isIndex = /\bindex\.html?$/.test(pagePath);
     const scopes = [
-      { marker: '/densetsu/', mediaDir: 'media/' },
-      { marker: '/team/', mediaDir: 'media/team/' }
+      { marker: '/densetsu/', mediaDir: '' },
+      { marker: '/team/', mediaDir: 'team/' }
     ];
     const scope = scopes.find(s => pagePath.indexOf(s.marker) !== -1);
     if (!scope || isIndex) return;
 
     const markerIdx = pagePath.indexOf(scope.marker);
-    let assetsBase;
-    if (scope.marker === '/team/') {
-      // Team assets live at /assets/, not under /team/assets/
-      assetsBase = pagePath.substring(0, markerIdx) + '/assets/';
-    } else {
-      assetsBase = pagePath.substring(0, markerIdx + scope.marker.length) + 'assets/';
-    }
-    assetsBase = withBasePrefix(assetsBase);
     const slug = pagePath
       .substring(markerIdx + scope.marker.length)
       .replace(/^\//, '')
       .replace(/[?#].*$/, '')
       .replace(/\.html?$/, '');
-    const baseMedia = withBasePrefix(`${assetsBase}${scope.mediaDir}`);
+    const baseMedia = withBasePrefix(`${MEDIA_ROOT}${scope.mediaDir}`);
     const panel = document.querySelector('.panel');
     if (!panel) return;
 
@@ -2760,6 +2786,7 @@ const buildBreadcrumb = () => {
     stripEditArtifacts();
     document.body.classList.remove('edit-active');
     const readerView = isReaderPage();
+    try { fixPageMediaSources(); } catch (err) { console.error('fixPageMediaSources failed', err); }
     try { checkCacheSignature(); } catch (err) { console.error('cache signature check failed', err); }
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
