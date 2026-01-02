@@ -645,7 +645,7 @@
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/kaze_anthem.html",
-    "label": "Kaze\u00e2\u20ac\u2122s Anthem"
+    "label": "Kazeâ€™s Anthem"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/kiputer_predictive_engine.html",
@@ -657,15 +657,15 @@
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/pombeiro_seal.html",
-    "label": "Pombeiro\u00e2\u20ac\u2122s Seal"
+    "label": "Pombeiroâ€™s Seal"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/relic_sword_alfons.html",
-    "label": "Alfons\u00e2\u20ac\u2122s Relic Sword"
+    "label": "Alfonsâ€™s Relic Sword"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/time_fan.html",
-    "label": "Time Fan (Toki no \u00c5\u0152gi)"
+    "label": "Time Fan (Toki no ÅŒgi)"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/torredasso.html",
@@ -826,5 +826,9 @@
   {
     "url": "/pages/retraissance/densetsu/engine/tools/index.html",
     "label": "Tools"
+  },
+  {
+    "label": "Cosmology: Time",
+    "url": "/pages/retraissance/reader/bible/topic_cosmology.html"
   }
 ]
