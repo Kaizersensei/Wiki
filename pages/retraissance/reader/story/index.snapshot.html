@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Main Story Script Reader</title>
   <link rel="stylesheet" href="../../assets/site.css">
   <style>
@@ -11,24 +12,43 @@
     #reader-list .entry { padding: 6px 8px; border-radius: 6px; cursor: pointer; }
     #reader-list .entry.active { background: #e0d5c5; font-weight: 700; }
     #reader-list .entry.struct { font-weight: 700; }
-    #reader-content { background: #fffaf3; padding: 16px; border-radius: 8px; min-height: 70vh; }
+    #reader-content { background: #fffaf3; padding: 16px; border-radius: 8px; min-height: 70vh; border: 1px solid #d8c9a8; }
+    .reader-nav { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+    .reader-nav button { padding: 6px 10px; font-size: 13px; }
+    .reader-pos { font-weight: 700; }
   </style>
 </head>
-<body>
+<body class="theme-wiki">
   <header class="site-header"></header>
-  <div id="reader-layout">
-    <aside>
-      <h3>Story Flow</h3>
-      <div id="reader-list"></div>
-    </aside>
-    <section id="reader-content">Loading…</section>
-  </div>
+  <main class="content">
+    <section class="panel reader-frame">
+      <nav class="breadcrumb"><a href="#" data-bc="home">Retraissance</a> / <a href="#" data-bc="reader">Reader</a> / <a href="#" data-bc="story">Main Story Script</a></nav>
+      <h1>Main Story Script</h1>
+      <div id="reader-layout">
+        <aside>
+          <h3>Story Flow</h3>
+          <div id="reader-list"></div>
+        </aside>
+        <section>
+          <div class="reader-nav">
+            <button id="story-prev" type="button">Previous</button>
+            <span class="reader-pos" id="story-pos"></span>
+            <button id="story-next" type="button">Next</button>
+          </div>
+          <section id="reader-content">Loading…</section>
+        </section>
+      </div>
+    </section>
+  </main>
   <script src="../../assets/site.js"></script>
   <script>
     (async () => {
       const LIST_URL = 'pages-list.json';
       const listEl = document.getElementById('reader-list');
       const contentEl = document.getElementById('reader-content');
+      const posEl = document.getElementById('story-pos');
+      const prevBtn = document.getElementById('story-prev');
+      const nextBtn = document.getElementById('story-next');
       let entries = [];
       let current = -1;
 
@@ -39,6 +59,14 @@
         const prefix = '/Wiki';
         if (path.startsWith(prefix)) return path;
         return `${prefix}${path}`.replace(/\/{2,}/g, '/');
+      };
+
+      const cleanLabel = (raw) => raw.replace(/\.html?$/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+      const updateNavButtons = () => {
+        posEl.textContent = current >= 0 ? `Page ${current + 1} / ${entries.length}` : '';
+        prevBtn.disabled = current <= 0;
+        nextBtn.disabled = current >= entries.length - 1;
       };
 
       const renderList = () => {
@@ -57,6 +85,7 @@
         const url = normalize(entries[idx].url);
         current = idx;
         renderList();
+        updateNavButtons();
         contentEl.textContent = 'Loading…';
         try {
           const resp = await fetch(url, { cache: 'no-cache' });
@@ -72,6 +101,8 @@
             el.setAttribute('src', normalize(p));
           });
           try { bindInlineLightbox && bindInlineLightbox(); } catch (_) {}
+          const active = listEl.querySelector('.entry.active');
+          if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest' });
         } catch (err) {
           contentEl.textContent = `Failed to load page: ${err.message || err}`;
         }
@@ -85,14 +116,21 @@
           if (typeof item === 'string' && item.trim().startsWith('#')) {
             return { isStruct: true, label: item.replace(/^#+\s*/, '').trim(), url: null };
           }
-          if (typeof item === 'string') return { label: item.replace(/.*\\//, ''), url: item };
-          return { label: item.label || item.url || 'Untitled', url: item.url || '', isStruct: !!item.isStruct };
+          if (typeof item === 'string') {
+            const base = item.replace(/.*\//, '');
+            return { label: cleanLabel(base), url: item };
+          }
+          const url = item.url || '';
+          const lbl = item.label || url;
+          return { label: cleanLabel(lbl), url, isStruct: !!item.isStruct };
         });
         renderList();
         if (entries.length) loadEntry(0);
       } catch (err) {
         contentEl.textContent = `Failed to load story list: ${err.message || err}`;
       }
+      prevBtn.addEventListener('click', () => loadEntry(current - 1, 'left'));
+      nextBtn.addEventListener('click', () => loadEntry(current + 1, 'right'));
     })();
   </script>
 </body>
