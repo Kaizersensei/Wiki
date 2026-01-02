@@ -15,12 +15,17 @@
   const LEXICON_FALLBACK = Array.isArray(window.UNIVERSE_LEXICON_DATA) ? window.UNIVERSE_LEXICON_DATA : [];
   const CONTROL_SELECTOR = '.inline-remove, .inline-move, .inline-size, .inline-align-group, .inline-remove-media, .inline-edit-media';
   const isReaderPage = () => (location.pathname || '').replace(/\\/g, '/').includes('/retraissance/reader/');
-  // Base prefix (e.g., /Wiki on GitHub Pages) so absolute URLs work everywhere.
+  const IS_FILE = location.protocol === 'file:';
+  // Base prefix (e.g., /Wiki) so we can build correct absolute paths on GitHub Pages.
   const BASE_PREFIX = (() => {
     const p = (location.pathname || '').replace(/\\/g, '/');
     const idx = p.indexOf('/pages/');
     return idx >= 0 ? p.slice(0, idx) : '';
   })();
+  const IS_HOST_READONLY = /github\.io$/i.test(location.hostname);
+  // Editor can be disabled by dropping a flag file at repo root (not tracked).
+  const EDITOR_FLAG = `${BASE_PREFIX}/disable-editor.flag`;
+  let editorDisabled = true; // start disabled by default (enable only locally when flag absent)
 
   const ensureBrandDiscord = () => {
     const brand = document.querySelector('.brand');
@@ -59,9 +64,32 @@
     }
   };
 
-  // Lightweight cache/version checker: if any watched asset (including the current page) changes, force a hard reload.
+  // Commit/version manifest checker (compares against local cache, clears and reloads on change)
+  const checkVersionManifest = async () => {
+    if (IS_FILE) return;
+    const manifestUrl = `${BASE_PREFIX}/pages/retraissance/version.json`;
+    let manifest = null;
+    try {
+      const res = await fetch(manifestUrl, { cache: 'no-cache' });
+      if (!res.ok) return;
+      manifest = await res.json();
+    } catch (_) { return; }
+    if (!manifest || !manifest.commit) return;
+    const key = 'siteVersion';
+    let prev = null;
+    try { prev = localStorage.getItem(key); } catch (_) { /* ignore */ }
+    if (prev && prev === manifest.commit) return;
+    try {
+      localStorage.clear();
+      localStorage.setItem(key, manifest.commit);
+    } catch (_) { /* ignore */ }
+    // Force a hard reload to pick up new assets/content.
+    location.reload(true);
+  };
+
+  // Simple cache signature checker: compares server last-modified/etag and reloads if changed.
   const checkCacheSignature = async () => {
-    if (location.protocol === 'file:') return;
+    if (IS_FILE) return;
     const here = (location.href || '').split('#')[0];
     const assets = [
       `${BASE_PREFIX}/pages/retraissance/assets/site.js`,
@@ -87,6 +115,7 @@
     try { prev = localStorage.getItem(VERSION_KEY); } catch (_) { /* ignore */ }
     if (prev && prev !== sig) {
       try { localStorage.setItem(VERSION_KEY, sig); } catch (_) { /* ignore */ }
+      // Hard refresh to pull newest assets.
       location.reload(true);
       return;
     }
@@ -108,7 +137,7 @@ const buildBreadcrumb = () => {
     if ((segments.length === 1 && /index\.html?$/i.test(segments[0])) || (segments.length <= 2 && segments[0] === 'retraissance' && /index\.html?$/i.test(segments[1] || ''))) return;
     const makeLabel = (s) => s.replace(/\.html?$/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     const crumbs = [];
-    let accum = '/pages';
+    let accum = `${BASE_PREFIX}/pages`;
     segments.forEach((seg) => {
       const isFile = /\.html?$/i.test(seg);
       const label = isFile && h1 ? (h1.textContent.trim() || makeLabel(seg)) : makeLabel(seg);
@@ -278,6 +307,7 @@ const buildBreadcrumb = () => {
   const rebuildNavLinks = () => {
     ensureBrandDiscord();
     let nav = document.querySelector('.nav-links');
+    // Create a nav container if none exists (keeps HTML pages free of static nav markup).
     if (!nav) {
       const header = document.querySelector('.site-header') || document.querySelector('header');
       if (!header) return;
@@ -285,7 +315,7 @@ const buildBreadcrumb = () => {
       nav.className = 'nav-links';
       header.appendChild(nav);
     }
-    // Always rebuild to remove any baked/static markup.
+    // Always rebuild and wipe any static nav content.
     nav.innerHTML = '';
     const pagePath = (location.pathname || '').replace(/\\/g, '/');
     const parts = pagePath.split('/').filter(Boolean);
@@ -404,7 +434,18 @@ const buildBreadcrumb = () => {
   const resolvePseudoUrl = (url) => {
     const trimmed = (url || '').trim();
     if (!trimmed) return '';
-    if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
+    if (/^(https?:)?\/\//i.test(trimmed)) {
+      try {
+        const u = new URL(trimmed, location.href);
+        const path = u.pathname.replace(/^\/+/, '/');
+        // Normalize dev/localhost absolute links into repo paths
+        if (path.startsWith('/pages/')) return `${location.origin}${BASE_PREFIX}${path}`;
+        if (path.startsWith('/assets/')) return `${location.origin}${BASE_PREFIX}/pages/retraissance${path}`;
+        return `${location.origin}${path}`;
+      } catch (_) {
+        return trimmed;
+      }
+    }
     const isFile = (location.protocol === 'file:');
 
     const resolveLocal = (p) => {
@@ -413,11 +454,12 @@ const buildBreadcrumb = () => {
     };
 
     if (trimmed.startsWith('/assets/')) {
-      const full = `/pages/retraissance${trimmed}`;
+      const full = `${BASE_PREFIX}/pages/retraissance${trimmed}`;
       return isFile ? resolveLocal(full) : `${location.origin}${full}`;
     }
     if (trimmed.startsWith('/pages/')) {
-      return isFile ? resolveLocal(trimmed) : `${location.origin}${trimmed}`;
+      const full = `${BASE_PREFIX}${trimmed}`;
+      return isFile ? resolveLocal(full) : `${location.origin}${full}`;
     }
 
     // If it's just a filename (no slash), try to auto-resolve against the page's media folder.
@@ -425,25 +467,40 @@ const buildBreadcrumb = () => {
     if (isBareName) {
       const pagePath = (location.pathname || '').replace(/\\/g, '/');
       const slug = (pagePath.split('/').pop() || '').replace(/\.html?$/i, '');
+      const dir = pagePath.replace(/[^/]+$/, ''); // trailing slash kept
       const candidates = [];
+
+      // Reader pages (Bible / reader mode)
+      if (/\/retraissance\/reader\//.test(pagePath)) {
+        const base = dir.replace('/pages/retraissance/reader/', '/pages/retraissance/reader/media/');
+        candidates.push(`${BASE_PREFIX}${base}${slug}/${trimmed}`);
+        candidates.push(`${BASE_PREFIX}${base}${trimmed}`);
+      }
+
       // Team pages
       if (/\/retraissance\/team\//.test(pagePath)) {
-        candidates.push(`/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
+        candidates.push(`${BASE_PREFIX}/pages/retraissance/assets/media/team/${slug}/${trimmed}`);
       }
-      // Universe pages
-      const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/([^/]+)\//);
+
+      // Universe pages: derive media dir from page dir
+      const uniMatch = pagePath.match(/\/retraissance\/densetsu\/universe\/(.+\/)[^/]+$/);
       if (uniMatch) {
-        const section = uniMatch[1];
-        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${section}/${slug}/${trimmed}`);
-        candidates.push(`/pages/retraissance/densetsu/assets/media/universe/${slug}/${trimmed}`);
+        const pageDir = uniMatch[1]; // e.g. world/ or overview/
+        const mediaBase = `${BASE_PREFIX}/pages/retraissance/densetsu/assets/media/universe/${pageDir}`;
+        candidates.push(`${mediaBase}${slug}/${trimmed}`);
+        candidates.push(`${mediaBase}${trimmed}`);
       }
+
       // Engine/tools fallback
       if (/\/retraissance\/densetsu\/engine\//.test(pagePath)) {
-        candidates.push(`/pages/retraissance/densetsu/assets/media/engine/${slug}/${trimmed}`);
+        const mediaBase = dir.replace('/pages/retraissance/densetsu/engine/', `${BASE_PREFIX}/pages/retraissance/densetsu/assets/media/engine/`);
+        candidates.push(`${mediaBase}${slug}/${trimmed}`);
+        candidates.push(`${mediaBase}${trimmed}`);
       }
+
       // Generic assets fallback
-      candidates.push(`/pages/retraissance/assets/media/${slug}/${trimmed}`);
-      candidates.push(`/pages/retraissance/assets/media/${trimmed}`);
+      candidates.push(`${BASE_PREFIX}/pages/retraissance/assets/media/${slug}/${trimmed}`);
+      candidates.push(`${BASE_PREFIX}/pages/retraissance/assets/media/${trimmed}`);
 
       const first = candidates.find(Boolean);
       if (first) return isFile ? resolveLocal(first) : `${location.origin}${first}`;
@@ -727,7 +784,19 @@ const buildBreadcrumb = () => {
   // Apply DOM-aware injection then a string fallback to catch any encoded tags.
   const applyInlineMediaWithFallback = () => {
     const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
+    const normalizeExistingMedia = (scope) => {
+      scope.querySelectorAll('img[src], video[src], audio[src], source[src]').forEach(el => {
+        const raw = el.getAttribute('src');
+        const fixed = resolvePseudoUrl(raw);
+        if (fixed && fixed !== raw) el.setAttribute('src', fixed);
+      });
+    };
+    const readerMode = isReaderPage();
     scopes.forEach(scope => {
+      // Always normalize any existing media (fixes baked localhost paths).
+      normalizeExistingMedia(scope);
+      // In reader mode, skip all pseudotag rewriting and wrapper logic to avoid path churn.
+      if (readerMode) return;
       try { applyInlineMedia(); } catch (err) { console.error('applyInlineMedia failed', err); }
 
       let html = scope.innerHTML;
@@ -763,6 +832,8 @@ const buildBreadcrumb = () => {
         const rendered = temp.firstChild;
         tag.replaceWith(rendered);
       });
+      // Normalize any existing media sources (handles baked absolute localhost paths).
+      normalizeExistingMedia(scope);
       // As a last resort, convert text nodes that still contain pseudo markup.
       const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
         acceptNode(node) {
@@ -865,18 +936,15 @@ const buildBreadcrumb = () => {
   };
 
   const cleanupInlineMediaWrappers = () => {
-    if (document.body.classList.contains('edit-active')) return;
-    document.querySelectorAll('.inline-media-wrap').forEach(wrap => {
-      const parent = wrap.parentElement;
-      if (parent) {
-        while (wrap.firstChild) parent.insertBefore(wrap.firstChild, wrap);
-        wrap.remove();
-      }
-    });
+    // No-op: we keep wrappers intact to avoid stripping media in view/reader modes.
+    return;
   };
 
   const stripEditArtifacts = () => {
-    document.querySelectorAll(`${CONTROL_SELECTOR}, .pager-floating, .edit-bar, .side-strip`).forEach(el => el.remove());
+    document.querySelectorAll(`${CONTROL_SELECTOR}, .inline-move-group, .pager-floating, .edit-bar, .side-strip`).forEach(el => el.remove());
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.removeAttribute('contenteditable');
+    });
     cleanupInlineMediaWrappers();
   };
 
@@ -973,10 +1041,10 @@ const buildBreadcrumb = () => {
     };
 
     const gatherFromGlobalLexicon = async () => {
-      const rootLex = await fetchJsonSafe(`${location.origin}/pages/retraissance/densetsu/universe/lexicon-data.json`);
+      const rootLex = await fetchJsonSafe(`${location.origin}${BASE_PREFIX}/pages/retraissance/densetsu/universe/lexicon-data.json`);
       const list = Array.isArray(rootLex) ? rootLex : [];
       const targets = [];
-      list.forEach(e => addCandidate(targets, e.Href, `${location.origin}/pages/retraissance/densetsu/universe/`));
+      list.forEach(e => addCandidate(targets, e.Href, `${location.origin}${BASE_PREFIX}/pages/retraissance/densetsu/universe/`));
       return targets;
     };
 
@@ -991,8 +1059,20 @@ const buildBreadcrumb = () => {
       return targets;
     };
 
-    if (!btn.dataset.randInit) {
-      btn.dataset.randInit = '1';
+    const gatherFromReaderList = async () => {
+      // Use the Bible reader pages list as a broad fallback.
+      const url = `${BASE_PREFIX}/pages/retraissance/reader/pages-list.json`;
+      const json = await fetchJsonSafe(url);
+      if (!Array.isArray(json)) return [];
+      const targets = [];
+      json.forEach(entry => {
+        if (entry && entry.url) addCandidate(targets, `${BASE_PREFIX}${entry.url}`);
+      });
+      return targets;
+    };
+
+    if (!btn.dataset.randBound) {
+      btn.dataset.randBound = '1';
       btn.addEventListener('click', async () => {
         if (isFile) {
           alert('Random page requires http://localhost:3000 (file:// blocks fetch).');
@@ -1012,6 +1092,7 @@ const buildBreadcrumb = () => {
         const fromIndex = await gatherFromIndex();
         const fromLex = await gatherFromLexicon();
         const fromTags = await gatherFromTags();
+        const fromReader = await gatherFromReaderList();
         const fromGlobalLex = await gatherFromGlobalLexicon();
         const fromFallback = (LEXICON_FALLBACK || []).map(e => {
           try {
@@ -1019,7 +1100,19 @@ const buildBreadcrumb = () => {
             return abs;
           } catch (_) { return null; }
         }).filter(Boolean);
-        const all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromGlobalLex, ...fromFallback];
+        let all = [...targets, ...fromIndex, ...fromLex, ...fromTags, ...fromReader, ...fromGlobalLex, ...fromFallback];
+
+        // If still empty (seen on reader mode), fall back to any links already in the reader list.
+        if (!all.length && isReaderPage()) {
+          const readerLinks = Array.from(document.querySelectorAll('#reader-list a'))
+            .map(a => {
+              try { return new URL(a.getAttribute('href') || '', location.href).href; }
+              catch (_) { return null; }
+            })
+            .filter(Boolean);
+          all = readerLinks;
+        }
+
         const uniq = Array.from(new Set(all));
         if (!uniq.length) {
           alert('No data pages found for random navigation. Ensure lexicon-data.json is reachable over http.');
@@ -1304,7 +1397,7 @@ const buildBreadcrumb = () => {
     const cover = await findFirstMedia(baseMedia, slug, ['cover', 'cover01', 'cover_01'], imgExts);
     insertCover(panel, cover);
 
-    // Turnaround: manifest order if present, else probe predictable names.
+    // Turnaround: manifest order if present, else probe a small, sane set of names to avoid 404 storms.
     let turnItems = [];
     const manifestUrl = `${baseMedia}${slug}/media.json`;
     try {
@@ -1320,14 +1413,11 @@ const buildBreadcrumb = () => {
       }
     } catch (err) { /* ignore */ }
     if (!turnItems.length) {
-      const names = ['turnaround', 'turnaround_01', 'turn1', 'turn', 'sheet', 'sheet_01'];
-      for (let i = 1; i <= 12; i += 1) {
-        const pad = i.toString().padStart(2, '0');
-        names.push(`turnaround${pad}`);
-        names.push(`turnaround${i}`);
-        names.push(`sheet${pad}`);
-        names.push(`sheet${i}`);
-      }
+      const names = [
+        'turnaround', 'turnaround01', 'turnaround_01',
+        'turn', 'turn1',
+        'sheet', 'sheet01', 'sheet_01', 'sheet1'
+      ];
       turnItems = await probeMedia(baseMedia, slug, names, imgExts);
     }
     if (turnItems.length) insertTurnaround(panel, turnItems);
@@ -1349,319 +1439,10 @@ const buildBreadcrumb = () => {
     insertRightStrip(portrait, audioSrc);
   };
     const enableInlineEdit = () => {
-      const panel = document.querySelector('.panel');
-      if (!panel) return;
-      let editObserver = null;
-      let observerPaused = false;
-    const removeControlOverlays = () => panel.querySelectorAll(CONTROL_SELECTOR).forEach(el => el.remove());
-
-    const bar = document.createElement('div');
-    bar.className = 'edit-bar';
-
-    const wrapInlineMedia = () => {
-      const mediaNodes = panel.querySelectorAll('img.inline-image, video.inline-video');
-      mediaNodes.forEach(node => {
-        let wrap = node.closest('.inline-media-wrap');
-        if (!wrap) {
-          wrap = document.createElement('div');
-          wrap.className = 'inline-media-wrap';
-          wrap.style.display = 'inline-block';
-          wrap.style.maxWidth = '100%';
-          const parent = node.parentElement;
-          parent.insertBefore(wrap, node);
-          wrap.appendChild(node);
-        } else if (!wrap.style.display) {
-          wrap.style.display = 'inline-block';
-          wrap.style.maxWidth = '100%';
-        }
-        // normalize stored size once per media
-        if (!node.dataset.sizePercent) {
-          const parent = node.parentElement;
-          let pct = 100;
-          if (parent && parent.getBoundingClientRect().width) {
-            const w = node.getBoundingClientRect().width || 0;
-            const pw = parent.getBoundingClientRect().width || 1;
-            pct = Math.min(200, Math.max(10, (w / pw) * 100));
-          } else if (node.style.width && node.style.width.endsWith('%')) {
-            pct = parseFloat(node.style.width);
-          }
-          node.dataset.sizePercent = String(pct);
-          node.style.width = `${pct}%`;
-        } else {
-          node.style.width = `${parseFloat(node.dataset.sizePercent || '100')}%`;
-        }
-      });
-    };
-
-    // Ensure inline pseudotag media are wrapped and have edit controls.
-    const ensureMediaControls = () => {
-      wrapInlineMedia();
-      const mediaNodes = document.querySelectorAll('img.inline-image, video.inline-video');
-      mediaNodes.forEach(node => {
-        const wrap = node.closest('.inline-media-wrap');
-        if (!wrap) return;
-        let btnDel = wrap.querySelector('.inline-remove-media');
-        if (!btnDel) {
-          btnDel = document.createElement('button');
-          btnDel.type = 'button';
-          btnDel.className = 'inline-remove-media';
-          btnDel.textContent = 'Del';
-          btnDel.title = 'Remove media';
-          btnDel.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const block = wrap.closest('.inline-media-block');
-            if (block) block.remove(); else wrap.remove();
-            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-            if (saveBtn) saveBtn.disabled = false;
-          });
-          wrap.appendChild(btnDel);
-        }
-        let btnEditMedia = wrap.querySelector('.inline-edit-media');
-        if (!btnEditMedia) {
-          btnEditMedia = document.createElement('button');
-          btnEditMedia.type = 'button';
-          btnEditMedia.className = 'inline-edit-media';
-          btnEditMedia.textContent = '?';
-          btnEditMedia.title = 'Edit media source';
-          btnEditMedia.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const current = node.getAttribute('src') || node.dataset.pseudo || '';
-            const loopAttr = node.loop ? ' -loop' : '';
-            const ncAttr = node.controls === false ? ' -nocontrols' : '';
-            const runPicker = () => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = node.tagName === 'VIDEO' ? 'video/*,audio/*' : 'image/*,video/*,audio/*';
-              input.addEventListener('change', () => {
-                const file = input.files && input.files[0];
-                if (!file) return;
-                const name = file.name;
-                node.dataset.pseudo = name;
-                node.src = resolvePseudoUrl(name);
-                node.classList.remove('inline-media-missing');
-                node.removeAttribute('data-missing');
-                if (node.tagName === 'VIDEO') {
-                  try { node.load(); node.play(); } catch (_) { /* ignore */ }
-                }
-                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-                if (saveBtn) saveBtn.disabled = false;
-              }, { once: true });
-              input.click();
-            };
-            const raw = prompt('Media source (you can include -loop and -nocontrols):', `${current}${loopAttr}${ncAttr}`);
-            if (!raw) {
-              runPicker();
-              return;
-            }
-            const hasLoop = /-loop/.test(raw);
-            const noControls = /-nocontrols/.test(raw);
-            const cleaned = raw.replace(/-loop/gi, '').replace(/-nocontrols/gi, '').trim();
-            node.dataset.pseudo = cleaned;
-            node.src = resolvePseudoUrl(cleaned);
-            if (!cleaned) {
-              node.classList.add('inline-media-missing');
-              node.dataset.missing = '1';
-            } else {
-              node.classList.remove('inline-media-missing');
-              node.removeAttribute('data-missing');
-            }
-            if (node.tagName === 'VIDEO') {
-              node.loop = hasLoop;
-              if (hasLoop) node.setAttribute('loop', '');
-              else node.removeAttribute('loop');
-              node.controls = !noControls;
-              if (noControls) node.setAttribute('controls', 'false');
-              else node.setAttribute('controls', 'true');
-              try { node.load(); node.play(); } catch (_) { /* ignore */ }
-            }
-            const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-            if (saveBtn) saveBtn.disabled = false;
-          });
-          wrap.appendChild(btnEditMedia);
-        }
-        const adjustSize = (delta) => {
-          const base = node.dataset.sizePercent
-            ? parseFloat(node.dataset.sizePercent)
-            : (node.style.width && node.style.width.endsWith('%'))
-              ? parseFloat(node.style.width)
-              : 100;
-          const next = Math.min(200, Math.max(10, base + delta));
-          node.dataset.sizePercent = String(next);
-          node.dataset.size = String(next);
-          node.style.width = `${next}%`;
-          const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-          if (saveBtn) saveBtn.disabled = false;
-        };
-        if (!node.dataset.sizePercent && node.style.width && node.style.width.endsWith('%')) {
-          node.dataset.sizePercent = String(parseFloat(node.style.width));
-        }
-        let btnShrink = wrap.querySelector('.inline-size-down');
-        if (!btnShrink) {
-          btnShrink = document.createElement('button');
-          btnShrink.type = 'button';
-          btnShrink.className = 'inline-size inline-size-down';
-          btnShrink.textContent = 'sml';
-          btnShrink.title = 'Shrink media';
-          btnShrink.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(-5); });
-          wrap.appendChild(btnShrink);
-        }
-        let btnGrow = wrap.querySelector('.inline-size-up');
-        if (!btnGrow) {
-          btnGrow = document.createElement('button');
-          btnGrow.type = 'button';
-          btnGrow.className = 'inline-size inline-size-up';
-          btnGrow.textContent = 'big';
-          btnGrow.title = 'Grow media';
-          btnGrow.addEventListener('click', (e) => { e.stopPropagation(); adjustSize(5); });
-          wrap.appendChild(btnGrow);
-        }
-        // Move controls for media blocks
-        let moveGroup = wrap.querySelector('.inline-move-group');
-        if (!moveGroup) {
-          moveGroup = document.createElement('div');
-          moveGroup.className = 'inline-move-group';
-          wrap.appendChild(moveGroup);
-        }
-        const ensureMoveBtn = (cls, label, title, dir) => {
-          let btn = moveGroup.querySelector(`.${cls}`);
-          if (!btn) {
-            btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `inline-move ${cls}`;
-            btn.textContent = label;
-            btn.title = title;
-            btn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const block = wrap.closest('.inline-media-block');
-              if (!block) return;
-              const markdown = panel.querySelector('.markdown') || panel;
-
-              // Find the start of the current section (nearest preceding h2/h3/h4 within markdown).
-              const findSectionStart = (el) => {
-                let cursor = el;
-                while (cursor && cursor !== markdown) {
-                  if (cursor.tagName && /^H[234]$/i.test(cursor.tagName)) return cursor;
-                  if (cursor.previousElementSibling) {
-                    cursor = cursor.previousElementSibling;
-                    if (cursor && cursor.tagName && /^H[234]$/i.test(cursor.tagName)) return cursor;
-                  } else {
-                    cursor = cursor.parentElement;
-                  }
-                }
-                // fallback: nearest direct child of markdown
-                let fallback = el;
-                while (fallback && fallback.parentElement !== markdown) fallback = fallback.parentElement;
-                return fallback;
-              };
-
-              const start = findSectionStart(block);
-              const fallbackMoveBlock = () => {
-                const parent = block.parentElement;
-                if (!parent) return false;
-                const sibling = dir === 'up' ? block.previousElementSibling : block.nextElementSibling;
-                if (!sibling) return false;
-                if (dir === 'up') parent.insertBefore(block, sibling);
-                else parent.insertBefore(block, sibling.nextSibling);
-                return true;
-              };
-
-              if (!start || !start.parentElement) {
-                if (!fallbackMoveBlock()) return;
-                const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-                if (saveBtn) saveBtn.disabled = false;
-                return;
-              }
-
-              const collectSection = (startNode) => {
-                const nodes = [];
-                let n = startNode;
-                while (n) {
-                  nodes.push(n);
-                  const next = n.nextElementSibling;
-                  if (next && next.tagName && /^H[234]$/i.test(next.tagName)) break;
-                  n = next;
-                }
-                return nodes;
-              };
-
-              const sectionNodes = collectSection(start);
-              const parent = start.parentElement;
-
-              const findPrevSectionStart = () => {
-                let n = start.previousElementSibling;
-                while (n) {
-                  if (n.tagName && /^H[234]$/i.test(n.tagName)) return n;
-                  n = n.previousElementSibling;
-                }
-                return null;
-              };
-              const findNextSectionStart = () => {
-                let n = sectionNodes[sectionNodes.length - 1].nextElementSibling;
-                while (n) {
-                  if (n.tagName && /^H[234]$/i.test(n.tagName)) return n;
-                  n = n.nextElementSibling;
-                }
-                return null;
-              };
-
-              const moveSectionUp = () => {
-                const prevStart = findPrevSectionStart();
-                if (!prevStart) return false;
-                const frag = document.createDocumentFragment();
-                sectionNodes.forEach(node => frag.appendChild(node));
-                parent.insertBefore(frag, prevStart);
-                return true;
-              };
-              const moveSectionDown = () => {
-                const nextStart = findNextSectionStart();
-                if (!nextStart) return false;
-                // insert after the next section group
-                const nextGroup = collectSection(nextStart);
-                const anchor = nextGroup[nextGroup.length - 1].nextSibling;
-                const frag = document.createDocumentFragment();
-                sectionNodes.forEach(node => frag.appendChild(node));
-                parent.insertBefore(frag, anchor);
-                return true;
-              };
-
-              const moved = dir === 'up' ? moveSectionUp() : moveSectionDown();
-              if (!moved) {
-                // If no neighboring section to swap with, try local block move as fallback.
-                if (!fallbackMoveBlock()) return;
-              }
-              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-              if (saveBtn) saveBtn.disabled = false;
-            });
-            moveGroup.appendChild(btn);
-          }
-        };
-        ensureMoveBtn('inline-move-up', 'Up', 'Move media up', 'up');
-        ensureMoveBtn('inline-move-down', 'Dn', 'Move media down', 'down');
-        let alignGroup = wrap.querySelector('.inline-align-group');
-        if (!alignGroup) {
-          alignGroup = document.createElement('div');
-          alignGroup.className = 'inline-align-group';
-          const makeAlignBtn = (label, value) => {
-            const b = document.createElement('button');
-            b.type = 'button';
-            b.className = 'inline-align';
-            b.textContent = label;
-            b.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const block = wrap.closest('.inline-media-block') || wrap.parentElement;
-              if (block) block.style.textAlign = value;
-              node.dataset.align = value;
-              const saveBtn = document.querySelector('.edit-bar button:nth-child(6)');
-              if (saveBtn) saveBtn.disabled = false;
-            });
-            alignGroup.appendChild(b);
-          };
-          makeAlignBtn('L', 'left');
-          makeAlignBtn('C', 'center');
-          makeAlignBtn('R', 'right');
-          wrap.appendChild(alignGroup);
-        }
-      });
+      // Editing is disabled in the current build; ensure no edit artifacts remain.
+      stripEditArtifacts();
+      document.body.classList.remove('edit-active');
+      return;
     };
 
     const selectionTouchesMediaBlock = () => {
@@ -2617,246 +2398,3 @@ const buildBreadcrumb = () => {
             panelChild.remove();
           } else {
             let cursor = panelChild.nextElementSibling;
-            let placed = false;
-            while (cursor) {
-              if (isEmptyBlock(cursor)) {
-                target.insertBefore(frag, cursor);
-                cursor.remove();
-                placed = true;
-                break;
-              }
-              cursor = cursor.nextElementSibling;
-            }
-            if (!placed) insertAfter(panelChild, frag);
-          }
-        } else {
-          target.appendChild(frag);
-        }
-        if (sel) {
-          const after = document.createRange();
-          after.setStartAfter(block);
-          after.collapse(true);
-          sel.removeAllRanges();
-          sel.addRange(after);
-        }
-      } else {
-        target.appendChild(frag);
-      }
-      // remember new position after insertion
-      const afterBlockRange = document.createRange();
-      afterBlockRange.setStartAfter(block);
-      afterBlockRange.collapse(true);
-      lastRange = afterBlockRange.cloneRange();
-      markDirty();
-    };
-    btnAddHeading.addEventListener('click', addHeadingBlock);
-
-    const addImageAtCursor = () => {
-      setEditable(true);
-      const pseudo = prompt('Image filename (from media folder or URL):', '') || '';
-      if (!pseudo.trim()) return;
-      const size = prompt('Width percent (10-200):', '100') || '100';
-      const align = (prompt('Align (left/center/right):', 'center') || 'center').toLowerCase();
-      const img = document.createElement('img');
-      img.className = 'inline-image';
-      img.dataset.pseudo = pseudo.trim();
-      img.dataset.size = size.trim();
-      img.dataset.align = ['left','right','center'].includes(align) ? align : 'center';
-      img.src = resolvePseudoUrl(pseudo.trim());
-      img.style.width = `${size}${size.includes('%') ? '' : '%'}`;
-      if (img.dataset.align === 'left') img.style.margin = '12px auto 12px 0';
-      else if (img.dataset.align === 'right') img.style.margin = '12px 0 12px auto';
-      else img.style.margin = '12px auto';
-      img.style.display = 'block';
-
-      // wrap immediately to ensure consistent layout
-      const wrap = document.createElement('div');
-      wrap.className = 'inline-media-wrap';
-      wrap.style.display = 'inline-block';
-      wrap.style.maxWidth = '100%';
-      const block = document.createElement('div');
-      block.className = 'inline-media-block';
-      block.style.textAlign = img.dataset.align || 'center';
-      block.contentEditable = 'false';
-      wrap.appendChild(img);
-      block.appendChild(wrap);
-
-      const target = panel.querySelector('.markdown') || panel;
-      const sel = window.getSelection && window.getSelection();
-      let range = null;
-      if (lastRange && target.contains(lastRange.commonAncestorContainer)) {
-        range = lastRange.cloneRange();
-      } else if (sel && sel.rangeCount && target.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-        range = sel.getRangeAt(0).cloneRange();
-      }
-
-      const placeNode = (node) => {
-        if (range) {
-          range.deleteContents();
-          range.insertNode(node);
-        } else {
-          target.appendChild(node);
-        }
-      };
-
-      placeNode(block);
-      try { applyInlineMediaWithFallback(); ensureMediaControls(); } catch (_) {}
-      markDirty();
-    };
-    btnAddImage.addEventListener('click', addImageAtCursor);
-
-    btnEdit.addEventListener('click', () => {
-      setEditable(true);
-      try { ensureMediaControls(); wrapInlineMedia(); } catch (_) { /* best effort */ }
-    });
-    btnSave.addEventListener('click', async () => {
-      // In reader mode, push edits to the underlying page instead of the shell.
-      if (isReaderPage() && window.readerSaveCurrent) {
-        btnSave.disabled = true;
-        const ok = await window.readerSaveCurrent();
-        btnSave.disabled = false;
-        if (ok) {
-          btnEdit.disabled = false;
-          document.body.classList.remove('edit-active');
-          return;
-        }
-        return;
-      }
-      doSave();
-    });
-    btnCancel.addEventListener('click', () => location.reload(true));
-    // ensure we start in view mode even if markup had edit-active
-    setEditable(false);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        if (!btnSave.disabled) doSave();
-      }
-      if (e.ctrlKey && e.shiftKey && (e.key === '8' || e.key === '*')) {
-        e.preventDefault();
-        execCmd('insertUnorderedList');
-      }
-      if (e.key === 'Escape' && document.body.classList.contains('edit-active')) {
-        e.preventDefault();
-        location.reload(true);
-      }
-    });
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    // Remove any baked edit bars/pagers/side-strips and edit-active flag before initializing.
-    stripEditArtifacts();
-    document.body.classList.remove('edit-active');
-    const readerView = isReaderPage();
-    try { checkCacheSignature(); } catch (err) { console.error('cache signature check failed', err); }
-    try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
-    try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
-    try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
-    // Build edit UI for all pages; edit mode stays off by default.
-    const ensureEditUI = () => {
-      try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
-    };
-    ensureEditUI();
-    // Retry a couple times in case content loads slowly.
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
-    // Always start view-only.
-    document.body.classList.remove('edit-active');
-    try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
-    try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
-    try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
-
-    // Universe autolink from lexicon data
-    const pagePath = (location.pathname || '').replace(/\\\\/g, '/');
-    const universeIdx = pagePath.indexOf('/densetsu/universe');
-    if (universeIdx !== -1) {
-      const base = pagePath.substring(0, universeIdx + '/densetsu/universe/'.length);
-      const lexUrl = `${base}lexicon-data.json`;
-      const maxLinks = 200;
-
-      const apply = (data) => {
-        if (!Array.isArray(data) || !data.length) return;
-        const map = {};
-        data.forEach(e => {
-          const key = (e.Name || '').toLowerCase();
-          if (!key || map[key]) return;
-          map[key] = e;
-        });
-        const terms = Object.keys(map).sort((a, b) => b.length - a.length);
-        if (!terms.length) return;
-        const escaped = terms.map(t => t.replace(/[-/\\^$*+?.()|[\\]{}]/g, '\\\\$&'));
-        const regex = new RegExp(`\\b(${escaped.join('|')})\\b`, 'gi');
-        const scopes = Array.from(document.querySelectorAll('main .panel, main article, .callout')).filter(el => !el.closest('header'));
-        let linksMade = 0;
-
-        const linkTextNode = (node) => {
-          if (!node || !node.nodeValue || !node.nodeValue.trim()) return;
-          const text = node.nodeValue;
-          let match;
-          let last = 0;
-          const frag = document.createDocumentFragment();
-          while ((match = regex.exec(text)) && linksMade < maxLinks) {
-            const term = match[0];
-            const entry = map[term.toLowerCase()];
-            if (!entry) continue;
-            frag.appendChild(document.createTextNode(text.slice(last, match.index)));
-            const a = document.createElement('a');
-            a.href = `${base}${entry.Href}`;
-            a.textContent = term;
-            a.className = 'auto-link';
-            frag.appendChild(a);
-            last = match.index + term.length;
-            linksMade += 1;
-          }
-          if (linksMade >= maxLinks || last === 0) return;
-          frag.appendChild(document.createTextNode(text.slice(last)));
-          node.replaceWith(frag);
-        };
-
-        const walkerFilter = {
-          acceptNode(node) {
-            const parent = node.parentElement;
-            if (parent) {
-              const tag = parent.tagName;
-              if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
-              if (/^H[1-6]$/.test(tag)) return NodeFilter.FILTER_REJECT;
-              if (parent.closest('.no-autolink, [data-autolink="off"]')) return NodeFilter.FILTER_REJECT;
-              if (parent.closest('.link-list')) return NodeFilter.FILTER_REJECT;
-            }
-            return NodeFilter.FILTER_ACCEPT;
-          }
-        };
-
-        scopes.forEach(scope => {
-          const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, walkerFilter);
-          const nodes = [];
-          let n;
-          while ((n = walker.nextNode()) && linksMade < maxLinks) nodes.push(n);
-          nodes.forEach(node => {
-            if (/pending canonical content/i.test(node.nodeValue || '')) return;
-            linkTextNode(node);
-          });
-        });
-      };
-
-      fetch(lexUrl).then(r => r.json()).then(data => {
-        if (Array.isArray(data) && data.length) apply(data);
-        else apply(LEXICON_FALLBACK);
-      }).catch(() => apply(LEXICON_FALLBACK));
-    }
-
-    // Inline media tokens (images/videos) everywhere
-    try { applyInlineMediaWithFallback(); } catch (err) { console.error('inline media inject failed', err); }
-    try { cleanupInlineMediaWrappers(); } catch (err) { console.error('media wrapper cleanup failed', err); }
-  });
-
-  window.wikiUi = {
-    endpoints: {
-      save: saveEndpoint,
-      create: createEndpoint,
-      delete: deleteEndpoint,
-      tags: tagsEndpoint,
-    }
-  };
-})();
