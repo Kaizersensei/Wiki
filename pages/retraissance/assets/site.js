@@ -470,6 +470,7 @@ const buildBreadcrumb = () => {
         <span class="nav-dropdown-toggle">Densetsu ▾</span>
         <div class="nav-dropdown-menu">
           <a href="${prefix}retraissance/reader/index.html">Bible</a>
+          <a href="${prefix}retraissance/reader/story/index.html">Main Story Script</a>
           <a href="${prefix}retraissance/densetsu/universe/index.html">Universe Wiki</a>
           <a href="${prefix}retraissance/densetsu/engine/index.html">Engine Wiki</a>
         </div>
