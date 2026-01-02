@@ -350,6 +350,46 @@
         persistList();
       };
 
+      const insertTurnaroundStrip = (panel, items) => {
+        if (!panel || !items || !items.length) return;
+        const h1 = panel.querySelector('h1');
+        const wrap = document.createElement('div');
+        wrap.className = 'turnaround-strip';
+        const label = document.createElement('div');
+        label.className = 'turnaround-header';
+        label.textContent = 'Appearance';
+        wrap.appendChild(label);
+        const rail = document.createElement('div');
+        rail.className = 'turnaround-rail';
+        items.forEach(entry => {
+          const card = document.createElement('div');
+          card.className = 'turnaround-frame';
+          card.dataset.src = entry.src;
+          card.dataset.title = entry.title || '';
+          const img = document.createElement('img');
+          img.src = entry.src;
+          img.alt = entry.title || 'Appearance frame';
+          card.appendChild(img);
+          rail.appendChild(card);
+        });
+        rail.addEventListener('click', (e) => {
+          const frame = e.target.closest('.turnaround-frame');
+          if (!frame) return;
+          const galleryItems = Array.from(rail.children).map(node => ({
+            src: node.dataset.src,
+            title: node.dataset.title,
+          }));
+          const idx = Array.from(rail.children).indexOf(frame);
+          openOverlay(galleryItems, idx);
+        });
+        wrap.appendChild(rail);
+        if (h1 && h1.parentNode === panel) {
+          panel.insertBefore(wrap, h1.nextSibling);
+        } else {
+          panel.prepend(wrap);
+        }
+      };
+
       const sanitize = (doc) => {
         doc.querySelectorAll('.side-strip, .turnaround-strip').forEach(el => el.remove());
         const main = doc.querySelector('main') || doc.body;
@@ -370,12 +410,12 @@
         // Build a path relative to the current reader URL so repo prefixes (e.g., /Wiki) are preserved.
         const baseMedia = new URL(`../densetsu/assets/media/universe/${section}/${slug}/`, location.href).pathname;
 
-        // Try manifest first
-        let items = [];
-        try {
-          const manifestUrl = `${baseMedia}media.json`;
-          const res = await fetch(manifestUrl, { cache: 'no-cache' });
-          if (res.ok) {
+          // Try manifest first
+          let items = [];
+          try {
+            const manifestUrl = `${baseMedia}media.json`;
+            const res = await fetch(manifestUrl, { cache: 'no-cache' });
+            if (res.ok) {
             const data = await res.json();
             if (Array.isArray(data)) {
               items = data.filter(e => e && (e.src || e.file || e.path)).map(e => ({
@@ -385,10 +425,10 @@
             }
           }
         } catch (_) { /* ignore */ }
-        if (items.length) {
-          insertTurnaround(containerEl.querySelector('.panel') || containerEl, items.map(i => ({ src: i.src, title: i.title })));
-          return;
-        }
+          if (items.length) {
+          insertTurnaroundStrip(containerEl.querySelector('.panel') || containerEl, items.map(i => ({ src: i.src, title: i.title })));
+            return;
+          }
         const names = [
           // Primary turnaround candidates
           'turnaround', 'turnaround01', 'turnaround_01', 'turn', 'turn1',
@@ -414,28 +454,7 @@
         });
         if (!found.length) return;
         const panel = containerEl.querySelector('.panel') || containerEl.querySelector('main') || containerEl.body || containerEl;
-        const wrap = document.createElement('div');
-        wrap.className = 'turnaround-strip';
-        const header = document.createElement('div');
-        header.className = 'turnaround-header';
-        header.textContent = 'Appearance';
-        wrap.appendChild(header);
-        const rail = document.createElement('div');
-        rail.className = 'turnaround-rail';
-        found.forEach(src => {
-          const img = document.createElement('img');
-          img.src = src;
-          img.alt = 'Appearance frame';
-          img.addEventListener('click', () => window.open(src, '_blank'));
-          rail.appendChild(img);
-        });
-        wrap.appendChild(rail);
-        const anchor = panel.querySelector('h1') || panel.firstChild;
-        if (anchor && anchor.parentNode === panel) {
-          panel.insertBefore(wrap, anchor.nextSibling);
-        } else {
-          panel.prepend(wrap);
-        }
+        insertTurnaroundStrip(panel, found.map(src => ({ src, title: '' })));
       };
 
       const applyFlip = (dir) => {
