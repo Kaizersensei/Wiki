@@ -15,6 +15,7 @@
   const LEXICON_FALLBACK = Array.isArray(window.UNIVERSE_LEXICON_DATA) ? window.UNIVERSE_LEXICON_DATA : [];
   const CONTROL_SELECTOR = '.inline-remove, .inline-move, .inline-size, .inline-align-group, .inline-remove-media, .inline-edit-media';
   const isReaderPage = () => (location.pathname || '').replace(/\\/g, '/').includes('/retraissance/reader/');
+  const ENABLE_EDITOR_FLAG = Boolean(window.ENABLE_EDITOR_FLAG);
   // Base prefix (e.g., /Wiki on GitHub Pages) so absolute URLs work everywhere.
   const BASE_PREFIX = (() => {
     const p = (location.pathname || '').replace(/\\/g, '/');
@@ -2753,16 +2754,7 @@ const buildBreadcrumb = () => {
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }
-    // Build edit UI for all pages; edit mode stays off by default.
-    const ensureEditUI = () => {
-      try { enableInlineEdit(); } catch (err) { console.error('enableInlineEdit failed', err); }
-    };
-    ensureEditUI();
-    // Retry a couple times in case content loads slowly.
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 150);
-    setTimeout(() => { if (!document.querySelector('.edit-bar')) ensureEditUI(); }, 400);
-    // Always start view-only.
-    document.body.classList.remove('edit-active');
+    // Editing is disabled by default; optional on-demand enablement lives in editor-tools.js
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
@@ -2859,4 +2851,15 @@ const buildBreadcrumb = () => {
       tags: tagsEndpoint,
     }
   };
+
+  // Expose an opt-in editor initializer; actual editor bootstrap lives in editor-tools.js
+  const initEditor = () => {
+    try {
+      enableInlineEdit();
+      document.body.classList.add('edit-active');
+    } catch (err) {
+      console.error('initEditor failed', err);
+    }
+  };
+  window.wikiEditor = { init: initEditor };
 })();
