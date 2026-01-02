@@ -720,6 +720,9 @@
           try { h = new URL(h).pathname; } catch (_) { /* fallback below */ }
         }
         h = h.replace(/^\/+/, '/');
+        // Handle bare relative entries like "pages/..." or "retraissance/...".
+        if (h.startsWith('pages/')) h = `/${h}`;
+        if (h.startsWith('retraissance/')) h = `/pages/${h}`;
         // Collapse any repeated /pages/ prefixes, then ensure a single /pages/ prefix.
         if (h.startsWith('/pages/')) {
           const cleaned = '/pages/' + h.replace(/^\/+/, '').replace(/^(pages\/)+/, '');
