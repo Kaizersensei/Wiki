@@ -147,6 +147,10 @@
         const idx = pagePath.indexOf('/pages/');
         return idx >= 0 ? pagePath.slice(0, idx) : '';
       })();
+      const extractContentHtml = (doc) => {
+        const main = doc.querySelector('main .panel') || doc.querySelector('main') || doc.body;
+        return main ? main.innerHTML : '';
+      };
       const READONLY_HOST = /github\.io$/i.test(location.hostname);
       // Fix breadcrumb hrefs at runtime to respect prefix.
       document.querySelectorAll('.breadcrumb a[data-bc]').forEach(a => {
@@ -518,7 +522,7 @@
           const text = await resp.text();
           const doc = new DOMParser().parseFromString(text, 'text/html');
           currentPageUrl = target;
-          container.innerHTML = sanitize(doc);
+          container.innerHTML = extractContentHtml(doc);
           // Strip any baked editor artifacts that might be present in source pages.
           container.querySelectorAll('.inline-move-group, .inline-remove-media, .inline-edit-media, .inline-size, .inline-align-group, .inline-remove, .inline-move').forEach(el => el.remove());
           container.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));

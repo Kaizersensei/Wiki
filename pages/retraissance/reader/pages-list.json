@@ -1,5 +1,4 @@
 [
-  "# Front Matter",
   {
     "url": "/pages/retraissance/reader/bible/cover.html",
     "label": "DENSETSU"
@@ -15,11 +14,6 @@
   {
     "url": "/pages/retraissance/reader/bible/terminology_primer.html",
     "label": "Terminology & Symbols"
-  },
-  "# I. Time, Memory, Cosmology",
-  {
-    "url": "/pages/retraissance/reader/bible/topic_cosmology.html",
-    "label": "Cosmology: Time"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/world/cosmology_and_epochs.html",
@@ -61,7 +55,6 @@
     "url": "/pages/retraissance/densetsu/universe/concepts/time_loops.html",
     "label": "Time Loops"
   },
-  "# II. Principles of Power",
   {
     "url": "/pages/retraissance/densetsu/universe/magic_principles.html",
     "label": "Magic Principles"
@@ -74,7 +67,6 @@
     "url": "/pages/retraissance/densetsu/universe/concepts/elements_and_concords.html",
     "label": "Elements and Ki"
   },
-  "# III. World & Geography",
   {
     "url": "/pages/retraissance/reader/bible/topic_world_geography.html",
     "label": "World & Geography"
@@ -87,12 +79,10 @@
     "url": "/pages/retraissance/densetsu/universe/world/world_overview.html",
     "label": "World Overview"
   },
-  "# Geography: Land Masses & Realms",
   {
     "url": "/pages/retraissance/densetsu/universe/world/world_and_geography.html",
     "label": "Geography: Land Masses & Realms"
   },
-  "# Eastern Continent",
   {
     "url": "/pages/retraissance/densetsu/universe/world/eastern_continent.html",
     "label": "Eastern Continent"
@@ -137,7 +127,6 @@
     "url": "/pages/retraissance/densetsu/universe/locations/yukigami.html",
     "label": "Yukigami"
   },
-  "# Western Continent",
   {
     "url": "/pages/retraissance/densetsu/universe/world/western_continent.html",
     "label": "Western Continent"
@@ -182,7 +171,6 @@
     "url": "/pages/retraissance/densetsu/universe/locations/kaerugan_iron_jungle.html",
     "label": "Kaerugan: The Iron Jungle"
   },
-  "# Independent Realms",
   {
     "url": "/pages/retraissance/densetsu/universe/world/independent_realms.html",
     "label": "Independent Realms"
@@ -199,7 +187,6 @@
     "url": "/pages/retraissance/densetsu/universe/locations/chronobonsai_chamber.html",
     "label": "Chronobonsai Chamber"
   },
-  "# IV. Cultures",
   {
     "url": "/pages/retraissance/reader/bible/struct_cultures.html",
     "label": "Cultures"
@@ -212,7 +199,6 @@
     "url": "/pages/retraissance/densetsu/universe/cultures/aokuni.html",
     "label": "Aokuni Culture"
   },
-  "# V. Factions & Power",
   {
     "url": "/pages/retraissance/reader/bible/topic_factions_power.html",
     "label": "Factions & Power"
@@ -297,7 +283,6 @@
     "url": "/pages/retraissance/densetsu/universe/factions/twilight_covenant.html",
     "label": "Twilight Covenant"
   },
-  "# VI. Events & Timeline",
   {
     "url": "/pages/retraissance/reader/bible/struct_events.html",
     "label": "Events & Timeline"
@@ -314,7 +299,6 @@
     "url": "/pages/retraissance/densetsu/universe/events/hirogawa_town_fire.html",
     "label": "Hirogawa Town Fire (event)"
   },
-  "# VII. People & Legends",
   {
     "url": "/pages/retraissance/reader/bible/topic_people_legends.html",
     "label": "People & Legends"
@@ -475,7 +459,6 @@
     "url": "/pages/retraissance/densetsu/universe/characters/nagamizu.html",
     "label": "Nagamizu"
   },
-  "# VIII. Creatures & Abominations",
   {
     "url": "/pages/retraissance/reader/bible/topic_creatures_abominations.html",
     "label": "Creatures & Abominations"
@@ -640,7 +623,6 @@
     "url": "/pages/retraissance/densetsu/universe/creatures/wyrm_pup.html",
     "label": "Wyrm Pup"
   },
-  "# IX. Artifacts & Relics",
   {
     "url": "/pages/retraissance/reader/bible/topic_artifacts_relics.html",
     "label": "Artifacts & Relics"
@@ -663,7 +645,7 @@
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/kaze_anthem.html",
-    "label": "Kaze’s Anthem"
+    "label": "Kaze\u00e2\u20ac\u2122s Anthem"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/kiputer_predictive_engine.html",
@@ -675,21 +657,20 @@
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/pombeiro_seal.html",
-    "label": "Pombeiro’s Seal"
+    "label": "Pombeiro\u00e2\u20ac\u2122s Seal"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/relic_sword_alfons.html",
-    "label": "Alfons’s Relic Sword"
+    "label": "Alfons\u00e2\u20ac\u2122s Relic Sword"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/time_fan.html",
-    "label": "Time Fan (Toki no Ōgi)"
+    "label": "Time Fan (Toki no \u00c5\u0152gi)"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/artifacts/torredasso.html",
     "label": "Torredasso"
   },
-  "# X. Concepts & Systems",
   {
     "url": "/pages/retraissance/reader/bible/struct_concepts.html",
     "label": "Concepts & Principles"
@@ -710,7 +691,6 @@
     "url": "/pages/retraissance/densetsu/universe/concepts/orb_statue_checkpoint.html",
     "label": "Orb Statue (Checkpoint)"
   },
-  "# XI. Enemies & Antagonists",
   {
     "url": "/pages/retraissance/reader/bible/topic_antagonists.html",
     "label": "Antagonists"
@@ -803,7 +783,6 @@
     "url": "/pages/retraissance/densetsu/universe/enemies/yama_binder.html",
     "label": "Yama-Binder"
   },
-  "# XII. Engine Appendix",
   {
     "url": "/pages/retraissance/reader/bible/topic_engine_appendix.html",
     "label": "Appendix: Engine & Technical"
