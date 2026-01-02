@@ -90,10 +90,12 @@
   // Simple cache signature checker: compares server last-modified/etag and reloads if changed.
   const checkCacheSignature = async () => {
     if (IS_FILE) return;
+    const here = (location.href || '').split('#')[0];
     const assets = [
       `${BASE_PREFIX}/pages/retraissance/assets/site.js`,
       `${BASE_PREFIX}/pages/retraissance/assets/site.css`,
-      `${BASE_PREFIX}/pages/retraissance/reader/index.html`
+      `${BASE_PREFIX}/pages/retraissance/reader/index.html`,
+      here
     ];
     const sigParts = [];
     for (const url of assets) {
