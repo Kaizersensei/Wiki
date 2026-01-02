@@ -240,6 +240,11 @@ const buildBreadcrumb = () => {
     // Skip breadcrumb on the top-level Retraissance index
     if ((segments.length === 1 && /index\.html?$/i.test(segments[0])) || (segments.length <= 2 && segments[0] === 'retraissance' && /index\.html?$/i.test(segments[1] || ''))) return;
     const makeLabel = (s) => s.replace(/\.html?$/i, '').replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const withBase = (href) => {
+      if (/^https?:\/\//i.test(href)) return href;
+      if (href.startsWith(BASE_PREFIX)) return href;
+      return `${BASE_PREFIX}${href.startsWith('/') ? '' : '/'}${href}`.replace(/\\/g, '/').replace(/\/{2,}/g, '/');
+    };
     const crumbs = [];
     let accum = '/pages';
     segments.forEach((seg) => {
@@ -247,7 +252,7 @@ const buildBreadcrumb = () => {
       const label = isFile && h1 ? (h1.textContent.trim() || makeLabel(seg)) : makeLabel(seg);
       accum += `/${seg}`;
       const href = isFile ? accum : `${accum}/index.html`;
-      crumbs.push({ label, href });
+      crumbs.push({ label, href: withBase(href) });
     });
     const nav = document.createElement('nav');
     nav.className = 'breadcrumb';

@@ -1,0 +1,969 @@
+<html lang="en" class=" vhnxmibh idc0_350 goimwju"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reader Mode</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <style>
+  .reader-frame { padding: 12px; background: #f7f1e6; border-radius: 8px; border: 1px solid #d8c9a8; }
+  .reader-layout { display: grid; grid-template-columns: 240px 1fr 220px; gap: 12px; align-items: start; }
+  .reader-sidebar { background: #f9f4ea; border: 1px solid #d8c9a8; border-radius: 8px; padding: 0 8px 8px 8px; max-height: 75vh; overflow-y: auto; position: relative; }
+  .reader-controls { position: sticky; top: 0; background: #f9f4ea; padding: 8px 0 6px 0; z-index: 2; }
+  .reader-list { padding-top: 4px; }
+  .reader-links { background: #f9f4ea; border: 1px solid #d8c9a8; border-radius: 8px; padding: 8px; max-height: 75vh; overflow-y: auto; }
+  .reader-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; font-size: 15px; }
+  .reader-list li { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 6px; border: 1px solid transparent; transition: background-color 0.2s ease, border-color 0.2s ease; }
+  .reader-list li.active { background: #e5d7b8; border-color: #b89c6a; font-weight: 800; }
+  .reader-list a { color: #3a2a1a; text-decoration: none; flex: 1; font-size: 15px; }
+  .reader-list a:hover { text-decoration: underline; }
+  .reader-separator { font-weight: 700; color: #6b5b4a; background: #f0e6d4; border: 1px solid #d8c9a8; border-radius: 6px; padding: 4px; }
+  .reader-order { display: none; gap: 4px; }
+  .reader-order button { padding: 2px 6px; font-size: 12px; }
+  .reader-editing .reader-order { display: flex; }
+  .reader-controls { display: flex; flex-direction: column; gap: 6px; align-items: stretch; margin-bottom: 8px; }
+  .reader-controls button { font-size: 12px; padding: 4px 8px; }
+  .reader-controls .reader-controls-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .reader-search { width: 100%; box-sizing: border-box; padding: 4px 6px; font-size: 13px; border: 1px solid #d8c9a8; border-radius: 6px; }
+  .reader-links h4 { margin: 0 0 6px 0; font-size: 24px; }
+  .reader-links ul { list-style: none; padding: 0; margin: 0 0 8px 0; }
+  .reader-links li { margin: 2px 0; }
+  .reader-links a { color: #3a2a1a; text-decoration: none; }
+  .reader-links a:hover { text-decoration: underline; }
+  @media (max-width: 960px) { .reader-layout { grid-template-columns: 1fr; } .reader-sidebar { order: 2; } }
+    .reader-error { color: #8a1f1f; font-weight: 600; margin-top: 8px; }
+  .reader-content { background: #fffdf8; padding: 12px; border-radius: 6px; border: 1px solid #e5d7b8; min-height: 40vh; transition: transform 0.35s ease, box-shadow 0.35s ease; overflow-x: auto; overflow-y: auto; box-sizing: border-box; max-height: 78vh; }
+  .reader-content img, .reader-content video, .reader-content figure, .reader-content .inline-media-block { max-width: 100%; height: auto; }
+  .reader-content pre { white-space: pre-wrap; word-break: break-word; }
+    .flip-left { transform: rotateY(-4deg); box-shadow: -8px 0 18px rgba(0,0,0,0.15); }
+    .flip-right { transform: rotateY(4deg); box-shadow: 8px 0 18px rgba(0,0,0,0.15); }
+      .reader-nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+      .turnaround-strip { margin: 12px 0; padding: 8px; border: 1px solid #d8c9a8; border-radius: 6px; background: #f9f4ea; }
+      .turnaround-header { font-weight: 700; margin-bottom: 6px; }
+      .turnaround-rail { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; }
+      .turnaround-rail img { max-height: 240px; border-radius: 4px; border: 1px solid #d8c9a8; cursor: pointer; }
+  /* Hide inline edit controls unless edit mode is on */
+  .reader-content .inline-move-group,
+  .reader-content .inline-remove,
+  .reader-content .inline-remove-media,
+  .reader-content .inline-edit-media,
+  .reader-content .inline-size,
+  .reader-content .inline-align-group,
+  .reader-content .inline-align {
+    display: none !important;
+  }
+  .edit-active .reader-content .inline-move-group { display: inline-flex !important; gap: 4px; }
+  .edit-active .reader-content .inline-remove,
+  .edit-active .reader-content .inline-remove-media,
+  .edit-active .reader-content .inline-edit-media,
+  .edit-active .reader-content .inline-size,
+  .edit-active .reader-content .inline-align {
+    display: inline-block !important;
+  }
+  .edit-active .reader-content .inline-align-group { display: inline-flex !important; gap: 4px; }
+  </style>
+<style type="text/css" id="operaUserStyle">
+  video {
+    filter: -opera-shader(url(data:text/plain;base64,Ly8gaHR0cHM6Ly9naXRodWIuY29tL0dQVU9wZW4tRWZmZWN0cy9GaWRlbGl0eUZYLUNBUwovLyB2MwoKdW5pZm9ybSBzaGFkZXIgaUNodW5rOwp1bmlmb3JtIGZsb2F0MiBpQ2h1bmtTaXplOwp1bmlmb3JtIGZsb2F0MiBpTW91c2U7CnVuaWZvcm0gZmxvYXQgaUFyZ3NbMV07Cgpjb25zdCBmbG9hdCBFUFNJT04gPSAwLjE7CmNvbnN0IGZsb2F0IFZfTUlOID0gMDsKY29uc3QgZmxvYXQgVl9MT1cgPSAwLjI1Owpjb25zdCBmbG9hdCBWX01FRCA9IDAuNTsKY29uc3QgZmxvYXQgVl9ISUdIID0gMC43NTsKY29uc3QgZmxvYXQgVl9NQVggPSAxOwoKY29uc3QgZmxvYXQgVEhSRVNIT0xEX0FSRUEgPSA4MDAgKiA2MDA7CmNvbnN0IGZsb2F0IE1JTl9BUkVBID0gNDAwICogMTAwOwpjb25zdCBmbG9hdCBNSU5fU1RSSVAgPSAyMDsKY29uc3QgZmxvYXQgTUFSR0lOID0gMTsKCmZsb2F0MyBwaXhlbChpbnQgeCwgaW50IHksIGZsb2F0MiB4eSkgewogICAgcmV0dXJuIGlDaHVuay5ldmFsKHh5ICsgZmxvYXQyKHgsIHkpKS5yZ2I7Cn0KCmZsb2F0MyBzaGFycGVuKGZsb2F0MiB4eSkgewogICAgZmxvYXQzIGYgPQogICAgICAgIHBpeGVsKC0xLCAtMSwgeHkpICogIDEgKwogICAgICAgIHBpeGVsKCAwLCAtMSwgeHkpICogLTEgKwogICAgICAgIHBpeGVsKCAxLCAtMSwgeHkpICogIDEgKwoKICAgICAgICBwaXhlbCgtMSwgMCwgeHkpICogLTEgICsKICAgICAgICBwaXhlbCggMCwgMCwgeHkpICogLTEgICsKICAgICAgICBwaXhlbCggMSwgMCwgeHkpICogLTEgICsKCiAgICAgICAgcGl4ZWwoLTEsIDEsIHh5KSAqIDEgICArCiAgICAgICAgcGl4ZWwoIDAsIDEsIHh5KSAqIC0xICArCiAgICAgICAgcGl4ZWwoIDEsIDEsIHh5KSAqIDE7CiAgICByZXR1cm4gZiAvIC0xOwp9CgpmbG9hdDQgUkdYMihmbG9hdDIgeHkpIHsKICAgIGZsb2F0NCBjb2xvciA9IGlDaHVuay5ldmFsKHh5KTsKCiAgICBpZiAoaUNodW5rU2l6ZS54ICogaUNodW5rU2l6ZS55IDwgTUlOX0FSRUEpIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgaWYgKGlDaHVua1NpemUueSA8IE1JTl9TVFJJUCB8fCBpQ2h1bmtTaXplLnggPCBNSU5fU1RSSVApIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgaWYgKHh5LnggPCBNQVJHSU4gfHwgeHkueCA+IChpQ2h1bmtTaXplLnggLSBNQVJHSU4pIHx8CiAgICAgICAgeHkueSA8IE1BUkdJTiB8fCB4eS55ID4gKGlDaHVua1NpemUueSAtIE1BUkdJTikpIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgcmV0dXJuIGZsb2F0NChzaGFycGVuKHh5KSwgMSk7Cn0KCmZsb2F0IG1pbjMoZmxvYXQgeCwgZmxvYXQgeSwgZmxvYXQgeikgewogICAgcmV0dXJuIG1pbih4LCBtaW4oeSwgeikpOwp9CgpmbG9hdCBtYXgzKGZsb2F0IHgsIGZsb2F0IHksIGZsb2F0IHopIHsKICAgIHJldHVybiBtYXgoeCwgbWF4KHksIHopKTsKfQoKZmxvYXQgcmNwKGZsb2F0IHYpIHsKICAgIHJldHVybiAxIC8gdjsKfQoKZmxvYXQzIFJHWDMoZmxvYXQyIHh5LCBmbG9hdCBzdHJlbmd0aCkgewogICAgZmxvYXQzIGEgPSBwaXhlbCgtMSwgLTEsIHh5KTsKICAgIGZsb2F0MyBiID0gcGl4ZWwoIDAsIC0xLCB4eSk7CiAgICBmbG9hdDMgYyA9IHBpeGVsKCAxLCAtMSwgeHkpOwoKICAgIGZsb2F0MyBkID0gcGl4ZWwoLTEsIDAsIHh5KTsKICAgIGZsb2F0MyBlID0gcGl4ZWwoIDAsIDAsIHh5KTsKICAgIGZsb2F0MyBmID0gcGl4ZWwoIDEsIDAsIHh5KTsKCiAgICBmbG9hdDMgZyA9IHBpeGVsKC0xLCAxLCB4eSk7CiAgICBmbG9hdDMgaCA9IHBpeGVsKCAwLCAxLCB4eSk7CiAgICBmbG9hdDMgaSA9IHBpeGVsKCAxLCAxLCB4eSk7CgogICAgZmxvYXQgbW5SID0gbWluMyhtaW4zKGQuciwgZS5yLCBmLnIpLCBiLnIsIGgucik7CiAgICBmbG9hdCBtbkcgPSBtaW4zKG1pbjMoZC5nLCBlLmcsIGYuZyksIGIuZywgaC5nKTsKICAgIGZsb2F0IG1uQiA9IG1pbjMobWluMyhkLmIsIGUuYiwgZi5iKSwgYi5iLCBoLmIpOwoKICAgIGZsb2F0IG1uUjIgPSBtaW4zKG1pbjMobW5SLCBhLnIsIGMuciksIGcuciwgaS5yKTsKICAgIGZsb2F0IG1uRzIgPSBtaW4zKG1pbjMobW5HLCBhLmcsIGMuZyksIGcuZywgaS5nKTsKICAgIGZsb2F0IG1uQjIgPSBtaW4zKG1pbjMobW5CLCBhLmIsIGMuYiksIGcuYiwgaS5iKTsKCiAgICBtblIgPSBtblIgKyBtblIyOwogICAgbW5HID0gbW5HICsgbW5HMjsKICAgIG1uQiA9IG1uQiArIG1uQjI7CgogICAgZmxvYXQgbXhSID0gbWF4MyhtYXgzKGQuciwgZS5yLCBmLnIpLCBiLnIsIGgucik7CiAgICBmbG9hdCBteEcgPSBtYXgzKG1heDMoZC5nLCBlLmcsIGYuZyksIGIuZywgaC5nKTsKICAgIGZsb2F0IG14QiA9IG1heDMobWF4MyhkLmIsIGUuYiwgZi5iKSwgYi5iLCBoLmIpOwoKICAgIGZsb2F0IG14UjIgPSBtYXgzKG1heDMobXhSLCBhLnIsIGMuciksIGcuciwgaS5yKTsKICAgIGZsb2F0IG14RzIgPSBtYXgzKG1heDMobXhHLCBhLmcsIGMuZyksIGcuZywgaS5nKTsKICAgIGZsb2F0IG14QjIgPSBtYXgzKG1heDMobXhCLCBhLmIsIGMuYiksIGcuYiwgaS5iKTsKCiAgICBteFIgPSBteFIgKyBteFIyOwogICAgbXhHID0gbXhHICsgbXhHMjsKICAgIG14QiA9IG14QiArIG14QjI7CgogICAgZmxvYXQgcmNwTVIgPSByY3AobXhSKTsKICAgIGZsb2F0IHJjcE1HID0gcmNwKG14Ryk7CiAgICBmbG9hdCByY3BNQiA9IHJjcChteEIpOwoKICAgIGZsb2F0IGFtcFIgPSBzYXR1cmF0ZShtaW4obW5SLCAyIC0gbXhSKSAqIHJjcE1SKTsKICAgIGZsb2F0IGFtcEcgPSBzYXR1cmF0ZShtaW4obW5HLCAyIC0gbXhHKSAqIHJjcE1HKTsKICAgIGZsb2F0IGFtcEIgPSBzYXR1cmF0ZShtaW4obW5CLCAyIC0gbXhCKSAqIHJjcE1CKTsKCiAgICBhbXBSID0gc3FydChhbXBSKTsKICAgIGFtcEcgPSBzcXJ0KGFtcEcpOwogICAgYW1wQiA9IHNxcnQoYW1wQik7CgogICAgZmxvYXQgcGVhayA9IC1yY3AobWl4KDgsIDUsIHN0cmVuZ3RoKSk7CgogICAgZmxvYXQgd1IgPSBhbXBSICogcGVhazsKICAgIGZsb2F0IHdHID0gYW1wRyAqIHBlYWs7CiAgICBmbG9hdCB3QiA9IGFtcEIgKiBwZWFrOwoKICAgIGZsb2F0IHJjcFdlaWdodFIgPSByY3AoMSArIDQgKiB3Uik7CiAgICBmbG9hdCByY3BXZWlnaHRHID0gcmNwKDEgKyA0ICogd0cpOwogICAgZmxvYXQgcmNwV2VpZ2h0QiA9IHJjcCgxICsgNCAqIHdCKTsKCiAgICByZXR1cm4gZmxvYXQzKAogICAgICAgIHNhdHVyYXRlKChiLnIgKiB3UiArIGQuciAqIHdSICsgZi5yICogd1IgKyBoLnIgKiB3UiArIGUucikgKiByY3BXZWlnaHRSKSwKICAgICAgICBzYXR1cmF0ZSgoYi5nICogd0cgKyBkLmcgKiB3RyArIGYuZyAqIHdHICsgaC5nICogd0cgKyBlLmcpICogcmNwV2VpZ2h0RyksCiAgICAgICAgc2F0dXJhdGUoKGIuYiAqIHdCICsgZC5iICogd0IgKyBmLmIgKiB3QiArIGguYiAqIHdCICsgZS5iKSAqIHJjcFdlaWdodEIpKTsKfQoKCmZsb2F0NCBtYWluKGZsb2F0MiB4eSkgewoKICAgIGZsb2F0NCBvcmlnaW5hbENvbG9yID0gaUNodW5rLmV2YWwoeHkpOwogICAgaWYgKG9yaWdpbmFsQ29sb3IuYSA8IDEpIHsKICAgICAgICByZXR1cm4gaUNodW5rLmV2YWwoeHkpOwogICAgfQoKICAgIGZsb2F0IGludGVuc2l0eSA9IGlBcmdzWzBdOwogICAgZmxvYXQgc3RyZW5ndGggPSAwOwogICAgZmxvYXQzIGNvbG9yOwoKICAgIGlmIChpbnRlbnNpdHkgPCBWX01JTiArIEVQU0lPTikgewogICAgICAgIHN0cmVuZ3RoID0gMC4xMDsKICAgICAgICBjb2xvciA9IFJHWDMoeHksIHN0cmVuZ3RoKTsKCiAgICB9IGVsc2UgaWYgKGludGVuc2l0eSA+IFZfTE9XIC0gRVBTSU9OICYmIGludGVuc2l0eSA8IFZfTE9XICsgRVBTSU9OKSB7CiAgICAgICAgc3RyZW5ndGggPSAwLjMzOwogICAgICAgIGNvbG9yID0gUkdYMyh4eSwgc3RyZW5ndGgpOwoKICAgIH0gZWxzZSBpZiAoaW50ZW5zaXR5ID4gVl9NRUQgLSBFUFNJT04gJiYgaW50ZW5zaXR5IDwgVl9NRUQgKyBFUFNJT04pIHsKICAgICAgICBzdHJlbmd0aCA9IDAuNTsKICAgICAgICBjb2xvciA9IFJHWDMoeHksIHN0cmVuZ3RoKTsKCiAgICB9IGVsc2UgaWYgKGludGVuc2l0eSA+IFZfSElHSCAtIEVQU0lPTiAmJiBpbnRlbnNpdHkgPCBWX0hJR0ggKyBFUFNJT04pIHsKICAgICAgICBzdHJlbmd0aCA9IDAuOTk7CiAgICAgICAgY29sb3IgPSBSR1gzKHh5LCBzdHJlbmd0aCk7CgogICAgfSBlbHNlIGlmIChpbnRlbnNpdHkgPiBWX01BWCAtIEVQU0lPTikgewogICAgICAgIHN0cmVuZ3RoID0gMTsKICAgICAgICBjb2xvciA9IFJHWDIoeHkpLnJnYjsKICAgIH0KCiAgICByZXR1cm4gZmxvYXQ0KGNvbG9yLCBvcmlnaW5hbENvbG9yLmEpOwp9) -opera-args(0.75 calc(env(-opera-accent-color-r, 255)/255) calc(env(-opera-accent-color-g, 255)/255) calc(env(-opera-accent-color-b, 255)/255)));
+  }
+</style><style type="text/css"></style><style type="text/css"></style></head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand" style="display:flex; align-items:center; gap:10px;">
+      <a href="../index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="/pages/retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance">
+      </a>
+      <a href="https://discord.gg/UqSGTNEp34" aria-label="Discord" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; padding-left:4px;"><img src="/pages/retraissance/assets/media/UI/discord.png" alt="Discord" style="height:22px;width:22px;object-fit:contain;"></a>
+    </div>
+    <nav class="nav-links"></nav>
+  </header>
+
+  <main class="content">
+    <section class="panel reader-frame">
+      <nav class="breadcrumb"><a href="#" data-bc="home">Retraissance</a> / <a href="#" data-bc="reader">Reader</a> / <a href="#" data-bc="bible">Densetsu Bible</a></nav>
+      <h1>Densetsu Bible</h1>
+      <div class="reader-layout">
+        <aside class="reader-sidebar">
+          <div class="reader-controls">
+            <span>Pages</span>
+            <input id="reader-search" class="reader-search" type="text" placeholder="Search pages...">
+          </div>
+          <ul id="reader-list" class="reader-list"><li class="reader-separator" style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);">Front Matter</li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/reader/bible/cover.html" style="padding-left: 12px;">DENSETSU</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/reader/bible/readers_note.html" style="padding-left: 12px;">Reader's Note</a></li><li class="active" style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/reader/bible/core_tenets.html" style="padding-left: 12px;">Core Tenets</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/reader/bible/terminology_primer.html" style="padding-left: 12px;">Terminology &amp; Symbols Primer</a></li><li class="reader-separator" style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);">I. Time, Memory, Cosmology</li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/reader/bible/topic_cosmology.html" style="padding-left: 12px;">Cosmology: Time</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/cosmology_and_epochs.html" style="padding-left: 12px;">Cosmology &amp; Epochs</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/overview/great_eclipse.html" style="padding-left: 12px;">The Great Eclipse</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/reader/bible/timeline_orientation.html" style="padding-left: 12px;">Timeline: Orientation</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/overview/calendar_be_ae.html" style="padding-left: 12px;">Calendar: BE and AE</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/world_memory.html" style="padding-left: 12px;">World Memory &amp; Timeline Log</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/kiputer_predictive_engine.html" style="padding-left: 12px;">Kiputer Predictive Engine</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/time_anomalies_and_loops.html" style="padding-left: 12px;">Time Anomalies</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/time_rifts.html" style="padding-left: 12px;">Time Rifts</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/anomalies.html" style="padding-left: 12px;">Anomalies</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/time_loops.html" style="padding-left: 12px;">Time Loops</a></li><li class="reader-separator" style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);">II. Principles of Power</li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/magic_principles.html" style="padding-left: 12px;">Magic Principles</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/tech_principles.html" style="padding-left: 12px;">Tech Principles</a></li><li style="background: rgba(170, 120, 90, 0.18); border-left: 3px solid rgba(170, 120, 90, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/elements_and_concords.html" style="padding-left: 12px;">Elements and Ki</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">III. World &amp; Geography</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_world_geography.html" style="padding-left: 4px;">World &amp; Geography</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_world.html" style="padding-left: 12px;">World: Structure</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/world_overview.html" style="padding-left: 12px;">World Overview</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">Geography: Land Masses &amp; Realms</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/world_and_geography.html" style="padding-left: 4px;">Geography: Land Masses &amp; Realms</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">Eastern Continent</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/eastern_continent.html" style="padding-left: 4px;">Eastern Continent</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/hirogawa.html" style="padding-left: 12px;">Hirogawa</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/shrine_of_still_flames.html" style="padding-left: 20px;">Shrine of Still Flames</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/nagamizu_dojo.html" style="padding-left: 20px;">Nagamizu Dojo</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/ishigane_manor.html" style="padding-left: 20px;">Ishigane Manor</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/waterfall_training_grounds.html" style="padding-left: 20px;">Waterfall Training Grounds</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/temple_of_stillness.html" style="padding-left: 20px;">Temple of Stillness</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/tree_resonance_grove.html" style="padding-left: 20px;">Tree Resonance Grove</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/crimson_dynasty.html" style="padding-left: 12px;">Crimson Dynasty</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/seigetsu_empire.html" style="padding-left: 12px;">Seigetsu Empire</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/yukigami.html" style="padding-left: 12px;">Yukigami</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">Western Continent</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/western_continent.html" style="padding-left: 4px;">Western Continent</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/galport.html" style="padding-left: 12px;">Galport</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/eddara.html" style="padding-left: 12px;">Eddara</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/eresh_emirate.html" style="padding-left: 12px;">Eresh Emirate</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/mirror_spire.html" style="padding-left: 20px;">Mirror Spire</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/glitch_in_the_dust.html" style="padding-left: 20px;">Glitch in the Dust</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/varthum.html" style="padding-left: 12px;">Varthum</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/mistral_stranded_cove.html" style="padding-left: 20px;">Mistral Stranded Cove</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/minus_depths.html" style="padding-left: 20px;">Minus Depths</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/verdathal.html" style="padding-left: 12px;">Verdathal</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/kaerugan_iron_jungle.html" style="padding-left: 20px;">Kaerugan: The Iron Jungle</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">Independent Realms</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/independent_realms.html" style="padding-left: 4px;">Independent Realms</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/kojimigakure.html" style="padding-left: 12px;">Kojimigakure</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/mycomind_covenant.html" style="padding-left: 12px;">Mycomind Covenant</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/locations/chronobonsai_chamber.html" style="padding-left: 20px;">Chronobonsai Chamber</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">IV. Cultures</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_cultures.html" style="padding-left: 12px;">Cultures</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/cultural_tenets.html" style="padding-left: 12px;">Cultural Tenets</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/cultures/aokuni.html" style="padding-left: 12px;">Aokuni Culture</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">V. Factions &amp; Power</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_factions_power.html" style="padding-left: 12px;">Factions &amp; Power</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_factions.html" style="padding-left: 12px;">Factions Overview</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/world/relationships_matrix.html" style="padding-left: 12px;">Faction Relationships</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/hirogawa_feud.html" style="padding-left: 12px;">Hirogawa Feud</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/seigetsu_empire.html" style="padding-left: 12px;">Seigetsu Empire</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/crimson_dynasty.html" style="padding-left: 12px;">Crimson Dynasty</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/galport_trade_federation.html" style="padding-left: 12px;">Galport Trade Federation</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/council_of_harbormasters.html" style="padding-left: 12px;">Council of Harbormasters</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/marella_caravans.html" style="padding-left: 12px;">Marella Caravans (Blackwater Tidebrokers)</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/verdathal_commonwealth.html" style="padding-left: 12px;">Verdathal Commonwealth</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/verdant_circle.html" style="padding-left: 12px;">Verdant Circle</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/water_courts.html" style="padding-left: 12px;">Water Courts</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/fire_dominion.html" style="padding-left: 12px;">Fire Dominion</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/eddara_council.html" style="padding-left: 12px;">Eddara Council of Elders</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/kaerugan_rust_courts.html" style="padding-left: 12px;">Kaerugan Rust Courts</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/eresh_emirate.html" style="padding-left: 12px;">Eresh Emirate</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/wakers.html" style="padding-left: 12px;">Wakers (Eresh)</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/technogarch_civilization.html" style="padding-left: 12px;">Technogarch Civilization</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/mycomind_covenant.html" style="padding-left: 12px;">Mycomind Covenant</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/ninth_wave.html" style="padding-left: 12px;">Ninth Wave</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/factions/twilight_covenant.html" style="padding-left: 12px;">Twilight Covenant</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">VI. Events &amp; Timeline</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_events.html" style="padding-left: 12px;">Events &amp; Timeline</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/events/timeline_index.html" style="padding-left: 12px;">Timeline Index</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/events/timeline_arcs.html" style="padding-left: 12px;">Historical Arcs</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/events/hirogawa_town_fire.html" style="padding-left: 12px;">Hirogawa Town Fire (event)</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">VII. People &amp; Legends</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_people_legends.html" style="padding-left: 12px;">People &amp; Legends</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_characters.html" style="padding-left: 12px;">People &amp; Legends</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/michio.html" style="padding-left: 12px;">Michio</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/hanzo.html" style="padding-left: 12px;">Hanzo</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/hitomi.html" style="padding-left: 12px;">Hitomi</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/bonsai_sage.html" style="padding-left: 12px;">Bonsai Sage</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/master_nagamizu.html" style="padding-left: 12px;">Master Nagamizu</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/aoi.html" style="padding-left: 12px;">Aoi</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/betto.html" style="padding-left: 12px;">Betto</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/chii.html" style="padding-left: 12px;">Chii</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/kodomaru.html" style="padding-left: 12px;">Kodomaru</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/midori.html" style="padding-left: 12px;">Midori</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/namika.html" style="padding-left: 12px;">Namika</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/tetsumaru.html" style="padding-left: 12px;">Tetsumaru</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/kaze.html" style="padding-left: 12px;">Kaze</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/ishigane.html" style="padding-left: 12px;">Ishigane</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/hideo_kohiba.html" style="padding-left: 12px;">Hideo Kohiba</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/okashira.html" style="padding-left: 12px;">Okashira</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/pombeiro_de_galporta.html" style="padding-left: 12px;">Pombeiro De Galporta</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/ferdinand_passaro.html" style="padding-left: 12px;">Ferdinand Passaro</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/king_frog_of_verdathal.html" style="padding-left: 12px;">King Frog Of Verdathal</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/pta_khaem.html" style="padding-left: 12px;">Pta-Khaem (Dream King of Eresh)</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/saul_azar.html" style="padding-left: 12px;">Saul Azar</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/king_elmanu_ii.html" style="padding-left: 12px;">King Elmanu II</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/manolo_marella.html" style="padding-left: 12px;">Manolo Marella</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/dog_elder_of_eddara.html" style="padding-left: 12px;">Dog Elder Of Eddara</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/shion.html" style="padding-left: 12px;">Shion</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/pip.html" style="padding-left: 12px;">Pip</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/kyo.html" style="padding-left: 12px;">Kyo</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/kuro.html" style="padding-left: 12px;">Kuro</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/amelia.html" style="padding-left: 12px;">Amelia</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/aya.html" style="padding-left: 12px;">Aya</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/bob.html" style="padding-left: 12px;">Bob</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/aka.html" style="padding-left: 12px;">Aka</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/solid_the_snake.html" style="padding-left: 12px;">Solid the Snake</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/tera.html" style="padding-left: 12px;">Tera</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/fenrir.html" style="padding-left: 12px;">Fenrir</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/petrus_avales_barcal.html" style="padding-left: 12px;">Petrus Avales Barcal</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/don_bastion.html" style="padding-left: 12px;">Don Bastion</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/characters/nagamizu.html" style="padding-left: 12px;">Nagamizu</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">VIII. Creatures &amp; Abominations</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_creatures_abominations.html" style="padding-left: 12px;">Creatures &amp; Abominations</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_creatures.html" style="padding-left: 12px;">Creatures &amp; Abominations</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/aquatic_fauna.html" style="padding-left: 12px;">Aquatic Fauna</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/forest_fauna.html" style="padding-left: 12px;">Forest Fauna</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/desert_fauna.html" style="padding-left: 12px;">Desert Fauna</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/mycomind_fauna.html" style="padding-left: 12px;">Mycomind Fauna</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/mount_class_creatures.html" style="padding-left: 12px;">Mount-Class Creatures</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/corrupted_creatures.html" style="padding-left: 12px;">Corrupted Creatures</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/aurex_the_last_basilisk.html" style="padding-left: 12px;">Aurex The Last Basilisk</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/cave_rat.html" style="padding-left: 12px;">Cave Rat</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/celadon_cranes.html" style="padding-left: 12px;">Celadon Cranes</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/chime_priestess.html" style="padding-left: 12px;">Chime Priestess</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/chitter_vineserpent.html" style="padding-left: 12px;">Chitter Vineserpent</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/cinder_wretches.html" style="padding-left: 12px;">Cinder Wretches</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/echo_of_the_first_betrayer.html" style="padding-left: 12px;">Echo of the First Betrayer</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/eclipse_bound.html" style="padding-left: 12px;">Eclipse Bound</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/gravemind_root.html" style="padding-left: 12px;">Gravemind Root</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/grizzleback.html" style="padding-left: 12px;">Grizzleback</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/hagane_snail.html" style="padding-left: 12px;">Hagane Snail</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/the_hollow_fang.html" style="padding-left: 12px;">The Hollow Fang</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/king_of_nothing.html" style="padding-left: 12px;">King of Nothing</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/komo_earth_dreamer.html" style="padding-left: 12px;">Komo the Earth Dreamer</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/lantern_moths.html" style="padding-left: 12px;">Lantern Moths</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/the_mawing_echo.html" style="padding-left: 12px;">The Mawing Echo</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/mire_crawler.html" style="padding-left: 12px;">Mire Crawler</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/mirrorspawn.html" style="padding-left: 12px;">Mirrorspawn</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/mist_hounds.html" style="padding-left: 12px;">Mist Hounds</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/mossbound_goats.html" style="padding-left: 12px;">Mossbound Goats</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/nayuga_the_thousand_faced.html" style="padding-left: 12px;">Nayuga The Thousand Faced</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/the_pale_matron.html" style="padding-left: 12px;">The Pale Matron</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/the_river_crown.html" style="padding-left: 12px;">The River Crown</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/rotling_mass.html" style="padding-left: 12px;">Rotling Mass</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/sand_whiptail.html" style="padding-left: 12px;">Sand Whiptail</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/shard_beetle.html" style="padding-left: 12px;">Shard Beetle</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/shrouded_acolyte.html" style="padding-left: 12px;">Shrouded Acolyte</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/shyr_aani_the_skybreaker.html" style="padding-left: 12px;">Shyr Aani The Skybreaker</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/soulbound_herald.html" style="padding-left: 12px;">Soulbound Herald</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/threadworms.html" style="padding-left: 12px;">Threadworms</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/vez_tar_the_devouring_secret.html" style="padding-left: 12px;">Vez Tar The Devouring Secret</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/wood_crawler.html" style="padding-left: 12px;">Wood Crawler</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/creatures/wyrm_pup.html" style="padding-left: 12px;">Wyrm Pup</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">IX. Artifacts &amp; Relics</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_artifacts_relics.html" style="padding-left: 12px;">Artifacts &amp; Relics</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_artifacts.html" style="padding-left: 12px;">Artifacts &amp; Relics</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/artifacts_registry.html" style="padding-left: 12px;">Artifacts Registry</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/echo_song.html" style="padding-left: 12px;">Echo-Song</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/infinitree_bark_shard.html" style="padding-left: 12px;">Infinitree Bark Shard</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/kaze_anthem.html" style="padding-left: 12px;">Kaze’s Anthem</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/kiputer_predictive_engine.html" style="padding-left: 12px;">Kiputer Predictive Engine</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/marella_sea_horn.html" style="padding-left: 12px;">Marella Sea Horn</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/pombeiro_seal.html" style="padding-left: 12px;">Pombeiro’s Seal</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/relic_sword_alfons.html" style="padding-left: 12px;">Alfons’s Relic Sword</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/time_fan.html" style="padding-left: 12px;">Time Fan (Toki no Ōgi)</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/artifacts/torredasso.html" style="padding-left: 12px;">Torredasso</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">X. Concepts &amp; Systems</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_concepts.html" style="padding-left: 12px;">Concepts &amp; Principles</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/chronobonsai_checkpoint.html" style="padding-left: 12px;">Chronobonsai (Checkpoint)</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/gong_arch_checkpoint.html" style="padding-left: 12px;">Gong Arch (Checkpoint)</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/infinitree.html" style="padding-left: 12px;">Infinitree</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/concepts/orb_statue_checkpoint.html" style="padding-left: 12px;">Orb Statue (Checkpoint)</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">XI. Enemies &amp; Antagonists</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_antagonists.html" style="padding-left: 12px;">Antagonists</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_enemies.html" style="padding-left: 12px;">Enemies</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/ashen_kite.html" style="padding-left: 12px;">Ashen Kite</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/bandit.html" style="padding-left: 12px;">Bandit</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_false_heaven.html" style="padding-left: 12px;">The False Heaven</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_folded_general.html" style="padding-left: 12px;">The Folded General</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_forgotten_shell.html" style="padding-left: 12px;">The Forgotten Shell</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_gilded_ghost.html" style="padding-left: 12px;">The Gilded Ghost</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/god_eater_scarab.html" style="padding-left: 12px;">God-Eater Scarab</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/grove_tyrant.html" style="padding-left: 12px;">Grove Tyrant</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/karma_engine.html" style="padding-left: 12px;">Karma Engine</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/lady_of_thorns.html" style="padding-left: 12px;">Lady of Thorns</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_lingering_oath.html" style="padding-left: 12px;">The Lingering Oath</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/michio_the_echowalker.html" style="padding-left: 12px;">Michio The Echowalker</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/ninja_grunts.html" style="padding-left: 12px;">Ninja Grunts</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/okashira.html" style="padding-left: 12px;">Okashira</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_plague_pilgrim.html" style="padding-left: 12px;">The Plague Pilgrim</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/raijin_last_apprentice.html" style="padding-left: 12px;">Raijin Last Apprentice</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/silkmother.html" style="padding-left: 12px;">Silkmother</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/stonelash_hydra.html" style="padding-left: 12px;">Stonelash Hydra</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/verdance.html" style="padding-left: 12px;">Verdance</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/the_womb_whale.html" style="padding-left: 12px;">The Womb Whale</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/universe/enemies/yama_binder.html" style="padding-left: 12px;">Yama-Binder</a></li><li class="reader-separator" style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);">XII. Engine Appendix</li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/topic_engine_appendix.html" style="padding-left: 12px;">Appendix: Engine &amp; Technical</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/reader/bible/struct_engine.html" style="padding-left: 12px;">Engine Systems &amp; Tools</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/actor-system/index.html" style="padding-left: 12px;">Actor-System</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/fsm/index.html" style="padding-left: 12px;">Fsm</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/input-movement/index.html" style="padding-left: 12px;">Input-Movement</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/stats-combat/index.html" style="padding-left: 12px;">Stats-Combat</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/runtime/index.html" style="padding-left: 12px;">Runtime</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/data-authoring/index.html" style="padding-left: 12px;">Data-Authoring</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/editor/index.html" style="padding-left: 12px;">Editor</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/integrations/index.html" style="padding-left: 12px;">Integrations</a></li><li style="background: rgba(90, 130, 170, 0.18); border-left: 3px solid rgba(90, 130, 170, 0.35);"><a href="/pages/retraissance/densetsu/engine/tools/index.html" style="padding-left: 12px;">Tools</a></li></ul>
+        </aside>
+        <div>
+          <div class="reader-nav">
+            <button id="reader-prev">Prev</button>
+            <button id="reader-next">Next</button>
+            <span id="reader-pos">Page 3 / 208</span>
+          </div>
+          <div id="reader-error" class="reader-error" role="alert"></div>
+          <div id="reader-content" class="reader-content"></div>
+        </div>
+        
+        <aside class="reader-links">
+          <h4>Mentioned here</h4>
+          <div id="reader-links-body"><h3>World</h3><ul><li><a href="/pages/retraissance/densetsu/universe/world/index.html">world</a></li></ul><h3>Concepts</h3><ul><li><a href="/pages/retraissance/densetsu/universe/concepts/anomalies.html">anomalies</a></li><li><a href="/pages/retraissance/densetsu/universe/concepts/world_memory.html">world memory</a></li></ul></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/site.js"></script>
+  <script>
+    (() => {
+      const prevBtn = document.getElementById('reader-prev');
+      const nextBtn = document.getElementById('reader-next');
+      const posLabel = document.getElementById('reader-pos');
+      const errorBox = document.getElementById('reader-error');
+      const container = document.getElementById('reader-content');
+      const listEl = document.getElementById('reader-list');
+      const renameBtn = null;
+      const linksBody = document.getElementById('reader-links-body');
+      const navBar = document.querySelector('.reader-nav');
+      const searchInput = document.getElementById('reader-search');
+      // Base prefix so paths work on GitHub Pages (served under /<repo>/...).
+      const pagePath = (location.pathname || '').replace(/\\/g, '/');
+      const PAGES_PREFIX = (() => {
+        const idx = pagePath.indexOf('/pages/');
+        return idx >= 0 ? pagePath.slice(0, idx) : '';
+      })();
+      const MEDIA_ROOT = `${PAGES_PREFIX}/pages/retraissance/assets/media/`;
+      const logo = document.querySelector('.nav-logo');
+      if (logo) logo.setAttribute('src', `${PAGES_PREFIX}/pages/retraissance/assets/res/LOGO_Retraissance.gif`);
+      const extractContentHtml = (doc) => {
+        const main = doc.querySelector('main .panel') || doc.querySelector('main') || doc.body;
+        if (!main) return '';
+        if (main.classList.contains('panel')) {
+          return `<section class="${main.className}">${main.innerHTML}</section>`;
+        }
+        return main.innerHTML || '';
+      };
+      const READONLY_HOST = /github\.io$/i.test(location.hostname);
+      // Fix breadcrumb hrefs at runtime to respect prefix.
+      document.querySelectorAll('.breadcrumb a[data-bc]').forEach(a => {
+        const key = a.dataset.bc;
+        if (key === 'home') a.href = `${PAGES_PREFIX}/pages/retraissance/index.html`;
+        else if (key === 'reader') a.href = `${PAGES_PREFIX}/pages/retraissance/reader/index.html`;
+        else if (key === 'bible') a.href = `${PAGES_PREFIX}/pages/retraissance/reader/index.html`;
+      });
+
+      // Jump-to-page control
+      const jumpWrap = document.createElement('div');
+      jumpWrap.style.display = 'flex';
+      jumpWrap.style.alignItems = 'center';
+      jumpWrap.style.gap = '4px';
+      const jumpLabel = document.createElement('span');
+      jumpLabel.textContent = 'Jump';
+      jumpLabel.style.fontSize = '10px';
+      const jumpInput = document.createElement('input');
+      jumpInput.type = 'number';
+      jumpInput.min = '1';
+      jumpInput.style.width = '60px';
+      jumpInput.style.fontSize = '10px';
+      jumpInput.placeholder = '#';
+      jumpWrap.appendChild(jumpLabel);
+      jumpWrap.appendChild(jumpInput);
+      navBar?.appendChild(jumpWrap);
+
+      const saveJsonEndpoint = ((window.SAVE_ENDPOINT || 'http://localhost:3000/__save').replace(/\/__save.*$/, '')) + '/__save-json';
+      const LAST_PAGE_KEY = 'reader:lastPage';
+      const EDITOR_FLAG = `${PAGES_PREFIX}/disable-editor.flag`;
+
+      // Clear baked content to avoid mixed-content image loads before JS fixes paths.
+      if (container) container.innerHTML = '';
+
+      let sitemapEntries = [];
+      let navEntries = [];
+      let currentNavIndex = -1;
+      let editMode = false;
+      let lexicon = [];
+      let searchQuery = '';
+      const titleCache = new Map();
+      let readerEditorDisabled = false;
+
+      const titleFromPath = (p = '') => {
+        const clean = (p.split('/').pop() || '').replace(/\.html?$/i, '');
+        return clean.replace(/[_-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      };
+
+      const slugFromUrl = (u = '') => (u.split('/').pop() || '').replace(/\.html?$/i, '').toLowerCase();
+      const stripTagPrefix = (label = '') => label.replace(/^\[[^\]]+\]\s*/, '').trim();
+
+      const computeDisplayLabel = (idx) => {
+        const entry = sitemapEntries[idx];
+        if (!entry || entry.isSep) return entry?.label || '';
+        const base = stripTagPrefix(entry.label || titleFromPath(entry.url));
+        const currentSlug = slugFromUrl(entry.url);
+        let parentLabel = '';
+        for (let j = idx - 1; j >= 0; j -= 1) {
+          const prev = sitemapEntries[j];
+          if (!prev) continue;
+          if (prev.isSep) break; // stay within the current section
+          if (!prev.url) continue;
+          const parentSlug = slugFromUrl(prev.url);
+          if (parentSlug && parentSlug !== currentSlug && currentSlug.includes(parentSlug)) {
+            parentLabel = stripTagPrefix(prev.label || titleFromPath(prev.url));
+            break;
+          }
+        }
+        if (parentLabel && !base.toLowerCase().includes(parentLabel.toLowerCase())) {
+          return `${parentLabel}: ${base}`;
+        }
+        return base;
+      };
+
+      const persistList = async () => {
+        if (location.protocol === 'file:' || !sitemapEntries.length) return;
+        const data = sitemapEntries.map(e => {
+          if (e.isSep) return `# ${e.label || ''}`;
+          if (e.label) return { url: e.url, label: e.label };
+          return e.url;
+        });
+        try {
+          await fetch(saveJsonEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: 'pages/retraissance/reader/pages-list.json', data })
+          });
+        } catch (err) {
+          console.warn('Failed to persist pages-list.json', err);
+        }
+      };
+
+      const renderList = () => {
+        if (!listEl) return;
+        listEl.innerHTML = '';
+        let sectionIdx = 0;
+        let groupIdx = 0; // maintain backward compatibility for padding logic
+        const palette = [
+          'rgba(170, 120, 90, 0.18)',  // Time/Cosmology
+          'rgba(120, 150, 95, 0.18)',  // Power/Magic
+          'rgba(90, 130, 170, 0.18)',  // World/Geography
+          'rgba(150, 120, 160, 0.18)', // Cultures/Factions
+          'rgba(170, 140, 70, 0.18)',  // Events/History
+          'rgba(110, 110, 110, 0.18)', // People/Creatures
+          'rgba(70, 120, 140, 0.18)',  // Artifacts/Concepts
+          'rgba(140, 80, 80, 0.18)',   // Enemies
+          'rgba(80, 120, 80, 0.18)'    // Engine/Other
+        ];
+        const romanToIdx = (label = '') => {
+          const m = label.match(/^#\s*([IVXL]+)\./i);
+          if (!m) return null;
+          const map = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 5, VIII: 6, IX: 6, X: 6, XI: 7, XII: 8 };
+          return map[m[1].toUpperCase()] ?? null;
+        };
+        const parentKeywords = ['geography', 'continent', 'independent realms', 'realms'];
+        const topCountries = new Set([
+          'Hirogawa', 'Yukigami', 'Seigetsu Empire', 'Crimson Dynasty',
+          'Verdathal', 'Galport', 'Eddara', 'Eresh Emirate', 'Varthum',
+          'Kojimigakure', 'Mycomind Covenant'
+        ]);
+        let currentCountry = null;
+        const q = (searchQuery || '').trim().toLowerCase();
+        sitemapEntries.forEach((entry, idx) => {
+          const li = document.createElement('li');
+          if (entry.isSep) {
+            if (q) return; // hide separators during search
+            const romanIdx = romanToIdx(entry.label || '');
+            if (romanIdx !== null) sectionIdx = romanIdx;
+            else if ((entry.label || '').toLowerCase().includes('geography')) sectionIdx = 2; // force geography group to match its children
+            const paletteIdx = Math.max(sectionIdx, 0) % palette.length;
+            const color = palette[paletteIdx];
+            li.className = 'reader-separator';
+            li.style.background = color;
+            li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
+            li.textContent = entry.label || '-';
+            listEl.appendChild(li);
+            currentCountry = null;
+            return;
+          }
+          const label = computeDisplayLabel(idx);
+          if (q && (!label || !label.toLowerCase().includes(q))) return;
+          const paletteIdx = Math.max(sectionIdx, 0) % palette.length;
+          const color = palette[paletteIdx];
+          li.style.background = color;
+          li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
+          const navIdx = navEntries.findIndex(n => n._idx === idx);
+          if (navIdx === currentNavIndex) {
+            li.classList.add('active');
+            // Bring current page into view without jank
+            setTimeout(() => {
+              try { li.scrollIntoView({ block: 'center', behavior: 'auto' }); } catch (_) {}
+            }, 0);
+          }
+          const link = document.createElement('a');
+          link.href = entry.url;
+          const isParent = parentKeywords.some(k => (label || '').toLowerCase().includes(k));
+          const isLocation = (entry.url || '').includes('/locations/');
+          const isChild = (groupIdx >= 0 && !entry.isSep && !isParent) || isLocation;
+          let padding = '4px';
+          if (isLocation) {
+            if (topCountries.has(label)) {
+              currentCountry = label;
+              padding = '12px';
+            } else {
+              padding = currentCountry ? '20px' : '12px';
+            }
+          } else if (isChild) {
+            padding = '12px';
+            currentCountry = null;
+          } else {
+            currentCountry = null;
+          }
+          link.textContent = label;
+          link.style.paddingLeft = padding;
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            goToNavIndex(navIdx, navIdx > currentNavIndex ? 'next' : 'prev');
+          });
+          li.appendChild(link);
+          if (editMode && location.protocol !== 'file:') {
+            const ctrl = document.createElement('div');
+            ctrl.className = 'reader-order';
+            const up = document.createElement('button');
+            up.textContent = '↑';
+            up.disabled = idx === 0;
+            up.addEventListener('click', (e) => { e.stopPropagation(); moveEntry(idx, -1); });
+            const down = document.createElement('button');
+            down.textContent = '↓';
+            down.disabled = idx === sitemapEntries.length - 1;
+            down.addEventListener('click', (e) => { e.stopPropagation(); moveEntry(idx, 1); });
+            ctrl.appendChild(up);
+            ctrl.appendChild(down);
+            li.appendChild(ctrl);
+          }
+          listEl.appendChild(li);
+        });
+      };
+
+      const rebuildNav = () => {
+        navEntries = sitemapEntries
+          .map((e, idx) => {
+            if (e.isSep) return null;
+            const label = computeDisplayLabel(idx);
+            return { url: e.url, label, _idx: idx };
+          })
+          .filter(Boolean);
+        if (currentNavIndex >= navEntries.length) currentNavIndex = navEntries.length - 1;
+      };
+
+      const moveEntry = (idx, delta) => {
+        const ni = idx + delta;
+        if (ni < 0 || ni >= sitemapEntries.length) return;
+        const tmp = sitemapEntries[idx];
+        sitemapEntries[idx] = sitemapEntries[ni];
+        sitemapEntries[ni] = tmp;
+        rebuildNav();
+        renderList();
+        updatePos();
+        persistList();
+      };
+
+      const insertTurnaroundStrip = (panel, items) => {
+        if (!panel || !items || !items.length) return;
+        const h1 = panel.querySelector('h1');
+        const wrap = document.createElement('div');
+        wrap.className = 'turnaround-strip';
+        const label = document.createElement('div');
+        label.className = 'turnaround-header';
+        label.textContent = 'Overview';
+        wrap.appendChild(label);
+        const rail = document.createElement('div');
+        rail.className = 'turnaround-rail';
+        items.forEach(entry => {
+          const card = document.createElement('div');
+          card.className = 'turnaround-frame';
+          card.dataset.src = entry.src;
+          card.dataset.title = entry.title || '';
+          const img = document.createElement('img');
+          img.src = entry.src;
+          img.alt = entry.title || 'Appearance frame';
+          card.appendChild(img);
+          rail.appendChild(card);
+        });
+        rail.addEventListener('click', (e) => {
+          const frame = e.target.closest('.turnaround-frame');
+          if (!frame) return;
+          const galleryItems = Array.from(rail.children).map(node => ({
+            src: node.dataset.src,
+            title: node.dataset.title,
+          }));
+          const idx = Array.from(rail.children).indexOf(frame);
+          openOverlay(galleryItems, idx);
+        });
+        wrap.appendChild(rail);
+        if (h1 && h1.parentNode === panel) {
+          panel.insertBefore(wrap, h1.nextSibling);
+        } else {
+          panel.prepend(wrap);
+        }
+      };
+
+      const sanitize = (doc) => {
+        doc.querySelectorAll('.side-strip, .turnaround-strip').forEach(el => el.remove());
+        const main = doc.querySelector('main') || doc.body;
+        main.querySelectorAll('script,.edit-bar,.pager,.side-strip,.turnaround-strip').forEach(el => el.remove());
+        return main.innerHTML;
+      };
+
+      const injectTurnaround = async (pageUrl, scope) => {
+        const path = (() => {
+          try { return new URL(pageUrl, location.href).pathname; } catch (_) { return ''; }
+        })();
+        const match = path.match(/\/retraissance\/densetsu\/universe\/(characters|creatures|enemies)\/([^/]+)\.html$/i);
+        if (!match) return;
+        const section = match[1];
+        const slug = match[2];
+        const containerEl = scope || document;
+        containerEl.querySelectorAll('.turnaround-strip').forEach(el => el.remove());
+        // Build a path relative to the current reader URL so repo prefixes (e.g., /Wiki) are preserved.
+        const baseMedia = `${MEDIA_ROOT}universe/${section}/${slug}/`;
+
+          // Try manifest first
+          let items = [];
+          try {
+            const manifestUrl = `${baseMedia}media.json`;
+            const res = await fetch(manifestUrl, { cache: 'no-cache' });
+            if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              items = data.filter(e => e && (e.src || e.file || e.path)).map(e => ({
+                src: `${baseMedia}${e.src || e.file || e.path}`,
+                title: e.title || ''
+              }));
+            }
+          }
+        } catch (_) { /* ignore */ }
+          if (items.length) {
+          insertTurnaroundStrip(containerEl.querySelector('.panel') || containerEl, items.map(i => ({ src: i.src, title: i.title })));
+            return;
+          }
+        const names = [
+          // Primary turnaround candidates
+          'turnaround', 'turnaround01', 'turnaround_01', 'turn', 'turn1',
+          // Common single images that can stand in
+          'image01', 'img01', 'image00', 'img00', 'portrait',
+          // Optional sheet variants
+          'sheet', 'sheet01', 'sheet_01', 'sheet1'
+        ];
+        const exts = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+        const probes = [];
+        names.forEach(n => exts.forEach(ext => probes.push(`${baseMedia}${n}.${ext}`)));
+        const found = [];
+        const probeImg = (src) => new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => resolve(src);
+          img.onerror = () => resolve(null);
+          img.src = src;
+        });
+        const results = await Promise.all(probes.map(probeImg));
+        results.filter(Boolean).some(src => {
+          if (!found.includes(src)) found.push(src);
+          return found.length >= 6;
+        });
+        if (!found.length) return;
+        const panel = containerEl.querySelector('.panel') || containerEl.querySelector('main') || containerEl.body || containerEl;
+        insertTurnaroundStrip(panel, found.map(src => ({ src, title: '' })));
+      };
+
+      const applyFlip = (dir) => {
+        container.classList.remove('flip-left', 'flip-right');
+        void container.offsetWidth;
+        container.classList.add(dir === 'next' ? 'flip-right' : 'flip-left');
+        setTimeout(() => container.classList.remove('flip-left', 'flip-right'), 350);
+      };
+
+      let currentPageUrl = '';
+
+      const readerFixMediaSources = () => {
+        if (!container) return;
+        const normSrc = (src) => {
+          if (!src) return src;
+          // Remove localhost dev host if present.
+          let path = src.replace(/^https?:\/\/localhost(?::\d+)?/i, '');
+          try {
+            const u = new URL(src, currentPageUrl || location.href);
+            path = u.pathname;
+          } catch (_) { /* fallback to raw */ }
+          path = path.replace(/^\/+/, '/');
+
+          // Normalize various common bases to the GH-friendly /<prefix>/pages/... form
+          const alreadyPrefixed = PAGES_PREFIX && path.startsWith(PAGES_PREFIX);
+          if (path.startsWith('/pages/')) return alreadyPrefixed ? path : `${PAGES_PREFIX}${path}`;
+          if (path.startsWith('/retraissance/assets/')) return `${PAGES_PREFIX}/pages${path}`;
+          if (path.startsWith('/retraissance/')) return `${PAGES_PREFIX}/pages${path}`;
+          if (path.startsWith('/assets/')) return `${PAGES_PREFIX}/pages/retraissance${path}`;
+
+          // Relative paths: resolve against current page and ensure prefix.
+          try {
+            const u = new URL(src, currentPageUrl || location.href);
+            const p = u.pathname.replace(/^\/+/, '/');
+            if (p.startsWith('/pages/')) return alreadyPrefixed ? p : `${PAGES_PREFIX}${p}`;
+            return `${PAGES_PREFIX}${p.startsWith('/') ? '' : '/'}${p}`;
+          } catch (_) {
+            return src;
+          }
+        };
+        container.querySelectorAll('img, video, audio, source').forEach(el => {
+          const src = el.getAttribute('src');
+          const fixed = normSrc(src);
+          if (fixed && fixed !== src) el.setAttribute('src', fixed);
+        });
+      };
+
+      // Optional static map to force correct reader-facing URLs -> underlying content URLs
+      const readerUrlMap = {
+        // add overrides here if a reader URL differs from its real path
+        // e.g. '/pages/retraissance/densetsu/universe/world/world_and_geography.html': '/pages/retraissance/densetsu/universe/world/world_and_geography.html'
+      };
+
+      const prefixUrl = (u) => {
+        if (!u) return u;
+        if (/^https?:\/\//i.test(u)) return u;
+        const path = u.startsWith('/') ? u : `/${u}`;
+        // Avoid double-prefixing already-normalized paths.
+        if (path.startsWith(PAGES_PREFIX)) return path;
+        return `${PAGES_PREFIX}${path}`;
+      };
+
+      const loadPage = async (url, dir) => {
+        errorBox.textContent = '';
+        container.innerHTML = 'Loading...';
+        try {
+          const target = prefixUrl(readerUrlMap[url] || url);
+          const resp = await fetch(target, { cache: 'no-cache' });
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const text = await resp.text();
+          const doc = new DOMParser().parseFromString(text, 'text/html');
+          currentPageUrl = target;
+          container.innerHTML = extractContentHtml(doc);
+          // Strip any baked editor artifacts that might be present in source pages.
+          container.querySelectorAll('.inline-move-group, .inline-remove-media, .inline-edit-media, .inline-size, .inline-align-group, .inline-remove, .inline-move').forEach(el => el.remove());
+          container.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+          applyAutoLinks(container);
+          await injectTurnaround(url, container);
+          readerFixMediaSources();
+          collectLinks();
+          if (dir) applyFlip(dir);
+          try { localStorage.setItem(LAST_PAGE_KEY, url); } catch (_) { /* ignore */ }
+        } catch (err) {
+          console.error('Reader load failed', err);
+          container.innerHTML = '';
+          errorBox.textContent = `Failed to load page: ${err.message || err}`;
+          renderLinksSidebar([]);
+        }
+      };
+
+      const updatePos = () => {
+        if (currentNavIndex < 0) { posLabel.textContent = ''; return; }
+        posLabel.textContent = `Page ${currentNavIndex + 1} / ${navEntries.length}`;
+        renderList();
+      };
+
+      const goToNavIndex = (i, dir) => {
+        if (i < 0 || i >= navEntries.length) return;
+        currentNavIndex = i;
+        loadPage(navEntries[i].url, dir);
+        readerFixMediaSources();
+        updatePos();
+        renderList();
+      };
+
+      // Reader-aware save: push edited content back into the underlying page.
+      window.readerSaveCurrent = async () => {
+        if (currentNavIndex < 0 || currentNavIndex >= navEntries.length) return false;
+        const targetUrl = navEntries[currentNavIndex].url;
+        try {
+          const resp = await fetch(targetUrl, { cache: 'no-cache' });
+          if (!resp.ok) throw new Error(`Fetch ${resp.status}`);
+          const html = await resp.text();
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const targetMain = doc.querySelector('main .panel') || doc.querySelector('main') || doc.body;
+          const source = document.getElementById('reader-content');
+          if (!targetMain || !source) throw new Error('Missing content nodes');
+          targetMain.innerHTML = source.innerHTML;
+          // ensure nav links rebuilt on target
+          const saveEndpoint = ((window.SAVE_ENDPOINT || 'http://localhost:3000/__save').replace(/\/__save.*$/, '')) + '/__save';
+          const payload = {
+            path: targetUrl.replace(/^https?:\/\/[^/]+/, '').replace(/^\/+/, ''),
+            html: doc.documentElement.outerHTML
+          };
+          const saveRes = await fetch(saveEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!saveRes.ok) throw new Error(`Save ${saveRes.status}`);
+          return true;
+        } catch (err) {
+          console.error('readerSaveCurrent failed', err);
+          errorBox.textContent = `Save failed: ${err.message || err}`;
+          return false;
+        }
+      };
+
+      if (searchInput) {
+        const onSearch = () => {
+          searchQuery = (searchInput.value || '').trim();
+          renderList();
+        };
+        searchInput.addEventListener('input', onSearch);
+      }
+
+      const disableEditorUI = () => {
+        readerEditorDisabled = true;
+        document.body.classList.remove('edit-active', 'reader-editing');
+      };
+
+      // Check flag to disable reader edit/reorder/rename on public deploys.
+      if (READONLY_HOST) {
+        disableEditorUI();
+      } else {
+        fetch(EDITOR_FLAG, { method: 'HEAD' }).then(res => {
+          if (res.ok) disableEditorUI();
+        }).catch(() => { /* ignore */ });
+      }
+
+      if (jumpInput) {
+        const jumpTo = () => {
+          const v = parseInt(jumpInput.value, 10);
+          if (Number.isNaN(v)) return;
+          goToNavIndex(v - 1, v - 1 > currentNavIndex ? 'next' : 'prev');
+        };
+        jumpInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            jumpTo();
+          }
+        });
+        jumpInput.addEventListener('change', jumpTo);
+      }
+
+      // Rename current page label
+      if (renameBtn) {
+        renameBtn.addEventListener('click', () => {
+          if (currentNavIndex < 0 || currentNavIndex >= navEntries.length) return;
+          const nav = navEntries[currentNavIndex];
+          if (!nav) return;
+          const entry = sitemapEntries[nav._idx];
+          if (!entry || entry.isSep) return;
+          const currentLabel = computeDisplayLabel(nav._idx);
+          const nextLabel = (window.prompt('Rename page label', currentLabel) || '').trim();
+          if (!nextLabel || nextLabel === currentLabel) return;
+          entry.label = nextLabel;
+          rebuildNav();
+          renderList();
+          persistList();
+        });
+      }
+
+        const loadLexicon = async () => {
+          try {
+            const lexUrl = `${PAGES_PREFIX}/pages/retraissance/densetsu/universe/lexicon-data.json`;
+            const res = await fetch(lexUrl, { cache: 'no-cache' });
+            if (res.ok) lexicon = await res.json();
+          } catch (err) {
+            console.warn('Lexicon load failed', err);
+          }
+        };
+
+      const applyAutoLinks = (scope) => {
+        if (!lexicon || !lexicon.length || !scope) return;
+        const map = {};
+        lexicon.forEach(e => {
+          const key = (e.Name || '').toLowerCase();
+          if (!key || map[key]) return;
+          map[key] = e;
+        });
+        const terms = Object.keys(map).sort((a, b) => b.length - a.length);
+        if (!terms.length) return;
+        const escaped = terms.map(t => t.replace(/[-/\\^$*+?.()|[\\]{}]/g, '\\$&'));
+        const regex = new RegExp(`\\b(${escaped.join('|')})\\b`, 'gi');
+        const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            const parent = node.parentElement;
+            if (parent) {
+              const tag = parent.tagName;
+              if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE' || /^H[1-6]$/.test(tag)) return NodeFilter.FILTER_REJECT;
+              if (parent.closest('.no-autolink, [data-autolink="off"], .link-list')) return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        });
+        const nodes = [];
+        let n;
+        while ((n = walker.nextNode())) nodes.push(n);
+        nodes.forEach(node => {
+          const text = node.nodeValue || '';
+          let match; let last = 0; const frag = document.createDocumentFragment();
+          let changed = false;
+          while ((match = regex.exec(text))) {
+            const term = match[0];
+            const entry = map[term.toLowerCase()];
+            if (!entry) continue;
+            frag.appendChild(document.createTextNode(text.slice(last, match.index)));
+            const a = document.createElement('a');
+            a.href = `/pages/retraissance/densetsu/universe/${entry.Href}`;
+            a.textContent = term;
+            frag.appendChild(a);
+            last = match.index + term.length;
+            changed = true;
+          }
+          if (!changed) return;
+          frag.appendChild(document.createTextNode(text.slice(last)));
+          node.replaceWith(frag);
+        });
+      };
+
+      const normalize = (href) => {
+        if (!href) return null;
+        let h = href.trim();
+        // Absolute URL: collapse to pathname so we avoid duplicating host.
+        if (/^https?:\/\//i.test(h)) {
+          try { h = new URL(h).pathname; } catch (_) { /* fallback below */ }
+        }
+        h = h.replace(/^\/+/, '/');
+        // Handle bare relative entries like "pages/..." or "retraissance/...".
+        if (h.startsWith('pages/')) h = `/${h}`;
+        if (h.startsWith('retraissance/')) h = `/pages/${h}`;
+        // Collapse any repeated /pages/ prefixes, then ensure a single /pages/ prefix.
+        if (h.startsWith('/pages/')) {
+          const cleaned = '/pages/' + h.replace(/^\/+/, '').replace(/^(pages\/)+/, '');
+          return `${PAGES_PREFIX}${cleaned}`;
+        }
+        if (h.startsWith('/retraissance/')) return `${PAGES_PREFIX}/pages${h}`;
+        if (h.startsWith('/')) return `${PAGES_PREFIX}${h}`;
+        return `${PAGES_PREFIX}/pages/` + h.replace(/^\/+/, '');
+      };
+
+      const buildOrderFromFs = async () => {
+        try {
+          const bust = `pages-list.json?v=${Date.now()}`;
+          const resp = await fetch(bust, { cache: 'no-cache' });
+          if (!resp.ok) throw new Error(`pages-list fetch ${resp.status}`);
+          const json = await resp.json();
+          const files = Array.isArray(json) ? json : [];
+          const entries = [];
+          files.forEach(item => {
+            if (typeof item === 'string' && item.trim().startsWith('#')) {
+              entries.push({ isSep: true, label: item.replace(/^#+\s*/, '').trim() });
+              return;
+            }
+            const raw = typeof item === 'string' ? item : (item && item.url) || '';
+            const customLabel = typeof item === 'object' && item ? item.label : null;
+            const url = normalize(raw);
+            if (!url) return;
+            if (!(url.includes('/densetsu/') || url.includes('/reader/bible/'))) return;
+            entries.push({ url, label: customLabel || titleFromPath(url) });
+          });
+          sitemapEntries = entries;
+          rebuildNav();
+        } catch (err) {
+          console.error('pages-list parse failed', err);
+          sitemapEntries = [];
+          navEntries = [];
+          if (errorBox) {
+            errorBox.textContent = `No pages found in sitemap (load failed: ${err.message || err}).`;
+          }
+        }
+      };
+
+      const categoryOrder = [
+        { key: 'overview', label: 'Overview' },
+        { key: 'world', label: 'World' },
+        { key: 'concepts', label: 'Concepts' },
+        { key: 'cultures', label: 'Cultures' },
+        { key: 'events', label: 'Events' },
+        { key: 'locations', label: 'Locations' },
+        { key: 'factions', label: 'Factions' },
+        { key: 'characters', label: 'Characters' },
+        { key: 'creatures', label: 'Creatures' },
+        { key: 'enemies', label: 'Enemies' },
+        { key: 'artifacts', label: 'Artifacts' },
+        { key: 'engine', label: 'Engine' },
+        { key: 'other', label: 'Other' }
+      ];
+
+      // Topic dividers and their target categories.
+      const topicCategory = {
+        '/pages/retraissance/reader/bible/topic_cosmology.html': 'overview',
+        '/pages/retraissance/reader/bible/topic_world_geography.html': 'world',
+        '/pages/retraissance/reader/bible/topic_factions_power.html': 'factions',
+        '/pages/retraissance/reader/bible/topic_people_legends.html': 'characters',
+        '/pages/retraissance/reader/bible/topic_creatures_abominations.html': 'creatures',
+        '/pages/retraissance/reader/bible/topic_artifacts_relics.html': 'artifacts',
+        '/pages/retraissance/reader/bible/topic_engine_gateway.html': 'engine',
+        '/pages/retraissance/reader/bible/topic_engine_appendix.html': 'engine'
+      };
+
+      const categorizeLink = (href) => {
+        if (!href) return null;
+        let path = href;
+        try {
+          path = new URL(href, location.origin).pathname;
+        } catch (_) {
+          return null;
+        }
+        const norm = path.toLowerCase();
+        if (!norm.includes('/pages/')) return null;
+        const test = (segment) => norm.includes(`/universe/${segment}/`) || norm.includes(`/${segment}/`);
+        if (test('overview')) return 'overview';
+        if (test('world')) return 'world';
+        if (test('concepts')) return 'concepts';
+        if (test('cultures')) return 'cultures';
+        if (test('events')) return 'events';
+        if (test('locations')) return 'locations';
+        if (test('factions')) return 'factions';
+        if (test('characters')) return 'characters';
+        if (test('creatures')) return 'creatures';
+        if (test('enemies')) return 'enemies';
+        if (test('artifacts')) return 'artifacts';
+        if (norm.includes('/engine/')) return 'engine';
+        return 'other';
+      };
+
+      const regroupByTopics = async () => { /* no-op: rely on explicit pages list order */ };
+
+      const renderLinksSidebar = (linkItems = []) => {
+        if (!linksBody) return;
+        if (!linkItems.length) {
+          linksBody.innerHTML = '<p style="margin:0; color:#6b5b4a;">None detected.</p>';
+          return;
+        }
+        const grouped = categoryOrder.reduce((acc, c) => { acc[c.key] = []; return acc; }, {});
+        linkItems.forEach(item => {
+          if (!grouped[item.category]) grouped[item.category] = [];
+          grouped[item.category].push(item);
+        });
+        linksBody.innerHTML = '';
+        categoryOrder.forEach(({ key, label }) => {
+          const bucket = grouped[key] || [];
+          if (!bucket.length) return;
+          const h = document.createElement('h3');
+          h.textContent = label;
+          linksBody.appendChild(h);
+          const ul = document.createElement('ul');
+          bucket
+            .sort((a, b) => a.text.localeCompare(b.text))
+            .forEach(item => {
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.href = item.href;
+              a.textContent = item.text;
+              a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const idx = navEntries.findIndex(n => n.url === item.href);
+                if (idx !== -1) {
+                  goToNavIndex(idx, idx > currentNavIndex ? 'next' : 'prev');
+                } else {
+                  window.open(item.href, '_blank');
+                }
+              });
+              li.appendChild(a);
+              ul.appendChild(li);
+            });
+          linksBody.appendChild(ul);
+        });
+      };
+
+      const collectLinks = () => {
+        if (!container) return renderLinksSidebar([]);
+        const anchors = Array.from(container.querySelectorAll('a[href]'));
+        const seen = new Set();
+        const items = [];
+        anchors.forEach(a => {
+          const href = normalize(a.getAttribute('href') || '');
+          if (!href) return;
+          const cat = categorizeLink(href);
+          if (!cat) return;
+          const key = `${cat}|${href}`;
+          if (seen.has(key)) return;
+          seen.add(key);
+          const text = (a.textContent || titleFromPath(href)).trim() || titleFromPath(href);
+          items.push({ href, text, category: cat });
+        });
+        renderLinksSidebar(items);
+      };
+
+      prevBtn?.addEventListener('click', () => {
+        if (currentNavIndex > 0) goToNavIndex(currentNavIndex - 1, 'prev');
+      });
+      nextBtn?.addEventListener('click', () => {
+        if (currentNavIndex >= 0 && currentNavIndex < navEntries.length - 1) goToNavIndex(currentNavIndex + 1, 'next');
+      });
+
+      const inferPrefix = (url = '') => {
+        if (url.includes('/reader/bible/topic_') || url.includes('/reader/bible/struct_')) return '';
+        if (url.includes('/locations/')) return '[Location] ';
+        if (url.includes('/characters/')) return '[Character] ';
+        if (url.includes('/creatures/')) return '[Creature] ';
+        if (url.includes('/artifacts/')) return '[Artifact] ';
+        if (url.includes('/enemies/')) return '[Enemy] ';
+        if (url.includes('/factions/')) return '[Faction] ';
+        if (url.includes('/events/')) return '[Event] ';
+        if (url.includes('/concepts/')) return '[Concept] ';
+        if (url.includes('/world/')) return '[World] ';
+        if (url.includes('/cultures/')) return '[Culture] ';
+        if (url.includes('/engine/')) return '[Engine] ';
+        if (url.includes('lexicon')) return '[Lexicon] ';
+        if (url.includes('languages')) return '[Language] ';
+        return '';
+      };
+
+      const resolveTitles = async () => {
+        if (location.protocol === 'file:') return;
+        const updates = [];
+        for (const entry of sitemapEntries) {
+          if (entry.isSep) continue;
+          if (titleCache.has(entry.url)) {
+            entry.label = (titleCache.get(entry.url) || '').replace(/^\[[^\]]+\]\s*/, '');
+            continue;
+          }
+          updates.push((async () => {
+            try {
+            const resp = await fetch(entry.url, { cache: 'no-cache' });
+              if (!resp.ok) return;
+              const text = await resp.text();
+              const doc = new DOMParser().parseFromString(text, 'text/html');
+              const h1 = doc.querySelector('h1');
+              let raw = h1 ? h1.textContent.trim() : '';
+              raw = raw.replace(/^\[[^\]]+\]\s*/, ''); // strip leading tags
+              if (raw) {
+                entry.label = raw;
+                titleCache.set(entry.url, raw);
+              }
+            } catch (_) { /* ignore */ }
+          })());
+        }
+        if (updates.length) {
+          await Promise.allSettled(updates);
+          rebuildNav();
+          renderList();
+        }
+      };
+
+      // Build sitemap order, then auto-load (after lexicon for autolinks)
+      Promise.all([loadLexicon(), buildOrderFromFs()]).then(async () => {
+        await regroupByTopics();
+        renderList();
+        resolveTitles();
+        const params = new URLSearchParams(location.search);
+        const preset = params.get('url');
+        const last = (() => { try { return localStorage.getItem(LAST_PAGE_KEY); } catch (_) { return null; } })();
+        let startIdx = -1;
+        if (preset) startIdx = navEntries.findIndex(n => n.url === preset);
+        if (startIdx === -1 && last) startIdx = navEntries.findIndex(n => n.url === last);
+        if (startIdx === -1 && navEntries.length) startIdx = 0;
+        if (startIdx !== -1) {
+          goToNavIndex(startIdx);
+        } else {
+          container.innerHTML = '';
+          errorBox.textContent = 'No pages found in sitemap.';
+        }
+      });
+    })();
+  </script>
+
+
+
+</body></html>
+
+
