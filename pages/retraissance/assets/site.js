@@ -227,10 +227,11 @@
   };
 
 const buildBreadcrumb = () => {
+    // Clear any baked-in breadcrumbs so we always render from JS.
+    document.querySelectorAll('.breadcrumb').forEach(el => el.remove());
     const panel = document.querySelector('.panel');
     if (!panel) return;
     const h1 = panel.querySelector('h1');
-    const old = panel.querySelector('.breadcrumb');
     const eyebrow = panel.querySelector('.eyebrow');
     const path = (location.pathname || '').replace(/\\/g, '/');
     const match = path.match(/pages\/(.+)/);
@@ -257,8 +258,7 @@ const buildBreadcrumb = () => {
     const nav = document.createElement('nav');
     nav.className = 'breadcrumb';
     nav.innerHTML = crumbs.map((c, i) => `<a href="${c.href}">${c.label}</a>${i < crumbs.length - 1 ? ' / ' : ''}`).join('');
-    if (old) old.replaceWith(nav);
-    else if (eyebrow) eyebrow.replaceWith(nav);
+    if (eyebrow) eyebrow.replaceWith(nav);
     else if (h1) panel.insertBefore(nav, h1);
     else panel.prepend(nav);
   };
@@ -412,8 +412,19 @@ const buildBreadcrumb = () => {
     }
   };
 
+  const stripStaticNavbars = () => {
+    // Drop any baked navbars so the dynamic one is the only source of truth.
+    document.querySelectorAll('nav').forEach(n => {
+      if (!n.classList.contains('nav-links') || n.dataset.navBuilt !== '1') n.remove();
+    });
+    document.querySelectorAll('.navbar, .nav-bar, .top-nav, header nav').forEach(n => {
+      if (!n.classList.contains('nav-links')) n.remove();
+    });
+  };
+
   // Build a consistent condensed navbar (Retraissance & Densetsu dropdowns + Random).
   const rebuildNavLinks = () => {
+    stripStaticNavbars();
     ensureBrandDiscord();
     ensureBrandLogo();
     ensureFavicon();
