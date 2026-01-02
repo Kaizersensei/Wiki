@@ -304,8 +304,17 @@ const buildBreadcrumb = () => {
   // Build a consistent condensed navbar (Retraissance & Densetsu dropdowns + Random).
   const rebuildNavLinks = () => {
     ensureBrandDiscord();
-    const nav = document.querySelector('.nav-links');
-    if (!nav || nav.dataset.navBuilt) return;
+    let nav = document.querySelector('.nav-links');
+    // Create a nav container if none exists (keeps HTML pages free of static nav markup).
+    if (!nav) {
+      const header = document.querySelector('.site-header') || document.querySelector('header');
+      if (!header) return;
+      nav = document.createElement('nav');
+      nav.className = 'nav-links';
+      header.appendChild(nav);
+    }
+    // Always rebuild and wipe any static nav content.
+    nav.innerHTML = '';
     const pagePath = (location.pathname || '').replace(/\\/g, '/');
     const parts = pagePath.split('/').filter(Boolean);
     const idxPages = parts.indexOf('pages');
