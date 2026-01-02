@@ -725,7 +725,8 @@
           const cleaned = '/pages/' + h.replace(/^\/+/, '').replace(/^(pages\/)+/, '');
           return `${PAGES_PREFIX}${cleaned}`;
         }
-        if (h.startsWith('/')) return `${PAGES_PREFIX}/pages${h}`;
+        if (h.startsWith('/retraissance/')) return `${PAGES_PREFIX}/pages${h}`;
+        if (h.startsWith('/')) return `${PAGES_PREFIX}${h}`;
         return `${PAGES_PREFIX}/pages/` + h.replace(/^\/+/, '');
       };
 
