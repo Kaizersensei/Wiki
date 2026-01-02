@@ -21,3 +21,4 @@ pages/retraissance/densetsu/assets/media/.tosort/
 *.snapshot.js
 snapshots/
 disable-editor.flag
+pages/retraissance/assets/editor-tools.js
