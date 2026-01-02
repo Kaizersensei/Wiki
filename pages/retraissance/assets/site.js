@@ -196,11 +196,10 @@
   const checkCacheSignature = async () => {
     if (location.protocol === 'file:') return;
     const here = (location.href || '').split('#')[0];
-    const assets = [
+  const assets = [
       `${BASE_PREFIX}/pages/retraissance/assets/site.js`,
       `${BASE_PREFIX}/pages/retraissance/assets/site.css`,
-      `${BASE_PREFIX}/pages/retraissance/reader/index.html`,
-      here
+      `${BASE_PREFIX}/pages/retraissance/reader/index.html`
     ];
     const sigParts = [];
     for (const url of assets) {
