@@ -515,19 +515,18 @@
         // e.g. '/pages/retraissance/densetsu/universe/world/world_and_geography.html': '/pages/retraissance/densetsu/universe/world/world_and_geography.html'
       };
 
-      const normalizePageUrl = (url) => {
-        if (!url) return url;
-        if (/^https?:\/\//i.test(url)) return url;
-        const cleaned = url.startsWith('/') ? url : `/${url}`;
-        if (cleaned.startsWith('/pages/')) return `${PAGES_PREFIX}${cleaned}`;
-        return `${PAGES_PREFIX}${cleaned}`;
+      const prefixUrl = (u) => {
+        if (!u) return u;
+        if (/^https?:\/\//i.test(u)) return u;
+        const path = u.startsWith('/') ? u : `/${u}`;
+        return `${PAGES_PREFIX}${path}`;
       };
 
       const loadPage = async (url, dir) => {
         errorBox.textContent = '';
         container.innerHTML = 'Loading...';
         try {
-          const target = normalizePageUrl(readerUrlMap[url] || url);
+          const target = prefixUrl(readerUrlMap[url] || url);
           const resp = await fetch(target, { cache: 'no-cache' });
           if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
           const text = await resp.text();
