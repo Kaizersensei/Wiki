@@ -482,7 +482,6 @@
           path = path.replace(/^\/+/, '/');
 
           // Normalize various common bases to the GH-friendly /<prefix>/pages/... form
-          if (path.startsWith('/pages/assets/')) path = path.replace('/pages/assets/', '/pages/retraissance/assets/');
           const alreadyPrefixed = PAGES_PREFIX && path.startsWith(PAGES_PREFIX);
           if (path.startsWith('/pages/')) return alreadyPrefixed ? path : `${PAGES_PREFIX}${path}`;
           if (path.startsWith('/retraissance/assets/')) return `${PAGES_PREFIX}/pages${path}`;
