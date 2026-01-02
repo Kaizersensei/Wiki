@@ -64,6 +64,29 @@
     }
   };
 
+  // Commit/version manifest checker (compares against local cache, clears and reloads on change)
+  const checkVersionManifest = async () => {
+    if (IS_FILE) return;
+    const manifestUrl = `${BASE_PREFIX}/pages/retraissance/version.json`;
+    let manifest = null;
+    try {
+      const res = await fetch(manifestUrl, { cache: 'no-cache' });
+      if (!res.ok) return;
+      manifest = await res.json();
+    } catch (_) { return; }
+    if (!manifest || !manifest.commit) return;
+    const key = 'siteVersion';
+    let prev = null;
+    try { prev = localStorage.getItem(key); } catch (_) { /* ignore */ }
+    if (prev && prev === manifest.commit) return;
+    try {
+      localStorage.clear();
+      localStorage.setItem(key, manifest.commit);
+    } catch (_) { /* ignore */ }
+    // Force a hard reload to pick up new assets/content.
+    location.reload(true);
+  };
+
   // Simple cache signature checker: compares server last-modified/etag and reloads if changed.
   const checkCacheSignature = async () => {
     if (IS_FILE) return;
@@ -2496,6 +2519,7 @@ const buildBreadcrumb = () => {
     stripEditArtifacts();
     document.body.classList.remove('edit-active');
     const readerView = isReaderPage();
+    try { checkVersionManifest(); } catch (err) { console.error('version manifest check failed', err); }
     try { checkCacheSignature(); } catch (err) { console.error('cache signature check failed', err); }
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
