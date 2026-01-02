@@ -519,6 +519,8 @@
         if (!u) return u;
         if (/^https?:\/\//i.test(u)) return u;
         const path = u.startsWith('/') ? u : `/${u}`;
+        // Avoid double-prefixing already-normalized paths.
+        if (path.startsWith(PAGES_PREFIX)) return path;
         return `${PAGES_PREFIX}${path}`;
       };
 
