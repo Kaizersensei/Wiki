@@ -99,6 +99,24 @@
     }
   };
 
+  const ensureBrandLogo = () => {
+    const logo = document.querySelector('.nav-logo');
+    if (!logo) return;
+    const desired = withBasePrefix('/pages/retraissance/assets/res/LOGO_Retraissance.gif');
+    const current = logo.getAttribute('src') || '';
+    if (current !== desired) logo.setAttribute('src', desired);
+  };
+
+  const ensureFavicon = () => {
+    let link = document.querySelector('link[rel*=\"icon\"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = withBasePrefix('/favicon.ico');
+  };
+
   // Lightweight cache/version checker: if any watched asset (including the current page) changes, force a hard reload.
   const checkCacheSignature = async () => {
     if (location.protocol === 'file:') return;
@@ -317,6 +335,8 @@ const buildBreadcrumb = () => {
   // Build a consistent condensed navbar (Retraissance & Densetsu dropdowns + Random).
   const rebuildNavLinks = () => {
     ensureBrandDiscord();
+    ensureBrandLogo();
+    ensureFavicon();
     let nav = document.querySelector('.nav-links');
     if (!nav) {
       const header = document.querySelector('.site-header') || document.querySelector('header');
@@ -324,6 +344,12 @@ const buildBreadcrumb = () => {
       nav = document.createElement('nav');
       nav.className = 'nav-links';
       header.appendChild(nav);
+    }
+    const header = document.querySelector('.site-header') || document.querySelector('header');
+    if (header) {
+      Array.from(header.querySelectorAll('nav')).forEach(n => {
+        if (n !== nav) n.remove();
+      });
     }
     // Always rebuild to remove any baked/static markup.
     nav.innerHTML = '';
@@ -1211,7 +1237,7 @@ const buildBreadcrumb = () => {
     wrap.className = 'turnaround-strip';
     const label = document.createElement('div');
     label.className = 'turnaround-header';
-    label.textContent = 'Turnaround';
+    label.textContent = 'Overview';
     wrap.appendChild(label);
     const rail = document.createElement('div');
     rail.className = 'turnaround-rail';

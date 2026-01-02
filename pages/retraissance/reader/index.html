@@ -126,9 +126,15 @@
         return idx >= 0 ? pagePath.slice(0, idx) : '';
       })();
       const MEDIA_ROOT = `${PAGES_PREFIX}/pages/retraissance/assets/media/`;
+      const logo = document.querySelector('.nav-logo');
+      if (logo) logo.setAttribute('src', `${PAGES_PREFIX}/pages/retraissance/assets/res/LOGO_Retraissance.gif`);
       const extractContentHtml = (doc) => {
         const main = doc.querySelector('main .panel') || doc.querySelector('main') || doc.body;
-        return main ? main.innerHTML : '';
+        if (!main) return '';
+        if (main.classList.contains('panel')) {
+          return `<section class="${main.className}">${main.innerHTML}</section>`;
+        }
+        return main.innerHTML || '';
       };
       const READONLY_HOST = /github\.io$/i.test(location.hostname);
       // Fix breadcrumb hrefs at runtime to respect prefix.
@@ -358,7 +364,7 @@
         wrap.className = 'turnaround-strip';
         const label = document.createElement('div');
         label.className = 'turnaround-header';
-        label.textContent = 'Appearance';
+        label.textContent = 'Overview';
         wrap.appendChild(label);
         const rail = document.createElement('div');
         rail.className = 'turnaround-rail';
