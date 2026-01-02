@@ -23,6 +23,14 @@
     return idx >= 0 ? p.slice(0, idx) : '';
   })();
 
+  const withBasePrefix = (p = '') => {
+    if (!p) return p;
+    if (/^(https?:)?\/\//i.test(p)) return p;
+    if (p.startsWith(BASE_PREFIX)) return p;
+    if (p.startsWith('/')) return `${BASE_PREFIX}${p}`;
+    return `${BASE_PREFIX}/${p}`.replace(/\/{2,}/g, '/');
+  };
+
   const ensureBrandDiscord = () => {
     const brand = document.querySelector('.brand');
     if (!brand) return;
@@ -1091,19 +1099,20 @@ const buildBreadcrumb = () => {
 
     const resolveMediaSrc = (baseMediaPath, slug, entrySrc) => {
     if (!entrySrc) return '';
-    if (/^(https?:)?\/\//i.test(entrySrc) || entrySrc.startsWith('/')) return entrySrc;
-    return `${baseMediaPath}${slug}/${entrySrc}`;
+    if (/^(https?:)?\/\//i.test(entrySrc)) return entrySrc;
+    if (entrySrc.startsWith('/')) return withBasePrefix(entrySrc);
+    return withBasePrefix(`${baseMediaPath}${slug}/${entrySrc}`);
   };
 
   const probeMedia = async (baseMediaPath, slug, names, exts, limit = null) => {
-    const prefix = `${baseMediaPath}${slug}/`;
+    const prefix = withBasePrefix(`${baseMediaPath}${slug}/`);
     const candidates = [];
     names.forEach(name => exts.forEach(ext => candidates.push(`${prefix}${name}.${ext}`)));
     const tryImg = (src) => new Promise(resolve => {
       const img = new Image();
       img.onload = () => resolve(src);
       img.onerror = () => resolve(null);
-      img.src = src;
+      img.src = withBasePrefix(src);
     });
     const results = await Promise.all(candidates.map(tryImg));
     const filtered = results.filter(Boolean).map(src => ({ src, title: '' }));
@@ -1137,7 +1146,7 @@ const buildBreadcrumb = () => {
     }
 
     const items = await probeMedia(baseMediaPath, slug, names, exts, 1);
-    return items.length ? items[0].src : null;
+    return items.length ? withBasePrefix(items[0].src) : null;
   };
 
   const insertCover = (panel, src) => {
@@ -1292,12 +1301,13 @@ const buildBreadcrumb = () => {
     } else {
       assetsBase = pagePath.substring(0, markerIdx + scope.marker.length) + 'assets/';
     }
+    assetsBase = withBasePrefix(assetsBase);
     const slug = pagePath
       .substring(markerIdx + scope.marker.length)
       .replace(/^\//, '')
       .replace(/[?#].*$/, '')
       .replace(/\.html?$/, '');
-    const baseMedia = `${assetsBase}${scope.mediaDir}`;
+    const baseMedia = withBasePrefix(`${assetsBase}${scope.mediaDir}`);
     const panel = document.querySelector('.panel');
     if (!panel) return;
 
