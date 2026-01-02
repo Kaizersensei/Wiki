@@ -85,7 +85,7 @@
           if (typeof item === 'string' && item.trim().startsWith('#')) {
             return { isStruct: true, label: item.replace(/^#+\s*/, '').trim(), url: null };
           }
-          if (typeof item === 'string') return { label: item.replace(/.*\\//, ''), url: item };
+          if (typeof item === 'string') return { label: item.replace(/.*\//, ''), url: item };
           return { label: item.label || item.url || 'Untitled', url: item.url || '', isStruct: !!item.isStruct };
         });
         renderList();
