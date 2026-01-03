@@ -424,18 +424,39 @@ const buildBreadcrumb = () => {
   // Build a consistent condensed navbar (Retraissance & Densetsu dropdowns + Random).
   const rebuildNavLinks = () => {
     stripStaticNavbars();
+    ensureFavicon();
+    const header = document.querySelector('.site-header') || document.querySelector('header');
+    if (!header) return;
+
+    // Ensure a brand block exists (logo + discord) even on pages that never had one (e.g., story reader).
+    let brand = header.querySelector('.brand');
+    if (!brand) {
+      brand = document.createElement('div');
+      brand.className = 'brand';
+      brand.style.display = 'flex';
+      brand.style.alignItems = 'center';
+      brand.style.gap = '10px';
+      header.prepend(brand);
+    }
+    if (!brand.querySelector('.nav-logo')) {
+      const home = document.createElement('a');
+      home.href = withBasePrefix('/pages/retraissance/index.html');
+      const img = document.createElement('img');
+      img.className = 'nav-logo';
+      img.alt = 'Retraissance';
+      img.src = withBasePrefix('/pages/retraissance/assets/res/LOGO_Retraissance.gif');
+      home.appendChild(img);
+      brand.prepend(home);
+    }
     ensureBrandDiscord();
     ensureBrandLogo();
-    ensureFavicon();
-    let nav = document.querySelector('.nav-links');
+
+    let nav = header.querySelector('.nav-links');
     if (!nav) {
-      const header = document.querySelector('.site-header') || document.querySelector('header');
-      if (!header) return;
       nav = document.createElement('nav');
       nav.className = 'nav-links';
       header.appendChild(nav);
     }
-    const header = document.querySelector('.site-header') || document.querySelector('header');
     if (header) {
       Array.from(header.querySelectorAll('nav')).forEach(n => {
         if (n !== nav) n.remove();
