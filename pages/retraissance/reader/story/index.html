@@ -9,13 +9,46 @@
     body { margin: 0; }
     #reader-layout { display: grid; grid-template-columns: 280px 1fr; gap: 12px; padding: 12px; }
     #reader-list { max-height: calc(100vh - 48px); overflow-y: auto; padding: 8px; background: rgba(0,0,0,0.03); border-radius: 8px; }
-    #reader-list .entry { padding: 6px 8px; border-radius: 6px; cursor: pointer; }
-    #reader-list .entry.active { background: #e0d5c5; font-weight: 700; }
+    #reader-list .entry {
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: url('../media/story/button_idle_unselected_available.png') center center / 100% 100% no-repeat;
+      margin-bottom: 4px;
+    }
+    #reader-list .entry.active {
+      background: url('../media/story/button_current_selected.png') center center / 100% 100% no-repeat;
+      font-weight: 700;
+    }
     #reader-list .entry.struct { font-weight: 700; }
     #reader-content { background: #fffaf3; padding: 16px; border-radius: 8px; min-height: 70vh; border: 1px solid #d8c9a8; }
     .reader-nav { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
     .reader-nav button { padding: 6px 10px; font-size: 13px; }
     .reader-pos { font-weight: 700; }
+
+    /* Per-page framing */
+    .story-page { display: flex; flex-direction: column; gap: 12px; }
+    .story-header, .story-footer {
+      background-position: center top;
+      background-repeat: repeat-x;
+      background-size: 100% auto;
+      min-height: 72px;
+      padding: 14px 18px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #2f1f14;
+      font-weight: 700;
+    }
+    .story-header { background-image: url('../media/story/page_header.png'); font-size: 20px; }
+    .story-footer { background-image: url('../media/story/page_footer.png'); font-size: 14px; }
+    .story-body {
+      background: url('../media/story/page_midsection.png') center center / 100% 100% repeat-y;
+      padding: 16px;
+      border-radius: 6px;
+    }
+    .story-body hr { border: 0; border-top: 1px solid rgba(0,0,0,0.08); margin: 14px 0; }
   </style>
 </head>
 <body class="theme-wiki">
@@ -49,6 +82,7 @@
       const posEl = document.getElementById('story-pos');
       const prevBtn = document.getElementById('story-prev');
       const nextBtn = document.getElementById('story-next');
+      const LAST_KEY = 'story-reader:last-page';
       let entries = [];
       let current = -1;
 
@@ -69,6 +103,11 @@
         nextBtn.disabled = current >= entries.length - 1;
       };
 
+      const persistLast = () => {
+        if (current < 0 || current >= entries.length) return;
+        try { localStorage.setItem(LAST_KEY, String(current)); } catch (_) { /* ignore */ }
+      };
+
       const renderList = () => {
         listEl.innerHTML = '';
         entries.forEach((e, idx) => {
@@ -86,6 +125,7 @@
         current = idx;
         renderList();
         updateNavButtons();
+        persistLast();
         contentEl.textContent = 'Loading…';
         try {
           const resp = await fetch(url, { cache: 'no-cache' });
@@ -93,7 +133,20 @@
           const html = await resp.text();
           const doc = new DOMParser().parseFromString(html, 'text/html');
           const panel = doc.querySelector('main .panel') || doc.querySelector('main') || doc.body;
-          contentEl.innerHTML = panel.innerHTML;
+          const work = panel.cloneNode(true);
+          const h1 = work.querySelector('h1');
+          const eyebrow = work.querySelector('.eyebrow');
+          const title = h1 ? (h1.textContent || '').trim() : (entries[idx].label || '');
+          if (eyebrow) eyebrow.remove();
+          if (h1) h1.remove();
+          const bodyHtml = work.innerHTML;
+          contentEl.innerHTML = `
+            <div class="story-page">
+              <div class="story-header"><span class="story-header-title">${title}</span></div>
+              <div class="story-body">${bodyHtml}</div>
+              <div class="story-footer"><span>${entries[idx].label}</span><span>Page ${idx + 1} / ${entries.length}</span></div>
+            </div>
+          `;
           contentEl.querySelectorAll('img, video, audio, source').forEach(el => {
             const src = el.getAttribute('src');
             if (!src || /^https?:\/\//i.test(src)) return;
@@ -125,7 +178,12 @@
           return { label: cleanLabel(lbl), url, isStruct: !!item.isStruct };
         });
         renderList();
-        if (entries.length) loadEntry(0);
+        let startIdx = 0;
+        try {
+          const saved = parseInt(localStorage.getItem(LAST_KEY), 10);
+          if (!Number.isNaN(saved) && saved >= 0 && saved < entries.length) startIdx = saved;
+        } catch (_) { /* ignore */ }
+        if (entries.length) loadEntry(startIdx);
       } catch (err) {
         contentEl.textContent = `Failed to load story list: ${err.message || err}`;
       }
