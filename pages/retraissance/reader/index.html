@@ -3,6 +3,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reader Mode</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Story+Script&display=swap">
   <style>
   .reader-frame { padding: 12px; background: #f7f1e6; border-radius: 8px; border: 1px solid #d8c9a8; }
   .reader-layout { display: grid; grid-template-columns: 240px 1fr 220px; gap: 12px; align-items: start; }
@@ -10,12 +11,12 @@
   .reader-controls { position: sticky; top: 0; background: #f9f4ea; padding: 8px 0 6px 0; z-index: 2; }
   .reader-list { padding-top: 4px; }
   .reader-links { background: #f9f4ea; border: 1px solid #d8c9a8; border-radius: 8px; padding: 8px; max-height: 75vh; overflow-y: auto; }
-  .reader-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; font-size: 15px; }
-  .reader-list li { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 6px; border: 1px solid transparent; transition: background-color 0.2s ease, border-color 0.2s ease; }
-  .reader-list li.active { background: #e5d7b8; border-color: #b89c6a; font-weight: 800; }
+  .reader-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
+  .reader-list li { display: flex; align-items: center; gap: 3px; padding: 3px 8px; border-radius: 6px; border: none; background-size: 100% 100%; background-repeat: no-repeat; background-position: center center; }
+  .reader-list li.active { font-weight: 800; }
   .reader-list a { color: #3a2a1a; text-decoration: none; flex: 1; font-size: 15px; }
   .reader-list a:hover { text-decoration: underline; }
-  .reader-separator { font-weight: 700; color: #6b5b4a; background: #f0e6d4; border: 1px solid #d8c9a8; border-radius: 6px; padding: 4px; }
+  .reader-separator { font-weight: 700; color: #2f1f14; }
   .reader-order { display: none; gap: 4px; }
   .reader-order button { padding: 2px 6px; font-size: 12px; }
   .reader-editing .reader-order { display: flex; }
@@ -30,7 +31,7 @@
   .reader-links a:hover { text-decoration: underline; }
   @media (max-width: 960px) { .reader-layout { grid-template-columns: 1fr; } .reader-sidebar { order: 2; } }
     .reader-error { color: #8a1f1f; font-weight: 600; margin-top: 8px; }
-  .reader-content { background: #fffdf8; padding: 12px; border-radius: 6px; border: 1px solid #e5d7b8; min-height: 40vh; transition: transform 0.35s ease, box-shadow 0.35s ease; overflow-x: auto; overflow-y: auto; box-sizing: border-box; max-height: 78vh; }
+  .reader-content { background: #fffdf8; padding: 12px; border-radius: 6px; border: 1px solid #e5d7b8; min-height: 40vh; transition: transform 0.35s ease, box-shadow 0.35s ease; overflow-x: auto; overflow-y: auto; box-sizing: border-box; max-height: 78vh; font-family: 'Story Script', var(--font-body, Georgia), serif; }
   .reader-content img, .reader-content video, .reader-content figure, .reader-content .inline-media-block { max-width: 100%; height: auto; }
   .reader-content pre { white-space: pre-wrap; word-break: break-word; }
     .flip-left { transform: rotateY(-4deg); box-shadow: -8px 0 18px rgba(0,0,0,0.15); }
@@ -231,25 +232,9 @@
       const renderList = () => {
         if (!listEl) return;
         listEl.innerHTML = '';
-        let sectionIdx = 0;
+        const btnIdle = `${PAGES_PREFIX}/pages/retraissance/reader/media/story/button_idle_unselected_available.png`;
+        const btnActive = `${PAGES_PREFIX}/pages/retraissance/reader/media/story/button_current_selected.png`;
         let groupIdx = 0; // maintain backward compatibility for padding logic
-        const palette = [
-          'rgba(170, 120, 90, 0.18)',  // Time/Cosmology
-          'rgba(120, 150, 95, 0.18)',  // Power/Magic
-          'rgba(90, 130, 170, 0.18)',  // World/Geography
-          'rgba(150, 120, 160, 0.18)', // Cultures/Factions
-          'rgba(170, 140, 70, 0.18)',  // Events/History
-          'rgba(110, 110, 110, 0.18)', // People/Creatures
-          'rgba(70, 120, 140, 0.18)',  // Artifacts/Concepts
-          'rgba(140, 80, 80, 0.18)',   // Enemies
-          'rgba(80, 120, 80, 0.18)'    // Engine/Other
-        ];
-        const romanToIdx = (label = '') => {
-          const m = label.match(/^#\s*([IVXL]+)\./i);
-          if (!m) return null;
-          const map = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 5, VIII: 6, IX: 6, X: 6, XI: 7, XII: 8 };
-          return map[m[1].toUpperCase()] ?? null;
-        };
         const parentKeywords = ['geography', 'continent', 'independent realms', 'realms'];
         const topCountries = new Set([
           'Hirogawa', 'Yukigami', 'Seigetsu Empire', 'Crimson Dynasty',
@@ -259,17 +244,16 @@
         let currentCountry = null;
         const q = (searchQuery || '').trim().toLowerCase();
         sitemapEntries.forEach((entry, idx) => {
+          const applyBg = (el, isActive) => {
+            const img = isActive ? btnActive : btnIdle;
+            el.style.background = `url('${img}') center center / 100% 100% no-repeat`;
+            el.style.border = 'none';
+          };
           const li = document.createElement('li');
           if (entry.isSep) {
             if (q) return; // hide separators during search
-            const romanIdx = romanToIdx(entry.label || '');
-            if (romanIdx !== null) sectionIdx = romanIdx;
-            else if ((entry.label || '').toLowerCase().includes('geography')) sectionIdx = 2; // force geography group to match its children
-            const paletteIdx = Math.max(sectionIdx, 0) % palette.length;
-            const color = palette[paletteIdx];
             li.className = 'reader-separator';
-            li.style.background = color;
-            li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
+            applyBg(li, false);
             li.textContent = entry.label || '-';
             listEl.appendChild(li);
             currentCountry = null;
@@ -277,17 +261,16 @@
           }
           const label = computeDisplayLabel(idx);
           if (q && (!label || !label.toLowerCase().includes(q))) return;
-          const paletteIdx = Math.max(sectionIdx, 0) % palette.length;
-          const color = palette[paletteIdx];
-          li.style.background = color;
-          li.style.borderLeft = `3px solid ${color.replace(/0\.18\)$/, '0.35)')}`;
           const navIdx = navEntries.findIndex(n => n._idx === idx);
           if (navIdx === currentNavIndex) {
             li.classList.add('active');
+            applyBg(li, true);
             // Bring current page into view without jank
             setTimeout(() => {
               try { li.scrollIntoView({ block: 'center', behavior: 'auto' }); } catch (_) {}
             }, 0);
+          } else {
+            applyBg(li, false);
           }
           const link = document.createElement('a');
           link.href = entry.url;
