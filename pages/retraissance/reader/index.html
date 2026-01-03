@@ -724,6 +724,8 @@
           try { h = new URL(h).pathname; } catch (_) { /* fallback below */ }
         }
         h = h.replace(/^\/+/, '/');
+        // If already prefixed with the repo base (e.g., /Wiki/...), leave as-is.
+        if (PAGES_PREFIX && h.startsWith(`${PAGES_PREFIX}/`)) return h;
         // Handle bare relative entries like "pages/..." or "retraissance/...".
         if (h.startsWith('pages/')) h = `/${h}`;
         if (h.startsWith('retraissance/')) h = `/pages/${h}`;
