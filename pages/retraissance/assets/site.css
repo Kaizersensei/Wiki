@@ -39,6 +39,38 @@ a {
   cursor: pointer;
 }
 
+/* Themed buttons (shared across scripted UIs) */
+.btn-themed,
+button:not(.nav-random-icon) {
+  background: url('../reader/media/story/button_idle_unselected_available.png') center center / 100% 100% no-repeat;
+  border: none;
+  color: #2f1f14;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 6px;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.15);
+}
+.btn-themed:hover,
+button:not(.nav-random-icon):hover {
+  background: url('../reader/media/story/button_current_selected.png') center center / 100% 100% no-repeat;
+}
+.btn-themed:disabled,
+button:not(.nav-random-icon):disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.pager-floating a {
+  background: url('../reader/media/story/button_idle_unselected_available.png') center center / 100% 100% no-repeat;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #2f1f14;
+  font-weight: 800;
+}
+.pager-floating a:hover {
+  background: url('../reader/media/story/button_current_selected.png') center center / 100% 100% no-repeat;
+}
+
 a:hover {
   text-decoration: underline;
 }

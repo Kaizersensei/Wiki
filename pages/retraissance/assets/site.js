@@ -2935,6 +2935,10 @@ const buildBreadcrumb = () => {
     try { initPrevNextNav(); } catch (err) { console.error('initPrevNextNav failed', err); }
     try { rebuildNavLinks(); } catch (err) { console.error('rebuildNavLinks failed', err); }
     try { initRandomButton(); } catch (err) { console.error('initRandomButton failed', err); }
+    try {
+      const buttons = Array.from(document.querySelectorAll('button')).filter(b => !b.classList.contains('nav-random-icon'));
+      buttons.forEach(b => b.classList.add('btn-themed'));
+    } catch (err) { console.error('button skinning failed', err); }
 
     // Universe autolink from lexicon data
     const pagePath = (location.pathname || '').replace(/\\\\/g, '/');
