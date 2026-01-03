@@ -287,7 +287,7 @@
             applyBg(li, false);
           }
           const link = document.createElement('a');
-          link.href = entry.url;
+          link.href = normalize(entry.url);
           const isParent = parentKeywords.some(k => (label || '').toLowerCase().includes(k));
           const isLocation = (entry.url || '').includes('/locations/');
           const isChild = (groupIdx >= 0 && !entry.isSep && !isParent) || isLocation;
@@ -503,6 +503,12 @@
           const src = el.getAttribute('src');
           const fixed = normSrc(src);
           if (fixed && fixed !== src) el.setAttribute('src', fixed);
+        });
+        // Normalize anchor links inside rendered content so they work on GitHub Pages.
+        container.querySelectorAll('a[href]').forEach(a => {
+          const href = a.getAttribute('href');
+          const fixed = normalize(href);
+          if (fixed && fixed !== href) a.setAttribute('href', fixed);
         });
       };
 
