@@ -22,7 +22,7 @@
       font-weight: 700;
     }
     #reader-list .entry.struct { font-weight: 700; }
-    #reader-content { background: #fffaf3; padding: 16px; border-radius: 8px; min-height: 70vh; border: 1px solid #d8c9a8; }
+    #reader-content { background: transparent; padding: 16px; border-radius: 8px; min-height: 70vh; border: none; }
     .reader-nav { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
     .reader-nav button { padding: 6px 10px; font-size: 13px; }
     .reader-pos { font-weight: 700; }
@@ -157,8 +157,16 @@
           contentEl.querySelectorAll('img, video, audio, source').forEach(el => {
             const src = el.getAttribute('src');
             if (!src || /^https?:\/\//i.test(src)) return;
-            const p = src.startsWith('/') ? src : `/${src}`;
-            el.setAttribute('src', normalize(p));
+            try {
+              const baseUrl = entries[idx].url.startsWith('http')
+                ? entries[idx].url
+                : `${location.origin}${entries[idx].url.startsWith('/') ? '' : '/'}${entries[idx].url}`;
+              const abs = new URL(src, baseUrl).pathname;
+              el.setAttribute('src', normalize(abs));
+            } catch (_) {
+              const p = src.startsWith('/') ? src : `/${src}`;
+              el.setAttribute('src', normalize(p));
+            }
           });
           try { bindInlineLightbox && bindInlineLightbox(); } catch (_) {}
           const active = listEl.querySelector('.entry.active');
