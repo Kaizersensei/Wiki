@@ -200,6 +200,10 @@
     "label": "Aokuni Culture"
   },
   {
+    "url": "/pages/retraissance/densetsu/universe/cultures/crimson_culture.html",
+    "label": "Crimson Culture"
+  },
+  {
     "url": "/pages/retraissance/reader/bible/topic_factions_power.html",
     "label": "Factions & Power"
   },
@@ -222,6 +226,10 @@
   {
     "url": "/pages/retraissance/densetsu/universe/factions/crimson_dynasty.html",
     "label": "Crimson Dynasty"
+  },
+  {
+    "url": "/pages/retraissance/densetsu/universe/factions/crimson_courts.html",
+    "label": "Crimson Courts"
   },
   {
     "url": "/pages/retraissance/densetsu/universe/factions/galport_trade_federation.html",

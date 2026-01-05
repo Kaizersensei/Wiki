@@ -39,11 +39,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       color: #2f1f14;
       font-weight: 700;
     }
     .story-header { background-image: url('../media/story/page_header.png'); font-size: 32px; padding-left: 28px; }
     .story-footer { background-image: url('../media/story/page_footer.png'); font-size: 14px; }
+    .story-footer-title { flex: 1; margin-left: 12px; font-size: 150%; }
+    .story-footer-page { flex: 1; text-align: right; margin-right: 12px; font-size: 110%; }
+    .story-footer-nav { display: flex; gap: 8px; justify-content: center; flex: 0 0 auto; }
     .story-body {
       background: url('../media/story/page_midsection.png') center center / 100% 100% repeat-y;
       padding: 16px;
@@ -112,6 +116,10 @@
         posEl.textContent = current >= 0 ? `Page ${current + 1} / ${entries.length}` : '';
         prevBtn.disabled = current <= 0;
         nextBtn.disabled = current >= entries.length - 1;
+        const footPrev = contentEl.querySelector('#story-prev-footer');
+        const footNext = contentEl.querySelector('#story-next-footer');
+        if (footPrev) footPrev.disabled = current <= 0;
+        if (footNext) footNext.disabled = current >= entries.length - 1;
       };
 
       const persistLast = () => {
@@ -155,7 +163,14 @@
             <div class="story-page">
               <div class="story-header"><span class="story-header-title" style="margin-left: 12px;">${title}</span></div>
               <div class="story-body">${bodyHtml}</div>
-              <div class="story-footer"><span style="margin-left: 12px; font-size: 150%;">${entries[idx].label}</span><span style="font-size: 110%;">Page ${idx + 1} / ${entries.length}</span></div>
+              <div class="story-footer">
+                <span class="story-footer-title">${entries[idx].label}</span>
+                <div class="story-footer-nav">
+                  <button id="story-prev-footer" type="button">Previous</button>
+                  <button id="story-next-footer" type="button">Next</button>
+                </div>
+                <span class="story-footer-page">Page ${idx + 1} / ${entries.length}</span>
+              </div>
             </div>
           `;
           contentEl.querySelectorAll('img, video, audio, source').forEach(el => {
@@ -172,6 +187,11 @@
               el.setAttribute('src', normalize(p));
             }
           });
+          const footPrev = contentEl.querySelector('#story-prev-footer');
+          const footNext = contentEl.querySelector('#story-next-footer');
+          if (footPrev) footPrev.addEventListener('click', () => loadEntry(current - 1, 'left'));
+          if (footNext) footNext.addEventListener('click', () => loadEntry(current + 1, 'right'));
+          updateNavButtons();
           try { bindInlineLightbox && bindInlineLightbox(); } catch (_) {}
           const active = listEl.querySelector('.entry.active');
           if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest' });

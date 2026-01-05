@@ -160,6 +160,16 @@
     "Category": "factions"
   },
   {
+    "Name": "Crimson Courts",
+    "Href": "factions/crimson_courts.html",
+    "Category": "factions"
+  },
+  {
+    "Name": "Crimson Culture",
+    "Href": "cultures/crimson_culture.html",
+    "Category": "cultures"
+  },
+  {
     "Name": "Crimson Dynasty Titles",
     "Href": "characters/crimson_dynasty_titles.html",
     "Category": "characters"
