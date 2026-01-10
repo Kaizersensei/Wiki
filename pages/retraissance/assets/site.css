@@ -434,10 +434,21 @@ strong, b {
 .panel h2 a,
 .panel h3 a,
 .panel h4 a {
-  color: inherit;
+  color: var(--page-link);           /* use link color */
+  text-decoration: none;             /* keep heading look */
+  font-weight: inherit;              /* keep heading weight */
+  text-shadow: inherit;              /* keep heading shadow */
+}
+.markdown h1 a:visited,
+.markdown h2 a:visited,
+.markdown h3 a:visited,
+.markdown h4 a:visited,
+.panel h1 a:visited,
+.panel h2 a:visited,
+.panel h3 a:visited,
+.panel h4 a:visited {
+  color: var(--page-link-visited);
   text-decoration: none;
-  font-weight: inherit;
-  text-shadow: inherit;
 }
 
 .markdown ul,
