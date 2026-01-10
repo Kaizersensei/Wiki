@@ -1,0 +1,32 @@
+STYLE RULES: IMPLICIT NARRATION AND WHEN SPEECHES HAPPEN
+(Agreed authorial principles)
+
+Core principle
+- Most meaning is implied.
+- Readers follow threads; they are not handed conclusions.
+- Information is presented as “strings,” with only the tip visible most of the time.
+
+Speeches / exposition usage (agreed)
+- Speeches (and exposition) happen only when they must:
+  - to convey someone’s exact thoughts and message
+  - to preserve character voice and intent
+- Otherwise: show via consequence, behavior, environment, procedure.
+
+Environmental pacing (agreed)
+- After high-action sequences, allow a breather:
+  - ambient sections
+  - detachment
+  - consequences rather than recap
+- Control cognitive load:
+  - section length discipline
+  - imagery-first passages that remain translatable into mental images without infodumping
+
+Protagonist decentering (agreed)
+- It is valid (and desired) to “forget Michio for a while”:
+  - everyone looks for him
+  - he wants to be forgotten (in that place, by those people)
+- Protagonists require a world that supports the journey; the world can lead for long stretches.
+
+See also: [Agency_Collapse_and_The_Eclipse.txt]
+See also: [Crimson_Control_Model_Scarcity_Courts_Propaganda.txt]
+See also: [San_Jiang_Revolt_Delayed_Ignition_Model.txt]

@@ -1,0 +1,29 @@
+AGENCY COLLAPSE AND THE GREAT ECLIPSE
+(High-level canon framing)
+
+Core statement
+- The Great Eclipse is framed as an agency-collapse event: it emerges when enough people stop meaningfully choosing.
+- The Eclipse is not “a button press” or a purely cosmic spectacle; it is a systemic consequence of collective abdication of intent.
+
+Why this framing exists in-universe
+- The Technogarch-era failure is not “machines rebelled,” but “machines succeeded too well”:
+  - friction removed
+  - uncertainty removed
+  - consequence-lag removed
+  - judgment replaced by procedure
+- As decision-making is externalized, lived intent density drops. The world keeps functioning, but authorship disappears.
+- The Eclipse becomes “unbinding” (time losing stable anchoring) rather than “destruction.”
+
+Narrative implications
+- Repetition: The Eclipse can recur because the condition is societal/systemic, not a one-time villain act.
+- Variability: Each Eclipse can look different because its surface expression depends on local structures and what forms agency-collapse takes.
+- Causality tone: No single actor “causes” it, yet many contribute.
+
+Real-world resonance (non-allegorical)
+- Past: collapses via bureaucratic inertia, enforced “order” replacing moral responsibility.
+- Present: “it’s policy” replacing ethics; metrics replacing judgment; algorithmic delegation normalizing non-authorship.
+- Future: predictive governance and optimization cultures pushing toward risk-elimination mistaken for wisdom.
+
+See also: [Okashira_Intent_and_Kiputer_Objective.txt]
+See also: [Crimson_Control_Model_Scarcity_Courts_Propaganda.txt]
+See also: [Ninth_Wave_Coercion_and_Immunity_Taxes.txt]

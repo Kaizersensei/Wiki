@@ -1,0 +1,35 @@
+OKASHIRA: INTENT AND KIPUTER OBJECTIVE
+(Canon intent framing; avoids cliché “world domination/time control”)
+
+Okashira’s goal (agreed framing)
+- Okashira wants the Kiputer inside Mirror Spire.
+- Not to “predict war outcomes” for tactical advantage.
+- Purpose: find the right conditions for a new Great Eclipse (a world reset) where Okashira becomes the one who binds time (instead of the Sage).
+
+Self-concept
+- Okashira does not see himself as a villain.
+- He frames himself as the correcting hand of destiny: the agent who restores coherence when the world becomes unstable through divergence.
+
+Mechanism: coherence via agency compression
+- Okashira’s worldview treats widespread agency as “noise” that creates divergence/branches.
+- Branches threaten the conditions required for successful rebinding.
+- Therefore, the plan is not “rule the future,” but reduce agency until rebinding becomes inevitable.
+
+Operational posture (timeline control without “omniscient mastermind” tone)
+- Okashira can be positioned as near/at the Kiputer throughout, influencing events indirectly.
+- The unfolding land-by-land outcomes can be “more or less controlled,” not perfectly.
+- Michio’s lived choices create branches that threaten Okashira’s desired outcome timeline.
+- This explains why Okashira intervenes personally near the end: not for spectacle, but because the branch-risk becomes unacceptable.
+
+Design constraints implied by this framing
+- Avoid melodramatic “I control everything” exposition.
+- Show system behaviors that compress choice:
+  - scarcity management
+  - procedural accusations
+  - spectacle justice when needed
+  - anti-knowledge enforcement
+- Let the reader infer intent through consequences rather than declarations.
+
+See also: [Agency_Collapse_and_The_Eclipse.txt]
+See also: [Ninth_Wave_Coercion_and_Immunity_Taxes.txt]
+See also: [San_Jiang_Revolt_Delayed_Ignition_Model.txt]

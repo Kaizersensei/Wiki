@@ -1,0 +1,39 @@
+SAN JIANG REVOLT: DELAYED IGNITION MODEL
+(Canon direction: not immediate; begins as erosion)
+
+High-level shape (agreed)
+- The revolt is not an immediate consequence of the arena event.
+- It is delayed and accumulative.
+- The ignition is systemic: patrol attrition, confidence loss, and failed conscription attempts.
+
+Stages (implementation-usable)
+1) Ambient destabilization
+   - rumors spread inconsistently
+   - official statements conflict but converge on “Court won” and “dissent = execution”
+   - patrols become more frequent/aggressive, then uneven
+
+2) Quiet disappearance of small patrols
+   - not presented as “heroic resistance” yet
+   - treated as unexplained absences
+   - community learns it outnumbers the state and can outthink its routines
+
+3) Late alarm at the High Courts
+   - signals arrive too late for orderly counteraction
+   - response patterns are slow, procedural, and mismatched to street-level dynamics
+
+4) Forced conscription: the inflection point
+   - conscription raids are violently denied
+   - authority loses its illusion of inevitability
+   - guards show poor training and fear once compliance breaks
+
+5) “Too late” phase
+   - control collapses locally before it collapses politically
+   - information spreads via disguised channels (work talk, prayer-like cadence, gossip that sounds harmless)
+
+Michio’s placement (agreed narrative approach)
+- For long stretches, this is not “Michio’s story.”
+- He returns at a chosen climax point (e.g., staged execution climax).
+- The world is allowed to exist and move without the protagonist centered.
+
+See also: [Crimson_Control_Model_Scarcity_Courts_Propaganda.txt]
+See also: [Style_Rules_Implicit_Narration_and_Speeches.txt]

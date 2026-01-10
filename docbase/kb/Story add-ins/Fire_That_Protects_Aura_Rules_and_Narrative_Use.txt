@@ -1,0 +1,27 @@
+THE FIRE THAT PROTECTS: AURA RULES AND NARRATIVE USE
+(Canon constraints and intent)
+
+What it is (agreed)
+- Not an aggressive “projected shield expanding radius of defense” as an intentional combat tool.
+- It remains (for now) an unintentional fire-reactive aura.
+
+What it does in practice (usable behaviors)
+- Neutralizes / absorbs / redirects hostile fire Ki rather than “casting” fire.
+- Under stress, growth of the aura can cause an unintentional heat-blast:
+  - can disrupt formations
+  - can throw attackers back
+  - can create crowd movement opportunities (e.g., doors forced open, formation broken)
+
+What it must NOT become (constraints)
+- No proud heroic “chosen one” framing.
+- No “destiny” monologues tied to it.
+- Avoid it becoming a clean, repeatable superpower with explicit rules too early.
+- Keep it experiential: consequence-first, explanation-later (or never fully explained).
+
+Narrative role (agreed direction)
+- Serves as a mechanism for escape dynamics without turning the scene into power fantasy.
+- The aura’s presence shifts how institutions react (fear upward, protocol breaks).
+- It should be legible through outcomes, not named systems.
+
+See also: [Style_Rules_Implicit_Narration_and_Speeches.txt]
+See also: [San_Jiang_Revolt_Delayed_Ignition_Model.txt]

@@ -1,0 +1,32 @@
+NINTH WAVE: COERCION, RIVER ANOMALY, AND “IMMUNITY TAXES”
+(Canon placement: revealed in connection with revolution)
+
+Narrative status / placement
+- The Ninth Wave’s presence is intentionally “lost” or muted after Hirogawa.
+- Their involvement returns as a revelation tied to the developing revolution, not earlier.
+
+Core involvement (agreed)
+- Shortages and rationing in Crimson lands are partly due to Ninth Wave coercion.
+- There exists a system of high “mafia taxes” paid by the Courts in exchange for “immunity.”
+- These arrangements were not openly spoken of; they are revealed as the revolution is underway.
+
+What “immunity” means (usable interpretation without over-specifying)
+- Protection from targeted disruption, sabotage, or escalation that would otherwise be attributed to “anomaly,” “alchemy,” or unrest.
+- A stabilizing payment that still starves the population—because resource extraction and stockpiling remain aligned to power survival, not public welfare.
+
+Relationship to the river anomaly (agreed direction, minimal specifics)
+- The river anomaly (salt intrusion / catastrophe) is a pressure point.
+- It functions both as material scarcity and as a narrative lever for dependency control.
+- The Ninth Wave can exploit this condition to extract tribute, intensify dependency, or destabilize court legitimacy.
+
+Reveal strategy (tone-consistent)
+- Avoid speeches and villain monologues.
+- Reveal through:
+  - documents/seals seen at the wrong time
+  - whispered logistics (“stockpile routes”)
+  - abrupt policy shifts that suddenly “make sense”
+  - a pattern of “paid calm” that fails once payments falter
+
+See also: [Crimson_Control_Model_Scarcity_Courts_Propaganda.txt]
+See also: [San_Jiang_Revolt_Delayed_Ignition_Model.txt]
+See also: [Agency_Collapse_and_The_Eclipse.txt]

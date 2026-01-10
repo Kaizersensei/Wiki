@@ -1,0 +1,17 @@
+DENSETSU KNOWLEDGE BASE (TXT)
+Scope: Consolidated, agreed-upon concepts from recent discussion threads (Okashira, Ninth Wave, Eclipse/agency, Crimson control mechanics, revolt ignition, and “Fire That Protects” constraints).
+
+Conventions
+- Cross-links use: See also: [FileName.txt]
+- “Canon” here means: explicitly agreed, or repeatedly reinforced as the intended framing.
+- Anything not agreed / still in flux is omitted from these articles by design. (A short exclusions log is provided separately.)
+
+Articles
+1) [Agency_Collapse_and_The_Eclipse.txt]
+2) [Okashira_Intent_and_Kiputer_Objective.txt]
+3) [Ninth_Wave_Coercion_and_Immunity_Taxes.txt]
+4) [Crimson_Control_Model_Scarcity_Courts_Propaganda.txt]
+5) [San_Jiang_Revolt_Delayed_Ignition_Model.txt]
+6) [Fire_That_Protects_Aura_Rules_and_Narrative_Use.txt]
+7) [Style_Rules_Implicit_Narration_and_Speeches.txt]
+8) [Exclusions_Log_Not_Agreed_or_Misaligned.txt]

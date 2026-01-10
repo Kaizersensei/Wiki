@@ -1,0 +1,16 @@
+EXCLUSIONS LOG (NOT AGREED / MISALIGNED / STILL IN FLUX)
+This file exists to document what was filtered out of “canon KB” articles.
+
+1) “World domination / time control” as Okashira’s goal
+- Explicitly rejected as boring/cliché.
+
+2) Intentional, aggressively used “projected fire shield expanding radius” as a controlled ability
+- Replaced with unintentional, fire-reactive aura framing.
+
+3) Any plan text that accidentally mixed “already-written manuscript events” with “still-deciding concepts”
+- Disallowed for KB canon; KB articles must reflect decided framing only.
+
+4) Any requirement to lock the revolt to a single immediate trigger
+- Replaced with delayed ignition model (attrition + denial + escalation).
+
+If you want, I can maintain this exclusions log going forward whenever decisions change, so KB stays clean.
