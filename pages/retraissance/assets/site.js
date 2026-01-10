@@ -2993,7 +2993,8 @@ const buildBreadcrumb = () => {
             if (parent) {
               const tag = parent.tagName;
               if (tag === 'A' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
-              if (/^H[1-6]$/.test(tag)) return NodeFilter.FILTER_REJECT;
+              // Skip any node inside a heading so we don't restyle headings as links
+              if (parent.closest('h1, h2, h3, h4, h5, h6')) return NodeFilter.FILTER_REJECT;
               if (parent.closest('.no-autolink, [data-autolink="off"]')) return NodeFilter.FILTER_REJECT;
               if (parent.closest('.link-list')) return NodeFilter.FILTER_REJECT;
             }
