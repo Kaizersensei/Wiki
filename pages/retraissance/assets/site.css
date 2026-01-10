@@ -425,6 +425,21 @@ strong, b {
   font-weight: 800;
 }
 
+/* Preserve heading look for autolinked headings */
+.markdown h1 a,
+.markdown h2 a,
+.markdown h3 a,
+.markdown h4 a,
+.panel h1 a,
+.panel h2 a,
+.panel h3 a,
+.panel h4 a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: inherit;
+  text-shadow: inherit;
+}
+
 .markdown ul,
 .markdown ol {
   margin: 0 0 12px 22px;
