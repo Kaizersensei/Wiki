@@ -451,6 +451,32 @@ strong, b {
   text-decoration: none;
 }
 
+/* Stronger override for autolinked headings */
+.panel h1 a.auto-link,
+.panel h2 a.auto-link,
+.panel h3 a.auto-link,
+.panel h4 a.auto-link,
+.markdown h1 a.auto-link,
+.markdown h2 a.auto-link,
+.markdown h3 a.auto-link,
+.markdown h4 a.auto-link {
+  color: var(--page-link) !important;
+  font-weight: inherit !important;
+  text-shadow: inherit !important;
+  text-decoration: none !important;
+}
+.panel h1 a.auto-link:visited,
+.panel h2 a.auto-link:visited,
+.panel h3 a.auto-link:visited,
+.panel h4 a.auto-link:visited,
+.markdown h1 a.auto-link:visited,
+.markdown h2 a.auto-link:visited,
+.markdown h3 a.auto-link:visited,
+.markdown h4 a.auto-link:visited {
+  color: var(--page-link-visited) !important;
+  text-decoration: none !important;
+}
+
 .markdown ul,
 .markdown ol {
   margin: 0 0 12px 22px;
