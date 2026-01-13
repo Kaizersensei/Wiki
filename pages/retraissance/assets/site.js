@@ -479,6 +479,7 @@ const buildBreadcrumb = () => {
         <div class="nav-dropdown-menu">
           <a href="${prefix}retraissance/index.html">Home</a>
           <a href="${prefix}retraissance/software/index.html">Software</a>
+          <a href="${prefix}retraissance/studies/index.html">Studies</a>
           <a href="${prefix}retraissance/team/index.html">Team</a>
           <a href="${prefix}retraissance/projects/index.html">Projects</a>
           <a href="${prefix}retraissance/sitemap.html">Site Map</a>
