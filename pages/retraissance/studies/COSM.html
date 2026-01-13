@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Semi-Passive Creator Revenue Channels (Create once → sell many)</title>
+  <style>
+    :root { --fg:#111; --muted:#555; --bg:#fff; --line:#e6e6e6; --chip:#f5f5f5; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); background:var(--bg); }
+    header { padding: 28px 18px 12px; border-bottom:1px solid var(--line); }
+    h1 { margin:0 0 6px; font-size: 22px; }
+    .sub { margin:0; color:var(--muted); line-height:1.35; }
+    main { max-width: 1050px; margin: 0 auto; padding: 18px; }
+    h2 { margin: 24px 0 10px; font-size: 18px; }
+    h3 { margin: 18px 0 8px; font-size: 15px; }
+    p { margin: 8px 0; line-height:1.5; }
+    ul { margin: 8px 0 12px 20px; }
+    li { margin: 6px 0; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .card { border:1px solid var(--line); border-radius: 10px; padding: 12px 12px 10px; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .chip { display:inline-block; background: var(--chip); border:1px solid var(--line); border-radius: 999px; padding: 2px 8px; font-size: 12px; color:var(--muted); }
+    table { width:100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid var(--line); padding: 10px; vertical-align: top; text-align:left; }
+    th { background:#fafafa; font-weight: 600; }
+    .small { font-size: 12px; color: var(--muted); }
+    .note { border-left: 3px solid #ddd; padding: 10px 12px; color: var(--muted); background: #fafafa; border-radius: 8px; }
+    footer { border-top:1px solid var(--line); padding: 14px 18px; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Semi-Passive Creator Revenue Channels</h1>
+    <p class="sub">
+      Objective: <strong>Create once → sell many</strong> (books/comics, PDFs, asset packs, merch).<br/>
+      Constraints: <strong>free to make first sales</strong>, <strong>no mandatory subscription</strong>, manageable by <strong>one assigned operator</strong>.
+    </p>
+  </header>
+
+  <main>
+    <section class="note">
+      <strong>Scope:</strong> Channel discovery + free-tier requirements/capabilities only. Strategy comes after initial selection.
+    </section>
+
+    <h2>1) Digital-First Publishing (Lowest friction)</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Amazon KDP (Kindle Direct Publishing)</h3>
+        <p><strong>Best for:</strong> ebooks, print-on-demand paperbacks/hardcovers (lore books, guides, comics volumes, artbooks).</p>
+        <ul>
+          <li><strong>Cost:</strong> free to publish; no subscription required.</li>
+          <li><strong>Free capabilities:</strong> upload ebooks + paperbacks; sell via Amazon storefront; optional ISBN provided.</li>
+          <li><strong>Operational fit:</strong> high—once formatting is solved, it’s largely maintenance-light.</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Digital</span><span class="chip">Print-on-demand</span><span class="chip">High scale</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>itch.io (Digital goods)</h3>
+        <p><strong>Best for:</strong> PDFs (comics), devlogs, soundtracks, art packs, early builds, bundles.</p>
+        <ul>
+          <li><strong>Cost:</strong> free to create pages and upload content.</li>
+          <li><strong>Free capabilities:</strong> pay-what-you-want; configurable revenue share; direct or collected payouts.</li>
+          <li><strong>Operational fit:</strong> very high—simple storefront + community hub.</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Digital</span><span class="chip">Community</span><span class="chip">Flexible pricing</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Gumroad (Direct digital storefront)</h3>
+        <p><strong>Best for:</strong> PDFs, asset packs, zines, artbooks, toolkits; direct-to-fan sales.</p>
+        <ul>
+          <li><strong>Cost:</strong> no required subscription; fees apply per sale.</li>
+          <li><strong>Free capabilities:</strong> pay-what-you-want via “0+” pricing; discount codes; file delivery.</li>
+          <li><strong>Operational fit:</strong> high—single-person manageable.</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Digital</span><span class="chip">Direct-to-fan</span><span class="chip">Solo-friendly</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Ko-fi (Shop + donations)</h3>
+        <p><strong>Best for:</strong> lightweight shop, tips, memberships, and digital downloads alongside community posts.</p>
+        <ul>
+          <li><strong>Cost:</strong> free to start; service fees on shop/membership features depending on mode.</li>
+          <li><strong>Free capabilities:</strong> shop listings; digital/physical items; significant storage and item limits.</li>
+          <li><strong>Operational fit:</strong> high—good “support hub” + small storefront.</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Digital</span><span class="chip">Support hub</span><span class="chip">Low overhead</span>
+        </div>
+      </article>
+    </div>
+
+    <h2>2) Print-on-Demand & Dropshipping (Physical goods)</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Lulu (Print-on-demand books)</h3>
+        <p><strong>Best for:</strong> higher-quality books (artbooks, comics collections, lore volumes) + optional distribution.</p>
+        <ul>
+          <li><strong>Cost:</strong> free to create an account and publish; pay per print job + shipping.</li>
+          <li><strong>Free capabilities:</strong> PoD fulfillment; guides/templates; no order minimums.</li>
+          <li><strong>Operational fit:</strong> medium-high—slightly more setup than KDP, but stable once configured.</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Print-on-demand</span><span class="chip">Books</span><span class="chip">No minimums</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Printify (Dropshipping merch)</h3>
+        <p><strong>Best for:</strong> posters, apparel, mugs, simple merch. You upload designs; they fulfill orders.</p>
+        <ul>
+          <li><strong>Cost:</strong> free to use; optional paid plan exists but not required.</li>
+          <li><strong>Free capabilities:</strong> create products; connect to up to a limited number of stores; pay per order/fulfillment.</li>
+          <li><strong>Operational fit:</strong> medium—more SKUs, returns, and customer support considerations.</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Dropshipping</span><span class="chip">Merch</span><span class="chip">Pay-per-order</span>
+        </div>
+      </article>
+    </div>
+
+    <h2>3) Comics-Specific Distribution</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>GlobalComix</h3>
+        <p><strong>Best for:</strong> serialized comics + digital discovery in a comic-native audience.</p>
+        <ul>
+          <li><strong>Cost:</strong> free creator tier available.</li>
+          <li><strong>Free capabilities:</strong> unlimited uploads; analytics; scheduled publishing; team roles; monetization tools.</li>
+          <li><strong>Operational fit:</strong> medium-high—works well if you can publish consistently (even in “seasons”).</li>
+        </ul>
+        <div class="meta">
+          <span class="chip">Comics</span><span class="chip">Discovery</span><span class="chip">Monetization</span>
+        </div>
+      </article>
+    </div>
+
+    <h2>4) Quick Comparison (Free-tier reality check)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>What you can sell</th>
+          <th>Free to start?</th>
+          <th>Free-tier highlights</th>
+          <th>Solo ops notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Amazon KDP</strong></td>
+          <td>Ebooks, PoD paperbacks/hardcovers</td>
+          <td>Yes</td>
+          <td>Upload/publish without subscription; Amazon distribution</td>
+          <td>Formatting is the main “work”; after that, low maintenance</td>
+        </tr>
+        <tr>
+          <td><strong>itch.io</strong></td>
+          <td>Digital goods (PDFs, builds, assets)</td>
+          <td>Yes</td>
+          <td>Free uploads; open revenue share; payment handling options</td>
+          <td>Very easy; doubles as community hub</td>
+        </tr>
+        <tr>
+          <td><strong>Gumroad</strong></td>
+          <td>Digital downloads</td>
+          <td>Yes</td>
+          <td>PWYW via “0+”; file delivery; discount codes</td>
+          <td>Simple storefront; fee-per-sale model</td>
+        </tr>
+        <tr>
+          <td><strong>Ko-fi</strong></td>
+          <td>Digital + some physical listings + support</td>
+          <td>Yes</td>
+          <td>Free account; shop storage/limits; fee structure varies by mode</td>
+          <td>Good “support HQ”; keep rewards low-maintenance</td>
+        </tr>
+        <tr>
+          <td><strong>Lulu</strong></td>
+          <td>PoD books</td>
+          <td>Yes</td>
+          <td>Free publishing; pay per print; no minimum orders</td>
+          <td>Great for premium books; more setup than KDP</td>
+        </tr>
+        <tr>
+          <td><strong>Printify</strong></td>
+          <td>Dropship merch</td>
+          <td>Yes</td>
+          <td>Free account; pay per order; optional premium is not required</td>
+          <td>More operational overhead (returns/support/SKU sprawl)</td>
+        </tr>
+        <tr>
+          <td><strong>GlobalComix</strong></td>
+          <td>Digital comics (serialized)</td>
+          <td>Yes</td>
+          <td>Free tier with publishing + analytics + monetization tools</td>
+          <td>Works best with seasonal/episodic cadence</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="small">
+      Next step (when you’re ready): shortlist 2–3 primary channels and define “operator workflows” per channel (upload cadence, packaging standards, update cadence, support load).
+    </p>
+  </main>
+
+  <footer>
+    Document purpose: early channel selection for semi-passive revenue. Not legal/tax advice. Validate fees/payout rules per region before launch.
+  </footer>
+</body>
+</html>
