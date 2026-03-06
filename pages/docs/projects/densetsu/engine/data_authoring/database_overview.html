@@ -38,88 +38,30 @@
       <p class="eyebrow">engine</p>
       <h1>Database &amp; Data Model Overview</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
-<h2 id="responsibilities">Responsibilities</h2>
+<h2>Overview</h2>
+<p>The data layer is built around custom Resource schemas and data assets stored in <code>data/</code> and <code>data3d/</code>. These resources define AI profiles, biomes, collisions, factions, items, and other gameplay data.</p>
+<h2>Resource schema</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>AIProfileData</code></li>
+  <li><code>BiomeData</code></li>
+  <li><code>CollisionData</code></li>
+  <li><code>FactionData</code></li>
+  <li><code>ItemData</code></li>
 </ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
-<h2 id="dependencies">Dependencies</h2>
+<h2>Asset locations</h2>
 <ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
+  <li><code>data/</code> — core data assets.</li>
+  <li><code>data3d/</code> — 3D-specific data assets (camera, items, prefabs, movement).</li>
 </ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
-<h2 id="constraints">Constraints</h2>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Resource schemas and sample assets exist.</p>
+<h2>Sources</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>engine/data/resources/*.gd</code></li>
+  <li><code>engine3d/data/resources/*.gd</code></li>
+  <li><code>data3d/</code> resources</li>
 </ul>
-<h2 id="sources">Sources</h2>
-<ul>
-<li>(TODO; keep aligned with frontmatter)</li>
-</ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-          <li>Link to database schemas, editor, pipelines; add ERDs.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Key principles: 
-●​ Certainty over probability: It assumes no free will or randomness, aiming for a 
-single, predictable outcome based on inputs, unlike probabilistic models that predict 
-a range of possible outcomes. 
-●​ Scientific and risk-based: It merges the scientific method with business principles
-
----
-
-from the start.  
-
-1: Overview 
-Game Identity 
-Title: Densetsu​
-
----
-
-2: World Overview 
-Historical Timeline 
-Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the</pre>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -131,5 +73,7 @@ Time in Densetsu is measured relative to the Great Eclipse, an event that fractu
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 
