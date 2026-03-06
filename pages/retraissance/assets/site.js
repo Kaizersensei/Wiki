@@ -197,6 +197,13 @@
     const rel = pagePath.substring(at + marker.length) || 'index.html';
     const navRoot = pagePath.substring(0, at + marker.length);
     const navUrl = `${navRoot}nav-tree.json`;
+    const resolveEngineHref = (href = '') => {
+      if (!href) return href;
+      if (/^(https?:)?\/\//i.test(href)) return href;
+      if (href.startsWith('/')) return withBasePrefix(href);
+      const clean = href.replace(/^\.\//, '');
+      return withBasePrefix(`${navRoot}${clean}`);
+    };
 
     let tree = null;
     try {
@@ -244,7 +251,7 @@
       const idxRel = idxHref.replace(/^\.\//, '');
 
       const top = document.createElement('a');
-      top.href = idxHref;
+      top.href = resolveEngineHref(idxHref);
       top.textContent = group.title || idxRel || 'Section';
       if (idxRel && rel === idxRel) top.classList.add('active');
       g.appendChild(top);
@@ -255,7 +262,7 @@
         const a = document.createElement('a');
         const href = (page && page.href) ? page.href : '';
         const hrefRel = href.replace(/^\.\//, '');
-        a.href = href;
+        a.href = resolveEngineHref(href);
         a.className = 'engine-nav-page';
         a.textContent = (page && page.title) ? page.title : hrefRel;
         if (hrefRel && rel === hrefRel) a.classList.add('active');
