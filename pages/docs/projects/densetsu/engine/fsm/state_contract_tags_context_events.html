@@ -38,93 +38,32 @@
       <p class="eyebrow">engine</p>
       <h1>State Contract (Tags, Context, Events)</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
-<h2 id="responsibilities">Responsibilities</h2>
+<h2>Overview</h2>
+<p>This page captures the current evidence for state contracts, tagging, and context events. The context database shows FSM core classes and a controller context object, but no explicit “state contract tag” registry or event schema.</p>
+<h2>Current evidence</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>engine/fsm/State.gd</code> and <code>engine/fsm/StateMachine.gd</code> define state lifecycle and transitions.</li>
+  <li><code>engine3d/fsm/ControllerContext3D.gd</code> provides refreshable runtime context for 3D states.</li>
 </ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
-<h2 id="dependencies">Dependencies</h2>
+<h2>Likely integration points</h2>
 <ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
+  <li>Actor tag signals from <code>ActorInterface3D</code> may act as state gating signals.</li>
+  <li>Controller context data may function as a lightweight state contract.</li>
 </ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
-<h2 id="constraints">Constraints</h2>
+<h2>Open questions</h2>
 <ul>
-<li>(TODO)</li>
+  <li>Is there a formal contract/tag schema for state transitions?</li>
+  <li>Are context events published through the EventBus or another channel?</li>
 </ul>
-<h2 id="sources">Sources</h2>
+<h2>Status</h2>
+<p><strong>Unknown.</strong> No explicit contract/tag registry identified in the evidence set.</p>
+<h2>Sources</h2>
 <ul>
-<li>(TODO; keep aligned with frontmatter)</li>
+  <li><code>engine/fsm/State.gd</code></li>
+  <li><code>engine/fsm/StateMachine.gd</code></li>
+  <li><code>engine3d/fsm/ControllerContext3D.gd</code></li>
 </ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-          <li>Link to actors, runtime; add state diagrams.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Each region’s culture evolved in response to its particular anomaly type, shaping society, 
-belief, and survival. 
-Factional Context 
-●​ Hirogawa: Neutral and prosperous, exporting natural resources. 
-●​ Seigetsu Empire: Militarized expansionist state under Okashira’s shadow.
-
----
-
-Factional Context 
-●​ Hirogawa: Neutral and prosperous, exporting natural resources. 
-●​ Seigetsu Empire: Militarized expansionist state under Okashira’s shadow. 
-●​ Crimson Dominion: Guarded isolationists; distrust foreigners and avoid conflict. 
-●​ Yukigami: Frozen wasteland; spiritual aftermath of annihilation.
-
----
-
-interaction.​
- 
-3.​ Reflection: Rest and interpret events at safe points to consolidate experience.​
- 
-This triad ensures each gameplay moment has emotional and systemic weight.</pre>
-      
-        <h2>Creatures vs Enemies</h2>
-        <div class="callout"><p>Creatures are Actors but distinct from Enemies: instinct-driven, simplified FSM, can be tamed/ridden/studied; corrupted creatures may temporarily behave like enemies but remain in Creature group. Enemies have intent/allegiance/corruption.</p></div>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -136,5 +75,7 @@ This triad ensures each gameplay moment has emotional and systemic weight.</pre>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 
