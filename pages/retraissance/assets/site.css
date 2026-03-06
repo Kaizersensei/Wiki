@@ -31,6 +31,20 @@ body.theme-wiki {
   text-shadow: 3px 3px 3px rgba(255, 255, 255, 0.375);
 }
 
+body.engine-nav {
+  margin: 0;
+  background: #fff;
+  background-image: none;
+}
+
+body.engine-nav .engine-nav-frame-body {
+  padding: 12px 10px 16px 10px;
+}
+
+body.engine-nav .engine-nav-frame-body h3 {
+  margin: 0 0 8px 0;
+}
+
 a {
   color: var(--page-link);
   text-decoration: none;
