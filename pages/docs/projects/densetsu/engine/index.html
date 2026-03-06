@@ -49,89 +49,34 @@
       <p class="eyebrow">engine</p>
       <h1>Engine Wiki</h1>
       <article class="markdown">
-        <h2 id="source-archives">Source archives</h2>
+<h2>Overview</h2>
+<p>This index summarizes the Densetsu Engine wiki and points to the primary subsystems. Content is sourced from the context database and existing project notes; gaps are explicitly marked in each section.</p>
+<h2>Sections</h2>
 <ul>
-<li><a href="../meta/raw_sources/Densetsu_Design_Document.html">Densetsu Design Document (full text)</a></li>
-<li><a href="../meta/raw_sources/Densetsu_–_Chat‑only_Canon_&_Project‑wide_Decisions.html">Chat-only Canon &amp; Decisions (full text)</a></li>
+  <li><a href="runtime/index.html">Core Runtime</a></li>
+  <li><a href="actors/index.html">Actor System</a></li>
+  <li><a href="fsm/index.html">FSM System</a></li>
+  <li><a href="stats_combat/index.html">Stats &amp; Combat</a></li>
+  <li><a href="input_movement/index.html">Input &amp; Movement</a></li>
+  <li><a href="data_authoring/index.html">Data &amp; Authoring</a></li>
+  <li><a href="editor/index.html">Editor</a></li>
+  <li><a href="tools/index.html">Tools &amp; Debugging</a></li>
+  <li><a href="integrations/index.html">Integrations</a></li>
+  <li><a href="networking/index.html">Networking &amp; Multiplayer</a></li>
+  <li><a href="rendering/index.html">Rendering &amp; Performance</a></li>
+  <li><a href="build-deploy/index.html">Build &amp; Deployment</a></li>
+  <li><a href="testing-qa/index.html">Testing &amp; QA</a></li>
+  <li><a href="telemetry/index.html">Telemetry &amp; Observability</a></li>
+  <li><a href="modding/index.html">Modding &amp; Plugins</a></li>
 </ul>
-
-<h2 id="notes">Notes</h2>
-<p>This index is intentionally minimal. Subpages are stubs and contain no inferred details beyond cited sources.</p>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Deterministic Design 
- 
-Deterministic design is an engineering approach that minimizes or eliminates unknowns in a 
-project by using a set of well-defined parameters to predict outcomes with certainty. Instead 
-of relying on probability or random chance, it uses a scientific and fact-based method to
-
----
-
-Title: Densetsu​
-Genre: Metroidvania / Narrative Action Adventure​
-Core Engine: Densetsu Engine (Godot-based FSM & Actor System)​
-Primary Themes: Balance, Memory, Time, Renewal.​
-Tagline: “Swords, Sorcery and Shuriken”
-
----
-
-systems described in the Game Design Document (GDD) are realized in practice. It bridges 
-creative intent and technical execution by detailing the structure, modular systems, and 
-development workflow that form the foundation of the Densetsu Engine. 
-Scope 
-This document serves as a blueprint for developers, designers, and technical artists under</pre>
-      
-        <h2>Game Identity</h2>
-        <div class="callout"><p>Title: Densetsu. Genre: Metroidvania / Narrative Action Adventure. Core Engine: Godot-based FSM &amp; Actor System. Themes: Balance, Memory, Time, Renewal. Tagline: &#x27;Swords, Sorcery and Shuriken&#x27;. Narrative: Michio heals anomalies born of the Great Eclipse; time observed, not mastered.</p></div>
-      
-        <h2>Core Loop</h2>
-        <div class="callout"><p>Pillars: Observation → Action → Reflection. Core loop: explore anomalies/regions; engage via combat/puzzles/environment; return to rest points to stabilize experience and progress.</p></div>
-      
-        <h2>Work Policies</h2>
-        <div class="callout"><p>AI Good: ideation, structuring, coding with plans; AI Bad: unreviewed production content, &gt;50% unreviewed AI output, consumer-facing AI art/writing. Human review mandatory.</p></div>
-      
-        <h2>Deterministic Design</h2>
-        <div class="callout"><p>Deterministic design: minimize unknowns with defined parameters; certainty over probability; scientific + risk-based; reduce complexity; clear mapped implementation path.</p></div>
-      
-        <h2>Loop Application</h2>
-        <div class="callout"><p>Pillars Observation → Action → Reflection tie directly to runtime, actors, FSM, stats, and editor flows; use Rest Points to stabilize experience and progression.</p></div>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+<h2>Source archives</h2>
+<ul>
+  <li><a href="../meta/raw_sources/Densetsu_Design_Document.html">Densetsu Design Document (full text)</a></li>
+  <li><a href="../meta/raw_sources/Densetsu_–_Chat‑only_Canon_&_Project‑wide_Decisions.html">Chat-only Canon &amp; Decisions (full text)</a></li>
+</ul>
+<h2>Status</h2>
+<p>Core Runtime, Actor System, FSM, Stats &amp; Combat, Input &amp; Movement, Data &amp; Authoring, Editor, Tools, Integrations, Rendering, Build &amp; Deployment, Testing, Telemetry, and Modding sections now contain evidence-based summaries. Networking, telemetry, build, and modding currently lack explicit engine evidence and are flagged as unknown in their pages.</p>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -143,6 +88,8 @@ This document serves as a blueprint for developers, designers, and technical art
   <script src="../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 
 
