@@ -38,87 +38,36 @@
       <p class="eyebrow">engine</p>
       <h1>Combat Overview</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
-<h2 id="responsibilities">Responsibilities</h2>
+<h2>Overview</h2>
+<p>The combat runtime centers on combat targets, attack FX handling, and projectile spawning. Evidence includes a combat target dummy for testing, an attack FX driver, and a projectile subsystem with templates and behaviors.</p>
+<h2>Core runtime elements</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>AttackFXDriver3D</code> — links combat state to VFX or debug visibility.</li>
+  <li><code>CombatTargetDummy3D</code> — test target with damage visualization and simple attack handling.</li>
+  <li><code>ActorProjectileSpawner3D</code> — spawns subweapons and projectiles.</li>
+  <li><code>DensetsuProjectile3D</code> — projectile runtime with hit + expire signals.</li>
 </ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
-<h2 id="dependencies">Dependencies</h2>
+<h2>Hit + damage flow</h2>
 <ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
+  <li>Hit detection uses combat target areas and projectile hit callbacks.</li>
+  <li>Damage feedback is represented via target dummy visuals and type multipliers.</li>
 </ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
-<h2 id="constraints">Constraints</h2>
+<h2>Data dependencies</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>data/stats</code> — stats data.</li>
+  <li><code>data/status_effects</code> — status effect definitions.</li>
+  <li><code>data/projectiles</code> and <code>data3d/projectiles</code> — projectile templates.</li>
 </ul>
-<h2 id="sources">Sources</h2>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Combat runtime scripts and projectile systems are present.</p>
+<h2>Sources</h2>
 <ul>
-<li>(TODO; keep aligned with frontmatter)</li>
+  <li><code>engine3d/combat/AttackFXDriver3D.gd</code></li>
+  <li><code>engine3d/combat/CombatTargetDummy3D.gd</code></li>
+  <li><code>engine3d/combat/projectiles/ActorProjectileSpawner3D.gd</code></li>
+  <li><code>engine3d/combat/projectiles/DensetsuProjectile3D.gd</code></li>
 </ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-          <li>Link to input, actors, runtime; add tables for stats/skills.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">from the start.  
-
-1: Overview 
-Game Identity 
-Title: Densetsu​
-
----
-
-Densetsu combines action-driven exploration with philosophical narrative design. Every 
-mechanic reinforces reflection, balance, and natural consequence rather than domination. 
-Combat, movement, progression, even the world and its inhabitants reflect the player’s 
-actions in the universe..
-
----
-
-2: World Overview 
-Historical Timeline 
-Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the</pre>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -130,5 +79,7 @@ Time in Densetsu is measured relative to the Great Eclipse, an event that fractu
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 
