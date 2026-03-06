@@ -177,6 +177,82 @@
     overlay.classList.add('active');
   };
 
+
+
+  const initEngineDocsSidebar = async () => {
+    const pagePath = (location.pathname || '').replace(/\\/g, '/');
+    const markers = [
+      '/pages/docs/projects/densetsu/engine/',
+      '/pages/retraissance/densetsu/engine/'
+    ];
+    const marker = markers.find(m => pagePath.indexOf(m) !== -1);
+    if (!marker) return;
+    const at = pagePath.indexOf(marker);
+
+    const panel = document.querySelector('main .panel');
+    const content = document.querySelector('main.content');
+    if (!panel || !content) return;
+
+    const rel = pagePath.substring(at + marker.length) || 'index.html';
+    const navRoot = pagePath.substring(0, at + marker.length);
+    const navUrl = `${navRoot}nav-tree.json`;
+
+    let tree = null;
+    try {
+      const res = await fetch(navUrl, { cache: 'no-cache' });
+      if (res.ok) tree = await res.json();
+    } catch (_) { /* ignore */ }
+    if (!tree || !Array.isArray(tree.groups)) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'engine-docs-layout';
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'engine-docs-sidebar';
+
+    const head = document.createElement('h3');
+    head.textContent = tree.title || 'Engine Wiki';
+    sidebar.appendChild(head);
+
+    const root = document.createElement('a');
+    root.className = `engine-root-link ${rel === 'index.html' ? 'active' : ''}`;
+    root.href = withBasePrefix(`${marker}index.html`);
+    root.textContent = 'Overview';
+    sidebar.appendChild(root);
+
+    tree.groups.forEach(group => {
+      const g = document.createElement('div');
+      g.className = 'engine-nav-group';
+      const idxHref = group.index || '';
+      const idxRel = idxHref.replace(/^\.\//, '');
+
+      const top = document.createElement('a');
+      top.href = idxHref;
+      top.textContent = group.title || idxRel || 'Section';
+      if (idxRel && rel === idxRel) top.classList.add('active');
+      g.appendChild(top);
+
+      const pages = document.createElement('div');
+      pages.className = 'engine-nav-pages';
+      (Array.isArray(group.pages) ? group.pages : []).forEach(page => {
+        const a = document.createElement('a');
+        const href = (page && page.href) ? page.href : '';
+        const hrefRel = href.replace(/^\.\//, '');
+        a.href = href;
+        a.className = 'engine-nav-page';
+        a.textContent = (page && page.title) ? page.title : hrefRel;
+        if (hrefRel && rel === hrefRel) a.classList.add('active');
+        pages.appendChild(a);
+      });
+      if (pages.children.length) g.appendChild(pages);
+      sidebar.appendChild(g);
+    });
+
+    const parent = panel.parentElement;
+    if (!parent) return;
+    parent.insertBefore(wrap, panel);
+    wrap.appendChild(sidebar);
+    wrap.appendChild(panel);
+  };
   const initImageZoom = () => {
     document.addEventListener('click', (e) => {
       const target = e.target;
@@ -2928,6 +3004,7 @@ const buildBreadcrumb = () => {
     try { fixPageMediaSources(); } catch (err) { console.error('fixPageMediaSources failed', err); }
     try { checkCacheSignature(); } catch (err) { console.error('cache signature check failed', err); }
     try { buildBreadcrumb(); } catch (err) { console.error('buildBreadcrumb failed', err); }
+    try { initEngineDocsSidebar(); } catch (err) { console.error('initEngineDocsSidebar failed', err); }
     try { initImageZoom(); } catch (err) { console.error('initImageZoom failed', err); }
     try { initMediaLayout(); } catch (err) { console.error('initMediaLayout failed', err); }
     try { applyInlineMediaWithFallback(); bindInlineLightbox(); cleanupInlineMediaWrappers(); } catch (err) { console.error('inline media inject failed', err); }

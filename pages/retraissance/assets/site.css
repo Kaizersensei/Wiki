@@ -1130,3 +1130,53 @@ details.meta-toggle .meta-grid {
   }
 }
 
+
+/* Engine docs: Slack-style persistent left navigation */
+.engine-docs-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.engine-docs-sidebar {
+  position: sticky;
+  top: 84px;
+  max-height: calc(100vh - 96px);
+  overflow: auto;
+  border: 1px solid #d8c9a8;
+  border-radius: 8px;
+  background: #f9f4ea;
+  padding: 10px;
+}
+.engine-docs-sidebar h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+.engine-nav-group { margin-bottom: 10px; }
+.engine-nav-group > a,
+.engine-nav-page,
+.engine-docs-sidebar .engine-root-link {
+  display: block;
+  color: #3a2a1a;
+  text-decoration: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+.engine-docs-sidebar a:hover { background: rgba(58,42,26,0.08); }
+.engine-docs-sidebar a.active {
+  font-weight: 700;
+  background: rgba(58,42,26,0.14);
+}
+.engine-nav-pages {
+  margin: 4px 0 0 10px;
+  padding-left: 8px;
+  border-left: 1px dashed #c6b595;
+}
+@media (max-width: 980px) {
+  .engine-docs-layout { grid-template-columns: 1fr; }
+  .engine-docs-sidebar {
+    position: static;
+    max-height: none;
+    order: 2;
+  }
+}

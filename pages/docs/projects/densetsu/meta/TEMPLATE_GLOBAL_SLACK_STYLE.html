@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{PAGE_TITLE}}</title>
+  <meta property="og:title" content="{{PAGE_TITLE}}">
+  <meta property="og:description" content="Documentation template with persistent left navigation.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../retraissance/index.html">Retraissance</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel slack-doc-page">
+      <p class="eyebrow">{{DOC_DOMAIN}}</p>
+      <h1>{{PAGE_TITLE}}</h1>
+      <article class="markdown">
+        <section>
+          <h2>At a glance</h2>
+          <ul>
+            <li>Type: {{DOC_TYPE}}</li>
+            <li>Audience: {{AUDIENCE}}</li>
+            <li>Status: {{STATUS}}</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Overview</h2>
+          <p>{{OVERVIEW}}</p>
+        </section>
+        <section>
+          <h2>Details</h2>
+          <p>{{DETAILS}}</p>
+        </section>
+        <section>
+          <h2>References</h2>
+          <ul>
+            <li>{{REFERENCE_1}}</li>
+            <li>{{REFERENCE_2}}</li>
+          </ul>
+        </section>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
