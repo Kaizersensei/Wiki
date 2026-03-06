@@ -197,7 +197,6 @@
     const rel = pagePath.substring(at + marker.length) || 'index.html';
     const navRoot = pagePath.substring(0, at + marker.length);
     const navUrl = `${navRoot}nav-tree.json`;
-    const engineCanonicalRoot = withBasePrefix('/pages/docs/projects/densetsu/engine/');
     const normalizeEngineHref = (href = '') => {
       if (!href) return href;
       if (/^(https?:)?\/\//i.test(href)) return href;
@@ -205,8 +204,7 @@
       if (href.startsWith('#')) return href;
       if (href.startsWith('/')) return withBasePrefix(href);
       if (href.startsWith(BASE_PREFIX)) return href;
-      const clean = href.replace(/^\.\//, '');
-      return `${engineCanonicalRoot}${clean}`;
+      return href; // keep as-authored; nav-tree should store absolute targets
     };
 
     const stripStaticEngineNav = () => {
