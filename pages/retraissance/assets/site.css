@@ -1148,6 +1148,13 @@ details.meta-toggle .meta-grid {
   background: #f9f4ea;
   padding: 10px;
 }
+.engine-docs-sidebar .engine-nav-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  border: 0;
+  background: transparent;
+}
 .engine-docs-sidebar h3 {
   margin: 0 0 8px 0;
   font-size: 16px;

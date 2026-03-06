@@ -224,55 +224,17 @@
 
     stripStaticEngineNav();
 
-    let tree = null;
-    try {
-      const res = await fetch(navUrl, { cache: 'no-cache' });
-      if (res.ok) tree = await res.json();
-    } catch (_) { /* ignore */ }
-    if (!tree || !Array.isArray(tree.groups)) return;
-
     const wrap = document.createElement('div');
     wrap.className = 'engine-docs-layout';
     const sidebar = document.createElement('aside');
     sidebar.className = 'engine-docs-sidebar';
 
-    const head = document.createElement('h3');
-    head.textContent = tree.title || 'Engine Wiki';
-    sidebar.appendChild(head);
-
-    const root = document.createElement('a');
-    root.className = `engine-root-link ${rel === 'index.html' ? 'active' : ''}`;
-    root.href = withBasePrefix(`${marker}index.html`);
-    root.textContent = 'Overview';
-    sidebar.appendChild(root);
-
-    tree.groups.forEach(group => {
-      const g = document.createElement('div');
-      g.className = 'engine-nav-group';
-      const idxHref = group.index || '';
-      const idxRel = idxHref.replace(/^\.\//, '');
-
-      const top = document.createElement('a');
-      top.href = normalizeEngineHref(idxHref);
-      top.textContent = group.title || idxRel || 'Section';
-      if (idxRel && rel === idxRel) top.classList.add('active');
-      g.appendChild(top);
-
-      const pages = document.createElement('div');
-      pages.className = 'engine-nav-pages';
-      (Array.isArray(group.pages) ? group.pages : []).forEach(page => {
-        const a = document.createElement('a');
-        const href = (page && page.href) ? page.href : '';
-        const hrefRel = href.replace(/^\.\//, '');
-        a.href = normalizeEngineHref(href);
-        a.className = 'engine-nav-page';
-        a.textContent = (page && page.title) ? page.title : hrefRel;
-        if (hrefRel && rel === hrefRel) a.classList.add('active');
-        pages.appendChild(a);
-      });
-      if (pages.children.length) g.appendChild(pages);
-      sidebar.appendChild(g);
-    });
+    const iframe = document.createElement('iframe');
+    iframe.className = 'engine-nav-frame';
+    iframe.title = 'Engine navigation';
+    iframe.loading = 'lazy';
+    iframe.src = withBasePrefix('/pages/docs/projects/densetsu/engine/nav.html');
+    sidebar.appendChild(iframe);
 
     const parent = panel.parentElement;
     if (!parent) return;
