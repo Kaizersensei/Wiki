@@ -38,86 +38,33 @@
       <p class="eyebrow">engine</p>
       <h1>In‑Game Editor Overview</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
-<h2 id="responsibilities">Responsibilities</h2>
+<h2>Overview</h2>
+<p>Editor tooling is provided through the Densetsu tool suite and related addon helpers. The evidence set includes editor context menu plugins and helper utilities for asset processing.</p>
+<h2>Key tooling</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>addons/densetsu_tool_suite/plugin.gd</code> — editor plugin entrypoint.</li>
+  <li><code>addons/densetsu_tool_suite/helpers/arraymesh_extract_helper.gd</code> — mesh extraction.</li>
+  <li><code>addons/densetsu_tool_suite/helpers/fbx_anim_persist_helper.gd</code> — animation import persistence.</li>
+  <li><code>addons/densetsu_tool_suite/helpers/image_transform_helper.gd</code> — image path conversion.</li>
+  <li><code>addons/densetsu_tool_suite/helpers/mesh_obj_helper.gd</code> — OBJ export helpers.</li>
 </ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
-<h2 id="dependencies">Dependencies</h2>
+<h2>Related editor scenes</h2>
 <ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
+  <li><code>engine3d/tools/CharacterEditor3D.tscn</code></li>
 </ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
-<h2 id="constraints">Constraints</h2>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Editor tooling scripts and helper scenes are present.</p>
+<h2>Open questions</h2>
 <ul>
-<li>(TODO)</li>
+  <li>Is there a dedicated in-game editor UI separate from Godot editor tooling?</li>
 </ul>
-<h2 id="sources">Sources</h2>
+<h2>Sources</h2>
 <ul>
-<li>(TODO; keep aligned with frontmatter)</li>
+  <li><code>addons/densetsu_tool_suite/plugin.gd</code></li>
+  <li><code>addons/densetsu_tool_suite/helpers/*.gd</code></li>
+  <li><code>engine3d/tools/CharacterEditor3D.tscn</code></li>
 </ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-          <li>Link to tools, data authoring, pipelines; screenshots when available.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Densetsu Game Design Document 
-2026
-
----
-
-2026 
-
-Densetsu Game Design Document 
-2026 Edition – Canon
-
----
-
-from the start.  
-
-1: Overview 
-Game Identity 
-Title: Densetsu​</pre>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -129,5 +76,7 @@ Title: Densetsu​</pre>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 
