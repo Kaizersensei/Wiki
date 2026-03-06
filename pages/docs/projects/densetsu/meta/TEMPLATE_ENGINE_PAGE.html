@@ -3,21 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Engine Page Template</title>
-  <meta property="og:title" content="Engine Page Template">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <title>{{PAGE_TITLE}}</title>
+  <meta property="og:title" content="{{PAGE_TITLE}}">
+  <meta property="og:description" content="Engine wiki documentation template.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/meta/TEMPLATE_ENGINE_PAGE.html">
-  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Engine Page Template">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
-  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../retraissance/index.html" aria-label="Retraissance">
@@ -26,120 +18,58 @@
     </div>
     <nav class="nav-links">
       <a class="nav-home" href="../../../../retraissance/index.html">Retraissance</a>
-      <a href="../../../../retraissance/projects/index.html">Projects</a>
-      <a href="../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
   <main class="content">
-    <section class="panel">
+    <section class="panel slack-doc-page">
       <p class="eyebrow">engine</p>
-      <h1>Engine Page Template</h1>
+      <h1>{{PAGE_TITLE}}</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
-<h2 id="responsibilities">Responsibilities</h2>
-<ul>
-<li>(TODO)</li>
-</ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
-<h2 id="dependencies">Dependencies</h2>
-<ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
-</ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
-<h2 id="constraints">Constraints</h2>
-<ul>
-<li>(TODO)</li>
-</ul>
-<h2 id="sources">Sources</h2>
-<ul>
-<li>(TODO)</li>
-</ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
+        <section>
+          <h2>At a glance</h2>
           <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
+            <li>Type: {{DOC_TYPE}}</li>
+            <li>Audience: {{AUDIENCE}}</li>
+            <li>Status: {{STATUS}}</li>
+            <li>Owner: {{OWNER}}</li>
           </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Deterministic Design 
- 
-Deterministic design is an engineering approach that minimizes or eliminates unknowns in a 
-project by using a set of well-defined parameters to predict outcomes with certainty. Instead 
-of relying on probability or random chance, it uses a scientific and fact-based method to
+        </section>
 
----
+        <section>
+          <h2>Overview</h2>
+          <p>{{OVERVIEW}}</p>
+        </section>
 
-Title: Densetsu​
-Genre: Metroidvania / Narrative Action Adventure​
-Core Engine: Densetsu Engine (Godot-based FSM & Actor System)​
-Primary Themes: Balance, Memory, Time, Renewal.​
-Tagline: “Swords, Sorcery and Shuriken”
+        <section>
+          <h2>How it works</h2>
+          <p>{{HOW_IT_WORKS}}</p>
+        </section>
 
----
+        <section>
+          <h2>Interfaces</h2>
+          <p>{{INTERFACES}}</p>
+        </section>
 
-systems described in the Game Design Document (GDD) are realized in practice. It bridges 
-creative intent and technical execution by detailing the structure, modular systems, and 
-development workflow that form the foundation of the Densetsu Engine. 
-Scope 
-This document serves as a blueprint for developers, designers, and technical artists under</pre>
-      
-        <h2>Work Policies</h2>
-        <div class="callout"><p>AI use: good for ideation/structuring/coding with plans; bad for unreviewed production, &gt;50% unreviewed AI output, consumer-facing AI art/writing. Human review mandatory.</p></div>
-      
-        <h2>Deterministic Design</h2>
-        <div class="callout"><p>Deterministic design minimizes unknowns via well-defined parameters for predictable outcomes: certainty over probability; scientific and risk-based; reduces risk/complexity; clear mapped implementation plan.</p></div>
-      
-        <h2>Policies &amp; Deterministic Design</h2>
-        <div class="callout"><p>AI policy: good for ideation/structuring/coding with plans; bad for unreviewed production, &gt;50% unreviewed AI output, or consumer-facing AI art/writing. Human review mandatory. Deterministic design: certainty over probability; scientific/risk-based; reduce unknowns; clear mapped implementation.</p></div>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        <section>
+          <h2>Operational concerns</h2>
+          <ul>
+            <li>{{OPS_NOTE_1}}</li>
+            <li>{{OPS_NOTE_2}}</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Related docs</h2>
+          <ul>
+            <li>{{RELATED_DOC_1}}</li>
+            <li>{{RELATED_DOC_2}}</li>
+          </ul>
+        </section>
       </article>
-    
-    <details class="meta-toggle"><summary>Show page info</summary>
-<div class='meta-grid'>
-<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>TEMPLATE_ENGINE_PAGE</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Engine Page Template</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>stub</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Template</span></div><div class='meta-item'><span class='meta-key'>aliases</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2025-12-24</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
-</div>
-</details>
     </section>
   </main>
   <script src="../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

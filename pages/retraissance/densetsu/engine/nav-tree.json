@@ -1,0 +1,66 @@
+{
+  "title": "Engine Wiki",
+  "root": "index.html",
+  "groups": [
+    {
+      "id": "runtime",
+      "title": "Core Runtime",
+      "index": "runtime/index.html",
+      "pages": []
+    },
+    {
+      "id": "actor-system",
+      "title": "Actor System",
+      "index": "actor-system/index.html",
+      "pages": []
+    },
+    {
+      "id": "fsm",
+      "title": "FSM System",
+      "index": "fsm/index.html",
+      "pages": []
+    },
+    {
+      "id": "stats-combat",
+      "title": "Stats & Combat",
+      "index": "stats-combat/index.html",
+      "pages": []
+    },
+    {
+      "id": "input-movement",
+      "title": "Input & Movement",
+      "index": "input-movement/index.html",
+      "pages": []
+    },
+    {
+      "id": "data-authoring",
+      "title": "Data & Authoring",
+      "index": "data-authoring/index.html",
+      "pages": []
+    },
+    {
+      "id": "editor",
+      "title": "Editor",
+      "index": "editor/index.html",
+      "pages": []
+    },
+    {
+      "id": "tools",
+      "title": "Tools & Debugging",
+      "index": "tools/index.html",
+      "pages": []
+    },
+    {
+      "id": "integrations",
+      "title": "Integrations",
+      "index": "integrations/index.html",
+      "pages": []
+    },
+    {
+      "id": "rendering",
+      "title": "Rendering & Performance",
+      "index": "rendering/index.html",
+      "pages": []
+    }
+  ]
+}

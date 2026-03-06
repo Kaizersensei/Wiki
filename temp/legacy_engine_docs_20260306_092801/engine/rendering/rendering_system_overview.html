@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rendering System Overview</title>
+  <meta property="og:title" content="Rendering System Overview">
+  <meta property="og:description" content="Overview of Densetsu engine rendering systems, compatibility strategy, post-process outlines, sky/weather rendering, and integration policy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/rendering/rendering_system_overview.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Rendering System Overview</h1>
+      <article class="markdown">
+        <h2 id="purpose">Purpose</h2>
+        <p>This page documents the current rendering-system direction for the Densetsu engine: compatibility-first rendering, project-owned shader systems where needed, and preservation of debugging/troubleshooting knowledge from real integration failures.</p>
+
+        <h2 id="current-focus">Current rendering focus areas</h2>
+        <ul>
+          <li>Post-process outline pipeline (Sobel-based) for stylized edge detection.</li>
+          <li>Toon rendering controls and global parameter coordination.</li>
+          <li>Sky/weather rendering system with clock/calendar coupling and layered visuals.</li>
+          <li>Terrain3D integration sanity, persistence issues, and rendering consistency.</li>
+          <li>Shader compatibility assessment and replacement planning for unstable third-party shaders.</li>
+        </ul>
+
+        <h2 id="core-principles">Core engineering principles</h2>
+        <ul>
+          <li><strong>Compatibility first:</strong> avoid exotic setups that break common materials or produce render-device spam.</li>
+          <li><strong>Sobel-first strategy:</strong> build the stylized outline stack around a working depth/normal screen pass that already matches project needs.</li>
+          <li><strong>Project-owned replacements when necessary:</strong> replace incompatible third-party shaders with internal equivalents rather than forcing fragile workarounds.</li>
+          <li><strong>Global vs local separation:</strong> global rendering controls should not unintentionally overwrite material-local authoring unless explicitly designed to do so.</li>
+          <li><strong>Debuggability:</strong> expose parameters at top-level control nodes and preserve troubleshooting notes.</li>
+        </ul>
+
+        <h2 id="why-replacements">Why replacements are part of the rendering strategy</h2>
+        <p>Outline/post-process integration exposed compatibility problems with several shaders and setups. In practice, the cost of preserving fragile third-party shaders can exceed the cost of replacing them with simpler, project-compatible variants. This is especially true when the project depends on a stable Sobel outline pass and consistent behavior across many materials/scenes.</p>
+
+        <h2 id="system-boundaries">System boundaries</h2>
+        <ul>
+          <li><strong>Rendering category:</strong> shaders, post-process, sky/weather visuals, rendering performance behavior.</li>
+          <li><strong>Integrations category:</strong> third-party plugin behavior, Terrain3D adaptation policy, compatibility notes.</li>
+          <li><strong>Runtime category:</strong> boot/loading sequencing and non-render startup logic.</li>
+        </ul>
+        <p>Some pages (especially sky/weather) cross runtime and rendering concerns; the implementation and visual behavior are documented here first, with runtime orchestration cross-linked elsewhere.</p>
+
+        <h2 id="known-pain-points">Known pain points (captured intentionally)</h2>
+        <ul>
+          <li>Shader compilation issues causing magenta/full-fail outputs.</li>
+          <li>Runtime-only post-process behavior being mistaken for editor-preview failure.</li>
+          <li>Parameters appearing to do nothing due to pipeline state, debug modes, or incorrect node bindings.</li>
+          <li>Cloud UV seams and rendering consistency problems in the sky system.</li>
+          <li>Terrain rendering consistency/persistence edge cases.</li>
+          <li>Driver/editor stability interactions during rendering-heavy workflows.</li>
+        </ul>
+
+        <h2 id="documentation-policy">Documentation policy for this category</h2>
+        <ul>
+          <li>Document both working paths and failed experiments that produced useful lessons.</li>
+          <li>Separate current implementation from future plans clearly.</li>
+          <li>Prefer reproducible troubleshooting steps over vague advice.</li>
+          <li>Do not publish non-public game art/content details unless sanitized.</li>
+        </ul>
+
+        <h2 id="next-pages">Next pages</h2>
+        <ul>
+          <li><a href="postfx_sobel_outline_pipeline.html">PostFX Sobel Outline Pipeline</a></li>
+          <li><a href="sky_weather_system_overview.html">Sky / Weather System Overview</a></li>
+          <li>Shader compatibility/replacement plan (planned)</li>
+        </ul>
+
+        <h2 id="sources">Sources / decisions</h2>
+        <ul>
+          <li>Project rendering implementation and debugging sessions (post-process, sky/weather, Terrain3D integration).</li>
+          <li>Chat decision: build the shader suite around the Sobel approach and preserve lessons from failed outline experiments.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
