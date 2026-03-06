@@ -3,12 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bootloader / Loading / Splash Pipeline</title>
-  <meta property="og:title" content="Bootloader / Loading / Splash Pipeline">
-  <meta property="og:description" content="Densetsu engine startup sequence documentation: bootloader, startup splashes, loading screen, and scene handoff.">
+  <title>Bootloader Loading Splash Pipeline</title>
+  <meta property="og:title" content="Bootloader Loading Splash Pipeline">
+  <meta property="og:description" content="Engine wiki documentation template.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/bootloader_loading_splash_pipeline.html">
-  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
@@ -20,90 +18,39 @@
     </div>
     <nav class="nav-links">
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
-      <a href="../../../../../retraissance/projects/index.html">Projects</a>
-      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+      <a href="../index.html">Engine Wiki</a>
     </nav>
   </header>
+
   <main class="content">
-    <section class="panel">
+    <section class="panel slack-doc-page">
       <p class="eyebrow">engine</p>
-      <h1>Bootloader / Loading / Splash Pipeline</h1>
+      <h1>Bootloader Loading Splash Pipeline</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-        <p>This pipeline provides a controlled startup flow for the public Densetsu engine: startup splashes, a reusable loading-screen host, and threaded scene loading before handoff to the target map/scene.</p>
-
-        <h2 id="components">Core components</h2>
-        <ul>
-          <li><code>DensetsuBootLoader</code>: project entry scene that sequences splashes and loading.</li>
-          <li><code>DensetsuSplashScreen</code>: parameter-driven splash scene type (logo/info/startup messaging).</li>
-          <li><code>DensetsuLoadingScreen</code>: loading host scene with overlay UI + content slot + threaded scene request.</li>
-          <li><code>DensetsuLoadingGauge</code>: configurable smooth progress control used by the loading screen.</li>
-        </ul>
-
-        <h2 id="sequence">Startup sequence (runtime)</h2>
-        <ol>
-          <li>Godot starts and loads the configured <code>main_scene</code> (the bootloader scene).</li>
-          <li>Bootloader resolves the target scene path.</li>
-          <li>Optional startup splash scenes are played in order.</li>
-          <li>Bootloader instances the loading screen scene.</li>
-          <li>Loading screen starts a threaded request for the target scene.</li>
-          <li>Loading screen reports progress and optionally auto-switches to the loaded scene.</li>
-        </ol>
-
-        <h2 id="target-resolution">How the bootloader knows what to load</h2>
-        <p>The bootloader resolves the target from a default exported <code>target_scene_path</code>, with optional command-line overrides. Two forms are supported:</p>
-        <ul>
-          <li><code>--scene=res://path/to/scene.tscn</code></li>
-          <li><code>--scene res://path/to/scene.tscn</code></li>
-        </ul>
-        <p>This allows one bootloader scene to serve normal game startup, test launches, and QA/automation scenarios.</p>
-
-        <h2 id="responsibilities">Responsibilities and boundaries</h2>
-        <ul>
-          <li>Sequence startup visuals and scene loading in a predictable order.</li>
-          <li>Centralize startup policy (skip behavior, splash ordering, minimum loading screen time).</li>
-          <li>Keep startup screens reusable and parameter-driven.</li>
-          <li>Do <strong>not</strong> become a general runtime manager or a heavy content scene itself.</li>
-        </ul>
-
-        <h2 id="limitations">Important limitation: what it cannot hide</h2>
-        <p>The bootloader runs <em>after</em> Godot has already loaded the bootloader scene/script and its dependencies. It cannot hide or solve stalls that happen earlier, such as:</p>
-        <ul>
-          <li>script parsing/compilation errors,</li>
-          <li>resource import/remap checks during startup,</li>
-          <li>heavy <code>preload()</code> dependencies inside the bootloader or splash scenes,</li>
-          <li>autoload singleton startup work,</li>
-          <li>editor/project scanning stalls (during preview runs).</li>
-        </ul>
-        <p>When startup appears frozen before any splash or loading UI appears, the stall is usually before the threaded target-scene load stage.</p>
-
-        <h2 id="failure-modes">Known failure modes / debugging notes</h2>
-        <ul>
-          <li>Perceived hang after boot completion may occur before loading begins if a splash or boot dependency is heavy.</li>
-          <li>Verbose boot logging is useful to determine the last startup milestone reached.</li>
-          <li>If a splash scene references large assets, startup may stall before the loading screen appears.</li>
-          <li>For quick isolation, disable splashes or point the bootloader to a small test scene.</li>
-        </ul>
-
-        <h2 id="design-guidelines">Design guidelines</h2>
-        <ul>
-          <li>Keep bootloader logic small and deterministic.</li>
-          <li>Prefer lazy-loading content through the loading screen instead of heavy startup preloads.</li>
-          <li>Treat splash scenes as lightweight presentation scenes, not content-rich showcase scenes (unless intentionally tested).</li>
-        </ul>
-
-        <h2 id="related-pages">Related pages</h2>
-        <ul>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host &amp; Content Slots</a></li>
-          <li><a href="startup_splashes_parameter_driven.html">Startup Splashes (Parameter-Driven)</a></li>
-        </ul>
-
-        <h2 id="sources">Sources / decisions</h2>
-        <ul>
-          <li>Project implementation work: <code>DensetsuBootLoader</code>, <code>DensetsuLoadingScreen</code>, splash sequencing integration.</li>
-          <li>Chat decisions: engine docs are public; game-specific non-public details must be sanitized.</li>
-        </ul>
+        <section>
+          <h2>At a glance</h2>
+          <ul>
+            <li>Status: Placeholder template</li>
+            <li>Audience: General + Technical</li>
+            <li>Owner: TBD</li>
+            <li>Last reviewed: TBD</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Overview</h2>
+          <p>This placeholder page exists to validate the new Slack-style documentation layout and navigation tree.</p>
+        </section>
+        <section>
+          <h2>Implementation details</h2>
+          <p>Technical details for this page will be generated from canonical project sources during the next content pass.</p>
+        </section>
+        <section>
+          <h2>References</h2>
+          <ul>
+            <li>Source files: pending generation</li>
+            <li>Related systems: pending linkage</li>
+          </ul>
+        </section>
       </article>
     </section>
   </main>
