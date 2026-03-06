@@ -197,20 +197,14 @@
     const rel = pagePath.substring(at + marker.length) || 'index.html';
     const navRoot = pagePath.substring(0, at + marker.length);
     const navUrl = `${navRoot}nav-tree.json`;
-    const engineRoot = withBasePrefix(marker);
-    const engineBase = `${location.origin}${engineRoot}`;
-    const resolveEngineHref = (href = '') => {
+    const normalizeEngineHref = (href = '') => {
       if (!href) return href;
       if (/^(https?:)?\/\//i.test(href)) return href;
       if (/^(mailto|tel|javascript):/i.test(href)) return href;
       if (href.startsWith('#')) return href;
       if (href.startsWith('/')) return withBasePrefix(href);
-      try {
-        return new URL(href, engineBase).toString();
-      } catch (_) {
-        const clean = href.replace(/^\.\//, '');
-        return withBasePrefix(`${navRoot}${clean}`);
-      }
+      if (href.startsWith(BASE_PREFIX)) return href;
+      return href; // no guessing; leave relative as-authored
     };
 
     const stripStaticEngineNav = () => {
@@ -229,24 +223,6 @@
     };
 
     stripStaticEngineNav();
-
-    const normalizeEngineLinks = (scope) => {
-      if (!scope) return;
-      scope.querySelectorAll('a[href]').forEach(a => {
-        const href = a.getAttribute('href') || '';
-        if (!href) return;
-        if (href.startsWith('#')) return;
-        if (/^(https?:)?\/\//i.test(href)) return;
-        if (/^(mailto|tel|javascript):/i.test(href)) return;
-        if (href.startsWith('/') || href.startsWith(BASE_PREFIX)) return;
-        if (href.startsWith('../') || href.startsWith('./')) return;
-        if (href.includes('/')) {
-          a.setAttribute('href', resolveEngineHref(href));
-        }
-      });
-    };
-
-    normalizeEngineLinks(panel);
 
     let tree = null;
     try {
@@ -277,7 +253,7 @@
       const idxRel = idxHref.replace(/^\.\//, '');
 
       const top = document.createElement('a');
-      top.href = resolveEngineHref(idxHref);
+      top.href = normalizeEngineHref(idxHref);
       top.textContent = group.title || idxRel || 'Section';
       if (idxRel && rel === idxRel) top.classList.add('active');
       g.appendChild(top);
@@ -288,7 +264,7 @@
         const a = document.createElement('a');
         const href = (page && page.href) ? page.href : '';
         const hrefRel = href.replace(/^\.\//, '');
-        a.href = resolveEngineHref(href);
+        a.href = normalizeEngineHref(href);
         a.className = 'engine-nav-page';
         a.textContent = (page && page.title) ? page.title : hrefRel;
         if (hrefRel && rel === hrefRel) a.classList.add('active');
@@ -303,8 +279,6 @@
     parent.insertBefore(wrap, panel);
     wrap.appendChild(sidebar);
     wrap.appendChild(panel);
-    normalizeEngineLinks(sidebar);
-    normalizeEngineLinks(panel);
   };
   const initImageZoom = () => {
     document.addEventListener('click', (e) => {

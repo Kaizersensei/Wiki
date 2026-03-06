@@ -1,209 +1,209 @@
 {
   "title": "Engine Wiki",
-  "root": "index.html",
+  "root": "/pages/docs/projects/densetsu/engine/index.html",
   "groups": [
     {
       "id": "runtime",
       "title": "Core Runtime",
-      "index": "../../../docs/projects/densetsu/engine/runtime/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/index.html",
       "pages": [
         {
           "title": "Bootloader Loading Splash Pipeline",
-          "href": "../../../docs/projects/densetsu/engine/runtime/bootloader_loading_splash_pipeline.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/bootloader_loading_splash_pipeline.html"
         },
         {
           "title": "Core Runtime Overview",
-          "href": "../../../docs/projects/densetsu/engine/runtime/core_runtime_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/core_runtime_overview.html"
         },
         {
           "title": "Data Persistence",
-          "href": "../../../docs/projects/densetsu/engine/runtime/data_persistence.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/data_persistence.html"
         },
         {
           "title": "Loading Screen Host And Content Slots",
-          "href": "../../../docs/projects/densetsu/engine/runtime/loading_screen_host_and_content_slots.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/loading_screen_host_and_content_slots.html"
         },
         {
           "title": "Save Load",
-          "href": "../../../docs/projects/densetsu/engine/runtime/save_load.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/save_load.html"
         },
         {
           "title": "Startup Splashes Parameter Driven",
-          "href": "../../../docs/projects/densetsu/engine/runtime/startup_splashes_parameter_driven.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/startup_splashes_parameter_driven.html"
         },
         {
           "title": "World Streaming",
-          "href": "../../../docs/projects/densetsu/engine/runtime/world_streaming.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/runtime/world_streaming.html"
         }
       ]
     },
     {
       "id": "actors",
       "title": "Actor System",
-      "index": "../../../docs/projects/densetsu/engine/actors/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/actors/index.html",
       "pages": [
         {
           "title": "Actor System Overview",
-          "href": "../../../docs/projects/densetsu/engine/actors/actor_system_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/actors/actor_system_overview.html"
         },
         {
           "title": "Actor Types Lifecycle",
-          "href": "../../../docs/projects/densetsu/engine/actors/actor_types_lifecycle.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/actors/actor_types_lifecycle.html"
         },
         {
           "title": "Creatures As Actors Framework",
-          "href": "../../../docs/projects/densetsu/engine/actors/creatures_as_actors_framework.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/actors/creatures_as_actors_framework.html"
         }
       ]
     },
     {
       "id": "fsm",
       "title": "FSM System",
-      "index": "../../../docs/projects/densetsu/engine/fsm/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/fsm/index.html",
       "pages": [
         {
           "title": "Fsm System Overview",
-          "href": "../../../docs/projects/densetsu/engine/fsm/fsm_system_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/fsm/fsm_system_overview.html"
         },
         {
           "title": "State Contract Tags Context Events",
-          "href": "../../../docs/projects/densetsu/engine/fsm/state_contract_tags_context_events.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/fsm/state_contract_tags_context_events.html"
         }
       ]
     },
     {
       "id": "stats_combat",
       "title": "Stats & Combat",
-      "index": "../../../docs/projects/densetsu/engine/stats_combat/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/stats_combat/index.html",
       "pages": [
         {
           "title": "Combat Overview",
-          "href": "../../../docs/projects/densetsu/engine/stats_combat/combat_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/stats_combat/combat_overview.html"
         },
         {
           "title": "Skills And Elemental Affinities",
-          "href": "../../../docs/projects/densetsu/engine/stats_combat/skills_and_elemental_affinities.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/stats_combat/skills_and_elemental_affinities.html"
         },
         {
           "title": "Stats Overview",
-          "href": "../../../docs/projects/densetsu/engine/stats_combat/stats_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/stats_combat/stats_overview.html"
         }
       ]
     },
     {
       "id": "input_movement",
       "title": "Input & Movement",
-      "index": "../../../docs/projects/densetsu/engine/input_movement/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/input_movement/index.html",
       "pages": [
         {
           "title": "Input Overview",
-          "href": "../../../docs/projects/densetsu/engine/input_movement/input_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/input_movement/input_overview.html"
         },
         {
           "title": "Movement Controller",
-          "href": "../../../docs/projects/densetsu/engine/input_movement/movement_controller.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/input_movement/movement_controller.html"
         },
         {
           "title": "Sonic Style Physics Optional",
-          "href": "../../../docs/projects/densetsu/engine/input_movement/sonic_style_physics_optional.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/input_movement/sonic_style_physics_optional.html"
         }
       ]
     },
     {
       "id": "data_authoring",
       "title": "Data & Authoring",
-      "index": "../../../docs/projects/densetsu/engine/data_authoring/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/data_authoring/index.html",
       "pages": [
         {
           "title": "Authoring Pipeline",
-          "href": "../../../docs/projects/densetsu/engine/data_authoring/authoring_pipeline.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/data_authoring/authoring_pipeline.html"
         },
         {
           "title": "Database Overview",
-          "href": "../../../docs/projects/densetsu/engine/data_authoring/database_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/data_authoring/database_overview.html"
         }
       ]
     },
     {
       "id": "editor",
       "title": "Editor",
-      "index": "../../../docs/projects/densetsu/engine/editor/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/editor/index.html",
       "pages": [
         {
           "title": "In Game Editor Overview",
-          "href": "../../../docs/projects/densetsu/engine/editor/in_game_editor_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/editor/in_game_editor_overview.html"
         }
       ]
     },
     {
       "id": "tools",
       "title": "Tools & Debugging",
-      "index": "../../../docs/projects/densetsu/engine/tools/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/tools/index.html",
       "pages": [
         {
           "title": "Debug Tools Overview",
-          "href": "../../../docs/projects/densetsu/engine/tools/debug_tools_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/tools/debug_tools_overview.html"
         }
       ]
     },
     {
       "id": "integrations",
       "title": "Integrations",
-      "index": "../../../docs/projects/densetsu/engine/integrations/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/integrations/index.html",
       "pages": [
         {
           "title": "Construct2 To Godot Tooling",
-          "href": "../../../docs/projects/densetsu/engine/integrations/construct2_to_godot_tooling.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/integrations/construct2_to_godot_tooling.html"
         }
       ]
     },
     {
       "id": "networking",
       "title": "Networking & Multiplayer",
-      "index": "../../../docs/projects/densetsu/engine/networking/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/networking/index.html",
       "pages": []
     },
     {
       "id": "rendering",
       "title": "Rendering & Performance",
-      "index": "../../../docs/projects/densetsu/engine/rendering/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/rendering/index.html",
       "pages": [
         {
           "title": "Postfx Sobel Outline Pipeline",
-          "href": "../../../docs/projects/densetsu/engine/rendering/postfx_sobel_outline_pipeline.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/rendering/postfx_sobel_outline_pipeline.html"
         },
         {
           "title": "Rendering System Overview",
-          "href": "../../../docs/projects/densetsu/engine/rendering/rendering_system_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/rendering/rendering_system_overview.html"
         },
         {
           "title": "Sky Weather System Overview",
-          "href": "../../../docs/projects/densetsu/engine/rendering/sky_weather_system_overview.html"
+          "href": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/rendering/sky_weather_system_overview.html"
         }
       ]
     },
     {
       "id": "build-deploy",
       "title": "Build & Deployment",
-      "index": "../../../docs/projects/densetsu/engine/build-deploy/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/build-deploy/index.html",
       "pages": []
     },
     {
       "id": "testing-qa",
       "title": "Testing & QA",
-      "index": "../../../docs/projects/densetsu/engine/testing-qa/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/testing-qa/index.html",
       "pages": []
     },
     {
       "id": "telemetry",
       "title": "Telemetry & Observability",
-      "index": "../../../docs/projects/densetsu/engine/telemetry/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/telemetry/index.html",
       "pages": []
     },
     {
       "id": "modding",
       "title": "Modding & Plugins",
-      "index": "../../../docs/projects/densetsu/engine/modding/index.html",
+      "index": "/pages/docs/projects/densetsu/engine/docs/projects/densetsu/engine/modding/index.html",
       "pages": []
     }
   ]
