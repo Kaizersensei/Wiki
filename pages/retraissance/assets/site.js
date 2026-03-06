@@ -192,6 +192,7 @@
     const panel = document.querySelector('main .panel');
     const content = document.querySelector('main.content');
     if (!panel || !content) return;
+    if (document.querySelector('.engine-docs-layout')) return;
 
     const rel = pagePath.substring(at + marker.length) || 'index.html';
     const navRoot = pagePath.substring(0, at + marker.length);
@@ -203,6 +204,23 @@
       if (res.ok) tree = await res.json();
     } catch (_) { /* ignore */ }
     if (!tree || !Array.isArray(tree.groups)) return;
+
+    const stripStaticEngineNav = () => {
+      panel.querySelectorAll('.link-list').forEach(el => el.remove());
+      panel.querySelectorAll('p').forEach(p => {
+        if (/listing pages under/i.test(p.textContent || '')) p.remove();
+      });
+      panel.querySelectorAll('h2').forEach(h2 => {
+        const label = (h2.textContent || '').trim().toLowerCase();
+        if (label === 'categories' || label === 'pages' || label === 'sections') {
+          const next = h2.nextElementSibling;
+          if (next && next.tagName === 'UL') next.remove();
+          h2.remove();
+        }
+      });
+    };
+
+    stripStaticEngineNav();
 
     const wrap = document.createElement('div');
     wrap.className = 'engine-docs-layout';
