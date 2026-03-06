@@ -197,20 +197,21 @@
     const rel = pagePath.substring(at + marker.length) || 'index.html';
     const navRoot = pagePath.substring(0, at + marker.length);
     const navUrl = `${navRoot}nav-tree.json`;
+    const engineRoot = withBasePrefix(marker);
+    const engineBase = `${location.origin}${engineRoot}`;
     const resolveEngineHref = (href = '') => {
       if (!href) return href;
       if (/^(https?:)?\/\//i.test(href)) return href;
+      if (/^(mailto|tel|javascript):/i.test(href)) return href;
+      if (href.startsWith('#')) return href;
       if (href.startsWith('/')) return withBasePrefix(href);
-      const clean = href.replace(/^\.\//, '');
-      return withBasePrefix(`${navRoot}${clean}`);
+      try {
+        return new URL(href, engineBase).toString();
+      } catch (_) {
+        const clean = href.replace(/^\.\//, '');
+        return withBasePrefix(`${navRoot}${clean}`);
+      }
     };
-
-    let tree = null;
-    try {
-      const res = await fetch(navUrl, { cache: 'no-cache' });
-      if (res.ok) tree = await res.json();
-    } catch (_) { /* ignore */ }
-    if (!tree || !Array.isArray(tree.groups)) return;
 
     const stripStaticEngineNav = () => {
       panel.querySelectorAll('.link-list').forEach(el => el.remove());
@@ -228,6 +229,31 @@
     };
 
     stripStaticEngineNav();
+
+    const normalizeEngineLinks = (scope) => {
+      if (!scope) return;
+      scope.querySelectorAll('a[href]').forEach(a => {
+        const href = a.getAttribute('href') || '';
+        if (!href) return;
+        if (href.startsWith('#')) return;
+        if (/^(https?:)?\/\//i.test(href)) return;
+        if (/^(mailto|tel|javascript):/i.test(href)) return;
+        if (href.startsWith('/') || href.startsWith(BASE_PREFIX)) return;
+        if (href.startsWith('../') || href.startsWith('./')) return;
+        if (href.includes('/')) {
+          a.setAttribute('href', resolveEngineHref(href));
+        }
+      });
+    };
+
+    normalizeEngineLinks(panel);
+
+    let tree = null;
+    try {
+      const res = await fetch(navUrl, { cache: 'no-cache' });
+      if (res.ok) tree = await res.json();
+    } catch (_) { /* ignore */ }
+    if (!tree || !Array.isArray(tree.groups)) return;
 
     const wrap = document.createElement('div');
     wrap.className = 'engine-docs-layout';
@@ -277,23 +303,8 @@
     parent.insertBefore(wrap, panel);
     wrap.appendChild(sidebar);
     wrap.appendChild(panel);
-
-    const normalizeEngineLinks = () => {
-      panel.querySelectorAll('a[href]').forEach(a => {
-        const href = a.getAttribute('href') || '';
-        if (!href) return;
-        if (href.startsWith('#')) return;
-        if (/^(https?:)?\/\//i.test(href)) return;
-        if (/^(mailto|tel|javascript):/i.test(href)) return;
-        if (href.startsWith('/') || href.startsWith(BASE_PREFIX)) return;
-        if (href.startsWith('../') || href.startsWith('./')) return;
-        if (href.includes('/')) {
-          a.setAttribute('href', resolveEngineHref(href));
-        }
-      });
-    };
-
-    normalizeEngineLinks();
+    normalizeEngineLinks(sidebar);
+    normalizeEngineLinks(panel);
   };
   const initImageZoom = () => {
     document.addEventListener('click', (e) => {
