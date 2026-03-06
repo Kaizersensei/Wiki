@@ -30,70 +30,25 @@
       <p class="eyebrow">engine</p>
       <h1>Sky / Weather System Overview</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-        <p>The Densetsu sky/weather system provides a flexible, layered rendering controller for sky color, sun/moon visuals, clouds, fog influence, and weather effects tied to a game clock/calendar and weather sequencing rules.</p>
-
-        <h2 id="design-goal">Design goal</h2>
-        <p>Support a wide range of weather/sky conditions with a parameter-driven system that can be authored per map while still allowing time/calendar-driven automation. The system intentionally favors practical, controllable stylization over strict realism when needed.</p>
-
-        <h2 id="layered-model">Layered sky model (conceptual)</h2>
-        <ol>
-          <li><strong>Base sky color</strong>: time-of-day driven gradient (24-step/wraparound concept).</li>
-          <li><strong>Sun layer</strong>: visible disc with tunable size/glow/falloff/brightness and light coupling.</li>
-          <li><strong>Cloud layer group</strong>: multiple cloud layers/materials mixed above the sky/sun.</li>
-          <li><strong>Fog influence</strong>: sky/fog blending behavior plus environment-fog integration considerations.</li>
-          <li><strong>Weather layer</strong>: particle systems and weather-specific overlays/behavior.</li>
-        </ol>
-
-        <h2 id="time-calendar">Clock, calendar, and timeline integration</h2>
-        <ul>
-          <li>Sky rendering is tied to game time and calendar scaffolding.</li>
-          <li>Weather types can be selected on demand or via a weighted system (conditions/groups).</li>
-          <li>Weather timeline behavior includes duration and blend/transition timing in hours (decimal).</li>
-          <li>Seasonal weighting and grouped weather selection are part of the system direction.</li>
-        </ul>
-
-        <h2 id="celestial-cycle">Celestial cycle approach</h2>
-        <p>The current direction is semi-realistic but stylized and gameplay-friendly. Practical examples include explicit visibility windows for the sun, smoother sun/moon transitions, and visual behavior chosen for clarity rather than strict astronomical correctness.</p>
-        <p>Moon rendering evolved toward a simpler visual model (flat-disc style behavior) when more complex simulation behavior produced undesirable visual artifacts.</p>
-
-        <h2 id="weather-system">Weather system direction</h2>
-        <ul>
-          <li>Weather definitions can drive particles, fog offsets, and visual shifts.</li>
-          <li>Conditions and grouped weather types support a more authored climate model.</li>
-          <li>Percent-based chance balancing across grouped weather types is part of the design direction.</li>
-          <li>Debug tools are required to make this tunable (weather stack, timeline, forcing weather, timescale).</li>
-        </ul>
-
-        <h2 id="debug-ui">Debug UI importance</h2>
-        <p>The sky/weather system includes or plans debug UI controls for time, calendar, season, weather forcing, stack inspection, and timeline inspection. Some UI elements are intended to be temporary debug-only controls; others (clock, weather icon) may later become production UI elements.</p>
-
-        <h2 id="known-issues">Known issues / operational notes (tracked deliberately)</h2>
-        <ul>
-          <li>Fog interactions can visually overpower the sky if blending is not configured correctly.</li>
-          <li>Certain weather transitions (especially foggy conditions) can create white-sky states or abrupt changes if parameters are poorly balanced.</li>
-          <li>Cloud UV wrapping and seams are a current rendering pain point and need explicit handling.</li>
-          <li>Moon material/texture application behavior has required iterative simplification and debugging.</li>
-          <li>Directional light/shadow behavior can break if sun/moon light transitions are not coordinated.</li>
-        </ul>
-
-        <h2 id="why-document-failures">Why failure notes are included</h2>
-        <p>This system was built through intensive iteration. Recording the misbehaviors (snaps, white sky states, seam issues, parameter no-ops, material application confusion) is part of the engineering value, because these are the exact problems future tuning and refactors need to avoid.</p>
-
-        <h2 id="related-pages">Related pages</h2>
-        <ul>
-          <li><a href="rendering_system_overview.html">Rendering System Overview</a></li>
-          <li><a href="postfx_sobel_outline_pipeline.html">PostFX Sobel Outline Pipeline</a></li>
-        </ul>
-
-        <h2 id="sources">Sources / decisions</h2>
-        <ul>
-          <li>Project implementation and tuning sessions for <code>DensetsuSkySystem3D</code>.</li>
-          <li>Chat decisions on stylized sun/moon behavior, weather weighting/groups, and debug UI requirements.</li>
-        </ul>
-      </article>
+<h2>Overview</h2>
+<p>The sky and weather system includes cloud layers and sky system scenes. Evidence includes a cloud layer resource and sky system scene.</p>
+<h2>Key components</h2>
+<ul>
+  <li><code>DensetsuCloudLayer.gd</code> — cloud layer resource.</li>
+  <li><code>DensetsuSkySystem3D.tscn</code> — sky system scene.</li>
+</ul>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Sky system scripts and scenes are present.</p>
+<h2>Sources</h2>
+<ul>
+  <li><code>engine3d/sky/DensetsuCloudLayer.gd</code></li>
+  <li><code>engine3d/sky/DensetsuSkySystem3D.tscn</code></li>
+</ul>
+</article>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+

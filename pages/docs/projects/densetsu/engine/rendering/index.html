@@ -30,23 +30,35 @@
       <p class="eyebrow">engine</p>
       <h1>Rendering &amp; Performance</h1>
       <article class="markdown">
-        <h2>Purpose</h2>
-        <p>This category documents the Densetsu engine rendering stack, post-process pipeline, shader compatibility policy, sky/weather rendering systems, and rendering-related performance behavior.</p>
-        <h2>Current pages</h2>
-        <ul>
-          <li><a href="rendering_system_overview.html">Rendering System Overview</a></li>
-          <li><a href="postfx_sobel_outline_pipeline.html">PostFX Sobel Outline Pipeline</a></li>
-          <li><a href="sky_weather_system_overview.html">Sky / Weather System Overview</a></li>
-        </ul>
-        <h2>Scope notes</h2>
-        <ul>
-          <li>Engine docs are public. Game-specific production secrets should be omitted or sanitized.</li>
-          <li>Operational failures and troubleshooting notes are included because they are part of the engineering knowledge base.</li>
-          <li>Third-party plugin/shader behavior is documented as integration risk, not as endorsement.</li>
-        </ul>
-      </article>
+<h2>Overview</h2>
+<p>Rendering &amp; Performance covers post-processing, sky and weather systems, and shader utilities. Evidence includes Sobel outline and toon post-FX controllers plus sky system scenes.</p>
+<h2>Scope</h2>
+<ul>
+  <li>Post-processing pipelines (Sobel outline, toon shading)</li>
+  <li>Sky and cloud systems</li>
+  <li>Shader utilities and asset libraries</li>
+</ul>
+<h2>Pages</h2>
+<ul>
+  <li><a href="rendering_system_overview.html">Rendering System Overview</a> — render stack and components.</li>
+  <li><a href="postfx_sobel_outline_pipeline.html">Postfx Sobel Outline Pipeline</a> — outline shader pipeline.</li>
+  <li><a href="sky_weather_system_overview.html">Sky Weather System Overview</a> — sky and cloud systems.</li>
+</ul>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Post-FX controllers, sky system, and shader assets are present.</p>
+<h2>Sources</h2>
+<ul>
+  <li><code>engine3d/postfx/SobelOutlineComposite3D.gd</code></li>
+  <li><code>engine3d/postfx/SobelOutlineDepthPostFX3D.gd</code></li>
+  <li><code>engine3d/postfx/ToonPostFXController3D.gd</code></li>
+  <li><code>engine3d/sky/DensetsuCloudLayer.gd</code></li>
+  <li><code>engine3d/sky/DensetsuSkySystem3D.tscn</code></li>
+</ul>
+</article>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+

@@ -30,70 +30,27 @@
       <p class="eyebrow">engine</p>
       <h1>PostFX Sobel Outline Pipeline</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-        <p>The Sobel outline pipeline provides a project-compatible screen-space outline pass for stylized rendering, with strong edge detection (including many normal-mapped details) and centralized controls for tuning thickness, threshold, softness, strength, color, and blending.</p>
-
-        <h2 id="why-sobel">Why Sobel-first</h2>
-        <p>Multiple outline approaches were tested (including setups that caused severe render-device error spam or incompatibility). The Sobel-based approach reached a stable runtime path and became the preferred foundation for the shader-suite plan.</p>
-
-        <h2 id="architecture">Pipeline architecture (current direction)</h2>
-        <ul>
-          <li>Screen-space post-process pass samples rendered scene data and computes edge intensity using Sobel-like gradients.</li>
-          <li>A composite/control node exposes top-level parameters for tuning and debugging.</li>
-          <li>The post-process layer is intended to work with the broader stylized rendering stack rather than forcing per-material outline hacks everywhere.</li>
-        </ul>
-
-        <h2 id="runtime-vs-editor">Runtime vs editor behavior</h2>
-        <p>A key operational lesson: the Sobel effect may appear to do nothing in editor viewports depending on the setup and scene. In the tested setup, the effect was confirmed working at runtime even when editor preview behavior was misleading.</p>
-        <p>Documentation and QA should always include a runtime verification step before concluding the effect is broken.</p>
-
-        <h2 id="tuning-workflow">Tuning workflow (practical)</h2>
-        <ol>
-          <li>Confirm the post-process node is active at runtime and the intended scene/camera path is used.</li>
-          <li>Use debug edge preview to verify edge detection before color/composite tuning.</li>
-          <li>Adjust threshold and softness first (edge detection quality).</li>
-          <li>Adjust thickness/strength next (readability and style).</li>
-          <li>Tune outline color and blend/mix last (art direction pass).</li>
-        </ol>
-        <p>Separating detection tuning from color/composite tuning avoids many false negatives during setup.</p>
-
-        <h2 id="known-failure-modes">Known failure modes (captured from integration work)</h2>
-        <ul>
-          <li><strong>Magenta screen / no valid output:</strong> shader compile failure or broken pass state.</li>
-          <li><strong>Parameters visible but no visual effect:</strong> often a binding/path issue, editor-vs-runtime confusion, or debug mode path not affecting final composite.</li>
-          <li><strong>Black/white inverted output only:</strong> debug edge output active or composite path not applying color/mix correctly.</li>
-          <li><strong>Color affects debug but not final:</strong> composite stage not using final color path as intended.</li>
-          <li><strong>Strength values above 1 appear capped:</strong> output path may be clamped or the effective range saturates; document actual useful range for the current implementation.</li>
-        </ul>
-
-        <h2 id="performance-stability">Performance / stability notes</h2>
-        <ul>
-          <li>A stable Sobel pass is preferable to exotic outline systems that destabilize rendering or flood logs.</li>
-          <li>Post-process startup cost and scene-preview cost should be monitored, especially after adding more rendering systems.</li>
-          <li>Centralized controls improve iteration speed and reduce accidental scene-specific breakage.</li>
-        </ul>
-
-        <h2 id="planned-expansions">Planned expansions (tracked separately)</h2>
-        <ul>
-          <li>Depth-based thickness and distance fade behavior (thicker near camera, thinner/faded far away).</li>
-          <li>Integration with a global toon control layer (without breaking per-material adjustments).</li>
-          <li>Compatibility matrix for third-party shaders and replacements.</li>
-        </ul>
-
-        <h2 id="related-pages">Related pages</h2>
-        <ul>
-          <li><a href="rendering_system_overview.html">Rendering System Overview</a></li>
-          <li><a href="sky_weather_system_overview.html">Sky / Weather System Overview</a></li>
-        </ul>
-
-        <h2 id="sources">Sources / decisions</h2>
-        <ul>
-          <li>Project Sobel post-process implementation and live tuning/debugging sessions.</li>
-          <li>Chat decision: keep Sobel as the primary outline approach and build shader-suite compatibility around it.</li>
-        </ul>
-      </article>
+<h2>Overview</h2>
+<p>The Sobel outline pipeline applies a post-processing outline effect using depth and composite passes. Evidence includes the Sobel outline depth post-FX and composite controller.</p>
+<h2>Pipeline components</h2>
+<ul>
+  <li><code>SobelOutlineDepthPostFX3D.gd</code> — depth pass and shader parameter application.</li>
+  <li><code>SobelOutlineComposite3D.gd</code> — combines outline with the base frame.</li>
+  <li><code>SobelOutlinePostFX3D.tscn</code> — scene wrapper for the outline effect.</li>
+</ul>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Post-FX scripts and scenes exist in the evidence set.</p>
+<h2>Sources</h2>
+<ul>
+  <li><code>engine3d/postfx/SobelOutlineDepthPostFX3D.gd</code></li>
+  <li><code>engine3d/postfx/SobelOutlineComposite3D.gd</code></li>
+  <li><code>engine3d/postfx/SobelOutlinePostFX3D.tscn</code></li>
+</ul>
+</article>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
