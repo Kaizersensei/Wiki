@@ -277,6 +277,23 @@
     parent.insertBefore(wrap, panel);
     wrap.appendChild(sidebar);
     wrap.appendChild(panel);
+
+    const normalizeEngineLinks = () => {
+      panel.querySelectorAll('a[href]').forEach(a => {
+        const href = a.getAttribute('href') || '';
+        if (!href) return;
+        if (href.startsWith('#')) return;
+        if (/^(https?:)?\/\//i.test(href)) return;
+        if (/^(mailto|tel|javascript):/i.test(href)) return;
+        if (href.startsWith('/') || href.startsWith(BASE_PREFIX)) return;
+        if (href.startsWith('../') || href.startsWith('./')) return;
+        if (href.includes('/')) {
+          a.setAttribute('href', resolveEngineHref(href));
+        }
+      });
+    };
+
+    normalizeEngineLinks();
   };
   const initImageZoom = () => {
     document.addEventListener('click', (e) => {
