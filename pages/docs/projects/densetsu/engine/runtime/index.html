@@ -1,1 +1,33 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Core Runtime</title><link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head><body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../index.html">Engine Wiki</a></nav></header><main class="content"><section class="panel slack-doc-page"><p class="eyebrow">engine</p><h1>Core Runtime</h1><article class="markdown"><h2>Overview</h2><p>Placeholder category index for navigation validation.</p></article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Core Runtime</title><link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head><body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../index.html">Engine Wiki</a></nav></header><main class="content"><section class="panel slack-doc-page"><p class="eyebrow">engine</p><h1>Core Runtime</h1><article class="markdown">
+<h2>Overview</h2>
+<p>The Core Runtime section covers the startup path, scene lifecycle, input capture, and shared runtime services that keep the game loop moving. Evidence comes from the bootloader and loading screen stack, autoload singletons, and scene management scripts captured in the context database.</p>
+<h2>Scope</h2>
+<ul>
+  <li>Bootstrapping and splash sequence</li>
+  <li>Loading screen lifecycle and progress reporting</li>
+  <li>Scene registration and runtime scene application</li>
+  <li>Autoload singletons (event bus, input manager, runtime)</li>
+  <li>Resource-backed data persistence</li>
+</ul>
+<h2>Pages</h2>
+<ul>
+  <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a> — Startup flow and splash sequencing.</li>
+  <li><a href="core_runtime_overview.html">Core Runtime Overview</a> — Responsibilities and system map.</li>
+  <li><a href="data_persistence.html">Data Persistence</a> — Resource-backed data types and storage points.</li>
+  <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a> — Loading screen host structure and visuals.</li>
+  <li><a href="save_load.html">Save Load</a> — Status and gaps for save/load workflows.</li>
+  <li><a href="startup_splashes_parameter_driven.html">Startup Splashes Parameter Driven</a> — Splash screen scenes and sequencing.</li>
+  <li><a href="world_streaming.html">World Streaming</a> — Current scene graph evidence and streaming gap.</li>
+</ul>
+<h2>Status</h2>
+<p><strong>Implemented (partial)</strong>. Boot and loading systems, autoloads, and scene management are implemented. Save/Load and World Streaming still need explicit evidence or a design decision.</p>
+<h2>Sources</h2>
+<ul>
+  <li><code>engine3d/loading/DensetsuBootLoader.gd</code></li>
+  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
+  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
+  <li><code>engine/scene/SceneManager.gd</code></li>
+  <li><code>autoload/EventBus.gd</code>, <code>autoload/InputManager.gd</code>, <code>autoload/Runtime.gd</code></li>
+</ul>
+</article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
+

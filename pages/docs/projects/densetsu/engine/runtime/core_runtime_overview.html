@@ -38,90 +38,41 @@
       <p class="eyebrow">engine</p>
       <h1>Core Runtime Overview</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
+<h2 id="purpose">Purpose</h2>
+<p>The core runtime packages the systems that bring the game online: boot sequence, loading screen, scene activation, and the singleton services used throughout gameplay. Evidence is anchored in the bootloader, loading UI, scene manager, and autoload services recorded in the context database.</p>
 <h2 id="responsibilities">Responsibilities</h2>
 <ul>
-<li>(TODO)</li>
+  <li>Run the boot sequence and startup splash pipeline.</li>
+  <li>Expose loading progress and failure signals to UI.</li>
+  <li>Prepare and activate target scenes.</li>
+  <li>Provide global services (event bus, input manager, runtime context).</li>
 </ul>
 <h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
+<ul>
+  <li>Resource-backed data sets (example resources: AIProfileData, BiomeData, CollisionData, FactionData, ItemData).</li>
+  <li>Runtime data assets in <code>data3d/</code> (camera, items, prefabs).</li>
+</ul>
 <h2 id="dependencies">Dependencies</h2>
 <ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
+  <li>Inbound: <code>main.tscn</code>, <code>World.tscn</code>, autoload singletons.</li>
+  <li>Outbound: loading screens, scene manager, input/controller modules.</li>
 </ul>
 <h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
+<p>Use the loading screen signals and bootloader logging hooks to trace startup issues. Runtime services should be reachable through autoloads.</p>
 <h2 id="constraints">Constraints</h2>
 <ul>
-<li>(TODO)</li>
+  <li>Save/load and world streaming evidence not confirmed in the current context database.</li>
+  <li>Runtime dependencies should remain autoload-safe (no scene-only assumptions).</li>
 </ul>
 <h2 id="sources">Sources</h2>
 <ul>
-<li>(TODO; keep aligned with frontmatter)</li>
+  <li><code>engine3d/loading/DensetsuBootLoader.gd</code></li>
+  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
+  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
+  <li><code>engine/scene/SceneManager.gd</code></li>
+  <li><code>autoload/EventBus.gd</code>, <code>autoload/InputManager.gd</code>, <code>autoload/Runtime.gd</code></li>
 </ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-          <li>Link to data persistence, save/load, streaming, performance notes.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">from the start.  
-
-1: Overview 
-Game Identity 
-Title: Densetsu​
-
----
-
-Title: Densetsu​
-Genre: Metroidvania / Narrative Action Adventure​
-Core Engine: Densetsu Engine (Godot-based FSM & Actor System)​
-Primary Themes: Balance, Memory, Time, Renewal.​
-Tagline: “Swords, Sorcery and Shuriken”
-
----
-
-The story explores humanity’s cyclical nature: our attempts to fix what should be accepted, 
-and the consequences of trying to rewrite time. 
-Core Design Vision 
-Densetsu combines action-driven exploration with philosophical narrative design. Every 
-mechanic reinforces reflection, balance, and natural consequence rather than domination.</pre>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -133,5 +84,7 @@ mechanic reinforces reflection, balance, and natural consequence rather than dom
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 

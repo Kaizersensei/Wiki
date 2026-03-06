@@ -30,85 +30,37 @@
       <p class="eyebrow">engine</p>
       <h1>Loading Screen Host &amp; Content Slots</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-        <p><code>DensetsuLoadingScreen</code> is a reusable runtime loading host. It combines a configurable overlay UI (status + gauge) with a freeform content slot so one scene can support simple progress bars, animated branding, music/video, slideshows, or interactive loading content.</p>
-
-        <h2 id="design-model">Design model</h2>
-        <ul>
-          <li><strong>Content host:</strong> <code>ContentRoot</code> receives arbitrary child scenes/nodes.</li>
-          <li><strong>Overlay UI:</strong> gauge + labels for progress/status/detail.</li>
-          <li><strong>Threaded loader:</strong> requests and polls a target scene asynchronously.</li>
-          <li><strong>Top-level forwarding:</strong> root node exposes gauge/panel/label parameters so users do not need to edit child nodes directly.</li>
-        </ul>
-
-        <h2 id="content-slot">Content slot usage patterns</h2>
-        <p>The loading screen can host almost any content scene that is safe to run during loading:</p>
-        <ul>
-          <li>logo animation or studio splash,</li>
-          <li>music visualizer,</li>
-          <li>video/cut-in presentation,</li>
-          <li>slideshow/tips screen,</li>
-          <li>interactive showcase (e.g., rotating model),</li>
-          <li>mini-scene / lightweight minigame.</li>
-        </ul>
-        <p>Because it is a regular scene host, the loading screen is intentionally not limited to a “UI-only” implementation.</p>
-
-        <h2 id="parameter-exposure">Top-level parameter exposure strategy</h2>
-        <p>The loading screen node exposes configuration at the root level to keep tuning fast and deterministic:</p>
-        <ul>
-          <li>Overlay visibility and panel visibility/modulate</li>
-          <li>Panel layout (size, bottom margin, minimum size, style override)</li>
-          <li>Status/detail label visibility and modulate</li>
-          <li>Gauge preview progress and visual settings (colors, textures, smoothing, border, text)</li>
-          <li>Threaded load behavior (auto start, target path, auto switch, minimum visible time)</li>
-        </ul>
-        <p>This avoids inspector hunting in deep child-node hierarchies and makes the scene practical as a reusable engine-level tool.</p>
-
-        <h2 id="threaded-loading">Threaded loading behavior</h2>
-        <ul>
-          <li>Loading starts via <code>begin_load_scene(scene_path)</code>.</li>
-          <li>The node polls progress and emits signals for start/progress/completion/failure.</li>
-          <li>It can auto-switch to the loaded scene after a minimum visible time.</li>
-          <li>A preview/idle gauge value can be shown when not actively loading.</li>
-        </ul>
-        <p>Practical note: scene switch is still a handoff point, so large target scenes may have a visible transition cost if the final activation is expensive.</p>
-
-        <h2 id="what-it-solves">What this solves well</h2>
-        <ul>
-          <li>One loading scene for multiple use cases and themes.</li>
-          <li>Fast iteration without breaking scene internals.</li>
-          <li>Clear separation between boot sequence policy and loading-screen presentation.</li>
-          <li>Runtime-friendly progress UI that can remain lightweight.</li>
-        </ul>
-
-        <h2 id="what-it-does-not-solve">What it does not solve</h2>
-        <ul>
-          <li>Engine startup stalls that happen before the loading scene is instantiated.</li>
-          <li>Heavy content placed into the loading screen itself (the content slot can still cause stalls if overloaded).</li>
-          <li>Project-wide async resource strategy by itself (this is a scene-loading host, not a full streaming framework).</li>
-        </ul>
-
-        <h2 id="usage-guidelines">Usage guidelines</h2>
-        <ul>
-          <li>Keep loading-content scenes lightweight unless they are intentionally designed/tested for heavy startup use.</li>
-          <li>Prefer parameter tuning on the root node over editing child controls.</li>
-          <li>Use the bootloader to set target path and startup sequence policy; keep the loading screen focused on presentation + loading behavior.</li>
-        </ul>
-
-        <h2 id="related-pages">Related pages</h2>
-        <ul>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
-          <li><a href="startup_splashes_parameter_driven.html">Startup Splashes (Parameter-Driven)</a></li>
-        </ul>
-
-        <h2 id="sources">Sources / decisions</h2>
-        <ul>
-          <li>Project implementation: <code>DensetsuLoadingScreen</code>, <code>DensetsuLoadingGauge</code>, bootloader integration.</li>
-          <li>Chat decision: loading screen should be flexible enough to host interactive scenes and not just a static progress UI.</li>
-        </ul>
-      </article>
+<h2>Overview</h2>
+<p>The loading screen host is the runtime container for loading visuals and progress display. Evidence shows a loading screen node and a loading gauge node; specific “content slot” APIs are not confirmed in the current database.</p>
+<h2>Known elements</h2>
+<ul>
+  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code> — emits loading lifecycle signals.</li>
+  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code> — draws progress bar and percentage.</li>
+  <li><code>engine3d/loading/DensetsuLoadingScreen.tscn</code> — scene wrapper for the host.</li>
+</ul>
+<h2>Usage</h2>
+<ul>
+  <li>Bootloader starts the loading screen during scene transitions.</li>
+  <li>Progress is reported through the loading screen signals.</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+  <li>No explicit content-slot API was found in the evidence set.</li>
+  <li>Confirm whether additional content widgets are injected at runtime.</li>
+</ul>
+<h2>Status</h2>
+<p><strong>Implemented (partial)</strong>. Loading host and gauge exist; slot mechanics need verification.</p>
+<h2>Sources</h2>
+<ul>
+  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
+  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
+  <li><code>engine3d/loading/DensetsuLoadingScreen.tscn</code></li>
+</ul>
+</article>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+

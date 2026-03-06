@@ -38,90 +38,35 @@
       <p class="eyebrow">engine</p>
       <h1>Data Persistence</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-<p>(TODO)</p>
-<h2 id="responsibilities">Responsibilities</h2>
+<h2>Overview</h2>
+<p>Data persistence currently centers on Godot resources and structured data assets. The engine defines custom Resource classes and stores runtime data in <code>data/</code> and <code>data3d/</code> directories.</p>
+<h2>Resource schema</h2>
 <ul>
-<li>(TODO)</li>
+  <li><code>engine/data/resources/AIProfileData.gd</code></li>
+  <li><code>engine/data/resources/BiomeData.gd</code></li>
+  <li><code>engine/data/resources/CollisionData.gd</code></li>
+  <li><code>engine/data/resources/FactionData.gd</code></li>
+  <li><code>engine/data/resources/ItemData.gd</code></li>
 </ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
-<p>(TODO)</p>
-<h2 id="dependencies">Dependencies</h2>
+<h2>Runtime data assets</h2>
 <ul>
-<li>Inbound: (TODO)</li>
-<li>Outbound: (TODO)</li>
+  <li><code>data3d/camera/CAMERA_Player_Default.tres</code></li>
+  <li><code>data3d/items/INVENTORY_Player_Default.tres</code></li>
+  <li><code>data3d/items/SUBWEAPON_Player_Default.tres</code></li>
 </ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>(TODO)</p>
-<h2 id="constraints">Constraints</h2>
+<h2>Status</h2>
+<p><strong>Implemented.</strong> Resource schemas and sample assets exist in the evidence set.</p>
+<h2>Open questions</h2>
 <ul>
-<li>(TODO)</li>
+  <li>Long-term persistence (save slots, serialization strategy) is not documented here; see Save/Load.</li>
 </ul>
-<h2 id="sources">Sources</h2>
+<h2>Sources</h2>
 <ul>
-<li>(TODO; keep aligned with frontmatter)</li>
+  <li><code>engine/data/resources/*.gd</code></li>
+  <li><code>engine3d/data/resources/*.gd</code></li>
+  <li><code>data3d/</code> resources</li>
 </ul>
-      
-        <div class="callout" id="missing-info">
-          <strong>Missing / conflicting information:</strong>
-          <ul>
-            <li>Content sections are stubbed with TODOs; needs canonical text from project sources.</li>
-            <li>No chat decisions recorded; prioritize future chat resolutions over documents if conflicts arise.</li>
-            <li>Media not provided in drop-in; add references or uploads when available.</li>
-          </ul>
-          <p class="media-placeholder">Media placeholder: pending upload.</p>
-        </div>
-      
-      <div id="autofill-block" class="callout">
-        <h2>Summary (placeholder)</h2>
-        <p>Pending canonical content. Replace with a concise overview sourced from project documents or chat decisions.</p>
-        <h2>Details to add</h2>
-        <ul>
-          <li>Fill in core sections with vetted information.</li>
-          <li>Add references to sources (docs, commits, chats) in Sources.</li>
-          <li>Include tables or graphics if available; otherwise keep the media placeholder.</li>
-        </ul>
-        <h2>Link opportunities</h2>
-        <ul>
-          <li>Cross-link to data contracts, runtime systems, and editor tooling.</li>
-          <li>Call out where universe concepts drive mechanics.</li>
-          <li>Propose new subcategories: Networking/Multiplayer, Rendering & Performance, Build/Deployment, Testing/QA, Telemetry/Observability, Modding/Plugins.</li>
-          <li>Link to data persistence, save/load, streaming, performance notes.</li>
-        </ul>
-        <h2>Open questions / conflicts</h2>
-        <ul>
-          <li>List conflicting notes here; resolve with chat decisions first, then documents.</li>
-          <li>Track pending media/table additions.</li>
-        </ul>
-        <p class="media-placeholder">Media placeholder: pending upload.</p>
-      </div>
-      
-        <h2 id="source-excerpts">Source excerpts</h2>
-        <pre class="source-excerpt">Character growth in Densetsu reflects internal understanding and mastery, not 
-instantaneous power gain. Experience is earned naturally through action, reflection, and 
-persistence, aligning with the game’s themes of balance and temporal consequence. 
-Experience & Leveling 
-Players earn Experience Points (XP) through actions governed by skills and core stats.
-
----
-
-5.​ Observer’s Log – Observation-based puzzle using insight timing. 
-6.​ Unstable Geometry – Physically degrading spaces with urgency. 
-Persistence of Unresolved Anomalies 
-Some loops resist closure. These persist subconsciously, influencing world behavior and 
-dialogue until the player gains insight or new tools.​
-
----
-
-glow faintly. 
- 
-10.4 Persistence of Unresolved Anomalies 
-Some anomalies resist resolution. They become latent — stored within the Infinitree’s 
-collective subconscious and the player’s narrative memory.​</pre>
-      
-        <h2 id="open-questions">Open questions / conflicts</h2>
-        <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-      </article>
+</article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -133,5 +78,7 @@ collective subconscious and the player’s narrative memory.​</pre>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
 
 
