@@ -30,68 +30,59 @@
       <p class="eyebrow">engine</p>
       <h1>Startup Splashes (Parameter-Driven)</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-        <p>The startup splash system provides reusable, parameter-driven splash scenes for the boot sequence. Instead of hardcoding a single logo screen, the engine can play an ordered list of splash presets (company logo, startup notices, platform warnings, etc.) before the loading screen appears.</p>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
 
-        <h2 id="core-type">Core type: <code>DensetsuSplashScreen</code></h2>
-        <p><code>DensetsuSplashScreen</code> is a reusable splash node (CanvasLayer-based) with exported parameters controlling:</p>
-        <ul>
-          <li>timing (fade-in / hold / fade-out / skip fade-out),</li>
-          <li>visuals (background color/texture, logo texture, tints),</li>
-          <li>text (title, subtitle, skip hint),</li>
-          <li>input skipping (actions, any-input option, minimum delay before skip).</li>
-        </ul>
-        <p>The intent is to create many small preset scenes that all instance the same splash base scene and only override exports.</p>
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
+<ul>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
+</ul>
 
-        <h2 id="bootloader-sequencing">Bootloader sequencing</h2>
-        <ul>
-          <li>The bootloader holds an ordered array of splash scenes.</li>
-          <li>It instances each splash scene, calls <code>play()</code>, and awaits its <code>finished</code> signal.</li>
-          <li>After the sequence completes, the bootloader instantiates the loading screen and begins threaded scene loading.</li>
-        </ul>
-        <p>This keeps sequencing policy centralized while keeping splash scenes reusable and self-contained.</p>
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
+<ul>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
+</ul>
 
-        <h2 id="reuse-pattern">Recommended reuse pattern</h2>
-        <ol>
-          <li>Keep one reusable splash base scene/type.</li>
-          <li>Create small preset scenes for each startup message type.</li>
-          <li>Configure the bootloader splash list for the desired startup sequence.</li>
-          <li>Avoid copy-pasting splash logic across many scene variants.</li>
-        </ol>
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
+<ul>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
+</ul>
 
-        <h2 id="best-practices">Best practices</h2>
-        <ul>
-          <li>Keep startup splashes lightweight (avoid heavy assets unless explicitly tested).</li>
-          <li>Use short, deterministic durations and fade timings.</li>
-          <li>Enable skipping only after a small minimum delay to prevent accidental instant skips.</li>
-          <li>Use splash scenes for public-safe startup messaging only.</li>
-        </ul>
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
 
-        <h2 id="known-risks">Known risks / caveats</h2>
-        <ul>
-          <li>If splash scenes pull large assets or expensive scripts, startup may appear frozen before the loading screen.</li>
-          <li>Startup stalls before any splash appears are usually pre-bootloader issues (script parse, imports, preloads, autoloads).</li>
-          <li>Overusing splash complexity defeats the purpose of a fast, deterministic startup path.</li>
-        </ul>
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
 
-        <h2 id="current-presets">Current preset examples (engine-side)</h2>
-        <ul>
-          <li>Company logo splash</li>
-          <li>Startup information splash</li>
-        </ul>
-        <p>These are intended as examples and can be replaced/reordered without changing the splash system implementation.</p>
+        <details>
+          <summary>Raw source excerpts</summary>
+          <p>(TODO) Add minimal excerpt only when needed for traceability.</p>
+        </details>
 
-        <h2 id="related-pages">Related pages</h2>
-        <ul>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host &amp; Content Slots</a></li>
-        </ul>
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>(TODO) Track only active blockers here; archive resolved items in changelogs.</p></div>
+        </details>
 
-        <h2 id="sources">Sources / decisions</h2>
-        <ul>
-          <li>Project implementation: <code>DensetsuSplashScreen</code>, splash presets, bootloader startup-splash sequencing.</li>
-          <li>Chat decision: splash scenes should be reusable and parameter-driven like the bootloader, not one-off hardcoded scenes.</li>
-        </ul>
       </article>
     </section>
   </main>

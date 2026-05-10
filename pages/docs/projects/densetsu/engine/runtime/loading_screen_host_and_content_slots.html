@@ -30,82 +30,59 @@
       <p class="eyebrow">engine</p>
       <h1>Loading Screen Host &amp; Content Slots</h1>
       <article class="markdown">
-        <h2 id="purpose">Purpose</h2>
-        <p><code>DensetsuLoadingScreen</code> is a reusable runtime loading host. It combines a configurable overlay UI (status + gauge) with a freeform content slot so one scene can support simple progress bars, animated branding, music/video, slideshows, or interactive loading content.</p>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
 
-        <h2 id="design-model">Design model</h2>
-        <ul>
-          <li><strong>Content host:</strong> <code>ContentRoot</code> receives arbitrary child scenes/nodes.</li>
-          <li><strong>Overlay UI:</strong> gauge + labels for progress/status/detail.</li>
-          <li><strong>Threaded loader:</strong> requests and polls a target scene asynchronously.</li>
-          <li><strong>Top-level forwarding:</strong> root node exposes gauge/panel/label parameters so users do not need to edit child nodes directly.</li>
-        </ul>
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
+<ul>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
+</ul>
 
-        <h2 id="content-slot">Content slot usage patterns</h2>
-        <p>The loading screen can host almost any content scene that is safe to run during loading:</p>
-        <ul>
-          <li>logo animation or studio splash,</li>
-          <li>music visualizer,</li>
-          <li>video/cut-in presentation,</li>
-          <li>slideshow/tips screen,</li>
-          <li>interactive showcase (e.g., rotating model),</li>
-          <li>mini-scene / lightweight minigame.</li>
-        </ul>
-        <p>Because it is a regular scene host, the loading screen is intentionally not limited to a “UI-only” implementation.</p>
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
+<ul>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
+</ul>
 
-        <h2 id="parameter-exposure">Top-level parameter exposure strategy</h2>
-        <p>The loading screen node exposes configuration at the root level to keep tuning fast and deterministic:</p>
-        <ul>
-          <li>Overlay visibility and panel visibility/modulate</li>
-          <li>Panel layout (size, bottom margin, minimum size, style override)</li>
-          <li>Status/detail label visibility and modulate</li>
-          <li>Gauge preview progress and visual settings (colors, textures, smoothing, border, text)</li>
-          <li>Threaded load behavior (auto start, target path, auto switch, minimum visible time)</li>
-        </ul>
-        <p>This avoids inspector hunting in deep child-node hierarchies and makes the scene practical as a reusable engine-level tool.</p>
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
+<ul>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
+</ul>
 
-        <h2 id="threaded-loading">Threaded loading behavior</h2>
-        <ul>
-          <li>Loading starts via <code>begin_load_scene(scene_path)</code>.</li>
-          <li>The node polls progress and emits signals for start/progress/completion/failure.</li>
-          <li>It can auto-switch to the loaded scene after a minimum visible time.</li>
-          <li>A preview/idle gauge value can be shown when not actively loading.</li>
-        </ul>
-        <p>Practical note: scene switch is still a handoff point, so large target scenes may have a visible transition cost if the final activation is expensive.</p>
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
 
-        <h2 id="what-it-solves">What this solves well</h2>
-        <ul>
-          <li>One loading scene for multiple use cases and themes.</li>
-          <li>Fast iteration without breaking scene internals.</li>
-          <li>Clear separation between boot sequence policy and loading-screen presentation.</li>
-          <li>Runtime-friendly progress UI that can remain lightweight.</li>
-        </ul>
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
 
-        <h2 id="what-it-does-not-solve">What it does not solve</h2>
-        <ul>
-          <li>Engine startup stalls that happen before the loading scene is instantiated.</li>
-          <li>Heavy content placed into the loading screen itself (the content slot can still cause stalls if overloaded).</li>
-          <li>Project-wide async resource strategy by itself (this is a scene-loading host, not a full streaming framework).</li>
-        </ul>
+        <details>
+          <summary>Raw source excerpts</summary>
+          <p>(TODO) Add minimal excerpt only when needed for traceability.</p>
+        </details>
 
-        <h2 id="usage-guidelines">Usage guidelines</h2>
-        <ul>
-          <li>Keep loading-content scenes lightweight unless they are intentionally designed/tested for heavy startup use.</li>
-          <li>Prefer parameter tuning on the root node over editing child controls.</li>
-          <li>Use the bootloader to set target path and startup sequence policy; keep the loading screen focused on presentation + loading behavior.</li>
-        </ul>
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>(TODO) Track only active blockers here; archive resolved items in changelogs.</p></div>
+        </details>
 
-        <h2 id="related-pages">Related pages</h2>
-        <ul>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
-          <li><a href="startup_splashes_parameter_driven.html">Startup Splashes (Parameter-Driven)</a></li>
-        </ul>
-
-        <h2 id="sources">Sources / decisions</h2>
-        <ul>
-          <li>Project implementation: <code>DensetsuLoadingScreen</code>, <code>DensetsuLoadingGauge</code>, bootloader integration.</li>
-          <li>Chat decision: loading screen should be flexible enough to host interactive scenes and not just a static progress UI.</li>
-        </ul>
       </article>
     </section>
   </main>
