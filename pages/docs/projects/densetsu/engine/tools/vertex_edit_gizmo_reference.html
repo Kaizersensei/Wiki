@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Vertex Edit Gizmo Reference</title>
+  <meta property="og:title" content="Densetsu Vertex Edit Gizmo Reference">
+  <meta property="og:description" content="Reference for Densetsu Vertex Edit dock controls, gizmo metadata, save flow, and handle behavior.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/vertex_edit_gizmo_reference.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Vertex Edit Gizmo Reference">
+  <meta property="twitter:description" content="Reference for Densetsu Vertex Edit dock controls, gizmo metadata, save flow, and handle behavior.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Densetsu Vertex Edit Gizmo Reference</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Implementation and workflow reference</td><th>Audience</th><td>Level artists, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_vertex_edit/plugin.gd</code>, <code>vertex_edit_gizmo.gd</code></td><th>User touchpoint</th><td>Right-side dock plus 3D gizmo handles</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="dock-controls">Dock Controls</h2>
+        <table>
+          <thead><tr><th>Control</th><th>Default</th><th>What it affects</th></tr></thead>
+          <tbody>
+            <tr><td><code>Surface</code></td><td><code>0</code></td><td>Stores <code>densetsu_vertex_edit_surface</code> metadata and selects which mesh surface the gizmo edits.</td></tr>
+            <tr><td><code>Max Handles</code></td><td><code>2000</code></td><td>Stores <code>densetsu_vertex_edit_max</code> metadata and caps sampled handle count.</td></tr>
+            <tr><td><code>Auto-enable on selection</code></td><td><code>true</code></td><td>When enabled, selecting a <code>MeshInstance3D</code> automatically sets edit-enabled metadata.</td></tr>
+            <tr><td><code>Enable Selected</code></td><td>n/a</td><td>Sets edit-enabled metadata, selected flag, surface, and max-handle values on the selected mesh node.</td></tr>
+            <tr><td><code>Disable Selected</code></td><td>n/a</td><td>Turns off edit-enabled metadata and hides the active gizmo.</td></tr>
+            <tr><td><code>Save Edited Mesh</code></td><td>n/a</td><td>Opens a save dialog for <code>.tres</code> or <code>.res</code> output using the currently edited mesh resource.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="metadata-contract">Node Metadata Contract</h2>
+        <table>
+          <thead><tr><th>Metadata key</th><th>Meaning</th><th>Set by</th></tr></thead>
+          <tbody>
+            <tr><td><code>densetsu_vertex_edit_enabled</code></td><td>Whether the gizmo should attach and render editable handles for the node.</td><td>Selection flow and enable/disable buttons.</td></tr>
+            <tr><td><code>densetsu_vertex_edit_selected</code></td><td>Marks the currently selected editable node.</td><td>Selection-change handler.</td></tr>
+            <tr><td><code>densetsu_vertex_edit_surface</code></td><td>Surface index to edit.</td><td>Surface spin box and enable button.</td></tr>
+            <tr><td><code>densetsu_vertex_edit_max</code></td><td>Maximum number of sampled handles.</td><td>Max Handles spin box and enable button.</td></tr>
+            <tr><td><code>densetsu_vertex_edit_mesh</code></td><td>Cached editable <code>ArrayMesh</code> copy used by the gizmo.</td><td><code>_get_edit_mesh</code> in the gizmo plugin.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="selection-and-enable-flow">Selection and Enable Flow</h2>
+        <ul>
+          <li>The plugin only considers <code>MeshInstance3D</code> nodes. Non-mesh nodes are ignored.</li>
+          <li>On selection change, the previous selected mesh has its edit-selected metadata cleared, and its enabled flag is reset to <code>false</code>.</li>
+          <li>If auto-enable is on, the newly selected mesh gets <code>densetsu_vertex_edit_enabled = true</code> immediately.</li>
+          <li>The status label explicitly tells the user whether a compatible mesh is selected and whether editing is active.</li>
+        </ul>
+
+        <h2 id="handle-sampling">Gizmo Handle Sampling</h2>
+        <table>
+          <thead><tr><th>Stage</th><th>Key functions</th><th>Behavior</th></tr></thead>
+          <tbody>
+            <tr><td>Eligibility</td><td><code>_has_gizmo</code></td><td>Only editable <code>MeshInstance3D</code> nodes with the enabled metadata are handled.</td></tr>
+            <tr><td>Mesh prep</td><td><code>_get_edit_mesh</code></td><td>Duplicates the source mesh into an editable <code>ArrayMesh</code> cache if needed.</td></tr>
+            <tr><td>Surface access</td><td><code>_get_surface_index</code></td><td>Reads the selected surface metadata.</td></tr>
+            <tr><td>Candidate selection</td><td><code>_redraw</code></td><td>Samples vertices and favors camera-facing normals before downsampling to the max handle count.</td></tr>
+            <tr><td>Handle downsampling</td><td><code>_sample_indices</code>, <code>_sample_indices_from_list</code></td><td>Evenly samples candidates when the mesh has more vertices than the handle cap.</td></tr>
+            <tr><td>Drag behavior</td><td><code>_set_handle</code></td><td>Projects drag movement onto a plane built from the current view ray and the vertex position.</td></tr>
+            <tr><td>Commit</td><td><code>_commit_handle</code>, <code>_begin_handle_action</code></td><td>Supports editor undo/redo commit flow.</td></tr>
+            <tr><td>Mesh write-back</td><td><code>_apply_surface_arrays</code></td><td>Rebuilds the mesh with edited arrays and assigns it back to the node.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="save-flow">Save Flow</h2>
+        <ul>
+          <li><code>Save Edited Mesh</code> only works when a <code>MeshInstance3D</code> with a mesh resource is selected.</li>
+          <li>The file dialog permits <code>.tres</code> and <code>.res</code> outputs only.</li>
+          <li>The current node mesh is passed directly to <code>ResourceSaver.save</code>; there is no separate export format.</li>
+          <li>The default output file name is <code>&lt;node_name&gt;_edited.tres</code>.</li>
+        </ul>
+
+        <h2 id="callable-surface">Callable Surface Inventory</h2>
+        <table>
+          <thead><tr><th>Function or family</th><th>Role</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>_enter_tree</code>, <code>_exit_tree</code>, <code>_build_dock</code>, <code>_build_save_dialog</code></td><td>Plugin lifecycle and dock construction</td><td>Verified.</td></tr>
+            <tr><td><code>_get_selected_mesh_instance</code>, <code>_on_selection_changed</code>, <code>_update_status</code></td><td>Selection tracking and status updates</td><td>Verified.</td></tr>
+            <tr><td><code>_on_enable_selected</code>, <code>_on_disable_selected</code>, <code>_on_surface_changed</code>, <code>_on_max_changed</code></td><td>Dock-driven metadata mutation</td><td>Verified.</td></tr>
+            <tr><td><code>_on_save_selected</code>, <code>_on_save_path_selected</code></td><td>Save dialog and resource write</td><td>Verified.</td></tr>
+            <tr><td><code>_has_gizmo</code>, <code>_redraw</code>, <code>_get_handle_name</code>, <code>_get_handle_value</code>, <code>_set_handle</code>, <code>_commit_handle</code>, <code>_begin_handle_action</code></td><td>Editor gizmo lifecycle</td><td>Verified.</td></tr>
+            <tr><td><code>_get_edit_mesh</code>, <code>_apply_surface_arrays</code></td><td>Editable mesh duplication and write-back</td><td>Verified.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="limits">Limits and Review Notes</h2>
+        <ul>
+          <li>This tool does not present every vertex on dense meshes; it samples up to the configured handle count.</li>
+          <li>The editing surface is one mesh surface at a time. Wrong surface selection can look like missing handles.</li>
+          <li>Because edits are applied to a duplicated <code>ArrayMesh</code>, downstream scenes that still reference the original imported mesh will not automatically update unless the saved mesh resource is wired back in.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="vertex_edit_overview.html">Densetsu Vertex Edit Overview</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>vertex_edit_gizmo_reference</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Densetsu Vertex Edit Gizmo Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Implementation Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Level artists, tool maintainers</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_vertex_edit/plugin.gd and vertex_edit_gizmo.gd</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
