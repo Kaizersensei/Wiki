@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Tool Suite Implementation Reference</title>
+  <meta property="og:title" content="Densetsu Tool Suite Implementation Reference">
+  <meta property="og:description" content="Source-driven implementation reference for Densetsu Tool Suite helpers, settings, dialogs, and background jobs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/tool_suite_implementation_reference.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Tool Suite Implementation Reference">
+  <meta property="twitter:description" content="Source-driven implementation reference for Densetsu Tool Suite helpers, settings, dialogs, and background jobs.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Densetsu Tool Suite Implementation Reference</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Implementation reference</td><th>Audience</th><td>Tool maintainers, engine programmers, technical artists</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_tool_suite/plugin.gd</code> and helper scripts</td><th>User touchpoint</th><td>Mostly background, dialog, and menu-runner behavior behind <code>Tools &gt; Densetsu</code></td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>This page is the code-facing companion to the <a href="tool_suite_action_catalog.html">action catalog</a>. It describes the plugin registry, helper coverage, exported parameters, dialog surfaces, and the background jobs that actually do the work.</p>
+
+        <h2 id="architecture">Architecture Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Role</th>
+              <th>Verification notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>plugin.gd</code></td>
+              <td>Central registry for menu wiring, dialogs, exported settings, action dispatch, FileSystem context menus, and tool-log reporting.</td>
+              <td>Verified.</td>
+            </tr>
+            <tr>
+              <td><code>_DensetsuSuiteContextMenuPlugin</code></td>
+              <td>FileSystem context-menu surface for geometry, textures, animation, assets, and maintenance subsets.</td>
+              <td>Verified in <code>plugin.gd</code>.</td>
+            </tr>
+            <tr>
+              <td>Helper scripts under <code>helpers/</code></td>
+              <td>Batch operations for extraction, resize, image transforms, pivot changes, selection, subdivision, OBJ handling, and occlusion pruning.</td>
+              <td>Mixed: several helpers are present, several are declared but missing.</td>
+            </tr>
+            <tr>
+              <td>External scripts under <code>res://engine3d/tools/</code></td>
+              <td>Specialized pipelines for baking, git, build, optimization, and environment control map generation.</td>
+              <td>Referenced by fixed script paths from Tool Suite.</td>
+            </tr>
+            <tr>
+              <td>Preview and confirmation dialogs</td>
+              <td>High-parameter workflows for mesh baking, kitbash composite bake, project-wide mesh reference replacement, moves, and Poser conversion.</td>
+              <td>Verified from dialog builder fields in <code>plugin.gd</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="helper-registry">Helper Registry</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Script</th>
+              <th>Status</th>
+              <th>Primary callable surface</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>helpers/static_pack_helper.gd</code></td><td>Verified</td><td><code>_pack_paths</code>, <code>_pack_resource_path</code></td><td>Static pack/export workflow.</td></tr>
+            <tr><td><code>helpers/arraymesh_extract_helper.gd</code></td><td>Verified</td><td><code>_extract_paths</code>, <code>_extract_from_file</code>, scene/mesh extraction helpers</td><td>Supports ArrayMesh, material, and combined extraction modes.</td></tr>
+            <tr><td><code>helpers/texture_resize_helper.gd</code></td><td>Verified</td><td><code>_resize_paths</code>, <code>_resize_single</code></td><td>Power-of-two correction, overwrite/copy modes.</td></tr>
+            <tr><td><code>helpers/image_transform_helper.gd</code></td><td>Verified</td><td><code>transform_image_paths</code>, <code>_transform_single</code></td><td>Non-destructive image flip/rotate outputs.</td></tr>
+            <tr><td><code>helpers/pivot_reassign_helper.gd</code></td><td>Verified</td><td><code>reassign_pivot_paths</code>, pivot computation helpers</td><td>Supports center-mass and center-bottom modes.</td></tr>
+            <tr><td><code>helpers/mesh_obj_helper.gd</code></td><td>Verified</td><td><code>convert_mesh_resource_paths_to_obj</code>, <code>replace_scene_mesh_references_with_obj</code>, <code>replace_project_mesh_references_with_obj_with_options</code></td><td>OBJ/MTL export plus scene/project relink flows.</td></tr>
+            <tr><td><code>helpers/fbx_anim_persist_helper.gd</code></td><td>Verified</td><td><code>configure_persistent_animation_import_paths</code></td><td>Import-file mutation and source reimport.</td></tr>
+            <tr><td><code>helpers/occlusion_prune_helper.gd</code></td><td>Verified</td><td><code>prune_occluded_mesh_instances</code></td><td>Visibility sampling and candidate pruning.</td></tr>
+            <tr><td><code>helpers/select_same_mesh_helper.gd</code></td><td>Verified</td><td><code>select_same_mesh_nodes</code></td><td>Selection expansion by shared mesh identity.</td></tr>
+            <tr><td><code>helpers/select_intersecting_mesh_helper.gd</code></td><td>Verified</td><td><code>select_intersecting_mesh_nodes</code></td><td>World-AABB intersection pass.</td></tr>
+            <tr><td><code>helpers/mesh_subdivide_helper.gd</code></td><td>Verified</td><td><code>subdivide_mesh_paths_to_obj</code></td><td>Subdivision and OBJ export.</td></tr>
+            <tr><td><code>helpers/terrain3d_image_import_helper.gd</code></td><td>Source missing</td><td>Declared constant and instance variable only</td><td>Behavior must be documented from <code>plugin.gd</code> runner until the helper exists.</td></tr>
+            <tr><td><code>helpers/mesh_to_csg_helper.gd</code></td><td>Source missing</td><td>Declared constant and instance variable only</td><td>Menu action exists; helper implementation file is absent.</td></tr>
+            <tr><td><code>helpers/import_sidecar_cleanup_helper.gd</code></td><td>Source missing</td><td>Declared constant and instance variable only</td><td>Project cleanup action exists; helper implementation file is absent.</td></tr>
+            <tr><td><code>helpers/missing_asset_relink_helper.gd</code></td><td>Source missing</td><td>Declared constant and instance variable only</td><td>Relink action exists; helper implementation file is absent.</td></tr>
+            <tr><td><code>helpers/mesh_flip_normals_helper.gd</code></td><td>Source missing</td><td>Declared constant and instance variable only</td><td>Normals-copy action exists; helper implementation file is absent.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="external-toolchains">External Toolchain Dependencies</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Script path</th>
+              <th>Used by</th>
+              <th>Type</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>res://engine3d/tools/TerrainBlendMaterialBaker.gd</code></td><td>Terrain blend bake actions</td><td>Toolchain</td><td>Uses terrain blend bake setting group.</td></tr>
+            <tr><td><code>res://engine3d/tools/SelectedMeshTextureBaker.gd</code></td><td>Selected static PBR mesh bakes and FileSystem mesh asset bakes</td><td>Toolchain</td><td>Preview-dialog-driven.</td></tr>
+            <tr><td><code>res://engine3d/tools/KitbashCompositeBaker.gd</code></td><td>Selected group to single mesh</td><td>Toolchain</td><td>Preview, ArmorPaint handoff, prefab commit path.</td></tr>
+            <tr><td><code>res://engine3d/tools/EnvironmentControlMapBaker.gd</code></td><td>Environment control map bakes</td><td>Toolchain</td><td>Writes RGBA control map outputs.</td></tr>
+            <tr><td><code>res://addons/densetsu_texture_maps/texture_map_generator.gd</code></td><td>Companion map generation and cleanup actions</td><td>Toolchain dependency</td><td>Not a standalone plugin in this wave.</td></tr>
+            <tr><td><code>res://engine3d/tools/GitPullMain.gd</code></td><td>Full Pull to Main</td><td>Editor script</td><td>Uses git export group.</td></tr>
+            <tr><td><code>res://engine3d/tools/BuildTestReleaseRegular.gd</code></td><td>Build Test Release (Regular)</td><td>Editor script</td><td>Uses release export group.</td></tr>
+            <tr><td><code>res://engine3d/tools/BuildTestReleaseCurrentScene.gd</code></td><td>Build Test Release (Current Scene)</td><td>Editor script</td><td>Uses release export group.</td></tr>
+            <tr><td><code>res://engine3d/tools/BuildActionAdventureLibrary.gd</code></td><td>Animation library rebuild</td><td>Editor script</td><td>Menu-launched rebuild path.</td></tr>
+            <tr><td><code>res://engine3d/tools/ForceSceneMaterialFiltering.gd</code></td><td>Force Scene Material Filtering</td><td>Editor script</td><td>Dry-run and live-run variants.</td></tr>
+            <tr><td><code>res://engine3d/tools/MapOptimizationPipeline.gd</code></td><td>Optimize for Editing/Runtime Efficiency</td><td>Editor script</td><td>Mode argument controls editing vs runtime behavior.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="exported-settings">Exported Settings</h2>
+        <p>These are the plugin-level parameters exposed by <code>plugin.gd</code>. They are the stable contract the overview and action pages should point back to.</p>
+
+        <h3 id="settings-scene">Scene Tools</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>new_map_template_scene</code></td><td><code>res://engine3d/maps/templates/densetsu_map_template.tscn</code></td><td>New map creation</td></tr>
+            <tr><td><code>new_map_output_dir</code></td><td><code>res://engine3d/maps</code></td><td>New map save location</td></tr>
+            <tr><td><code>new_map_default_file</code></td><td><code>new_densetsu_map.tscn</code></td><td>New map dialog default file name</td></tr>
+            <tr><td><code>prune_occluded_threshold_percent</code></td><td><code>100.0</code></td><td>Occlusion prune threshold</td></tr>
+            <tr><td><code>prune_occluded_use_selection_scope</code></td><td><code>true</code></td><td>Selection-scoped prune pass</td></tr>
+            <tr><td><code>prune_occluded_dry_run</code></td><td><code>true</code></td><td>Safe preview mode for occlusion prune</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-git">Git</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>git_remote_url</code></td><td><code>ssh://git@gitea.eventidemiles.com:2221/Retraissance/densetsu-dev.git</code></td><td>Full Pull to Main</td></tr>
+            <tr><td><code>git_main_branch</code></td><td><code>main</code></td><td>Full Pull to Main</td></tr>
+            <tr><td><code>git_in_editor_commit_message</code></td><td><code>Godot In-editor commit</code></td><td>Full Pull to Main</td></tr>
+            <tr><td><code>git_remote_name</code></td><td><code>origin</code></td><td>Full Pull to Main</td></tr>
+            <tr><td><code>tool_godot_exe_override</code></td><td><code>""</code></td><td>Git/build script launch override</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-release">Test Releases</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>test_release_output_root</code></td><td><code>D:/Test</code></td><td>All test release builds</td></tr>
+            <tr><td><code>test_release_publish_to_gitea</code></td><td><code>true</code></td><td>Post-build publish step</td></tr>
+            <tr><td><code>test_release_gitea_base_url</code></td><td><code>https://gitea.eventidemiles.com</code></td><td>Publish step</td></tr>
+            <tr><td><code>test_release_gitea_owner</code></td><td><code>Retraissance</code></td><td>Publish step</td></tr>
+            <tr><td><code>test_release_gitea_repo</code></td><td><code>densetsu-dev</code></td><td>Publish step</td></tr>
+            <tr><td><code>test_release_gitea_token_file</code></td><td><code>res://temp/local/gitea_token.txt</code></td><td>Publish authentication</td></tr>
+            <tr><td><code>test_release_gitea_token_env_var</code></td><td><code>DENSETSU_GITEA_TOKEN</code></td><td>Publish authentication fallback</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-map-opt">Map Optimization</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>map_opt_blender_exe</code></td><td><code>""</code></td><td>Optimization pipeline</td></tr>
+            <tr><td><code>map_opt_blender_script</code></td><td><code>res://engine3d/tools/blender/export_uv_templates.py</code></td><td>Optimization pipeline</td></tr>
+            <tr><td><code>map_opt_report_dir</code></td><td><code>res://artifacts/optimization</code></td><td>Optimization reports</td></tr>
+            <tr><td><code>map_opt_staging_dir</code></td><td><code>res://artifacts/opt_stage</code></td><td>Optimization staging</td></tr>
+            <tr><td><code>map_opt_export_uv_templates_editing</code></td><td><code>true</code></td><td>Editing-mode UV export</td></tr>
+            <tr><td><code>map_opt_export_uv_templates_runtime</code></td><td><code>false</code></td><td>Runtime-mode UV export</td></tr>
+            <tr><td><code>map_opt_uv_template_format</code></td><td><code>PNG</code></td><td>UV template export format</td></tr>
+            <tr><td><code>map_opt_uv_template_resolution</code></td><td><code>2048</code></td><td>UV template export resolution</td></tr>
+            <tr><td><code>map_opt_uv_template_per_object</code></td><td><code>true</code></td><td>Per-object UV template behavior</td></tr>
+            <tr><td><code>map_opt_uv_template_include_lods</code></td><td><code>false</code></td><td>LOD inclusion</td></tr>
+            <tr><td><code>map_opt_uv_template_destination</code></td><td><code>res://artifacts/uv_templates</code></td><td>UV template output</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-poser">Poser CR2 Converter</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>poser_cr2_blender_exe</code></td><td><code>F:/Blender/blender.exe</code></td><td>Poser conversion dialog</td></tr>
+            <tr><td><code>poser_cr2_blender_script</code></td><td><code>res://scripts/poser_cr2_to_gltf.py</code></td><td>Poser conversion dialog</td></tr>
+            <tr><td><code>poser_cr2_default_runtime_root</code></td><td><code>F:/poser4/Runtime</code></td><td>Poser conversion dialog</td></tr>
+            <tr><td><code>poser_cr2_default_output_dir</code></td><td><code>res://temp</code></td><td>Poser conversion dialog</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-terrain-bake">Terrain Blend Bake</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>terrain_blend_bake_output_root</code></td><td><code>res://assets/materials/baked</code></td><td>Terrain blend bake actions</td></tr>
+            <tr><td><code>terrain_blend_bake_texture_size</code></td><td><code>Vector2i(1024, 1024)</code></td><td>Terrain blend bake actions</td></tr>
+            <tr><td><code>terrain_blend_bake_output_scale</code></td><td><code>1x</code></td><td>Terrain blend bake actions</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-selected-mesh-bake">Selected Mesh Texture Bake</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>selected_mesh_bake_scene_output_root</code></td><td><code>res://assets/materials/baked_selected</code></td><td>Selected mesh bake preview dialog</td></tr>
+            <tr><td><code>selected_mesh_bake_filesystem_output_mode</code></td><td><code>sibling_folder</code></td><td>FileSystem mesh asset bake output mode</td></tr>
+            <tr><td><code>selected_mesh_bake_texture_size</code></td><td><code>Vector2i(1024, 1024)</code></td><td>Selected mesh bake preview dialog</td></tr>
+            <tr><td><code>selected_mesh_bake_output_scale</code></td><td><code>1x</code></td><td>Selected mesh bake preview dialog</td></tr>
+            <tr><td><code>selected_mesh_bake_unwrap_padding</code></td><td><code>4</code></td><td>Selected mesh bake preview dialog</td></tr>
+            <tr><td><code>selected_mesh_bake_edge_dilation_pixels</code></td><td><code>8</code></td><td>Selected mesh bake preview dialog</td></tr>
+            <tr><td><code>selected_mesh_bake_export_emission</code></td><td><code>true</code></td><td>Selected mesh bake preview dialog</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-kitbash">Kitbash Composite Bake</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>kitbash_bake_blender_exe</code></td><td><code>F:/Blender/blender.exe</code></td><td>Kitbash composite bake</td></tr>
+            <tr><td><code>kitbash_bake_armorpaint_exe</code></td><td><code>""</code></td><td>ArmorPaint handoff</td></tr>
+            <tr><td><code>kitbash_bake_output_root</code></td><td><code>res://assets/3d-baked/kitbash_composites</code></td><td>Kitbash composite bake output</td></tr>
+            <tr><td><code>kitbash_bake_preview_atlas_size</code></td><td><code>1024</code></td><td>Preview atlas size</td></tr>
+            <tr><td><code>kitbash_bake_final_atlas_size</code></td><td><code>2048</code></td><td>Final atlas size</td></tr>
+            <tr><td><code>kitbash_bake_unwrap_padding</code></td><td><code>12</code></td><td>UV unwrap padding</td></tr>
+            <tr><td><code>kitbash_bake_margin</code></td><td><code>12</code></td><td>Packing margin</td></tr>
+            <tr><td><code>kitbash_bake_packing_algorithm</code></td><td><code>xatlas</code></td><td>Packing algorithm</td></tr>
+            <tr><td><code>kitbash_bake_collapse_shared_materials</code></td><td><code>true</code></td><td>Material collapse behavior</td></tr>
+            <tr><td><code>kitbash_bake_preserve_material_groups</code></td><td><code>true</code></td><td>Material grouping behavior</td></tr>
+            <tr><td><code>kitbash_bake_export_emission</code></td><td><code>true</code></td><td>Emission export</td></tr>
+            <tr><td><code>kitbash_bake_generate_trimesh_collision</code></td><td><code>true</code></td><td>Prefab collision generation</td></tr>
+            <tr><td><code>kitbash_bake_instantiate_baked_prefab</code></td><td><code>true</code></td><td>Post-commit scene instantiation</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="settings-env-control">Environment Control Bake</h3>
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
+          <tbody>
+            <tr><td><code>environment_control_bake_output_root</code></td><td><code>res://assets/materials/control_maps</code></td><td>Environment control map bake</td></tr>
+            <tr><td><code>environment_control_bake_resolution</code></td><td><code>Vector2i(1024, 1024)</code></td><td>Environment control map bake</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="dialogs">Dialog and Background Job Surfaces</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>User-visible controls</th>
+              <th>Background behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>New map save dialog</td><td>Template-derived save path selection</td><td>Creates a new scene from the configured template.</td></tr>
+            <tr><td>Mesh reference replacement dialog</td><td>Current-folder scope, dry run, same-folder only, basename fallback</td><td>Runs project-wide replacement and generates a report dialog.</td></tr>
+            <tr><td>Tool log dialog</td><td>Read-only result text</td><td>Central reporting surface for many long-running actions.</td></tr>
+            <tr><td>Selected mesh bake preview</td><td>Commit mode, unwrap mode, resolution, scale, padding, dilation, emission, output root, per-job navigation</td><td>Analyzes jobs, renders previews, and commits on confirm.</td></tr>
+            <tr><td>Kitbash bake preview</td><td>Preview/final atlas size, padding, margin, packing algorithm, emission, collision, instantiate, output root, ArmorPaint button</td><td>Builds preview artifacts, optionally launches ArmorPaint, then commits on confirm.</td></tr>
+            <tr><td>Poser conversion dialog</td><td>CR2 path, OBJ path, output path, runtime root, status text</td><td>Runs the external Blender conversion script.</td></tr>
+            <tr><td>Move selected to folder dialog</td><td>Destination folder picker</td><td>Moves resources and refreshes FileSystem state.</td></tr>
+            <tr><td>Deferred reimport/refresh queues</td><td>Not directly user-facing</td><td><code>_process</code> flushes reimport and FileSystem refresh work after actions queue them.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="callable-surface">Callable Surface Inventory</h2>
+        <p>The Tool Suite codebase is large. The tables below cover the functions that drive user-visible behavior or background state changes. Internal UI plumbing that only relays widget changes is grouped rather than given standalone prose.</p>
+
+        <h3 id="callable-core">Core lifecycle and dispatch</h3>
+        <table>
+          <thead><tr><th>Function or family</th><th>Purpose</th><th>Side effects</th></tr></thead>
+          <tbody>
+            <tr><td><code>_enter_tree</code>, <code>_exit_tree</code></td><td>Instantiate helpers, build menus/dialogs, install context-menu plugin, dispose nodes on shutdown.</td><td>Registers editor UI surfaces.</td></tr>
+            <tr><td><code>_process</code></td><td>Flushes queued Terrain3D reimports, FileSystem refreshes, and pending kitbash operations.</td><td>Background job processing.</td></tr>
+            <tr><td><code>_instantiate_plugin</code></td><td>Loads helper scripts and instantiates them if possible.</td><td>Pushes warnings for missing or non-instantiable helpers.</td></tr>
+            <tr><td><code>_build_tool_menus</code>, <code>_create_tool_submenu</code>, <code>_register_tool_menu_item</code>, <code>_on_tool_menu_id_pressed</code>, <code>_clear_tool_menus</code></td><td>Build and dispatch the top-level Tool Suite menu tree.</td><td>Registers editor menu callbacks.</td></tr>
+            <tr><td><code>_DensetsuSuiteContextMenuPlugin._popup_menu</code>, <code>_build_submenu</code>, <code>_on_submenu_id_pressed</code></td><td>Build and dispatch the FileSystem context-menu subsets.</td><td>Registers right-click menu callbacks.</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="callable-runners">User-facing runners</h3>
+        <table>
+          <thead><tr><th>Function or family</th><th>Role</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>_run_static_pack</code>, <code>_run_array_extract</code>, <code>_run_pivot_reassign</code>, <code>_run_convert_mesh_res_to_obj</code>, <code>_run_subdivide_mesh_to_obj</code>, <code>_run_scale_mesh_files_overwrite</code>, <code>_run_flip_model_normals</code>, <code>_run_convert_selected_mesh_to_csg</code>, <code>_run_replace_mesh_refs_with_obj</code>, <code>_run_replace_mesh_refs_with_obj_project</code></td><td>Geometry operations</td><td>Mostly resource-writing actions.</td></tr>
+            <tr><td><code>_run_texture_resize</code>, <code>_run_image_transform</code>, <code>_run_terrain3d_image_import_standards</code>, <code>_run_generate_texture_companion_maps</code>, <code>_run_cleanup_orphan_companion_maps</code>, <code>_run_cleanup_all_companion_maps</code></td><td>Texture and import operations</td><td>Resource mutation plus optional reimport/cleanup.</td></tr>
+            <tr><td><code>_run_enable_anim_import_persistence</code>, <code>_run_rebuild_action_adventure_animation_library</code></td><td>Animation pipeline operations</td><td>Import-file mutation and external script launch.</td></tr>
+            <tr><td><code>_run_prune_occluded_mesh_instances</code>, <code>_run_select_same_mesh_nodes</code>, <code>_run_select_intersecting_mesh_nodes</code></td><td>Scene/selection operations</td><td>Selection-only or scene mutation depending on action.</td></tr>
+            <tr><td><code>_run_force_thumbnail_refresh</code>, <code>_run_force_thumbnail_refresh_selected</code>, <code>_run_force_scene_material_filtering_current_scene</code>, <code>_run_cleanup_orphan_import_sidecars_project</code>, <code>_run_relink_missing_assets_active_scene</code></td><td>Maintenance operations</td><td>Several declared helper gaps exist here.</td></tr>
+            <tr><td><code>_run_map_optimization</code>, <code>_run_test_release_regular</code>, <code>_run_test_release_current_scene</code>, <code>_run_git_pull_main</code></td><td>Optimization, build, and git operations</td><td>External-script heavy; high-risk.</td></tr>
+            <tr><td><code>_run_move_selected_to_folder</code>, <code>_run_selected_static_pbr_mesh_bake</code>, <code>_run_selected_filesystem_mesh_asset_bake</code>, <code>_run_selected_kitbash_composite_bake</code>, <code>_run_environment_control_map_bake</code>, <code>_run_terrain_blend_bake</code></td><td>Asset pipeline operations</td><td>Dialog-driven and output-heavy.</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="callable-entrypoints">Entry-point families</h3>
+        <table>
+          <thead><tr><th>Family</th><th>Examples</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>_on_tool_*</code></td><td><code>_on_tool_static_pack</code>, <code>_on_tool_build_test_release_regular</code>, <code>_on_tool_git_pull_main</code></td><td>Top-menu entrypoints that gather selection and call runners.</td></tr>
+            <tr><td><code>_on_ctx_*</code></td><td><code>_on_ctx_resize_copy</code>, <code>_on_ctx_generate_missing_companion_maps</code>, <code>_on_ctx_move_selected_to_folder</code></td><td>FileSystem context-menu entrypoints.</td></tr>
+            <tr><td>Preview callbacks</td><td><code>_selected_mesh_bake_show_preview_job</code>, <code>_on_selected_mesh_bake_preview_confirmed</code>, <code>_on_kitbash_bake_preview_confirmed</code>, <code>_on_kitbash_bake_preview_armorpaint_pressed</code></td><td>Preview rebuild, navigation, commit, and external handoff.</td></tr>
+            <tr><td>Dialog callbacks</td><td><code>_on_poser_dialog_confirmed</code>, <code>_on_mesh_ref_replace_dialog_confirmed</code>, <code>_on_move_dialog_confirmed</code></td><td>Confirmation and execution entrypoints for modal flows.</td></tr>
+            <tr><td>Reporting helpers</td><td><code>_show_mesh_ref_replace_report</code>, <code>_show_tool_log</code>, <code>_show_selected_mesh_bake_summary</code>, <code>_show_kitbash_bake_summary</code>, <code>_show_terrain_bake_summary</code></td><td>Normalize user-facing result reporting.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="verification-gaps">Verification Gaps</h2>
+        <div class="callout">
+          <p><strong>Declared helper gaps:</strong> <code>terrain3d_image_import_helper.gd</code>, <code>mesh_to_csg_helper.gd</code>, <code>import_sidecar_cleanup_helper.gd</code>, <code>missing_asset_relink_helper.gd</code>, and <code>mesh_flip_normals_helper.gd</code> are referenced in <code>plugin.gd</code> but missing from the addon tree scanned on 2026-06-09.</p>
+          <p><strong>Documentation rule:</strong> these actions remain documented because users can trigger them, but their helper-level implementation status must stay labeled <em>source missing</em> until the files exist.</p>
+        </div>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="tool_suite_overview.html">Densetsu Tool Suite Overview</a></li>
+          <li><a href="tool_suite_action_catalog.html">Densetsu Tool Suite Action Catalog</a></li>
+          <li><a href="texture_maps_overview.html">Densetsu Texture Maps</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>tool_suite_implementation_reference</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Densetsu Tool Suite Implementation Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Implementation Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Tool maintainers, engine programmers, technical artists</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_tool_suite/plugin.gd and linked helper/toolchain scripts</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
