@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PathMeshInstance3D Overview</title>
+  <meta property="og:title" content="PathMeshInstance3D Overview">
+  <meta property="og:description" content="Overview of the PathMeshInstance3D editor plugin surface used in Densetsu authoring.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/path_mesh_instance_3d_overview.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="PathMeshInstance3D Overview">
+  <meta property="twitter:description" content="Overview of the PathMeshInstance3D editor plugin surface used in Densetsu authoring.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>PathMeshInstance3D Overview</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Plugin overview</td><th>Audience</th><td>Level designers, shader authors, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/path_mesh_instance_3d/path_mesh_instance_3d.gd</code>, editor plugin and inspector plugin scripts</td><th>User touchpoint</th><td>Node inspector plus custom <code>Generate Mesh</code> button</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><code>PathMeshInstance3D</code> is an editor-facing node type that generates a mesh along a <code>Path3D</code>. In the Densetsu documentation wave it is tracked because designers can add it, configure it in the inspector, and regenerate geometry directly inside Godot.</p>
+
+        <h2 id="when-to-use">When To Use It</h2>
+        <ul>
+          <li>Road, ribbon, tube, or cross-style meshes that need to follow a path.</li>
+          <li>Procedural authoring where shader data should receive path-length or around-the-mesh mapping channels.</li>
+          <li>Cases where manual mesh editing would be slower than adjusting path and width settings in the inspector.</li>
+        </ul>
+
+        <h2 id="touchpoints">User Touchpoints</h2>
+        <table>
+          <thead><tr><th>Touchpoint</th><th>What the user sees</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Node type</td><td><code>PathMeshInstance3D</code> node</td><td>Extends <code>MeshInstance3D</code> and holds the generated mesh.</td></tr>
+            <tr><td>Inspector plugin</td><td><code>Generate Mesh</code> button</td><td>Calls <code>generate_and_assign()</code> on the selected node.</td></tr>
+            <tr><td>Inspector properties</td><td>Path, mesh format, subdivision, width, ends, UV mapping groups</td><td>Control mesh generation behavior.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="authoring-flow">Authoring Flow</h2>
+        <ol>
+          <li>Create or select a <code>Path3D</code>.</li>
+          <li>Add a <code>PathMeshInstance3D</code> node and assign the <code>path_3d</code> property.</li>
+          <li>Choose a mesh format, subdivision strategy, width behavior, end behavior, and UV mapping outputs.</li>
+          <li>Use the inspector <code>Generate Mesh</code> button to rebuild the mesh in place.</li>
+        </ol>
+
+        <h2 id="implementation-shape">Implementation Shape</h2>
+        <table>
+          <thead><tr><th>Script</th><th>Role</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>path_mesh_instance_3d.gd</code></td><td>Node implementation and mesh generator</td><td>Defines enums, exported properties, <code>generate_and_assign()</code>, and <code>generate_mesh()</code>.</td></tr>
+            <tr><td><code>path_mesh_instance_3d_editor_plugin.gd</code></td><td>Registers inspector plugin</td><td>No dock or menu surface.</td></tr>
+            <tr><td><code>path_mesh_instance_3d_editor_inspector_plugin.gd</code></td><td>Adds <code>Generate Mesh</code> button when the object is a <code>PathMeshInstance3D</code></td><td>This is the only extra editor control surfaced by the plugin.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="review-notes">Review Notes</h2>
+        <ul>
+          <li>The upstream metadata in <code>plugin.cfg</code> is sparse, so internal docs should rely on the actual script behavior instead of the plugin manifest.</li>
+          <li>The generated <code>mesh</code> property is intentionally made read-only in the inspector by <code>_validate_property()</code>.</li>
+          <li>This page documents the authoring surface, not the full mathematical internals of the generator. The property reference covers the concrete inspector contract.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="path_mesh_instance_3d_property_reference.html">PathMeshInstance3D Property Reference</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>path_mesh_instance_3d_overview</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>PathMeshInstance3D Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Tooling Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Level designers, shader authors, tool maintainers</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/path_mesh_instance_3d/*.gd</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
