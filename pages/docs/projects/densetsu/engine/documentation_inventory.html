@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Documentation Inventory</title>
+  <meta property="og:title" content="Documentation Inventory">
+  <meta property="og:description" content="Priority inventory and standards for overhauling Densetsu engine documentation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/documentation_inventory.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Documentation Inventory">
+  <meta property="twitter:description" content="Priority inventory and standards for overhauling Densetsu engine documentation.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Documentation Inventory</h1>
+      <article class="markdown">
+        <div class="callout">
+          <strong>How to use this page:</strong> This is the documentation backlog and quality bar for the Densetsu engine wiki overhaul. It is not the final implementation reference for any single subsystem.
+        </div>
+
+        <h2 id="at-a-glance">At a glance</h2>
+        <ul>
+          <li>Scan target: <code>D:\Desktop\DEV\!!\densetsu-dev</code></li>
+          <li>Scan date: June 9, 2026</li>
+          <li>Project type: Godot 4.6 project with heavy scene usage and a mixed runtime/editor tool footprint</li>
+          <li>Observed implementation mix: 335 <code>.gd</code>, 57 <code>.gdshader</code>, 1175 <code>.tscn</code>, 227 <code>.tres</code>, 24 <code>.cfg</code>, 27 <code>.md</code></li>
+          <li>Observed non-GDScript boundary: C# files in <code>addons/waterways_net</code> and a <code>terrain_3d</code> <code>.gdextension</code>; no repo-local C++ source files were found in this scanned tree</li>
+          <li>Highest-value code zones: <code>engine3d/</code>, <code>engine/</code>, <code>autoload/</code>, <code>addons/</code>, <code>data3d/</code>, <code>shaders/</code>, <code>Maps/</code>, <code>demo/</code></li>
+        </ul>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Signal</th>
+              <th>What it tells us</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Only <code>Terrain3DRuntimeCollisionBridge</code> is registered in the <code>[autoload]</code> section of <code>project.godot</code></td>
+              <td>Autoload documentation must distinguish between scripts that exist in <code>autoload/</code> and scripts actually enabled by project configuration.</td>
+            </tr>
+            <tr>
+              <td><code>README.md</code> points to <code>docs/EngineReference/agent_quickstart.md</code>, but that path is missing in the scanned tree</td>
+              <td>Repo orientation, source-of-truth rules, and stale-doc detection need first-class documentation.</td>
+            </tr>
+            <tr>
+              <td>Large asset footprint in <code>assets/</code> and many third-party addons under <code>addons/</code></td>
+              <td>The wiki should document workflows, ownership, and integration boundaries, not attempt one page per imported asset file.</td>
+            </tr>
+            <tr>
+              <td>Backup, broken, temp, and legacy scene artifacts are present in the working tree</td>
+              <td>The wiki needs a hygiene page or policy section so devs can tell active runtime content from recovery artifacts.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="standards">Documentation standards for the overhaul</h2>
+        <ul>
+          <li>Every page should declare <strong>page type</strong>, <strong>audience</strong>, <strong>implementation status</strong>, <strong>last verified date</strong>, and <strong>primary code paths</strong> at the top.</li>
+          <li>Pages should answer the fast questions first: what this is, when to read it, and what code or content it governs.</li>
+          <li>Design intent, current implementation, and open questions should be visually separated so readers do not confuse aspirational notes with working behavior.</li>
+          <li>Use tables for inputs, outputs, signals, state transitions, data schema fields, dependencies, and file ownership.</li>
+          <li>Use callout boxes for risk, migration notes, unstable behavior, and pending verification.</li>
+          <li>Prefer diagrams, screenshots, scene-tree captures, and flowcharts where they reduce ambiguity; track missing visuals as explicit placeholder items rather than silent TODOs.</li>
+          <li>Link laterally across related pages so a developer can jump from overview to workflow to API/reference without hunting through indexes.</li>
+        </ul>
+
+        <h2 id="page-anatomy">Recommended page anatomy</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>Purpose</th>
+              <th>Good content types</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Header metadata</td>
+              <td>Tell the reader exactly what kind of page they opened.</td>
+              <td>Status badges, audience, owner, verification date, code paths.</td>
+            </tr>
+            <tr>
+              <td>Quick read</td>
+              <td>Help a developer decide if they are in the right place.</td>
+              <td>One-sentence summary, when to read, common tasks.</td>
+            </tr>
+            <tr>
+              <td>Architecture or workflow view</td>
+              <td>Explain the moving parts before the details.</td>
+              <td>Sequence diagram, scene-tree screenshot, system map, lifecycle table.</td>
+            </tr>
+            <tr>
+              <td>Implementation details</td>
+              <td>Anchor the page to concrete code and data.</td>
+              <td>Paths, classes, resources, signals, data fields, config tables.</td>
+            </tr>
+            <tr>
+              <td>Operations and pitfalls</td>
+              <td>Prevent common mistakes and wasted debugging time.</td>
+              <td>Troubleshooting callouts, gotchas, failure modes, test steps.</td>
+            </tr>
+            <tr>
+              <td>Media register</td>
+              <td>Track visuals that should exist even if they do not yet.</td>
+              <td>Placeholder screenshot slots, diagram requests, capture checklist.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="tier-1">Tier 1 - must-document first</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Why it matters</th>
+              <th>Evidence in repo</th>
+              <th>Pages to create or overhaul</th>
+              <th>Best page aids</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Repo orientation and truth sources</td>
+              <td>New contributors need to know where reality lives, what is stale, and which docs are authoritative.</td>
+              <td><code>README.md</code>, <code>HANDOFF.md</code>, missing <code>docs/EngineReference/agent_quickstart.md</code></td>
+              <td>Developer quickstart, source-of-truth policy, repo map, doc status page.</td>
+              <td>Directory map, ownership table, risk callout.</td>
+            </tr>
+            <tr>
+              <td>Project configuration and startup surface</td>
+              <td>Project-wide settings define main scene, enabled plugins, input map, physics layers, and startup expectations.</td>
+              <td><code>project.godot</code>, <code>main.tscn</code>, <code>World.tscn</code>, <code>export_presets.cfg</code></td>
+              <td>Project config reference, input map reference, layer naming guide.</td>
+              <td>Tables for actions, layers, and plugin toggles.</td>
+            </tr>
+            <tr>
+              <td>Boot, loading, and runtime service flow</td>
+              <td>Developers need a clear path from launch to live scene activation.</td>
+              <td><code>engine3d/loading/DensetsuBootLoader.gd</code>, <code>DensetsuLoadingScreen.gd</code>, splash scenes, <code>autoload/</code></td>
+              <td>Boot sequence, loading screen contract, runtime services overview.</td>
+              <td>Sequence diagram, event table, scene handoff flow.</td>
+            </tr>
+            <tr>
+              <td>Autoload and global services</td>
+              <td>Global state and service access patterns affect almost every subsystem.</td>
+              <td><code>autoload/EventBus.gd</code>, <code>autoload/InputManager.gd</code>, <code>autoload/Runtime.gd</code>, <code>project.godot</code></td>
+              <td>Autoload registry, global service contracts, event bus usage guide.</td>
+              <td>Enabled-vs-present table, signals table, dependency callout.</td>
+            </tr>
+            <tr>
+              <td>Actor framework and scene topology</td>
+              <td>The actor stack is the backbone for player, NPC, scenery, collision, and spawn behavior.</td>
+              <td><code>engine3d/actors/ActorPlayer3D.gd</code>, <code>ActorCharacter3D.gd</code>, <code>ActorNPC3D.gd</code>, collision rig scripts, spawn point scenes</td>
+              <td>Actor architecture overview, actor type guide, collision rig contract, spawn workflow.</td>
+              <td>Scene-tree screenshot, inheritance table, callout for required child nodes.</td>
+            </tr>
+            <tr>
+              <td>Player input and command pipeline</td>
+              <td>Input handling is distributed across project config, controllers, and player modules.</td>
+              <td><code>project.godot</code> input actions, <code>engine3d/controllers/</code>, <code>engine3d/actors/player/PlayerInputModule3D.gd</code></td>
+              <td>Input-to-command flow, control scheme reference, command frame contract.</td>
+              <td>Sequence diagram, action matrix, device mapping table.</td>
+            </tr>
+            <tr>
+              <td>FSM and locomotion state stack</td>
+              <td>Movement and animation behavior depend on how runtime states are selected and transitioned.</td>
+              <td><code>engine/fsm/StateMachine.gd</code>, <code>FSMState.gd</code>, <code>engine3d/fsm/states/LocomotionGrounded3D.gd</code>, <code>LocomotionAir3D.gd</code></td>
+              <td>FSM framework overview, state lifecycle contract, movement state reference.</td>
+              <td>State transition table, flowchart, event/guard condition table.</td>
+            </tr>
+            <tr>
+              <td>Combat, damage, and projectiles</td>
+              <td>Combat runtime behavior must be documented clearly for debugging and balancing.</td>
+              <td><code>engine3d/combat/AttackFXDriver3D.gd</code>, <code>CombatTargetDummy3D.gd</code>, projectile scripts and scenes</td>
+              <td>Combat runtime overview, projectile contract, hit and damage feedback reference.</td>
+              <td>Signal table, lifecycle chart, data dependency table.</td>
+            </tr>
+            <tr>
+              <td>Data contracts and resource schema library</td>
+              <td>Resource-backed data appears to be a major integration seam across systems.</td>
+              <td><code>engine/data/DataRegistry.gd</code>, <code>engine/data/resources/*.gd</code>, <code>data3d/</code></td>
+              <td>Data registry overview, schema catalog, resource authoring guide.</td>
+              <td>Field tables, ID conventions table, sample resource anatomy.</td>
+            </tr>
+            <tr>
+              <td>Custom editor tools and internal addons</td>
+              <td>Tooling changes the speed and safety of everyday development work.</td>
+              <td><code>engine3d/tools/</code>, <code>addons/densetsu_*</code>, <code>addons/project_audit</code>, <code>addons/hitbox_hurtbox</code></td>
+              <td>Tool catalog, per-tool workflow pages, troubleshooting, ownership and maturity table.</td>
+              <td>Screenshots, before/after examples, CLI examples, limitation callouts.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="tier-2">Tier 2 - subsystem deep dives</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Why it matters</th>
+              <th>Evidence in repo</th>
+              <th>Pages to create or overhaul</th>
+              <th>Best page aids</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Camera systems and mode switching</td>
+              <td>Camera behavior directly affects player feel and debugging of traversal spaces.</td>
+              <td><code>engine3d/camera/OrbitCamera3D.gd</code>, <code>FirstPersonCamera3D.gd</code>, <code>CameraModeTrigger3D.gd</code></td>
+              <td>Camera overview, mode trigger guide, camera parameter reference.</td>
+              <td>Mode comparison table, trigger setup screenshot.</td>
+            </tr>
+            <tr>
+              <td>Items, equipment, weapons, and inventory</td>
+              <td>These data and scene contracts bridge gameplay, UI, and authoring.</td>
+              <td><code>engine3d/items/</code>, <code>data3d/items/</code>, <code>WeaponItem3D.tscn</code>, <code>InventoryData.gd</code></td>
+              <td>Inventory schema guide, weapon/subweapon reference, item authoring workflow.</td>
+              <td>Field tables, scene anatomy, example item setup.</td>
+            </tr>
+            <tr>
+              <td>Rendering, outlines, and post FX</td>
+              <td>Stylized rendering is a visible part of the engine identity and a likely tuning hotspot.</td>
+              <td><code>engine3d/postfx/</code>, <code>shaders/postfx/</code>, <code>shaders/main.gdshader</code>, <code>shaders/stylized.gdshader</code></td>
+              <td>Post FX overview, Sobel pipeline reference, shader library index.</td>
+              <td>Before/after media, shader parameter tables.</td>
+            </tr>
+            <tr>
+              <td>Sky, clouds, weather, and time-of-day</td>
+              <td>Environmental presentation and weather data appear to cross engine, data, and shader layers.</td>
+              <td><code>engine3d/sky/</code>, <code>shaders/sky/</code>, <code>WeatherData.gd</code></td>
+              <td>Sky system overview, weather data contract, clock and cloud layer reference.</td>
+              <td>System diagram, screenshot placeholders, weather state table.</td>
+            </tr>
+            <tr>
+              <td>Terrain, maps, and world content conventions</td>
+              <td>Map files, terrain data, and world content need naming and ownership rules.</td>
+              <td><code>Maps/</code>, <code>Terrain Data/</code>, <code>data3d/terrain/</code>, <code>addons/terrain_3d</code>, <code>engine3d/terrain/Terrain3DRuntimeCollisionBridge.gd</code></td>
+              <td>World content guide, terrain workflow, map naming and active-content policy.</td>
+              <td>Directory map, workflow diagram, active-vs-archive table.</td>
+            </tr>
+            <tr>
+              <td>Animation and character assembly tooling</td>
+              <td>Animation library generation and character editing are core to iteration speed.</td>
+              <td><code>engine3d/tools/BuildBiped*</code>, <code>CharacterEditor3D.gd</code>, Blender helper scripts</td>
+              <td>Animation pipeline overview, character editor guide, export/import checklist.</td>
+              <td>Workflow checklist, screenshot series, file naming table.</td>
+            </tr>
+            <tr>
+              <td>Testing, sandboxes, and demos</td>
+              <td>Debug scenes are often the fastest way to validate runtime changes.</td>
+              <td><code>engine3d/tests/</code>, <code>demo/</code>, <code>Maps/Test Room.tscn</code></td>
+              <td>Test scene catalog, smoke test instructions, demo scene purpose map.</td>
+              <td>Scene purpose table, reproduction steps, expected result boxes.</td>
+            </tr>
+            <tr>
+              <td>Build, export, and release automation</td>
+              <td>Release helpers and manifests should be understandable before they are trusted.</td>
+              <td><code>engine3d/tools/BuildTestReleaseRegular.gd</code>, <code>BuildStrippedTestPack.gd</code>, <code>RuntimeExportManifest.gd</code>, <code>GiteaReleasePublisher.gd</code>, <code>export_presets.cfg</code></td>
+              <td>Export pipeline overview, release checklist, manifest reference.</td>
+              <td>Flowchart, command examples, environment prerequisite table.</td>
+            </tr>
+            <tr>
+              <td>Legacy migration and compatibility work</td>
+              <td>Migration tooling should be documented before it becomes tribal knowledge.</td>
+              <td><code>engine3d/tools/c2_migration/ImportC2UiMenus.gd</code>, <code>legacy/</code>, README in <code>c2_migration/</code></td>
+              <td>C2 migration overview, CLI usage page, generated-content policy.</td>
+              <td>Before/after screenshots, CLI argument table, safety notes.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="tier-3">Tier 3 - reference, integration, and operations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Why it matters</th>
+              <th>Evidence in repo</th>
+              <th>Pages to create or overhaul</th>
+              <th>Best page aids</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Third-party addon registry</td>
+              <td>The project depends on many addons; devs need to know which are vendor code, which are customized, and which are safe to upgrade.</td>
+              <td><code>addons/goshapes</code>, <code>terrain_3d</code>, <code>waterways_net</code>, <code>nexus_vertex_painter</code>, <code>transform_variance</code>, others enabled in <code>project.godot</code></td>
+              <td>Addon registry, upgrade policy, integration boundary notes.</td>
+              <td>Owner/source/version table, local-modification flags.</td>
+            </tr>
+            <tr>
+              <td>Native and non-GDScript boundary</td>
+              <td>Cross-language boundaries are high-risk when debugging, porting, or building.</td>
+              <td>C# in <code>addons/waterways_net</code>, <code>addons/terrain_3d/terrain.gdextension</code></td>
+              <td>Native boundary page, build assumptions page, external source location notes.</td>
+              <td>Boundary diagram, prerequisites table, limitations callout.</td>
+            </tr>
+            <tr>
+              <td>Shader library reference</td>
+              <td>Shader ownership and intended use are easy to lose in a scene-heavy repo.</td>
+              <td><code>shaders/</code>, <code>standard_shaders/</code>, shader utility READMEs</td>
+              <td>Shader index, per-family notes, common parameter reference.</td>
+              <td>Preview media, parameter tables, performance notes.</td>
+            </tr>
+            <tr>
+              <td>Asset pipeline and directory conventions</td>
+              <td>There are too many assets to document one by one, so the pipeline and naming rules must be documented instead.</td>
+              <td><code>assets/</code>, <code>data3d/models/</code>, <code>demo/assets/</code>, helper scripts in <code>scripts/</code> and <code>engine3d/tools/blender/</code></td>
+              <td>Asset intake guide, naming conventions, import policy, provenance checklist.</td>
+              <td>Directory examples, import checklist, media placeholders.</td>
+            </tr>
+            <tr>
+              <td>Operations, troubleshooting, and known rough edges</td>
+              <td>Current-state project risks should be easy to find without reading handoff notes or commit history.</td>
+              <td><code>HANDOFF.md</code>, temp and backup scene artifacts, README gaps</td>
+              <td>Known issues page, recovery notes, local-environment gotchas.</td>
+              <td>Warning callouts, symptom-to-fix tables.</td>
+            </tr>
+            <tr>
+              <td>License and provenance notes</td>
+              <td>Imported content and third-party code need traceability even in an internal wiki.</td>
+              <td><code>LICENSE*</code>, <code>LICENSES/</code>, <code>demo/assets/textures/asset_licenses.txt</code></td>
+              <td>Provenance registry, third-party attribution notes, reuse policy.</td>
+              <td>Source/usage table, status badges.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="low-priority">What should not become one-page-per-file docs</h2>
+        <ul>
+          <li>Individual imported images, models, and raw asset files unless they are canonical examples for a workflow.</li>
+          <li>Every <code>.import</code> file or generated metadata file.</li>
+          <li>Upstream addon internals that have not been locally modified or wrapped.</li>
+          <li>Every backup, broken, temp, or deprecated scene snapshot; document the cleanup policy instead.</li>
+          <li>Every demo asset instance; document the demo scene purpose and setup rules instead.</li>
+        </ul>
+
+        <h2 id="media-stubs">Media stub register</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Placeholder</th>
+              <th>Supports pages</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Engine architecture map</td>
+              <td>Repo orientation, actor framework, runtime overview</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Boot and loading sequence diagram</td>
+              <td>Boot, loading, runtime services</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>ActorPlayer3D scene-tree capture</td>
+              <td>Actor framework, player stack, collision rig docs</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Input-to-command-to-state flow chart</td>
+              <td>Input pipeline, FSM, locomotion docs</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Tool Suite and addon screenshots</td>
+              <td>Custom tools, terrain workflow, editor plugin pages</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Rendering comparison shots</td>
+              <td>Post FX, sky, shader library docs</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Map and terrain directory diagram</td>
+              <td>World content, terrain, asset pipeline docs</td>
+              <td>Needed</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="scan-notes">Scan notes worth carrying forward</h2>
+        <div class="callout">
+          <p><strong>Important:</strong> this inventory is grounded in the current code tree, not the existing wiki page structure.</p>
+          <p><strong>Important:</strong> the scanned tree shows C# and <code>.gdextension</code> boundaries, but no repo-local C++ sources. If C++ lives in a separate repository or generated dependency tree, it should be inventoried separately.</p>
+          <p><strong>Important:</strong> several subsystem README files are placeholders, which means the repo itself cannot yet be trusted to explain those areas without code inspection.</p>
+        </div>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+<div class='meta-grid'>
+<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>documentation_inventory</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Documentation Inventory</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Inventory</span></div><div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Developers, technical artists, tool authors</span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Codebase scan of D:\Desktop\DEV\!!\densetsu-dev</span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+</div>
+</details>
+    </section>
+  </main>
+  <script src="../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
