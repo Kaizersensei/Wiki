@@ -38,7 +38,7 @@
         <span class="nav-dropdown-toggle">Densetsu ▾</span>
         <div class="nav-dropdown-menu">
           <a href="../../../../retraissance/densetsu/universe/index.html">Universe</a>
-          <a href="index.html">Engine</a>
+          <a href="../../../../retraissance/densetsu/engine/index.html">Engine</a>
         </div>
       </div>
     </nav>
@@ -49,42 +49,84 @@
       <p class="eyebrow">engine</p>
       <h1>Engine Wiki</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>This index summarizes the Densetsu Engine wiki and points to the primary subsystems. Content is sourced from the context database and existing project notes; gaps are explicitly marked in each section.</p>
-<h2>Sections</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><a href="runtime/index.html">Core Runtime</a></li>
-  <li><a href="actors/index.html">Actor System</a></li>
-  <li><a href="fsm/index.html">FSM System</a></li>
-  <li><a href="stats_combat/index.html">Stats &amp; Combat</a></li>
-  <li><a href="input_movement/index.html">Input &amp; Movement</a></li>
-  <li><a href="data_authoring/index.html">Data &amp; Authoring</a></li>
-  <li><a href="editor/index.html">Editor</a></li>
-  <li><a href="tools/index.html">Tools &amp; Debugging</a></li>
-  <li><a href="integrations/index.html">Integrations</a></li>
-  <li><a href="networking/index.html">Networking &amp; Multiplayer</a></li>
-  <li><a href="rendering/index.html">Rendering &amp; Performance</a></li>
-  <li><a href="build-deploy/index.html">Build &amp; Deployment</a></li>
-  <li><a href="testing-qa/index.html">Testing &amp; QA</a></li>
-  <li><a href="telemetry/index.html">Telemetry &amp; Observability</a></li>
-  <li><a href="modding/index.html">Modding &amp; Plugins</a></li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Highlighted tooling</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li><a href="tools/index.html">Tools &amp; Debugging</a></li>
-  <li><a href="tools/debug_tools_overview.html#tool-suite">Tool Suite</a></li>
-  <li><a href="tools/debug_tools_overview.html#autocliff">Autocliff</a></li>
-  <li><a href="tools/debug_tools_overview.html#foliage">Foliage</a></li>
-  <li><a href="tools/debug_tools_overview.html#project-audit">Project Audit</a></li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Source archives</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><a href="../meta/raw_sources/Densetsu_Design_Document.html">Densetsu Design Document (full text)</a></li>
-  <li><a href="../meta/raw_sources/Densetsu_–_Chat‑only_Canon_&_Project‑wide_Decisions.html">Chat-only Canon &amp; Decisions (full text)</a></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-<h2>Status</h2>
-<p>Core Runtime, Actor System, FSM, Stats &amp; Combat, Input &amp; Movement, Data &amp; Authoring, Editor, Tools, Integrations, Rendering, Build &amp; Deployment, Testing, Telemetry, and Modding sections now contain evidence-based summaries. Networking, telemetry, build, and modding currently lack explicit engine evidence and are flagged as unknown in their pages.</p>
-</article>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="index.html">Engine index</a></li>
+<li><a href="tools/debug_tools_overview.html">Tools &amp; Debugging overview</a></li>
+<li><a href="tools/tool_suite_overview.html">Densetsu Tool Suite</a></li>
+<li><a href="tools/autocliff_terrain3d_overview.html">Autocliff overview</a></li>
+<li><a href="tools/foliage_system_overview.html">Foliage system overview</a></li>
+<li><a href="tools/project_audit_overview.html">Project Audit</a></li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">Deterministic Design 
+ 
+Deterministic design is an engineering approach that minimizes or eliminates unknowns in a 
+project by using a set of well-defined parameters to predict outcomes with certainty. Instead 
+of relying on probability or random chance, it uses a scientific and fact-based method to
+
+---
+
+Title: Densetsu​
+Genre: Metroidvania / Narrative Action Adventure​
+Core Engine: Densetsu Engine (Godot-based FSM & Actor System)​
+Primary Themes: Balance, Memory, Time, Renewal.​
+Tagline: “Swords, Sorcery and Shuriken”
+
+---
+
+systems described in the Game Design Document (GDD) are realized in practice. It bridges 
+creative intent and technical execution by detailing the structure, modular systems, and 
+development workflow that form the foundation of the Densetsu Engine. 
+Scope 
+This document serves as a blueprint for developers, designers, and technical artists under</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -96,3 +138,6 @@
   <script src="../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
+
