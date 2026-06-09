@@ -1,15 +1,137 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Densetsu Tool Suite Overview</title>
-<meta property="og:title" content="Densetsu Tool Suite Overview"><meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/tool_suite_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Densetsu Tool Suite Overview"><meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-<link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head>
-<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
-<main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Densetsu Tool Suite Overview</h1><article class="markdown">
-<div class="callout" id="content-status"><strong>Content status:</strong> Populated from rewrite notes. This page should split into dedicated subpages once menu labels stabilize.</div>
-<h2 id="at-a-glance">At a glance</h2><ul><li>Plugin path/config: <code>res://addons/densetsu_tool_suite</code> and <code>res://addons/densetsu_tool_suite/plugin.cfg</code>.</li><li>Project-owned editor plugin; active central utility menu/context-menu hub.</li><li>Hosts terrain baking, texture helpers, mesh/object helpers, image transforms, selection helpers, static packing, and import-standard actions.</li></ul>
-<h2 id="how-it-works">How it works</h2><ul><li>Tools are exposed via editor menu entries and context actions instead of separate single-purpose docks.</li><li>Companion map generation access points are routed through Tool Suite workflows.</li><li>Terrain blend baking now synthesizes UV-space output instead of viewport-capturing lit scene pixels.</li><li>Bake detection supports slope/altitude shader usage across ShaderMaterial resources, overrides, and mesh-bearing Node3D targets.</li><li>Bake output scaling supports 1x/2x/4x using the largest source texture as the reference.</li></ul>
-<h2 id="interfaces">Interfaces</h2><ul><li>Implementation: <code>res://addons/densetsu_tool_suite/plugin.gd</code>.</li><li>Helpers: <code>res://addons/densetsu_tool_suite/helpers/</code>.</li><li>Worklog/context: <code>res://docs/production_rewrite_worklog.md</code>.</li><li>Key areas: terrain blend baking, Terrain3D import standards, companion maps, OBJ helpers, ArrayMesh extraction/subdivision, pivot/selection helpers, static packing, occlusion pruning.</li></ul>
-<h2 id="operational-concerns">Operational concerns</h2><ul><li>FileSystem refresh/reimport actions were hardened to avoid Godot progress-dialog/deferred-callback errors.</li><li>Terrain3D image import standards enforce VRAM compression with <code>compress/high_quality = true</code> (BPTC_RGBA), normal-map importer disabled, mipmaps enabled, and no channel packing at this stage.</li><li>Validation markers: <code>TERRAIN3D_IMAGE_IMPORT_VALIDATION_FAILURE_COUNT=0</code>, <code>TERRAIN3D_IMAGE_IMPORT_PARSE_FAILURE_COUNT=0</code>; companion generator validation also passed after optimization.</li></ul>
-<h2 id="related-docs">Related docs</h2><ul><li><a href="../index.html">Engine index</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li><li><a href="texture_maps_overview.html">Densetsu Texture Maps</a></li><li><a href="geometry_obj_export_overview.html">Densetsu Geometry OBJ Export</a></li></ul>
-<details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Split this into dedicated pages for texture tools, mesh tools, terrain baking, and import standards after Tool Suite menu labels stabilize.</p></div></details>
-</article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Tool Suite Overview</title>
+  <meta property="og:title" content="Densetsu Tool Suite Overview">
+  <meta property="og:description" content="Operator-facing overview of the Densetsu Tool Suite editor plugin.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/tool_suite_overview.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Tool Suite Overview">
+  <meta property="twitter:description" content="Operator-facing overview of the Densetsu Tool Suite editor plugin.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Densetsu Tool Suite Overview</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Plugin overview</td><th>Audience</th><td>Developers, level designers, technical artists</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_tool_suite/plugin.gd</code> plus helper and toolchain scripts</td><th>User touchpoint</th><td><code>Tools &gt; Densetsu</code> and FileSystem context menus</td></tr>
+              <tr><th>Risk level</th><td>High because many actions write files, mutate scenes, or run external scripts</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Densetsu Tool Suite is the central editor utility hub for Densetsu. Instead of shipping one small plugin per task, it exposes a single <code>Densetsu</code> menu tree and a matching FileSystem context-menu layer that dispatches into mesh helpers, texture helpers, baking pipelines, maintenance utilities, build scripts, and git workflows.</p>
+
+        <h2 id="quick-read">Quick Read</h2>
+        <ul>
+          <li>Use Tool Suite when the task starts from selected scene nodes, selected resources, or a project-wide editor workflow.</li>
+          <li>Use the <a href="tool_suite_action_catalog.html">action catalog</a> when you need the exact menu path, selection requirements, side effects, or settings behind one action.</li>
+          <li>Use the <a href="tool_suite_implementation_reference.html">implementation reference</a> when you need helper coverage, exported settings, missing helper gaps, or background job details.</li>
+        </ul>
+
+        <h2 id="menu-categories">Menu Categories</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>What it covers</th>
+              <th>Typical inputs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Scene</code></td><td>Map creation, floor spread, same-mesh selection, intersecting-mesh selection, occlusion prune</td><td>Scene selection and active scene state</td></tr>
+            <tr><td><code>Geometry</code></td><td>Static packing, mesh extraction, pivot fixes, mesh-to-OBJ, subdivision, scaling, normals, mesh-reference replacement</td><td>Mostly FileSystem selection; some scene selection</td></tr>
+            <tr><td><code>Textures</code></td><td>Resize, transform, companion map generation, cleanup, Terrain3D import standards</td><td>FileSystem selection or current folder scope</td></tr>
+            <tr><td><code>Animation</code></td><td>Animation import persistence and ActionAdventure library rebuild</td><td>FileSystem selection or fixed animation folder</td></tr>
+            <tr><td><code>Maintenance</code></td><td>Thumbnail refresh, scene material filtering, orphan import cleanup, missing-asset relink</td><td>Current scene, project scope, FileSystem selection</td></tr>
+            <tr><td><code>Build</code></td><td>Regular and current-scene test releases</td><td>Release settings and export environment</td></tr>
+            <tr><td><code>Optimization</code></td><td>Editing-mode or runtime-mode map optimization</td><td>Optimization settings and external Blender path</td></tr>
+            <tr><td><code>Assets</code></td><td>Folder moves, terrain blend bakes, selected mesh bakes, kitbash composite bakes, environment control maps, Poser conversion</td><td>Scene selection, FileSystem selection, dialog-driven paths</td></tr>
+            <tr><td><code>Git</code></td><td>In-editor pull workflow</td><td>Configured remote/branch settings</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="what-it-touches">What Tool Suite Touches</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Examples</th>
+              <th>Why it matters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Scene state</td><td>Selection tools, occlusion prune, mesh-to-CSG, bake instantiation</td><td>Some actions mutate the active scene, not just files.</td></tr>
+            <tr><td>Project files</td><td>Texture resize, OBJ export, pivot rewrite, companion-map generation, resource moves</td><td>Many actions write or overwrite resources.</td></tr>
+            <tr><td>Import metadata</td><td>Animation persistence, Terrain3D import standards, orphan <code>.import</code> cleanup</td><td>These actions affect future reimport behavior.</td></tr>
+            <tr><td>External scripts</td><td>Builds, git pull, optimization pipeline, baking toolchains, Poser conversion</td><td>Some workflows depend on other tools and executables.</td></tr>
+            <tr><td>Reports and logs</td><td>Tool log dialog, mesh-reference replacement report, bake summaries</td><td>Several actions rely on review-first reporting before safe execution.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="known-gaps">Known Gaps and Caution Flags</h2>
+        <div class="callout">
+          <p><strong>Declared helper gaps:</strong> <code>terrain3d_image_import_helper.gd</code>, <code>mesh_to_csg_helper.gd</code>, <code>import_sidecar_cleanup_helper.gd</code>, <code>missing_asset_relink_helper.gd</code>, and <code>mesh_flip_normals_helper.gd</code> are referenced from <code>plugin.gd</code> but were missing from the scanned addon tree on 2026-06-09.</p>
+          <p><strong>Meaning for readers:</strong> the actions are still visible and therefore documented, but helper-level implementation notes for those surfaces remain marked <em>source missing</em>.</p>
+        </div>
+
+        <h2 id="where-to-go-next">Where To Go Next</h2>
+        <ul>
+          <li><a href="tool_suite_action_catalog.html">Densetsu Tool Suite Action Catalog</a> for every visible action, menu path, and side effect.</li>
+          <li><a href="tool_suite_implementation_reference.html">Densetsu Tool Suite Implementation Reference</a> for helper coverage, settings tables, dialog surfaces, and background jobs.</li>
+          <li><a href="texture_maps_overview.html">Densetsu Texture Maps</a> for the internal companion-map toolchain surfaced through Tool Suite.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="tool_suite_action_catalog.html">Densetsu Tool Suite Action Catalog</a></li>
+          <li><a href="tool_suite_implementation_reference.html">Densetsu Tool Suite Implementation Reference</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>tool_suite_overview</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Densetsu Tool Suite Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Tooling Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Developers, level designers, technical artists</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_tool_suite/plugin.gd and linked helper/toolchain scripts</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
