@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,41 +38,79 @@
       <p class="eyebrow">engine</p>
       <h1>Actor Types &amp; Lifecycle</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>Actor types share a common lifecycle defined by <code>ActorInterface3D</code>. Concrete actors (player, NPC, scenery) plug into these hooks to implement their behavior.</p>
-<h2>Lifecycle phases</h2>
-<ol>
-  <li><strong>Initialize</strong>: <code>initialize</code> sets runtime references and prepares state.</li>
-  <li><strong>Ready</strong>: <code>on_actor_ready</code> runs after the actor enters the scene.</li>
-  <li><strong>Update</strong>: <code>on_actor_update</code> handles per-frame logic.</li>
-  <li><strong>Physics</strong>: <code>on_actor_physics</code> handles physics step logic.</li>
-  <li><strong>Hit</strong>: <code>on_actor_hit</code> handles damage reactions.</li>
-  <li><strong>Death</strong>: <code>on_actor_death</code> handles cleanup or state transitions.</li>
-  <li><strong>Respawn</strong>: <code>on_actor_respawn</code> restores actor state when applicable.</li>
-</ol>
-<h2>Actor types</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><strong>ActorPlayer3D</strong> — player-controlled character actor.</li>
-  <li><strong>ActorNPC3D</strong> — autonomous actor; includes wander phase helpers.</li>
-  <li><strong>ActorScenery3D</strong> — non-character world actor.</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Signals &amp; state</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li><code>actor_state_changed</code> for state transitions.</li>
-  <li><code>actor_tag_added</code> and <code>actor_tag_removed</code> for tag-driven logic.</li>
-  <li>Movement signals on <code>ActorCharacter3D</code> (<code>landed</code>, <code>jumped</code>, <code>direction_changed</code>, <code>hurt</code>).</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Lifecycle hooks and concrete actor scenes are present.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>engine3d/actors/ActorInterface3D.gd</code></li>
-  <li><code>engine3d/actors/ActorCharacter3D.gd</code></li>
-  <li><code>engine3d/actors/ActorNPC3D.gd</code></li>
-  <li><code>engine3d/actors/ActorPlayer3D.gd</code></li>
-  <li><code>engine3d/actors/ActorScenery3D.tscn</code></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">Title: Densetsu​
+Genre: Metroidvania / Narrative Action Adventure​
+Core Engine: Densetsu Engine (Godot-based FSM & Actor System)​
+Primary Themes: Balance, Memory, Time, Renewal.​
+Tagline: “Swords, Sorcery and Shuriken”
+
+---
+
+●​ Rest Points: Meditation zones for leveling and world state updates.​
+ 
+Quest Types 
+●​ Narrative Quests: Drive the story, revealing character arcs and world secrets.​
+
+---
+
+Combat remains grounded in weight and rhythm — every strike, block, or dodge matters. 
+AI & Enemy Behavior 
+Enemies are Actors governed by the FSM system. Their state logic follows group priorities, 
+context flags, and frame events, ensuring dynamic interaction rather than scripted behavior. 
+Enemies react to sound, light, environmental pressure, and player actions, allowing</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -84,7 +122,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
