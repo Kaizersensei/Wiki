@@ -1,15 +1,86 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Densetsu Texture Maps</title>
-<meta property="og:title" content="Densetsu Texture Maps"><meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/texture_maps_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Densetsu Texture Maps"><meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+<meta property="og:title" content="Densetsu Texture Maps"><meta property="og:description" content="Overview of the Densetsu Texture Maps toolchain surfaced through Tool Suite."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/texture_maps_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Densetsu Texture Maps"><meta property="twitter:description" content="Overview of the Densetsu Texture Maps toolchain surfaced through Tool Suite."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
 <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head>
-<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
+<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
 <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Densetsu Texture Maps</h1><article class="markdown">
-<div class="callout" id="content-status"><strong>Content status:</strong> Populated from production rewrite notes. Final parameter guidance and approved example outputs are pending.</div>
-<h2 id="at-a-glance">At a glance</h2><ul><li>Project-owned helper module at <code>res://addons/densetsu_texture_maps</code> (no currently active plugin config).</li><li>Generates companion maps from source images inside Godot: normal, ambient, specular, and displacement.</li><li>Status: integrated helper code exposed through Densetsu Tool Suite menus.</li></ul>
-<h2 id="how-it-works">How it works</h2><ul><li>Standalone dock workflow was removed; features are now routed through Tool Suite texture menu entries and FileSystem context actions.</li><li>Batch processing includes bounds/safety limits to avoid long editor hangs on huge recursive runs.</li><li>Large images are constrained by tool defaults before processing.</li><li>Algorithm path avoids slow per-pixel <code>Image.get_pixel()</code>/<code>Image.set_pixel()</code> hot loops.</li></ul>
-<h2 id="interfaces">Interfaces</h2><ul><li>Module path: <code>res://addons/densetsu_texture_maps</code>.</li><li>Implementation entrypoint: <code>res://addons/densetsu_texture_maps/texture_map_generator.gd</code>.</li><li>Validation gate: <code>res://temp/validate_companion_generator.gd</code> with last documented value <code>COMPANION_GENERATOR_VALIDATION_FAILURE_COUNT=0</code>.</li><li>External reference: <a href="https://cpetry.github.io/NormalMap-Online/">NormalMap-Online</a>.</li></ul>
-<h2 id="operational-concerns">Operational concerns</h2><ul><li>Ambient/specular/displacement outputs use L8 grayscale buffers; normal output remains RGBA8.</li><li>The tool is inspired by NormalMap-Online behavior but implemented as a local Godot batch tool, not an embedded web app.</li><li>Refer to <code>res://docs/production_rewrite_worklog.md</code> for rewrite notes and rollout context.</li></ul>
-<h2 id="related-docs">Related docs</h2><ul><li><a href="../index.html">Engine index</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li><li><a href="geometry_obj_export_overview.html">Densetsu Geometry OBJ Export</a></li></ul>
-<details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Add final parameter explanations and before/after texture examples once defaults are approved.</p></div></details>
+<div class="callout"><table><tbody>
+<tr><th>Page type</th><td>Toolchain overview and reference</td><th>Audience</th><td>Technical artists, tool maintainers</td></tr>
+<tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+<tr><th>Source scripts</th><td><code>res://addons/densetsu_texture_maps/texture_map_generator.gd</code></td><th>User touchpoint</th><td>Surfaced through Tool Suite texture actions, not as a standalone plugin UI</td></tr>
+<tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+</tbody></table></div>
+
+<p>Densetsu Texture Maps is an internal toolchain component, not a standalone editor plugin in this documentation wave. Its job is to generate and clean up companion texture maps behind Tool Suite actions.</p>
+
+<h2 id="touchpoints">User Touchpoints</h2>
+<table>
+  <thead><tr><th>Touchpoint</th><th>What the user sees</th><th>Backed by</th></tr></thead>
+  <tbody>
+    <tr><td><code>Generate Missing Companion Maps</code></td><td>Selection or current-folder recursive generation from Tool Suite</td><td><code>generate_for_paths()</code> with <code>only_generate_missing = true</code></td></tr>
+    <tr><td><code>Generate All Companion Maps</code></td><td>Selection generation from Tool Suite</td><td><code>generate_for_paths()</code> with <code>only_generate_missing = false</code></td></tr>
+    <tr><td><code>Cleanup Orphan Companion Maps</code></td><td>Selection or folder cleanup from Tool Suite</td><td><code>cleanup_orphan_companion_maps_for_paths()</code></td></tr>
+    <tr><td><code>Cleanup All Companion Maps</code></td><td>Selection or folder cleanup from Tool Suite</td><td><code>cleanup_all_companion_maps_for_paths()</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="generated-outputs">Generated Outputs</h2>
+<table>
+  <thead><tr><th>Suffix</th><th>Status in current generator</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>_normal</code></td><td>Generated</td><td>RGBA normal map output.</td></tr>
+    <tr><td><code>_ambient</code></td><td>Generated</td><td>Ambient/occlusion-style grayscale output.</td></tr>
+    <tr><td><code>_specular</code></td><td>Generated</td><td>Derived grayscale specular map.</td></tr>
+    <tr><td><code>_displacement</code></td><td>Generated</td><td>Derived grayscale displacement/height-style output.</td></tr>
+    <tr><td><code>_ao</code>, <code>_height</code>, <code>_roughness</code>, <code>_metallic</code>, <code>_orm</code></td><td>Tracked as companion suffixes</td><td>Relevant for cleanup detection even when not all are generated by the current implementation path.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="supported-inputs-and-limits">Supported Inputs and Limits</h2>
+<table>
+  <thead><tr><th>Rule</th><th>Value</th><th>Why it matters</th></tr></thead>
+  <tbody>
+    <tr><td>Supported source extensions</td><td><code>png</code>, <code>jpg</code>, <code>jpeg</code>, <code>webp</code>, <code>bmp</code>, <code>tga</code></td><td>Only these file types are treated as valid source images.</td></tr>
+    <tr><td><code>DEFAULT_MAX_SOURCE_DIMENSION</code></td><td><code>2048</code></td><td>Large sources are scaled down before processing.</td></tr>
+    <tr><td><code>DEFAULT_MAX_FILES_PER_BATCH</code></td><td><code>64</code></td><td>Prevents recursive runs from hanging the editor too easily.</td></tr>
+    <tr><td>Source-image filtering</td><td>Generated companion files are excluded from source scans</td><td>Prevents the generator from re-ingesting its own outputs as new sources.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="callable-surface">Callable Surface Inventory</h2>
+<table>
+  <thead><tr><th>Function</th><th>Purpose</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>generate_batch(folder_path, recursive, options)</code></td><td>Batch generation from a folder root</td><td>Folder-oriented entrypoint.</td></tr>
+    <tr><td><code>generate_for_paths(paths, recursive, options)</code></td><td>Generation from selected files or folders</td><td>Main Tool Suite integration entrypoint.</td></tr>
+    <tr><td><code>cleanup_orphan_companion_maps_for_paths(paths, recursive, delete_files)</code></td><td>Delete or report companion files whose source textures no longer exist</td><td>Cleanup path.</td></tr>
+    <tr><td><code>cleanup_all_companion_maps_for_paths(paths, recursive, delete_files)</code></td><td>Delete or report all recognized companion outputs under the target scope</td><td>More aggressive cleanup path.</td></tr>
+    <tr><td><code>_generate_for_image</code>, <code>_build_height_data</code>, <code>_build_normal_map</code>, <code>_build_ambient_map</code>, <code>_build_specular_map</code>, <code>_build_displacement_map</code></td><td>Per-image generation pipeline</td><td>Internal implementation family.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="important-options">Important Option Keys</h2>
+<table>
+  <thead><tr><th>Option key</th><th>Purpose</th><th>Where it matters</th></tr></thead>
+  <tbody>
+    <tr><td><code>only_generate_missing</code></td><td>Skip outputs that already exist</td><td>Differentiate missing-only versus generate-all runs.</td></tr>
+    <tr><td><code>max_files_per_batch</code></td><td>Batch safety limit</td><td>Recursive folder runs.</td></tr>
+    <tr><td><code>max_source_dimension</code></td><td>Pre-resize oversized source textures</td><td>Protects editor performance and memory use.</td></tr>
+    <tr><td><code>invert_height</code>, <code>preblur_radius</code></td><td>Height-data pre-processing</td><td>Changes source scalar field before map derivation.</td></tr>
+    <tr><td><code>normal_strength</code>, <code>wrap_sampling</code>, <code>invert_green</code></td><td>Normal map behavior</td><td>Normal output style.</td></tr>
+    <tr><td><code>ambient_radius</code>, <code>ambient_strength</code>, <code>ambient_bias</code></td><td>Ambient map behavior</td><td>Occlusion-style output shaping.</td></tr>
+    <tr><td><code>specular_power</code>, <code>specular_strength</code>, <code>specular_radius</code></td><td>Specular map behavior</td><td>Specular output shaping.</td></tr>
+    <tr><td><code>displacement_contrast</code>, <code>displacement_bias</code></td><td>Displacement map behavior</td><td>Height/displacement output shaping.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="operational-guidance">Operational Guidance</h2>
+<div class="callout">
+  <p><strong>Not a plugin UI:</strong> document this as a Tool Suite dependency, not as a separate dock workflow.</p>
+  <p><strong>Cleanup caution:</strong> the cleanup entrypoints are destructive when <code>delete_files</code> is true. Treat them as reviewed cleanup steps, not casual maintenance clicks.</p>
+</div>
+
+<h2 id="related-docs">Related Docs</h2>
+<ul><li><a href="tool_suite_overview.html">Densetsu Tool Suite Overview</a></li><li><a href="tool_suite_action_catalog.html">Densetsu Tool Suite Action Catalog</a></li><li><a href="debug_tools_overview.html">Internal Tools Overview</a></li><li><a href="../documentation_inventory.html">Documentation Inventory</a></li></ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
