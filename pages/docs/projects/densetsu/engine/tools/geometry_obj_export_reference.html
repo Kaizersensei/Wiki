@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Geometry OBJ Export Reference</title>
+  <meta property="og:title" content="Densetsu Geometry OBJ Export Reference">
+  <meta property="og:description" content="Reference for Densetsu Geometry OBJ Export options, pipeline stages, and output behavior.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/geometry_obj_export_reference.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Geometry OBJ Export Reference">
+  <meta property="twitter:description" content="Reference for Densetsu Geometry OBJ Export options, pipeline stages, and output behavior.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Densetsu Geometry OBJ Export Reference</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Implementation and option reference</td><th>Audience</th><td>Tool maintainers, tech artists, DCC pipeline owners</td></tr>
+              <tr><th>Implementation status</th><td>Verified against exporter source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_geometry_obj_export/plugin.gd</code>, <code>scene_geometry_obj_exporter.gd</code></td><th>User touchpoint</th><td><code>Tools &gt; Densetsu &gt; Export Selected Scene Geometry to OBJ</code></td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="options">Export Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code>include_mesh_instances</code></td><td><code>true</code></td><td>Include <code>MeshInstance3D</code> content under selected roots.</td></tr>
+            <tr><td><code>include_csg</code></td><td><code>true</code></td><td>Attempt to bake <code>CSGShape3D</code> trees into exportable meshes.</td></tr>
+            <tr><td><code>include_multimesh</code></td><td><code>false</code></td><td>Expand <code>MultiMeshInstance3D</code> data into regular geometry for export.</td></tr>
+            <tr><td><code>apply_world_transform</code></td><td><code>true</code></td><td>Export vertices in world space rather than local node space.</td></tr>
+            <tr><td><code>flip_v_texcoord</code></td><td><code>true</code></td><td>Flip V texture coordinate output for common OBJ/DCC expectations.</td></tr>
+            <tr><td><code>enforce_outward_winding</code></td><td><code>true</code></td><td>Evaluate winding direction and flip surfaces when confidence favors outward normals.</td></tr>
+            <tr><td><code>manifold_only</code></td><td><code>true</code></td><td>Filters to manifold-friendly triangle sets where possible.</td></tr>
+            <tr><td><code>remove_enclosed_faces</code></td><td><code>true</code></td><td>Attempts to discard enclosed/internal shell faces during topology cleanup.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="selection-model">Selection Model</h2>
+        <ul>
+          <li>The plugin collects selected scene nodes, then filters nested selections so child nodes under another selected root are not exported twice.</li>
+          <li>The file dialog is built once and used after selection collection succeeds.</li>
+          <li>No FileSystem context action exists for this plugin; it is scene-selection-driven.</li>
+        </ul>
+
+        <h2 id="pipeline-stages">Exporter Pipeline Stages</h2>
+        <table>
+          <thead><tr><th>Stage</th><th>Key functions</th><th>Behavior</th></tr></thead>
+          <tbody>
+            <tr><td>Selection normalization</td><td><code>_get_selected_scene_nodes</code></td><td>Collect top-level selected roots only.</td></tr>
+            <tr><td>Geometry collection</td><td><code>_collect_node_geometry</code></td><td>Walk scene roots and gather exportable mesh items.</td></tr>
+            <tr><td>CSG extraction</td><td><code>_extract_csg_mesh</code></td><td>Uses baked/static-mesh or mesh-list fallback paths for CSG nodes.</td></tr>
+            <tr><td>MultiMesh expansion</td><td><code>_append_multimesh_instances</code></td><td>Expands visible multimesh instances into regular mesh items if enabled.</td></tr>
+            <tr><td>OBJ text build</td><td><code>_build_obj_text</code></td><td>Writes objects, vertices, UVs, normals, faces, and <code>usemtl</code> statements.</td></tr>
+            <tr><td>Triangle extraction</td><td><code>_build_triangle_indices</code>, <code>_get_surface_primitive_type</code></td><td>Rejects unsupported primitives and converts supported surfaces into triangle streams.</td></tr>
+            <tr><td>Topology cleanup</td><td><code>_filter_surface_triangles</code> family</td><td>Applies manifold-only and enclosed-face cleanup policy.</td></tr>
+            <tr><td>Winding policy</td><td><code>_evaluate_winding_policy</code>, <code>_compute_winding_scores</code>, <code>_compute_triangle_extra_flips</code></td><td>Scores normals and outwardness, then decides whether to flip winding or invert normals.</td></tr>
+            <tr><td>MTL build</td><td><code>_resolve_surface_material</code>, <code>_ensure_material_entry</code>, <code>_build_mtl_entry_lines</code></td><td>Builds material names and MTL blocks with texture path hints when available.</td></tr>
+            <tr><td>Path handling</td><td><code>_texture_to_abs_path</code>, <code>_to_abs_path</code>, <code>_obj_path_escape</code></td><td>Normalizes texture/material paths for OBJ/MTL output.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="callable-surface">Callable Surface Inventory</h2>
+        <table>
+          <thead><tr><th>Function or family</th><th>Role</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>_enter_tree</code>, <code>_exit_tree</code>, <code>_build_file_dialog</code></td><td>Plugin lifecycle and menu/dialog registration</td><td>Menu label is <code>Densetsu/Export Selected Scene Geometry to OBJ</code>.</td></tr>
+            <tr><td><code>_on_menu_export_selected</code>, <code>_on_file_selected</code></td><td>User entrypoint and export dispatch</td><td>Builds option dictionary and invokes exporter.</td></tr>
+            <tr><td><code>export_nodes_to_obj</code></td><td>Main exporter entrypoint</td><td>Returns a result dictionary and writes OBJ/MTL files.</td></tr>
+            <tr><td><code>_collect_node_geometry</code>, <code>_extract_csg_mesh</code>, <code>_append_multimesh_instances</code></td><td>Scene traversal and geometry extraction</td><td>Backbone of supported-node coverage.</td></tr>
+            <tr><td><code>_build_obj_text</code>, array-slot helpers, packed-array helpers, face token helpers</td><td>OBJ serialization</td><td>Handles indices, vertices, normals, UVs, and object/material naming.</td></tr>
+            <tr><td><code>_evaluate_winding_policy</code>, <code>_compute_winding_scores</code>, <code>_compute_triangle_extra_flips</code></td><td>Winding correction</td><td>Best-effort heuristic, not a formal watertight-mesh guarantee.</td></tr>
+            <tr><td><code>_build_mtl_entry_lines</code>, <code>_shader_material_diffuse_texture_path</code>, <code>_texture_to_abs_path</code></td><td>MTL generation and texture path detection</td><td>Supports <code>BaseMaterial3D</code> and best-effort <code>ShaderMaterial</code> texture discovery.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="output-behavior">Output Behavior and Caveats</h2>
+        <ul>
+          <li>The exporter is geometry-only. Skeletons, animation, script state, and gameplay nodes are not preserved.</li>
+          <li>Material handling is good enough for scene inspection and DCC round-tripping, but it is still constrained by what Godot material data exposes cleanly.</li>
+          <li>Texture paths written into MTL content are normalized from resource paths; treat them as pipeline hints, not a cross-DCC guarantee.</li>
+          <li><code>manifold_only</code> and <code>remove_enclosed_faces</code> are cleanup heuristics, not formal mesh repair certification.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="geometry_obj_export_overview.html">Densetsu Geometry OBJ Export Overview</a></li>
+          <li><a href="tool_suite_action_catalog.html">Densetsu Tool Suite Action Catalog</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>geometry_obj_export_reference</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Densetsu Geometry OBJ Export Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Implementation Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Tool maintainers, DCC pipeline owners</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_geometry_obj_export/plugin.gd and scene_geometry_obj_exporter.gd</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
