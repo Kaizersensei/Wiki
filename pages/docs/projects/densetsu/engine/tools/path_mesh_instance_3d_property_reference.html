@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PathMeshInstance3D Property Reference</title>
+  <meta property="og:title" content="PathMeshInstance3D Property Reference">
+  <meta property="og:description" content="Inspector property and enum reference for PathMeshInstance3D.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/path_mesh_instance_3d_property_reference.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="PathMeshInstance3D Property Reference">
+  <meta property="twitter:description" content="Inspector property and enum reference for PathMeshInstance3D.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>PathMeshInstance3D Property Reference</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Property reference</td><th>Audience</th><td>Level designers, shader authors, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/path_mesh_instance_3d/path_mesh_instance_3d.gd</code></td><th>User touchpoint</th><td>Inspector properties and <code>Generate Mesh</code> button</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="enums">Enums</h2>
+        <table>
+          <thead><tr><th>Enum</th><th>Values</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>MeshFormat</code></td><td><code>TUBE</code>, <code>TUBE_UNCAPPED</code>, <code>CROSS</code></td><td>Controls the overall cross-section and whether tube ends are capped.</td></tr>
+            <tr><td><code>SubDivisionRule</code></td><td><code>CURVE_DENSITY</code>, <code>UNIFORM</code></td><td>Controls whether tessellation follows curve density or even-length spacing.</td></tr>
+            <tr><td><code>WidthAround</code></td><td><code>EDGES</code>, <code>DIVISIONS</code></td><td>Controls how width is preserved around sharp turns.</td></tr>
+            <tr><td><code>UVMapping</code></td><td><code>NONE</code>, <code>UV_X</code>, <code>UV_Y</code>, <code>UV2_X</code>, <code>UV2_Y</code>, <code>CUSTOM0_X</code>, <code>CUSTOM0_Y</code>, <code>CUSTOM0_Z</code>, <code>CUSTOM0_W</code></td><td>Selects where generated scalar data is written for shaders.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="core-properties">Core Properties</h2>
+        <table>
+          <thead><tr><th>Property</th><th>Default</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>path_3d</code></td><td>unset</td><td>Path the generated mesh follows. The curve must contain at least two points.</td></tr>
+            <tr><td><code>mesh_format</code></td><td><code>TUBE</code></td><td>Cross-section format for the generated mesh.</td></tr>
+            <tr><td><code>faces</code></td><td><code>6</code></td><td>Number of faces around the generated mesh cross-section.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="subdivision">Sub Division Tesselation</h2>
+        <table>
+          <thead><tr><th>Property</th><th>Default</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>sub_division_rule</code></td><td>source default</td><td>Chooses curve-density or uniform tessellation mode.</td></tr>
+            <tr><td><code>sub_division_max_stages</code></td><td><code>5</code></td><td>Controls tessellation stage depth before final mesh generation.</td></tr>
+            <tr><td><code>sub_division_max_length</code></td><td><code>0</code></td><td>Maximum allowed distance between generated subdivisions after tessellation.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="width">Width</h2>
+        <table>
+          <thead><tr><th>Property</th><th>Default</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>width</code></td><td><code>1.0</code></td><td>Base generated width around the path.</td></tr>
+            <tr><td><code>width_multiplier</code></td><td>unset</td><td>Optional curve that modulates width along the path.</td></tr>
+            <tr><td><code>width_multiplier_tile_length</code></td><td><code>0</code></td><td>If non-zero, tiles the width multiplier curve along the path.</td></tr>
+            <tr><td><code>width_multiplier_tile_length_shrink_to_fit</code></td><td><code>true</code></td><td>Controls whether tiled width curves shrink to fit the final path length.</td></tr>
+            <tr><td><code>width_around</code></td><td>source default</td><td>Chooses edge-based or division-based width logic.</td></tr>
+            <tr><td><code>width_orientation_lerp_distance</code></td><td><code>0</code> unless configured</td><td>Lerps ring orientation toward non-straight subdivisions to reduce breakage near sharp turns.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="ends">Ends</h2>
+        <table>
+          <thead><tr><th>Property</th><th>Default</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>end_length</code></td><td><code>0</code></td><td>Length of the start and end zones used by end-specific settings.</td></tr>
+            <tr><td><code>end_sub_divisions</code></td><td><code>8</code></td><td>Extra subdivisions added near both ends of the path.</td></tr>
+            <tr><td><code>end_width_multiplier</code></td><td>unset</td><td>Optional width curve that overrides width near the path ends.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="uv-mapping">UV Mapping Outputs</h2>
+        <table>
+          <thead><tr><th>Property</th><th>Default</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>uv_path_length_normalized</code></td><td><code>UV_Y</code></td><td>Normalized path distance from <code>0</code> to <code>1</code>.</td></tr>
+            <tr><td><code>uv_path_length</code></td><td><code>NONE</code></td><td>Absolute path length value.</td></tr>
+            <tr><td><code>uv_sub_division</code></td><td><code>NONE</code></td><td>Subdivision index value.</td></tr>
+            <tr><td><code>uv_path_point</code></td><td><code>NONE</code></td><td>Original path point index.</td></tr>
+            <tr><td><code>uv_line_mesh_around</code></td><td><code>UV_X</code></td><td>Wrap-around value for the mesh cross-section.</td></tr>
+            <tr><td><code>uv_line_original_width</code></td><td><code>NONE</code></td><td>Width multiplier value before the base <code>width</code> is applied.</td></tr>
+            <tr><td><code>uv_line_mesh_width</code></td><td><code>NONE</code></td><td>Width along the path right axis after orientation is applied.</td></tr>
+            <tr><td><code>uv_line_mesh_height</code></td><td><code>NONE</code></td><td>Height along the path up axis after orientation is applied.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="callables">Callable Surface</h2>
+        <table>
+          <thead><tr><th>Function</th><th>Purpose</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>_validate_property(property)</code></td><td>Makes the generated <code>mesh</code> property read-only in the inspector.</td><td>Inspector contract helper.</td></tr>
+            <tr><td><code>generate_and_assign()</code></td><td>Generates a new mesh and assigns it to the node.</td><td>Called by the inspector button.</td></tr>
+            <tr><td><code>generate_mesh() -&gt; ArrayMesh</code></td><td>Builds and returns the generated mesh without assigning it.</td><td>Returns <code>null</code> and warns if the path has fewer than two points.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="notes">Review Notes</h2>
+        <ul>
+          <li>The inspector plugin adds only one custom control: <code>Generate Mesh</code>. Everything else is driven by exported properties on the node itself.</li>
+          <li>Several exported properties rely on source defaults without explicit initializer values. Where the source does not set a value inline, this page labels them as source-default instead of guessing.</li>
+          <li>The UV mapping outputs are especially important for shader authors because they determine where path-derived scalar data is written.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="path_mesh_instance_3d_overview.html">PathMeshInstance3D Overview</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>path_mesh_instance_3d_property_reference</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>PathMeshInstance3D Property Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Property Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Level designers, shader authors, tool maintainers</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/path_mesh_instance_3d/path_mesh_instance_3d.gd</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
