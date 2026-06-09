@@ -1,15 +1,70 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Densetsu Vertex Edit</title>
-<meta property="og:title" content="Densetsu Vertex Edit"><meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/vertex_edit_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Densetsu Vertex Edit"><meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-<link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head>
-<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Vertex Edit</title>
+  <meta property="og:title" content="Densetsu Vertex Edit">
+  <meta property="og:description" content="Overview of the Densetsu Vertex Edit plugin.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/vertex_edit_overview.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Vertex Edit">
+  <meta property="twitter:description" content="Overview of the Densetsu Vertex Edit plugin.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
 <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Densetsu Vertex Edit</h1><article class="markdown">
-<div class="callout" id="content-status"><strong>Content status:</strong> Baseline plugin inventory captured. Full workflow, save behavior, and limitations are pending dedicated review.</div>
-<h2 id="at-a-glance">At a glance</h2><ul><li>Project-owned editor plugin at <code>res://addons/densetsu_vertex_edit</code>.</li><li>Plugin config path: <code>res://addons/densetsu_vertex_edit/plugin.cfg</code>.</li><li>Provides editor-side mesh vertex editing with gizmo handles and save-as-resource workflow.</li><li>Status: present.</li></ul>
-<h2 id="how-it-works">How it works</h2><ul><li>Current pass only confirms plugin presence and high-level purpose.</li><li>No detailed operation sequence is documented yet.</li><li>Treat current behavior as utility tooling pending tool audit.</li></ul>
-<h2 id="interfaces">Interfaces</h2><ul><li>Plugin root: <code>res://addons/densetsu_vertex_edit</code>.</li><li>Plugin config: <code>res://addons/densetsu_vertex_edit/plugin.cfg</code>.</li><li>No local README was found in this pass.</li></ul>
-<h2 id="operational-concerns">Operational concerns</h2><ul><li>No recent production-rewrite changes were identified in the current pass.</li><li>Do not assume compatibility/limitations beyond stated purpose until workflow audit completes.</li><li>Document save behavior and known constraints after dedicated tool review.</li></ul>
-<h2 id="related-docs">Related docs</h2><ul><li><a href="../index.html">Engine index</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li><li><a href="tool_suite_overview.html">Densetsu Tool Suite Overview</a></li></ul>
-<details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Add workflow details, save behavior, and limitations after a dedicated vertex-edit tool review.</p></div></details>
+<div class="callout"><table><tbody>
+<tr><th>Page type</th><td>Plugin overview</td><th>Audience</th><td>Level artists, prop authors, tool maintainers</td></tr>
+<tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+<tr><th>Source scripts</th><td><code>res://addons/densetsu_vertex_edit/plugin.gd</code>, <code>vertex_edit_gizmo.gd</code></td><th>User touchpoint</th><td>Right-side dock plus 3D gizmo handles</td></tr>
+<tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+</tbody></table></div>
+
+<p>Densetsu Vertex Edit is a focused in-editor mesh-adjustment tool for <code>MeshInstance3D</code> nodes. It adds a dock, samples a limited number of editable vertices as gizmo handles, and lets the user save the resulting mesh resource as <code>.tres</code> or <code>.res</code>.</p>
+
+<h2 id="when-to-use">When To Use It</h2>
+<ul>
+<li>Minor local mesh corrections that are faster than leaving Godot for a DCC tool.</li>
+<li>Quick scene-blockout adjustments on props or simple geometry.</li>
+<li>Cases where you only need to touch one mesh surface and can work with sampled handles rather than every vertex at once.</li>
+</ul>
+
+<h2 id="workflow">Workflow</h2>
+<ol>
+<li>Select a <code>MeshInstance3D</code> in the scene.</li>
+<li>Choose the target surface and max handle count in the dock.</li>
+<li>Enable editing for the selected node if auto-enable did not already do it.</li>
+<li>Drag gizmo handles in the 3D view.</li>
+<li>Use <code>Save Edited Mesh</code> to write the edited mesh resource out as <code>.tres</code> or <code>.res</code>.</li>
+</ol>
+
+<h2 id="touchpoints">Primary Controls</h2>
+<table>
+  <thead><tr><th>Control</th><th>What the user changes</th><th>Why it matters</th></tr></thead>
+  <tbody>
+    <tr><td><code>Surface</code></td><td>Which mesh surface gets edited</td><td>Wrong surface means missing or unexpected handles.</td></tr>
+    <tr><td><code>Max Handles</code></td><td>How many vertices can become handles</td><td>Higher values give more precision but can be heavier in the editor.</td></tr>
+    <tr><td><code>Auto-enable on selection</code></td><td>Whether selected meshes immediately become editable</td><td>Convenience versus more deliberate enabling.</td></tr>
+    <tr><td><code>Enable Selected</code>/<code>Disable Selected</code></td><td>Explicitly toggle editing on the active mesh node</td><td>Useful when comparing editable versus non-editable states.</td></tr>
+    <tr><td><code>Save Edited Mesh</code></td><td>Persist the current edited mesh resource</td><td>Edits are not useful long-term unless saved and then re-assigned where needed.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="limits">Limits</h2>
+<ul>
+<li>Only <code>MeshInstance3D</code> nodes are supported by the current plugin.</li>
+<li>The tool samples handle candidates instead of exposing every vertex on dense meshes.</li>
+<li>The save flow writes a mesh resource, not a full scene replacement or import rewrite.</li>
+</ul>
+
+<h2 id="related-docs">Related Docs</h2>
+<ul>
+<li><a href="vertex_edit_gizmo_reference.html">Densetsu Vertex Edit Gizmo Reference</a></li>
+<li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+<li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+</ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
