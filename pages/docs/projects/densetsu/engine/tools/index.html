@@ -1,31 +1,86 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Tools & Debugging</title><link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head><body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../index.html">Engine Wiki</a></nav></header><main class="content"><section class="panel slack-doc-page"><p class="eyebrow">engine</p><h1>Tools & Debugging</h1><article class="markdown">
 <h2>Overview</h2>
-<p>Tools &amp; Debugging includes editor plugins and helper scenes used during development. Evidence includes the Densetsu tool suite, combat collider tools, and sample visualizers.</p>
-<h2>Scope</h2>
+<p>This page is the compact navigation strip for Densetsu engine tooling docs. Use it when you already know the tool family you need and want direct links instead of the broader documentation inventory.</p>
+<h2>Primary Navigation</h2>
 <ul>
-  <li>Editor context menu tools</li>
-  <li>Scene helpers and visualization tools</li>
-  <li>Debug utilities for combat and assets</li>
+  <li><a href="debug_tools_overview.html">Internal Tools Overview</a> — current tooling map and documentation-wave rules.</li>
+  <li><a href="../documentation_inventory.html">Documentation Inventory</a> — master tracker for the full engine docs program.</li>
 </ul>
-<h2>Pages</h2>
+<h2>Tool Pages</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Operator docs</th>
+      <th>Deep reference</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Densetsu Tool Suite</td>
+      <td><a href="tool_suite_overview.html">Overview</a></td>
+      <td><a href="tool_suite_action_catalog.html">Action Catalog</a>, <a href="tool_suite_implementation_reference.html">Implementation Reference</a></td>
+    </tr>
+    <tr>
+      <td>Densetsu Autocliff</td>
+      <td><a href="autocliff_terrain3d_overview.html">Overview</a></td>
+      <td><a href="autocliff_dock_usage_and_troubleshooting.html">Workflow</a>, <a href="autocliff_implementation_reference.html">Implementation Reference</a></td>
+    </tr>
+    <tr>
+      <td>Densetsu Geometry OBJ Export</td>
+      <td><a href="geometry_obj_export_overview.html">Overview</a></td>
+      <td><a href="geometry_obj_export_reference.html">Reference</a></td>
+    </tr>
+    <tr>
+      <td>Densetsu Vertex Edit</td>
+      <td><a href="vertex_edit_overview.html">Overview</a></td>
+      <td><a href="vertex_edit_gizmo_reference.html">Gizmo Reference</a></td>
+    </tr>
+    <tr>
+      <td>Project Audit</td>
+      <td><a href="project_audit_overview.html">Workflow and Reference</a></td>
+      <td>Covered on the main page.</td>
+    </tr>
+    <tr>
+      <td>Densetsu Texture Maps</td>
+      <td><a href="texture_maps_overview.html">Toolchain Overview</a></td>
+      <td>Covered through Tool Suite texture actions.</td>
+    </tr>
+    <tr>
+      <td>PathMeshInstance3D</td>
+      <td><a href="path_mesh_instance_3d_overview.html">Overview</a></td>
+      <td><a href="path_mesh_instance_3d_property_reference.html">Property Reference</a></td>
+    </tr>
+    <tr>
+      <td>HitboxHurtbox</td>
+      <td><a href="hitbox_hurtbox_bridge_overview.html">Status and Reference</a></td>
+      <td>Implementation gap is documented on the main page.</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Adjacent Docs</h2>
 <ul>
-  <li><a href="debug_tools_overview.html">Debug Tools Overview</a> — current tools inventory and usage notes.</li>
-  <li><a href="debug_tools_overview.html#autocliff">Autocliff</a> — navigation stub restored from the unpublished work branch.</li>
-  <li><a href="debug_tools_overview.html#foliage">Foliage</a> — navigation stub restored from the unpublished work branch.</li>
-  <li><a href="debug_tools_overview.html#geometry-obj-export">Geometry OBJ Export</a> — mesh export helper notes.</li>
-  <li><a href="debug_tools_overview.html#texture-maps">Texture Maps</a> — image and texture helper notes.</li>
-  <li><a href="debug_tools_overview.html#tool-suite">Tool Suite</a> — editor plugin entrypoint and bundled helpers.</li>
-  <li><a href="debug_tools_overview.html#vertex-edit">Vertex Edit</a> — navigation stub restored from the unpublished work branch.</li>
-  <li><a href="debug_tools_overview.html#hitbox-hurtbox-bridge">Hitbox Hurtbox Bridge</a> — combat collider tooling notes.</li>
-  <li><a href="debug_tools_overview.html#project-audit">Project Audit</a> — navigation stub restored from the unpublished work branch.</li>
+  <li><a href="foliage_system_overview.html">Foliage System Overview</a> — adjacent environment tooling docs retained from the earlier engine pass.</li>
 </ul>
 <h2>Status</h2>
-<p><strong>Implemented.</strong> Tooling scripts and helper scenes are present in the evidence set, and the restored navigation now points to the published overview anchors.</p>
+<p><strong>Updated.</strong> Navigation now includes the pages listed in the Internal Tools Overview tooling map, so the left-side tools index exposes the current published tool docs directly.</p>
 <h2>Sources</h2>
 <ul>
   <li><code>debug_tools_overview.html</code></li>
-  <li><code>addons/densetsu_tool_suite/plugin.gd</code></li>
-  <li><code>addons/addons/combat_colliders/plugin.gd</code></li>
-  <li><code>addons/dynamic_day_night_cycles/*.tscn</code></li>
+  <li><code>tool_suite_overview.html</code></li>
+  <li><code>tool_suite_action_catalog.html</code></li>
+  <li><code>tool_suite_implementation_reference.html</code></li>
+  <li><code>autocliff_terrain3d_overview.html</code></li>
+  <li><code>autocliff_dock_usage_and_troubleshooting.html</code></li>
+  <li><code>autocliff_implementation_reference.html</code></li>
+  <li><code>geometry_obj_export_overview.html</code></li>
+  <li><code>geometry_obj_export_reference.html</code></li>
+  <li><code>vertex_edit_overview.html</code></li>
+  <li><code>vertex_edit_gizmo_reference.html</code></li>
+  <li><code>project_audit_overview.html</code></li>
+  <li><code>texture_maps_overview.html</code></li>
+  <li><code>path_mesh_instance_3d_overview.html</code></li>
+  <li><code>path_mesh_instance_3d_property_reference.html</code></li>
+  <li><code>hitbox_hurtbox_bridge_overview.html</code></li>
 </ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
