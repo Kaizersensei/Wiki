@@ -22,7 +22,7 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
   <main class="content">
@@ -30,37 +30,62 @@
       <p class="eyebrow">engine</p>
       <h1>Loading Screen Host &amp; Content Slots</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>The loading screen host is the runtime container for loading visuals and progress display. Evidence shows a loading screen node and a loading gauge node; specific “content slot” APIs are not confirmed in the current database.</p>
-<h2>Known elements</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code> — emits loading lifecycle signals.</li>
-  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code> — draws progress bar and percentage.</li>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.tscn</code> — scene wrapper for the host.</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Usage</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li>Bootloader starts the loading screen during scene transitions.</li>
-  <li>Progress is reported through the loading screen signals.</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Open questions</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li>No explicit content-slot API was found in the evidence set.</li>
-  <li>Confirm whether additional content widgets are injected at runtime.</li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented (partial)</strong>. Loading host and gauge exist; slot mechanics need verification.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
 <ul>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.tscn</code></li>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <p>(TODO) Add minimal excerpt only when needed for traceability.</p>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>(TODO) Track only active blockers here; archive resolved items in changelogs.</p></div>
+        </details>
+
+      </article>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
