@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,41 +38,80 @@
       <p class="eyebrow">engine</p>
       <h1>Core Runtime Overview</h1>
       <article class="markdown">
-<h2 id="purpose">Purpose</h2>
-<p>The core runtime packages the systems that bring the game online: boot sequence, loading screen, scene activation, and the singleton services used throughout gameplay. Evidence is anchored in the bootloader, loading UI, scene manager, and autoload services recorded in the context database.</p>
-<h2 id="responsibilities">Responsibilities</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li>Run the boot sequence and startup splash pipeline.</li>
-  <li>Expose loading progress and failure signals to UI.</li>
-  <li>Prepare and activate target scenes.</li>
-  <li>Provide global services (event bus, input manager, runtime context).</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2 id="data-interfaces">Data &amp; interfaces</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li>Resource-backed data sets (example resources: AIProfileData, BiomeData, CollisionData, FactionData, ItemData).</li>
-  <li>Runtime data assets in <code>data3d/</code> (camera, items, prefabs).</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2 id="dependencies">Dependencies</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li>Inbound: <code>main.tscn</code>, <code>World.tscn</code>, autoload singletons.</li>
-  <li>Outbound: loading screens, scene manager, input/controller modules.</li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-<h2 id="debugging-tooling">Debugging &amp; tooling</h2>
-<p>Use the loading screen signals and bootloader logging hooks to trace startup issues. Runtime services should be reachable through autoloads.</p>
-<h2 id="constraints">Constraints</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
 <ul>
-  <li>Save/load and world streaming evidence not confirmed in the current context database.</li>
-  <li>Runtime dependencies should remain autoload-safe (no scene-only assumptions).</li>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
 </ul>
-<h2 id="sources">Sources</h2>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
 <ul>
-  <li><code>engine3d/loading/DensetsuBootLoader.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
-  <li><code>engine/scene/SceneManager.gd</code></li>
-  <li><code>autoload/EventBus.gd</code>, <code>autoload/InputManager.gd</code>, <code>autoload/Runtime.gd</code></li>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
 </ul>
-</article>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">from the start.  
+
+1: Overview 
+Game Identity 
+Title: Densetsu​
+
+---
+
+Title: Densetsu​
+Genre: Metroidvania / Narrative Action Adventure​
+Core Engine: Densetsu Engine (Godot-based FSM & Actor System)​
+Primary Themes: Balance, Memory, Time, Renewal.​
+Tagline: “Swords, Sorcery and Shuriken”
+
+---
+
+The story explores humanity’s cyclical nature: our attempts to fix what should be accepted, 
+and the consequences of trying to rewrite time. 
+Core Design Vision 
+Densetsu combines action-driven exploration with philosophical narrative design. Every 
+mechanic reinforces reflection, balance, and natural consequence rather than domination.</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -84,7 +123,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
