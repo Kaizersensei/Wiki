@@ -1,15 +1,75 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Project Audit</title>
-<meta property="og:title" content="Project Audit"><meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/project_audit_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Project Audit"><meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+<meta property="og:title" content="Project Audit"><meta property="og:description" content="Workflow and reference for the Project Audit plugin."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/project_audit_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Project Audit"><meta property="twitter:description" content="Workflow and reference for the Project Audit plugin."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
 <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head>
-<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
+<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
 <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Project Audit</h1><article class="markdown">
-<div class="callout" id="content-status"><strong>Content status:</strong> Baseline utility inventory captured. Report-format and cleanup procedures are pending the next asset audit pass.</div>
-<h2 id="at-a-glance">At a glance</h2><ul><li>Project-owned utility plugin at <code>res://addons/project_audit</code>.</li><li>Plugin config: <code>res://addons/project_audit/plugin.cfg</code>.</li><li>Purpose: find unused project files and support content cleanup/auditing.</li><li>Status: present.</li></ul>
-<h2 id="how-it-works">How it works</h2><ul><li>Current pass captures identity and intended operational role only.</li><li>Tool output/review workflow will be documented after the next audit cycle.</li><li>Use reports as review artifacts before any cleanup actions are applied.</li></ul>
-<h2 id="interfaces">Interfaces</h2><ul><li>Plugin root: <code>res://addons/project_audit</code>.</li><li>Plugin config: <code>res://addons/project_audit/plugin.cfg</code>.</li><li>No local README was found during this pass.</li></ul>
-<h2 id="operational-concerns">Operational concerns</h2><ul><li>No recent production-rewrite changes were identified in this pass.</li><li>Tool is relevant to ongoing cleanup goals but should not be used destructively without reviewed reports.</li><li>Establish a safe cleanup procedure before deleting files based on plugin output.</li></ul>
-<h2 id="related-docs">Related docs</h2><ul><li><a href="../index.html">Engine index</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li><li><a href="hitbox_hurtbox_bridge_overview.html">Hitbox Hurtbox Bridge</a></li></ul>
-<details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Add report format and safe cleanup procedure after the next project asset audit.</p></div></details>
+<div class="callout"><table><tbody>
+<tr><th>Page type</th><td>Workflow and reference</td><th>Audience</th><td>Developers, technical artists, cleanup owners</td></tr>
+<tr><th>Implementation status</th><td>Verified against current source</td><th>Last verified</th><td>2026-06-09</td></tr>
+<tr><th>Source scripts</th><td><code>res://addons/project_audit/plugin.gd</code>, <code>unused_files_dock.gd</code>, <code>unused_files_dock.tscn</code></td><th>User touchpoint</th><td>Bottom panel dock with Scan, Save, and Copy buttons</td></tr>
+<tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+</tbody></table></div>
+
+<p>Project Audit is a review-first utility for finding unused project files. It does not delete anything by itself. It scans trackable resources, builds a dependency graph from project roots, and reports resources that are present but unreachable from those roots.</p>
+
+<h2 id="operator-flow">Operator Flow</h2>
+<ol>
+<li>Open the Project Audit bottom panel.</li>
+<li>Run <code>Scan</code> to collect all trackable files and all reachable dependencies from project roots.</li>
+<li>Review the tree of reported unused files inside the panel.</li>
+<li>Use <code>Copy</code> to move the report into notes or chat, or <code>Save</code> to write a text report into the project.</li>
+</ol>
+
+<h2 id="roots-and-scope">Dependency Roots and Scope</h2>
+<table>
+  <thead><tr><th>Source of truth</th><th>How it is used</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>application/run/main_scene</code></td><td>Seed root for dependency traversal</td><td>Main scene is treated as a live-entry anchor.</td></tr>
+    <tr><td><code>autoload</code> project setting</td><td>Additional dependency roots</td><td>Supports both direct string entries and dictionary entries with a <code>path</code> field.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="ignored-files">Ignored and Trackable Files</h2>
+<table>
+  <thead><tr><th>Category</th><th>Behavior</th><th>Source note</th></tr></thead>
+  <tbody>
+    <tr><td>Dotfiles and hidden content</td><td>Ignored</td><td>Anything whose file name begins with <code>.</code>.</td></tr>
+    <tr><td><code>res://.godot/</code> and <code>res://.git/</code></td><td>Ignored</td><td>Explicitly excluded.</td></tr>
+    <tr><td><code>res://.audit/</code></td><td>Ignored</td><td>Prevents the audit from reporting its own output directory.</td></tr>
+    <tr><td>Trackable resource extensions</td><td>Included</td><td><code>tscn</code>, <code>tres</code>, <code>res</code>, <code>gd</code>, <code>gdshader</code>, <code>shader</code>, <code>png</code>, <code>jpg</code>, <code>jpeg</code>, <code>webp</code>, <code>svg</code>, <code>wav</code>, <code>ogg</code>, <code>mp3</code>, <code>glb</code>, <code>gltf</code>, <code>fbx</code>, <code>obj</code>, <code>mesh</code>, <code>material</code>, <code>tga</code>, <code>exr</code></td></tr>
+    <tr><td><code>import</code>, <code>uid</code>, <code>tmp</code></td><td>Excluded</td><td>These are explicitly treated as non-trackable metadata or temp files.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="report-output">Report Output</h2>
+<table>
+  <thead><tr><th>Output</th><th>Path or behavior</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Saved report</td><td><code>res://.audit/unused_files.txt</code></td><td>Created after ensuring <code>res://.audit</code> exists.</td></tr>
+    <tr><td>Clipboard output</td><td>Newline-separated list of unused files</td><td>Copies an empty string if there are no results.</td></tr>
+    <tr><td>Dock tree</td><td>In-panel list of unused file paths</td><td>Count label updates with the total number of results.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="operational-guidance">Operational Guidance</h2>
+<div class="callout">
+  <p><strong>Review-first rule:</strong> an audit result is a cleanup lead, not deletion permission. Files can still be intentionally parked, dynamically loaded in unconventional ways, or used by out-of-band tooling.</p>
+  <p><strong>Coverage rule:</strong> the audit only knows about what becomes reachable from the configured roots and what Godot reports through <code>ResourceLoader.get_dependencies()</code>.</p>
+</div>
+
+<h2 id="callable-surface">Callable Surface Inventory</h2>
+<table>
+  <thead><tr><th>Function or family</th><th>Role</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>_ready</code>, <code>set_editor_interface</code></td><td>Dock setup and editor interface wiring</td><td>Verified.</td></tr>
+    <tr><td><code>_scan_unused</code>, <code>_collect_all_files</code>, <code>_collect_used_files</code>, <code>_collect_dependency_roots</code></td><td>Core audit pipeline</td><td>Verified.</td></tr>
+    <tr><td><code>_collect_files_recursive</code>, <code>_is_audit_ignored</code>, <code>_is_trackable_resource</code></td><td>Scope and filter logic</td><td>Verified.</td></tr>
+    <tr><td><code>_render_unused</code>, <code>_save_report</code>, <code>_copy_report</code>, <code>_ensure_report_dir</code></td><td>Presentation and output</td><td>Verified.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="related-docs">Related Docs</h2>
+<ul><li><a href="debug_tools_overview.html">Internal Tools Overview</a></li><li><a href="tool_suite_overview.html">Densetsu Tool Suite Overview</a></li><li><a href="../documentation_inventory.html">Documentation Inventory</a></li></ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
