@@ -215,6 +215,179 @@
           </tbody>
         </table>
 
+        <h2 id="plugin-wave-status">Internal Plugin Documentation Wave Status</h2>
+        <div class="callout">
+          <p><strong>Scope note:</strong> this section tracks only the plugin and toolchain surfaces touched by the current documentation task wave. The rest of this inventory remains the global engine backlog.</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Plugin or tool</th>
+              <th>Surface type</th>
+              <th>User touchpoint</th>
+              <th>Verification status</th>
+              <th>Documentation status</th>
+              <th>Source script</th>
+              <th>Target pages</th>
+              <th>Media needed</th>
+              <th>Blockers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Densetsu Tool Suite</td>
+              <td>Plugin, menu hub, context-menu hub</td>
+              <td><code>Tools &gt; Densetsu</code> and FileSystem context menus</td>
+              <td>Verified, with declared helper gaps</td>
+              <td>Overview, action catalog, and implementation reference live</td>
+              <td><code>addons/densetsu_tool_suite/plugin.gd</code></td>
+              <td><a href="tools/tool_suite_overview.html">Overview</a>, <a href="tools/tool_suite_action_catalog.html">Action Catalog</a>, <a href="tools/tool_suite_implementation_reference.html">Implementation Reference</a></td>
+              <td>Full menu capture, selected-mesh bake dialog capture, kitbash bake dialog capture</td>
+              <td>Declared helper files missing: <code>terrain3d_image_import_helper.gd</code>, <code>mesh_to_csg_helper.gd</code>, <code>import_sidecar_cleanup_helper.gd</code>, <code>missing_asset_relink_helper.gd</code>, <code>mesh_flip_normals_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td>Densetsu Autocliff</td>
+              <td>Plugin and dock workflow</td>
+              <td>Right-side dock</td>
+              <td>Verified</td>
+              <td>Overview, workflow page, and implementation reference live</td>
+              <td><code>addons/densetsu_autocliff/autocliff_dock.gd</code></td>
+              <td><a href="tools/autocliff_terrain3d_overview.html">Overview</a>, <a href="tools/autocliff_dock_usage_and_troubleshooting.html">Workflow</a>, <a href="tools/autocliff_implementation_reference.html">Implementation Reference</a></td>
+              <td>Annotated dock screenshot, before/after placement examples, preset example captures</td>
+              <td>Placeholder media still needed</td>
+            </tr>
+            <tr>
+              <td>Densetsu Geometry OBJ Export</td>
+              <td>Plugin</td>
+              <td><code>Tools &gt; Densetsu &gt; Export Selected Scene Geometry to OBJ</code></td>
+              <td>Verified</td>
+              <td>Overview and reference live</td>
+              <td><code>addons/densetsu_geometry_obj_export/plugin.gd</code>, <code>scene_geometry_obj_exporter.gd</code></td>
+              <td><a href="tools/geometry_obj_export_overview.html">Overview</a>, <a href="tools/geometry_obj_export_reference.html">Reference</a></td>
+              <td>Menu-path capture, OBJ/MTL output example, round-trip example</td>
+              <td>No blocker beyond missing media</td>
+            </tr>
+            <tr>
+              <td>Densetsu Vertex Edit</td>
+              <td>Plugin and 3D gizmo tool</td>
+              <td>Right-side dock and scene gizmo handles</td>
+              <td>Verified</td>
+              <td>Overview and gizmo reference live</td>
+              <td><code>addons/densetsu_vertex_edit/plugin.gd</code>, <code>vertex_edit_gizmo.gd</code></td>
+              <td><a href="tools/vertex_edit_overview.html">Overview</a>, <a href="tools/vertex_edit_gizmo_reference.html">Gizmo Reference</a></td>
+              <td>Dock screenshot, handle-edit capture, saved-resource example</td>
+              <td>No blocker beyond missing media</td>
+            </tr>
+            <tr>
+              <td>Project Audit</td>
+              <td>Plugin and bottom-panel workflow</td>
+              <td>Bottom panel</td>
+              <td>Verified</td>
+              <td>Workflow/reference page live</td>
+              <td><code>addons/project_audit/unused_files_dock.gd</code></td>
+              <td><a href="tools/project_audit_overview.html">Workflow and Reference</a></td>
+              <td>Panel screenshot and sample report snippet</td>
+              <td>No blocker beyond missing media</td>
+            </tr>
+            <tr>
+              <td>Densetsu Texture Maps</td>
+              <td>Toolchain dependency</td>
+              <td>Tool Suite texture actions</td>
+              <td>Verified</td>
+              <td>Toolchain overview live</td>
+              <td><code>addons/densetsu_texture_maps/texture_map_generator.gd</code></td>
+              <td><a href="tools/texture_maps_overview.html">Toolchain Overview</a></td>
+              <td>Before/after texture set, cleanup-example capture</td>
+              <td>No standalone plugin UI; documentation must stay linked to Tool Suite</td>
+            </tr>
+            <tr>
+              <td>HitboxHurtbox</td>
+              <td>Bridge scaffolding plugin</td>
+              <td>Plugin enablement only</td>
+              <td>Partially verified</td>
+              <td>Status/reference page live</td>
+              <td><code>addons/hitbox_hurtbox/plugin.gd</code></td>
+              <td><a href="tools/hitbox_hurtbox_bridge_overview.html">Status and Reference</a></td>
+              <td>None until implementation is restored</td>
+              <td>Missing <code>HitboxEmitter.gd</code> source file</td>
+            </tr>
+            <tr>
+              <td>PathMeshInstance3D</td>
+              <td>Editor plugin and node authoring surface</td>
+              <td>Node inspector and custom <code>Generate Mesh</code> button</td>
+              <td>Verified</td>
+              <td>Overview and property reference live</td>
+              <td><code>addons/path_mesh_instance_3d/path_mesh_instance_3d.gd</code></td>
+              <td><a href="tools/path_mesh_instance_3d_overview.html">Overview</a>, <a href="tools/path_mesh_instance_3d_property_reference.html">Property Reference</a></td>
+              <td>Inspector screenshot, path-mesh before/after example</td>
+              <td>Upstream manifest metadata is sparse; rely on source instead</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 id="plugin-media-register">Plugin Media Register</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Placeholder</th>
+              <th>Supports pages</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tool Suite root menu and submenu capture</td>
+              <td>Tool Suite overview and action catalog</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Selected mesh bake preview dialog capture</td>
+              <td>Tool Suite action catalog and implementation reference</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Kitbash composite bake preview dialog capture</td>
+              <td>Tool Suite action catalog and implementation reference</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Autocliff dock annotated screenshot</td>
+              <td>Autocliff overview and workflow pages</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Autocliff before/after placement examples</td>
+              <td>Autocliff workflow page</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Geometry OBJ export output pair</td>
+              <td>Geometry OBJ Export overview and reference</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Vertex Edit dock and handle capture</td>
+              <td>Vertex Edit overview and gizmo reference</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Project Audit panel plus sample report</td>
+              <td>Project Audit reference</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>Texture Maps before/after example set</td>
+              <td>Texture Maps toolchain overview</td>
+              <td>Needed</td>
+            </tr>
+            <tr>
+              <td>PathMeshInstance3D inspector capture</td>
+              <td>PathMesh overview and property reference</td>
+              <td>Needed</td>
+            </tr>
+          </tbody>
+        </table>
+
         <h2 id="tier-2">Tier 2 - subsystem deep dives</h2>
         <table>
           <thead>
