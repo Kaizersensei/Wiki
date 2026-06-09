@@ -22,7 +22,7 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
   <main class="content">
@@ -30,46 +30,62 @@
       <p class="eyebrow">engine</p>
       <h1>Bootloader / Loading / Splash Pipeline</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>The bootloader orchestrates the startup pipeline: it runs an initial boot sequence, plays startup splashes, resolves the target scene, and tracks loading progress.</p>
-<h2>Pipeline</h2>
-<ol>
-  <li>Bootloader initializes on scene ready.</li>
-  <li>Startup splashes play in sequence (company logo, startup info).</li>
-  <li>The target scene path is resolved (including command-line overrides).</li>
-  <li>Loading screen starts and emits progress signals.</li>
-  <li>On completion or failure, the bootloader transitions accordingly.</li>
-</ol>
-<h2>Key nodes &amp; scripts</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><code>engine3d/loading/DensetsuBootLoader.gd</code> — boot sequence orchestration.</li>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code> — loading screen host and signals.</li>
-  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code> — visual progress display.</li>
-  <li><code>engine3d/loading/splashes/DensetsuSplashScreen.gd</code> — splash base.</li>
-  <li><code>engine3d/loading/splashes/DensetsuCompanyLogoSplash.tscn</code></li>
-  <li><code>engine3d/loading/splashes/DensetsuStartupInfoSplash.tscn</code></li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Signals</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li><code>loading_started</code></li>
-  <li><code>loading_progress</code></li>
-  <li><code>loading_completed</code></li>
-  <li><code>loading_failed</code></li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Bootloader, loading screen, and splash scenes are present in the runtime evidence set.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>engine3d/loading/DensetsuBootLoader.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
-  <li><code>engine3d/loading/splashes/DensetsuSplashScreen.gd</code></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <p>(TODO) Add minimal excerpt only when needed for traceability.</p>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>(TODO) Track only active blockers here; archive resolved items in changelogs.</p></div>
+        </details>
+
+      </article>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
