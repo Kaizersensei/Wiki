@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Internal Plugins Overview</title>
+  <meta property="og:title" content="Internal Plugins Overview">
+  <meta property="og:description" content="Navigation hub for Densetsu internal plugin and toolchain documentation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/plugins_overview.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Internal Plugins Overview">
+  <meta property="twitter:description" content="Navigation hub for Densetsu internal plugin and toolchain documentation.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Internal Plugins Overview</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Navigation hub</td><th>Audience</th><td>Developers, technical artists, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Active documentation wave</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Primary source</th><td>Current plugin and toolchain source under <code>addons/</code> and linked engine tool scripts</td><th>User touchpoint</th><td>Wiki landing page for internal plugin docs</td></tr>
+              <tr><th>Inventory</th><td colspan="3"><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>This page is the main hub for the current internal plugin documentation wave. It covers project-owned editor plugins and plugin-backed toolchain surfaces. Debug helpers and adjacent utility pages are tracked separately so plugins do not read like a subsection of debugging.</p>
+
+        <h2 id="how-to-use">How To Use These Pages</h2>
+        <ul>
+          <li>Start with an overview page when you need to know what a plugin is for and whether it is the right surface.</li>
+          <li>Open a workflow or action page when you need the exact click path, selection requirements, or output expectations.</li>
+          <li>Open an implementation reference page when you need helper coverage, settings tables, missing-source notes, or background behavior.</li>
+        </ul>
+
+        <h2 id="plugin-map">Plugin Map</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>What it is</th>
+              <th>Primary touchpoint</th>
+              <th>Docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Densetsu Tool Suite</td>
+              <td>Central menu and context-menu hub for custom editor tools, bakes, maintenance, builds, optimization, and git workflows.</td>
+              <td><code>Tools &gt; Densetsu</code> and FileSystem context menus</td>
+              <td><a href="tool_suite_overview.html">Overview</a>, <a href="tool_suite_action_catalog.html">Action Catalog</a>, <a href="tool_suite_implementation_reference.html">Implementation Reference</a></td>
+            </tr>
+            <tr>
+              <td>Densetsu Autocliff</td>
+              <td>Dock-based placement tool for cliffs, rocks, and other placeables over Terrain3D or mesh targets.</td>
+              <td>Right dock</td>
+              <td><a href="autocliff_terrain3d_overview.html">Overview</a>, <a href="autocliff_dock_usage_and_troubleshooting.html">Workflow</a>, <a href="autocliff_implementation_reference.html">Implementation Reference</a></td>
+            </tr>
+            <tr>
+              <td>Densetsu Geometry OBJ Export</td>
+              <td>Scene-selection-driven OBJ export utility with MTL generation and cleanup heuristics.</td>
+              <td><code>Tools &gt; Densetsu &gt; Export Selected Scene Geometry to OBJ</code></td>
+              <td><a href="geometry_obj_export_overview.html">Overview</a>, <a href="geometry_obj_export_reference.html">Reference</a></td>
+            </tr>
+            <tr>
+              <td>Densetsu Vertex Edit</td>
+              <td>Mesh vertex editing dock with sampled gizmo handles and save-to-resource flow.</td>
+              <td>Right dock and 3D gizmo</td>
+              <td><a href="vertex_edit_overview.html">Overview</a>, <a href="vertex_edit_gizmo_reference.html">Gizmo Reference</a></td>
+            </tr>
+            <tr>
+              <td>Project Audit</td>
+              <td>Bottom-panel unused-file audit tool.</td>
+              <td>Bottom panel</td>
+              <td><a href="project_audit_overview.html">Workflow and Reference</a></td>
+            </tr>
+            <tr>
+              <td>Densetsu Texture Maps</td>
+              <td>Internal toolchain for companion map generation and cleanup, surfaced through Tool Suite.</td>
+              <td>Tool Suite texture actions</td>
+              <td><a href="texture_maps_overview.html">Toolchain Overview</a></td>
+            </tr>
+            <tr>
+              <td>PathMeshInstance3D</td>
+              <td>Inspector-driven mesh generator along a <code>Path3D</code>.</td>
+              <td>Node inspector and custom Generate Mesh button</td>
+              <td><a href="path_mesh_instance_3d_overview.html">Overview</a>, <a href="path_mesh_instance_3d_property_reference.html">Property Reference</a></td>
+            </tr>
+            <tr>
+              <td>HitboxHurtbox</td>
+              <td>Combat bridge scaffolding with incomplete visible source in the scanned tree.</td>
+              <td>Plugin enablement only</td>
+              <td><a href="hitbox_hurtbox_bridge_overview.html">Status and Reference</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="scope-boundary">Scope Boundary</h2>
+        <ul>
+          <li>This page is for plugins and plugin-backed toolchains.</li>
+          <li>Debug-only or adjacent utility pages belong under <a href="debug_tools_overview.html">Debug Tools Overview</a>.</li>
+          <li>The full engine backlog still lives in <a href="../documentation_inventory.html">Documentation Inventory</a>.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Tools Index</a></li>
+          <li><a href="debug_tools_overview.html">Debug Tools Overview</a></li>
+          <li><a href="../index.html">Engine index</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>plugins_overview</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Internal Plugins Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Navigation Hub</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Developers, technical artists, tool maintainers</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Current plugin and toolchain source under addons/ and engine3d/tools/</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
