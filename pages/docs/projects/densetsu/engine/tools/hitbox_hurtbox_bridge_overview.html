@@ -1,15 +1,51 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hitbox Hurtbox Bridge</title>
-<meta property="og:title" content="Hitbox Hurtbox Bridge"><meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/hitbox_hurtbox_bridge_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Hitbox Hurtbox Bridge"><meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+<meta property="og:title" content="Hitbox Hurtbox Bridge"><meta property="og:description" content="Status and reference page for the HitboxHurtbox plugin surface."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/hitbox_hurtbox_bridge_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Hitbox Hurtbox Bridge"><meta property="twitter:description" content="Status and reference page for the HitboxHurtbox plugin surface."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
 <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head>
-<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
+<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
 <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Hitbox Hurtbox Bridge</h1><article class="markdown">
-<div class="callout" id="content-status"><strong>Content status:</strong> Baseline scaffolding reference only. Combat-integration details will be added after the new combat component/service layer lands.</div>
-<h2 id="at-a-glance">At a glance</h2><ul><li>Project-owned bridge/scaffolding plugin at <code>res://addons/hitbox_hurtbox</code>.</li><li>Plugin config: <code>res://addons/hitbox_hurtbox/plugin.cfg</code>.</li><li>Provides bridge scaffolding for hitbox/hurtbox integration, including HitPayload-style helpers.</li><li>Status: present.</li></ul>
-<h2 id="how-it-works">How it works</h2><ul><li>Current pass documents only plugin identity and intended scope.</li><li>No detailed runtime or authoring workflow is confirmed in this pass.</li><li>Treat this as scaffolding until combat systems are rebuilt around explicit contexts and damage resolution.</li></ul>
-<h2 id="interfaces">Interfaces</h2><ul><li>Plugin root: <code>res://addons/hitbox_hurtbox</code>.</li><li>Plugin config: <code>res://addons/hitbox_hurtbox/plugin.cfg</code>.</li><li>No local README was found during this pass.</li></ul>
-<h2 id="operational-concerns">Operational concerns</h2><ul><li>No recent production-rewrite changes were identified during this pass.</li><li>Expected relevance increases when combat context + damage-resolution services are implemented.</li><li>Avoid assuming final contracts until combat service interfaces are stabilized.</li></ul>
-<h2 id="related-docs">Related docs</h2><ul><li><a href="../index.html">Engine index</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li><li><a href="vertex_edit_overview.html">Densetsu Vertex Edit</a></li></ul>
-<details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Add combat integration notes once the new combat component/service layer is implemented.</p></div></details>
+<div class="callout"><table><tbody>
+<tr><th>Page type</th><td>Status and reference</td><th>Audience</th><td>Combat programmers, tool maintainers</td></tr>
+<tr><th>Implementation status</th><td>Partially verified; source gap present</td><th>Last verified</th><td>2026-06-09</td></tr>
+<tr><th>Source scripts</th><td><code>res://addons/hitbox_hurtbox/plugin.gd</code>, <code>HitboxEmitter.gd.uid</code></td><th>User touchpoint</th><td>Plugin enablement only; no dock or menu surface verified</td></tr>
+<tr><th>Risk level</th><td>High because behavior cannot be fully confirmed</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+</tbody></table></div>
+
+<p><code>HitboxHurtbox</code> currently documents as a bridge/scaffolding plugin for hitbox and hurtbox integration, but the scanned addon tree does not contain enough source to treat it as a fully documented workflow yet.</p>
+
+<h2 id="verified-surface">Verified Surface</h2>
+<table>
+  <thead><tr><th>File or surface</th><th>Status</th><th>What is verified</th></tr></thead>
+  <tbody>
+    <tr><td><code>plugin.cfg</code></td><td>Verified</td><td>Name is <code>HitboxHurtbox</code>; description says it is bridge scaffolding for hitbox/hurtbox integration with <code>HitPayload</code>-style helpers.</td></tr>
+    <tr><td><code>plugin.gd</code></td><td>Verified</td><td><code>_enter_tree()</code> contains only a comment that scripts are globally available via <code>class_name</code>; no dock, menu, or inspector surface is registered.</td></tr>
+    <tr><td><code>HitboxEmitter.gd.uid</code></td><td>Verified as gap</td><td>A UID file exists, but the actual <code>HitboxEmitter.gd</code> source file was not present in the scanned tree.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="what-we-can-safely-say">What We Can Safely Say</h2>
+<ul>
+  <li>This plugin currently exposes no confirmed user-facing dock or menu workflow.</li>
+  <li>The manifest positions it as combat-integration scaffolding rather than a standalone editor utility.</li>
+  <li>The implementation surface is incomplete enough that downstream pages should not invent node contracts, payload schema, or runtime behavior.</li>
+</ul>
+
+<h2 id="gaps">Explicit Gaps</h2>
+<div class="callout">
+  <p><strong>Source missing:</strong> <code>HitboxEmitter.gd</code> was not present alongside the UID file during the 2026-06-09 scan.</p>
+  <p><strong>Documentation rule:</strong> treat any undocumented combat-hit workflow tied to this plugin as <em>unverified</em> until the missing source is restored or located elsewhere.</p>
+</div>
+
+<h2 id="callable-surface">Callable Surface Inventory</h2>
+<table>
+  <thead><tr><th>Function</th><th>Status</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>_enter_tree()</code></td><td>Verified</td><td>No active registration beyond the comment about globally available classes.</td></tr>
+    <tr><td><code>_exit_tree()</code></td><td>Verified</td><td>No teardown behavior beyond the empty plugin shell.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="related-docs">Related Docs</h2>
+<ul><li><a href="debug_tools_overview.html">Internal Tools Overview</a></li><li><a href="project_audit_overview.html">Project Audit</a></li><li><a href="../documentation_inventory.html">Documentation Inventory</a></li></ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
