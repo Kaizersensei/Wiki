@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,57 +38,84 @@
       <p class="eyebrow">engine</p>
       <h1>Debug Tools Overview</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>Debug tooling is supplied through editor plugins and helper scenes. The evidence set includes combat collider tooling, mesh extraction helpers, and visualization scenes.</p>
-<h2>Pages</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Partially populated. Core debug/tooling pages are still being filled from local project docs.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><a href="#tool-suite">Tool Suite</a></li>
-  <li><a href="#autocliff">Autocliff</a></li>
-  <li><a href="#foliage">Foliage</a></li>
-  <li><a href="#geometry-obj-export">Geometry OBJ Export</a></li>
-  <li><a href="#texture-maps">Texture Maps</a></li>
-  <li><a href="#vertex-edit">Vertex Edit</a></li>
-  <li><a href="#hitbox-hurtbox-bridge">Hitbox Hurtbox Bridge</a></li>
-  <li><a href="#project-audit">Project Audit</a></li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2 id="tool-suite">Tool Suite</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li>Published evidence currently points to the Densetsu editor plugin entrypoint and its bundled helper scripts.</li>
-  <li>Known helpers include array-mesh extraction, FBX animation persistence, image transforms, and mesh OBJ export workflows.</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2 id="autocliff">Autocliff</h2>
-<p>This navigation item was restored from the unpublished work branch. The public wiki does not yet have a dedicated source-backed write-up for this tool, so this section remains a placeholder for future documentation.</p>
-<h2 id="foliage">Foliage</h2>
-<p>This navigation item was restored from the unpublished work branch. The public wiki does not yet have a dedicated source-backed write-up for this tool, so this section remains a placeholder for future documentation.</p>
-<h2 id="geometry-obj-export">Geometry OBJ Export</h2>
-<p>The current published overview ties geometry export coverage to the mesh OBJ helper listed in the Densetsu tool suite. This section exists so the tools index can link directly to that workflow.</p>
-<h2 id="texture-maps">Texture Maps</h2>
-<p>The current published overview ties texture-map coverage to the image transform helper listed in the Densetsu tool suite. A fuller write-up can be added here once the supporting notes are published.</p>
-<h2 id="vertex-edit">Vertex Edit</h2>
-<p>This navigation item was restored from the unpublished work branch. The public wiki does not yet have a dedicated source-backed write-up for this tool, so this section remains a placeholder for future documentation.</p>
-<h2 id="hitbox-hurtbox-bridge">Hitbox Hurtbox Bridge</h2>
-<p>Combat collider tooling is part of the published evidence set, including hitbox and hurtbox manipulation scripts. This section gives the tools index a stable destination for that workflow.</p>
-<h2 id="project-audit">Project Audit</h2>
-<p>This navigation item was restored from the unpublished work branch. The public wiki does not yet have a dedicated source-backed write-up for this tool, so this section remains a placeholder for future documentation.</p>
-<h2>Combat collider tools</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>addons/addons/combat_colliders/plugin.gd</code></li>
-  <li><code>combat_collider.gd</code>, <code>hitbox_manip.gd</code>, <code>hurtbox_manip.gd</code></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-<h2>Visualization helpers</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
 <ul>
-  <li><code>addons/dynamic_day_night_cycles/day_color_visualizer.tscn</code></li>
-  <li><code>addons/dynamic_day_night_cycles/eot_plot.tscn</code></li>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Tooling and debug helpers are present. Restored navigation anchors now provide stable published targets for the tool links that previously only existed in the unpublished work branch.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
 <ul>
-  <li><code>addons/densetsu_tool_suite/plugin.gd</code></li>
-  <li><code>addons/addons/combat_colliders/plugin.gd</code></li>
-  <li><code>addons/dynamic_day_night_cycles/*.tscn</code></li>
+<li><a href="../index.html">Engine index</a></li>
+<li><a href="autocliff_terrain3d_overview.html">Autocliff Overview</a></li>
+<li><a href="autocliff_dock_usage_and_troubleshooting.html">Autocliff Dock Usage &amp; Troubleshooting</a></li>
+<li><a href="foliage_system_overview.html">Densetsu Foliage System Overview</a></li>
+<li><a href="geometry_obj_export_overview.html">Densetsu Geometry OBJ Export</a></li>
+<li><a href="texture_maps_overview.html">Densetsu Texture Maps</a></li>
+<li><a href="tool_suite_overview.html">Densetsu Tool Suite Overview</a></li>
+<li><a href="vertex_edit_overview.html">Densetsu Vertex Edit</a></li>
+<li><a href="hitbox_hurtbox_bridge_overview.html">Hitbox Hurtbox Bridge</a></li>
+<li><a href="project_audit_overview.html">Project Audit</a></li>
 </ul>
-</article>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">from the start.  
+
+1: Overview 
+Game Identity 
+Title: Densetsu​
+
+---
+
+2: World Overview 
+Historical Timeline 
+Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the
+
+---
+
+Weapon & Equipment Scaling 
+Weapons and tools scale dynamically with stat alignment rather than linear power curves, 
+promoting personalized playstyles.</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -100,3 +127,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
+
+
