@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Autocliff Overview</title>
   <meta property="og:title" content="Autocliff Overview">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Overview of the Densetsu Autocliff plugin and its authoring role.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/autocliff_terrain3d_overview.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Autocliff Overview">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Overview of the Densetsu Autocliff plugin and its authoring role.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
@@ -27,7 +26,6 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
@@ -36,64 +34,80 @@
       <p class="eyebrow">engine</p>
       <h1>Autocliff Overview</h1>
       <article class="markdown">
-        <div class="callout" id="content-status">
-          <strong>Content status:</strong> Populated from local project notes. Final screenshot-driven workflow is pending UI/foliage overlap resolution.
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Plugin overview</td><th>Audience</th><td>Level designers, environment artists, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current source and README</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_autocliff/plugin.gd</code>, <code>autocliff_dock.gd</code>, <code>README.md</code></td><th>User touchpoint</th><td>Right-side Autocliff dock</td></tr>
+              <tr><th>Risk level</th><td>Medium to high</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <h2 id="at-a-glance">At a glance</h2>
+        <p>Densetsu Autocliff is an editor-assisted placement tool for cliffs, rocks, and other placeable meshes. It samples either Terrain3D data or mesh-bearing scene targets, then scatters selected pool entries according to slope, height, density, clearance, and optional Terrain3D material filters.</p>
+
+        <h2 id="what-it-is">What It Is</h2>
         <ul>
-          <li>Densetsu Autocliff is an active, project-owned editor plugin at <code>res://addons/densetsu_autocliff</code>.</li>
-          <li>It places cliff/rock meshes (and other placeables) across selected Terrain3D or mesh surfaces using slope and placement filters.</li>
-          <li>It is used for fast environment dressing and can emit either individual MeshInstance3D output or MultiMesh output.</li>
+          <li>A project-owned editor plugin rooted at <code>res://addons/densetsu_autocliff</code>.</li>
+          <li>A dock-based workflow rather than a top-menu-only tool.</li>
+          <li>A placement system that supports both individual <code>MeshInstance3D</code> output and grouped <code>MultiMeshInstance3D</code> output.</li>
         </ul>
 
-        <h2 id="how-it-works">How it works</h2>
+        <h2 id="when-to-use">When To Use It</h2>
         <ul>
-          <li>Enable the plugin in Project Settings and open the Autocliff dock.</li>
-          <li>Select either a Terrain3D node or a mesh-bearing Node3D target, then add placeable meshes.</li>
-          <li>Configure slope, density, offsets, placement, and output mode before generation.</li>
-          <li>Terrain3D targets use Terrain3D data sampling as the preferred path.</li>
-          <li>Mesh targets are sampled by triangle ray tests, including descendant mesh nodes under a selected root.</li>
+          <li>You need fast cliff or rock population over a Terrain3D surface.</li>
+          <li>You want the same scattering logic on a mesh-derived target without requiring collision authoring first.</li>
+          <li>You need grouped placement tuning for large, medium, and small placeables instead of one global density rule.</li>
         </ul>
 
-        <h2 id="interfaces">Interfaces</h2>
+        <h2 id="touchpoints">Primary Touchpoints</h2>
+        <table>
+          <thead><tr><th>Touchpoint</th><th>What the user controls</th><th>What it affects</th></tr></thead>
+          <tbody>
+            <tr><td>Target path</td><td>Which Terrain3D or mesh-bearing node receives the placement pass</td><td>Sampling surface and output parent</td></tr>
+            <tr><td>Mesh pool</td><td>Which meshes or packed scenes can be placed</td><td>Generated content set, size grouping, output names</td></tr>
+            <tr><td>Placement parameters</td><td>Area size, slope window, height window, density, bury, scale, yaw, overlap rules, material filtering</td><td>Candidate acceptance and transform generation</td></tr>
+            <tr><td>Output mode</td><td>Instance output or MultiMesh output</td><td>Editor editability versus denser runtime-friendly representation</td></tr>
+            <tr><td>Preset system</td><td>Load, save, refresh, reset preset values</td><td>Reusable authoring configurations</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="outputs">Outputs and Ownership</h2>
         <ul>
-          <li>Plugin path: <code>res://addons/densetsu_autocliff</code>.</li>
-          <li>Plugin config: <code>res://addons/densetsu_autocliff/plugin.cfg</code>.</li>
-          <li>Primary in-editor surface: Autocliff dock.</li>
-          <li>Local implementation/reference doc: <code>res://addons/densetsu_autocliff/README.md</code>.</li>
+          <li>Generated content is written under a named output root beneath the target's parent.</li>
+          <li>Mesh output can remain as editable instances or be converted into grouped <code>MultiMeshInstance3D</code> nodes.</li>
+          <li>The README and current tool behavior both treat generated nodes as Autocliff-owned placement output and identify them with the <code>densetsu_autocliff</code> tag/group.</li>
         </ul>
 
-        <h2 id="operational-concerns">Operational concerns</h2>
+        <h2 id="important-notes">Important Notes</h2>
+        <div class="callout">
+          <p><strong>Not Terrain3D-only:</strong> the current source explicitly supports mesh targets and descendant mesh sampling, so newer documentation should not describe this as a Terrain3D-exclusive tool.</p>
+          <p><strong>Origin-sensitive:</strong> incorrect mesh pivots or embedded offsets are a common cause of bad placements.</p>
+        </div>
+
+        <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li>Mesh-target sampling bypasses physics/collision requirements, which helps with imported geometry and temporary authoring meshes.</li>
-          <li>Placement quality depends on placeable mesh origins and embedded offsets; verify mesh origin before changing tool logic.</li>
-          <li>For dense output, prefer MultiMesh where possible.</li>
+          <li><a href="autocliff_dock_usage_and_troubleshooting.html">Autocliff Dock Usage and Troubleshooting</a></li>
+          <li><a href="autocliff_implementation_reference.html">Autocliff Implementation Reference</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
         </ul>
-
-        <h2 id="related-docs">Related docs</h2>
-        <ul>
-          <li><a href="../index.html">Engine index</a></li>
-          <li><a href="debug_tools_overview.html">Debug Tools Overview</a></li>
-          <li><a href="autocliff_dock_usage_and_troubleshooting.html">Autocliff Dock Usage &amp; Troubleshooting</a></li>
-        </ul>
-
-        <details>
-          <summary>Raw source excerpts</summary>
-          <pre class="source-excerpt">Plugin path: res://addons/densetsu_autocliff
-Type: project-owned editor plugin
-Status: active authoring tool
-
-Purpose: places cliff/rock meshes on Terrain3D or mesh surfaces using slope filtering and configurable rules.
-
-Project changes: expanded from Terrain3D-only wording to generic surface-target messaging; MeshInstance3D can be sampled without collision; descendant mesh nodes are supported.</pre>
-        </details>
-
-        <details>
-          <summary>Unresolved conflicts / open questions</summary>
-          <div class="callout"><p>Add final screenshot-driven workflow once Autocliff UI and foliage-system overlap are resolved.</p></div>
-        </details>
       </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>autocliff_terrain3d_overview</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Autocliff Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Tooling Overview</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Level designers, environment artists, tool maintainers</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_autocliff/plugin.gd, autocliff_dock.gd, README.md</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
