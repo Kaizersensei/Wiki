@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Autocliff Implementation Reference</title>
+  <meta property="og:title" content="Densetsu Autocliff Implementation Reference">
+  <meta property="og:description" content="Implementation reference for Densetsu Autocliff persistence, presets, generation stages, and material filtering.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/autocliff_implementation_reference.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Autocliff Implementation Reference">
+  <meta property="twitter:description" content="Implementation reference for Densetsu Autocliff persistence, presets, generation stages, and material filtering.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Densetsu Autocliff Implementation Reference</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Implementation reference</td><th>Audience</th><td>Tool maintainers, environment pipeline owners</td></tr>
+              <tr><th>Implementation status</th><td>Verified against <code>plugin.gd</code> and <code>autocliff_dock.gd</code></td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_autocliff/plugin.gd</code>, <code>res://addons/densetsu_autocliff/autocliff_dock.gd</code></td><th>User touchpoint</th><td>Right-side Autocliff dock</td></tr>
+              <tr><th>Risk level</th><td>Medium to high</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>This page focuses on the code-level behavior behind the Autocliff dock: how state persists, how presets are stored, how placement samples are filtered, and how generated outputs are converted or cleared.</p>
+
+        <h2 id="plugin-shape">Plugin Shape</h2>
+        <table>
+          <thead><tr><th>Surface</th><th>Role</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>plugin.gd</code></td><td>Registers the dock with Godot and saves state on exit.</td><td>The editor-plugin layer is intentionally thin.</td></tr>
+            <tr><td><code>autocliff_dock.gd</code></td><td>Owns UI creation, persistence, presets, sampling, overlap rules, generation, output conversion, and cleanup.</td><td>This is the real implementation surface.</td></tr>
+            <tr><td><code>README.md</code></td><td>Operator-facing notes and limits.</td><td>Useful, but not exhaustive enough to replace source inspection.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="state-and-presets">State, Presets, and Persistence</h2>
+        <table>
+          <thead><tr><th>Path or constant</th><th>Purpose</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>user://densetsu_autocliff_state.cfg</code></td><td>Persistent dock state</td><td>Written by <code>save_state()</code>, loaded by <code>load_state()</code>.</td></tr>
+            <tr><td><code>res://temp/autocliff_presets</code></td><td>Preset storage directory</td><td>Created on demand.</td></tr>
+            <tr><td><code>.cfg</code></td><td>Preset file extension</td><td>One preset per config file.</td></tr>
+            <tr><td><code>base_floor_medium_cliff</code></td><td>Base preset name</td><td>Used by reset/load bootstrap helpers.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Persistence is wired through <code>_connect_persistence_signals()</code>, which subscribes line edits, spin boxes, checkboxes, and option buttons to save-queue helpers. The dock does not save immediately on every change; it queues state writes through <code>_queue_save_state()</code> and <code>_save_state_deferred()</code>.</p>
+
+        <h2 id="classification-and-filtering">Classification and Filtering Rules</h2>
+        <table>
+          <thead><tr><th>Constant or mode</th><th>Meaning</th><th>Code notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>LARGE_OBJECT_MIN_METERS = 15.0</code></td><td>Size threshold for large objects</td><td>Used for group-based tuning previews and effective size grouping.</td></tr>
+            <tr><td><code>SMALL_OBJECT_MAX_METERS = 3.0</code></td><td>Size threshold for small objects</td><td>Objects between thresholds are treated as medium.</td></tr>
+            <tr><td><code>MATERIAL_FILTER_MODE_BASE_OR_OVERLAY</code></td><td>Accept either Terrain3D base or overlay ID</td><td>Default mode.</td></tr>
+            <tr><td><code>MATERIAL_FILTER_MODE_BASE_ONLY</code></td><td>Base layer must match</td><td>Terrain-aware filter path.</td></tr>
+            <tr><td><code>MATERIAL_FILTER_MODE_OVERLAY_ONLY</code></td><td>Overlay layer must match</td><td>Terrain-aware filter path.</td></tr>
+            <tr><td><code>MATERIAL_FILTER_MODE_DOMINANT</code></td><td>Dominant texture ID must match</td><td>Most restrictive terrain filter mode.</td></tr>
+          </tbody>
+        </table>
+
+        <p>The dock classifies pool entries into large, medium, and small groups using measured bounds, then applies optional global and per-group multipliers to density, scale, bury depth, yaw, clearance, cluster radius, and slope windows.</p>
+
+        <h2 id="generation-stages">Generation Stages</h2>
+        <table>
+          <thead><tr><th>Stage</th><th>Key functions</th><th>What happens</th></tr></thead>
+          <tbody>
+            <tr><td>Target resolution</td><td><code>_get_autocliff_output_root</code>, <code>_get_first_selected_terrain_node</code>, <code>_get_first_selected_node3d</code></td><td>Resolve active target, output parent, and output name from dock state and current selection.</td></tr>
+            <tr><td>Mesh pool intake</td><td><code>_on_mesh_files_selected</code>, <code>_append_pool_entry</code>, <code>_compute_pool_entry_bounds</code>, <code>_estimate_scene_bounds</code></td><td>Accept meshes or packed scenes, compute bounds/radii, and cache preview metadata.</td></tr>
+            <tr><td>Sampling grid setup</td><td><code>_add_spin_row</code>, dock fields, generation body near <code>_sample_surface</code></td><td>Area size, sample spacing, ray height, slope, density, and height filters determine candidate sample positions.</td></tr>
+            <tr><td>Surface sampling</td><td><code>_sample_surface</code>, <code>_sample_terrain_data</code>, <code>_hit_matches_target</code></td><td>Terrain3D uses data sampling first; mesh targets fall back to ray intersection against target/descendants.</td></tr>
+            <tr><td>Terrain material filtering</td><td><code>_hit_matches_terrain_material_filter</code>, <code>_get_terrain_material_ids_for_point</code>, <code>_get_terrain_material_density_factor</code></td><td>Terrain hits can be rejected or density-scaled by material IDs and blend weights.</td></tr>
+            <tr><td>Overlap rejection</td><td><code>_placement_overlaps_blocker</code>, <code>_placement_overlaps_static_aabbs</code>, <code>_placement_overlaps_generated_cluster</code></td><td>Rejects placements that collide with blockers, world AABBs, or generated cluster radius rules.</td></tr>
+            <tr><td>Transform build</td><td><code>_build_cliff_basis</code></td><td>Constructs basis from hit normal and yaw jitter, then applies scale and bury offsets.</td></tr>
+            <tr><td>Output commit</td><td><code>_convert_output_to_multimesh</code>, <code>_convert_output_to_arraymesh_groups</code></td><td>Writes either per-instance MeshInstance3D output or grouped MultiMesh output.</td></tr>
+            <tr><td>Cleanup</td><td><code>_on_clear_generated_pressed</code></td><td>Deletes the generated output root under the target parent.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="output-conversion">Output Conversion Behavior</h2>
+        <table>
+          <thead><tr><th>Mode</th><th>Key functions</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Instance output</td><td>Main generation body in <code>autocliff_dock.gd</code></td><td>Creates <code>MeshInstance3D</code> or instantiated scene children under an output root.</td></tr>
+            <tr><td>MultiMesh output</td><td><code>_convert_output_to_multimesh</code></td><td>Groups matching meshes and creates <code>MultiMeshInstance3D</code> nodes.</td></tr>
+            <tr><td>Expanded grouped output</td><td><code>_convert_output_to_arraymesh_groups</code></td><td>Converts existing MultiMesh output back into grouped mesh instances.</td></tr>
+            <tr><td>Material filter fixup</td><td><code>_get_filtered_mesh_for_output</code>, <code>_get_filtered_material_for_output</code>, <code>_apply_filter_to_scene_instance_materials</code></td><td>Normalizes filtering behavior on generated materials/meshes.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="callable-surface">Callable Surface Inventory</h2>
+        <table>
+          <thead><tr><th>Function or family</th><th>Role</th><th>Verification notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>setup</code>, <code>_build_ui</code></td><td>Dock setup and full UI construction</td><td>Verified.</td></tr>
+            <tr><td><code>_connect_persistence_signals</code>, <code>_on_persist_*</code>, <code>save_state</code>, <code>load_state</code></td><td>State persistence pipeline</td><td>Verified.</td></tr>
+            <tr><td><code>_ensure_preset_dir</code>, <code>_refresh_preset_options</code>, <code>_on_save_preset_pressed</code>, <code>_on_load_preset_pressed</code>, <code>_on_reset_to_base_preset_pressed</code>, <code>_load_preset_by_name</code></td><td>Preset management</td><td>Verified.</td></tr>
+            <tr><td><code>_on_use_multimesh_mode_toggled</code>, <code>_convert_output_to_multimesh</code>, <code>_convert_output_to_arraymesh_groups</code></td><td>Output representation switching</td><td>Verified.</td></tr>
+            <tr><td><code>_on_use_selected_node_pressed</code>, <code>_on_add_selected_node_mesh_pressed</code>, <code>_on_add_mesh_files_pressed</code>, <code>_on_mesh_files_selected</code>, <code>_on_remove_selected_meshes_pressed</code>, <code>_on_clear_meshes_pressed</code></td><td>Target and mesh-pool management</td><td>Verified.</td></tr>
+            <tr><td><code>_refresh_mesh_list</code>, <code>_update_group_preview</code>, bounds/radius helpers</td><td>Pool metadata and group preview maintenance</td><td>Verified.</td></tr>
+            <tr><td><code>_sample_surface</code>, <code>_sample_terrain_data</code>, <code>_parse_terrain_texture_id_variant</code>, <code>_variant_to_int_or_default</code>, <code>_variant_to_float_or_default</code></td><td>Terrain and mesh sampling pipeline</td><td>Verified.</td></tr>
+            <tr><td><code>_placement_overlaps_blocker</code>, <code>_placement_overlaps_static_aabbs</code>, <code>_placement_overlaps_generated_cluster</code>, <code>_collect_static_blocker_aabbs</code></td><td>Clearance and overlap rejection</td><td>Verified.</td></tr>
+            <tr><td><code>_get_terrain_material_ids_for_point</code>, <code>_hit_matches_terrain_material_filter</code>, <code>_get_terrain_material_density_factor</code></td><td>Terrain material filtering and density weighting</td><td>Verified.</td></tr>
+            <tr><td><code>_on_clear_generated_pressed</code></td><td>Output cleanup</td><td>Verified.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="known-risks">Known Risks and Review Notes</h2>
+        <ul>
+          <li>Placement correctness depends heavily on the source mesh or scene origin. Mis-centered assets will look like Autocliff bugs even when the math is working.</li>
+          <li>Large sample areas with many pool entries can become expensive because each accepted placement goes through overlap and bounds logic.</li>
+          <li>The plugin treats Terrain3D as a first-class target, but mesh-target behavior is also implemented and should not be documented as Terrain3D-only anymore.</li>
+          <li>Preset storage under <code>res://temp/</code> means presets are project content rather than user-only config; that is useful for sharing, but it also means they should be source-controlled intentionally.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="autocliff_terrain3d_overview.html">Autocliff Overview</a></li>
+          <li><a href="autocliff_dock_usage_and_troubleshooting.html">Autocliff Dock Usage and Troubleshooting</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>autocliff_implementation_reference</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Densetsu Autocliff Implementation Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Implementation Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Tool maintainers, environment pipeline owners</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_autocliff/plugin.gd and autocliff_dock.gd</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
