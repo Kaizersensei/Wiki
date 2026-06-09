@@ -1,15 +1,81 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Densetsu Geometry OBJ Export</title>
-<meta property="og:title" content="Densetsu Geometry OBJ Export"><meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="og:type" content="website"><meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/geometry_obj_export_overview.html"><meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:title" content="Densetsu Geometry OBJ Export"><meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers."><meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-<link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head>
-<body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
-<main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Densetsu Geometry OBJ Export</h1><article class="markdown">
-<div class="callout" id="content-status"><strong>Content status:</strong> Populated from local plugin notes. Menu-path screenshots and round-trip examples are pending DCC workflow finalization.</div>
-<h2 id="at-a-glance">At a glance</h2><ul><li>Project-owned editor plugin at <code>res://addons/densetsu_geometry_obj_export</code>.</li><li>Exports selected scene geometry to Wavefront OBJ for DCC repair, inspection, and external processing.</li><li>Status: active utility; intended as geometry snapshot/export tooling.</li></ul>
-<h2 id="how-it-works">How it works</h2><ul><li>Select one or more scene roots and run the exporter from the plugin UI/workflow.</li><li>Exporter walks nested <code>MeshInstance3D</code> under selected roots.</li><li><code>CSGShape3D</code> trees are baked before export.</li><li><code>MultiMeshInstance3D</code> is expanded into regular geometry for OBJ output.</li><li>Surface material grouping is preserved with generated <code>.mtl</code> output.</li></ul>
-<h2 id="interfaces">Interfaces</h2><ul><li>Plugin path: <code>res://addons/densetsu_geometry_obj_export</code>.</li><li>Plugin config: <code>res://addons/densetsu_geometry_obj_export/plugin.cfg</code>.</li><li>Local docs: <code>res://addons/densetsu_geometry_obj_export/README.md</code>.</li></ul>
-<h2 id="operational-concerns">Operational concerns</h2><ul><li>This exporter is snapshot-oriented and not a full gameplay scene serializer.</li><li>It does not preserve skeletons, animation, gameplay nodes, or runtime behavior.</li><li>Use it for geometry transfer/inspection, then re-integrate results through project authoring flows.</li></ul>
-<h2 id="related-docs">Related docs</h2><ul><li><a href="../index.html">Engine index</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li><li><a href="autocliff_terrain3d_overview.html">Autocliff Overview</a></li><li><a href="foliage_system_overview.html">Densetsu Foliage System Overview</a></li></ul>
-<details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Add exact menu-path screenshots and OBJ round-trip examples after DCC workflow is finalized.</p></div></details>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Geometry OBJ Export</title>
+  <meta property="og:title" content="Densetsu Geometry OBJ Export">
+  <meta property="og:description" content="Overview of the Densetsu Geometry OBJ Export plugin.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/geometry_obj_export_overview.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Geometry OBJ Export">
+  <meta property="twitter:description" content="Overview of the Densetsu Geometry OBJ Export plugin.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
+  <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Densetsu Geometry OBJ Export</h1><article class="markdown">
+<div class="callout"><table><tbody>
+<tr><th>Page type</th><td>Plugin overview</td><th>Audience</th><td>Technical artists, level designers, DCC pipeline owners</td></tr>
+<tr><th>Implementation status</th><td>Verified against current source and README</td><th>Last verified</th><td>2026-06-09</td></tr>
+<tr><th>Source scripts</th><td><code>res://addons/densetsu_geometry_obj_export/plugin.gd</code>, <code>scene_geometry_obj_exporter.gd</code>, <code>README.md</code></td><th>User touchpoint</th><td><code>Tools &gt; Densetsu &gt; Export Selected Scene Geometry to OBJ</code></td></tr>
+<tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+</tbody></table></div>
+
+<p>Densetsu Geometry OBJ Export is a scene-selection-driven export utility for snapshotting selected geometry into OBJ/MTL form. It is designed for DCC round-tripping, inspection, repair, and external processing, not for preserving the full Godot scene contract.</p>
+
+<h2 id="what-it-exports">What It Exports</h2>
+<ul>
+<li><code>MeshInstance3D</code> content under selected roots.</li>
+<li><code>CSGShape3D</code> trees, baked into exportable geometry first when enabled.</li>
+<li><code>MultiMeshInstance3D</code> content when the plugin option <code>include_multimesh</code> is enabled.</li>
+<li>Material assignments via generated <code>.mtl</code> output.</li>
+</ul>
+
+<h2 id="what-it-does-not-preserve">What It Does Not Preserve</h2>
+<ul>
+<li>Scripts, gameplay nodes, signals, scene ownership, or editor-only metadata.</li>
+<li>Skeletons, animation logic, or runtime relationships outside exported geometry transforms.</li>
+<li>A guarantee that all downstream DCC tools will interpret the generated MTL data identically.</li>
+</ul>
+
+<h2 id="operator-flow">Operator Flow</h2>
+<ol>
+<li>Select one or more top-level scene roots.</li>
+<li>Run the export command from <code>Tools &gt; Densetsu</code>.</li>
+<li>Choose an output <code>.obj</code> path in the file dialog.</li>
+<li>Review the generated OBJ and companion MTL in your DCC tool or inspection flow.</li>
+</ol>
+
+<h2 id="user-visible-options">User-Visible Options</h2>
+<table>
+  <thead><tr><th>Option</th><th>Why a user would change it</th></tr></thead>
+  <tbody>
+    <tr><td><code>include_mesh_instances</code></td><td>Normally stays on; only disable if you are isolating other geometry types.</td></tr>
+    <tr><td><code>include_csg</code></td><td>Disable if you want to exclude CSG-authored geometry from the export.</td></tr>
+    <tr><td><code>include_multimesh</code></td><td>Enable when repeated scatter content must be exported too.</td></tr>
+    <tr><td><code>apply_world_transform</code></td><td>Disable only if local-space output is required by a custom downstream workflow.</td></tr>
+    <tr><td><code>flip_v_texcoord</code></td><td>Keep enabled for typical OBJ expectations unless a downstream tool proves otherwise.</td></tr>
+    <tr><td><code>enforce_outward_winding</code></td><td>Useful when imported geometry has inconsistent face orientation.</td></tr>
+    <tr><td><code>manifold_only</code></td><td>Use when cleaner triangle topology matters more than retaining every surface.</td></tr>
+    <tr><td><code>remove_enclosed_faces</code></td><td>Use when internal shells are not useful to the downstream step.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="caveats">Caveats</h2>
+<div class="callout">
+  <p><strong>Snapshot tool:</strong> this is best treated as geometry export, not scene serialization.</p>
+  <p><strong>Heuristic cleanup:</strong> winding correction and enclosed-face cleanup are best-effort heuristics, not formal mesh certification.</p>
+</div>
+
+<h2 id="related-docs">Related Docs</h2>
+<ul>
+<li><a href="geometry_obj_export_reference.html">Densetsu Geometry OBJ Export Reference</a></li>
+<li><a href="tool_suite_action_catalog.html">Densetsu Tool Suite Action Catalog</a></li>
+<li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+<li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+</ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
