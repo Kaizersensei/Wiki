@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Densetsu Tool Suite Action Catalog</title>
+  <meta property="og:title" content="Densetsu Tool Suite Action Catalog">
+  <meta property="og:description" content="Source-driven action catalog for every visible Densetsu Tool Suite menu and context action.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/tool_suite_action_catalog.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Densetsu Tool Suite Action Catalog">
+  <meta property="twitter:description" content="Source-driven action catalog for every visible Densetsu Tool Suite menu and context action.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Densetsu Tool Suite Action Catalog</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Action catalog</td><th>Audience</th><td>Level designers, technical artists, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Verified against <code>addons/densetsu_tool_suite/plugin.gd</code></td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_tool_suite/plugin.gd</code>, helper scripts under <code>res://addons/densetsu_tool_suite/helpers/</code>, external scripts under <code>res://engine3d/tools/</code></td><th>User touchpoint</th><td><code>Tools &gt; Densetsu</code> and FileSystem context menus under <code>Densetsu &gt; ...</code></td></tr>
+              <tr><th>Risk level</th><td>High for overwrite, move, relink, build, and project-wide replacement actions</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>This page documents every visible Tool Suite action exposed from <code>plugin.gd</code>. It focuses on what a user can trigger, what the action touches, which settings feed it, and where the implementation lives.</p>
+
+        <div class="callout">
+          <strong>Touchpoint legend:</strong>
+          <ul>
+            <li><code>Top menu</code> means <code>Tools &gt; Densetsu &gt; ...</code>.</li>
+            <li><code>Context</code> means the Godot FileSystem dock right-click menu under <code>Densetsu &gt; ...</code>.</li>
+            <li><code>Scene selection</code> means selected nodes in the 3D scene/editor selection.</li>
+            <li><code>FileSystem selection</code> means selected files or folders in the FileSystem dock.</li>
+          </ul>
+        </div>
+
+        <h2 id="scene-actions">Scene Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>New Densetsu Map</code></td>
+              <td>Top menu</td>
+              <td>You need a new map scene created from the project template instead of copying scenes by hand.</td>
+              <td>Uses <code>new_map_template_scene</code>, <code>new_map_output_dir</code>, <code>new_map_default_file</code>, then opens a save dialog.</td>
+              <td>Creates a new scene resource from the configured template path and writes it into <code>res://</code>.</td>
+              <td><code>_on_tool_new_densetsu_map</code>, <code>_build_new_map_dialog</code>, <code>_on_new_map_file_selected</code></td>
+            </tr>
+            <tr>
+              <td><code>Spread Selected On Floor</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You want selected scene items redistributed onto floor geometry without hand-placing each one.</td>
+              <td>Requires selected nodes in the scene. Uses internal spread constants such as <code>FLOOR_SPREAD_GAP</code>, <code>FLOOR_SPREAD_MIN_SIZE</code>, <code>FLOOR_SPREAD_RAY_HEIGHT</code>, and <code>FLOOR_SPREAD_RAY_DEPTH</code>.</td>
+              <td>Moves selected nodes in the active scene.</td>
+              <td><code>_on_tool_spread_selected_on_floor</code></td>
+            </tr>
+            <tr>
+              <td><code>Select Nodes With Same Mesh As Selected</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You need fast selection expansion by shared mesh resource.</td>
+              <td>Requires a selected <code>MeshInstance3D</code>.</td>
+              <td>Changes editor selection only.</td>
+              <td><code>_run_select_same_mesh_nodes</code>, <code>select_same_mesh_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Select Nodes Intersecting Selected Mesh</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You need to find mesh instances that physically overlap a reference mesh in world space.</td>
+              <td>Requires a selected <code>MeshInstance3D</code>.</td>
+              <td>Changes editor selection only.</td>
+              <td><code>_run_select_intersecting_mesh_nodes</code>, <code>select_intersecting_mesh_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Prune Occluded MeshInstances (Current Scene/Selection)</code></td>
+              <td>Top menu, scene selection optional</td>
+              <td>You want a visibility-based cleanup pass before runtime or authoring optimization work.</td>
+              <td>Controlled by <code>prune_occluded_threshold_percent</code>, <code>prune_occluded_use_selection_scope</code>, and <code>prune_occluded_dry_run</code>.</td>
+              <td>Either reports candidates or mutates the active scene depending on dry-run state.</td>
+              <td><code>_run_prune_occluded_mesh_instances</code>, <code>occlusion_prune_helper.gd</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="geometry-actions">Geometry Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Pack to Static Mesh (Selected)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need selected scene or mesh resources flattened into a static export workflow.</td>
+              <td>Uses selected files or folders from the FileSystem dock.</td>
+              <td>Writes packed mesh outputs beside source assets.</td>
+              <td><code>_run_static_pack</code>, <code>static_pack_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Extract ArrayMeshes (Per File/Common)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need ArrayMesh extraction from scenes or imported meshes, either split per file or merged to a common output.</td>
+              <td>Selection is files or folders. Output mode is encoded by which menu entry you choose.</td>
+              <td>Creates extracted mesh outputs.</td>
+              <td><code>_run_array_extract</code>, <code>arraymesh_extract_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Extract Material Meshes (Per File/Common)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need geometry split by material ownership.</td>
+              <td>Selection is files or folders. Output mode is encoded by which menu entry you choose.</td>
+              <td>Creates material-split outputs.</td>
+              <td><code>_run_array_extract</code>, <code>arraymesh_extract_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Extract Combined Mesh (Per File/Common)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You want scene geometry collapsed into one combined mesh export.</td>
+              <td>Selection is files or folders. Output mode is encoded by which menu entry you choose.</td>
+              <td>Creates combined outputs, optionally shared across inputs.</td>
+              <td><code>_run_array_extract</code>, <code>arraymesh_extract_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Reassign Pivot (Center Mass / Center Bottom)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need imported meshes rewritten with a better local origin.</td>
+              <td>Selection is files or folders. Mode is chosen by menu item.</td>
+              <td>Writes adjusted mesh resources or OBJ vertex rewrites depending on source type.</td>
+              <td><code>_run_pivot_reassign</code>, <code>pivot_reassign_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Convert Mesh TRES_RES to OBJ (Selected)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need a mesh resource exported into OBJ/MTL for DCC work or inspection.</td>
+              <td>Selection is mesh resources and supported scene resources.</td>
+              <td>Writes OBJ and MTL files beside source resources.</td>
+              <td><code>_run_convert_mesh_res_to_obj</code>, <code>mesh_obj_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Subdivide Mesh -&gt; OBJ (1x/2x/4x)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need denser geometry exported without committing subdivision into the original scene resource.</td>
+              <td>Selection is files or folders. Iteration count is encoded by helper flow.</td>
+              <td>Writes subdivided OBJ outputs.</td>
+              <td><code>_run_subdivide_mesh_to_obj</code>, <code>mesh_subdivide_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Scale Selected Mesh Files x2/x10/x0.25/x0.1 (Overwrite)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need a batch corrective scale pass on mesh resources.</td>
+              <td>Selection is files or folders. Scale factor is chosen by menu item.</td>
+              <td>Overwrites selected mesh files.</td>
+              <td><code>_run_scale_mesh_files_overwrite</code></td>
+            </tr>
+            <tr>
+              <td><code>Flip Model Normals (Selected, Copy)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need a non-destructive flipped-normals copy for imported geometry.</td>
+              <td>Selection is files or folders.</td>
+              <td>Creates copied outputs rather than overwriting originals.</td>
+              <td><code>_run_flip_model_normals</code>; helper path <code>mesh_flip_normals_helper.gd</code> is declared but missing</td>
+            </tr>
+            <tr>
+              <td><code>Convert Selected MeshInstance3D to CSGMesh3D</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You need a selected runtime mesh converted into a CSG editing surface.</td>
+              <td>Requires selected <code>MeshInstance3D</code>.</td>
+              <td>Mutates the active scene by creating a CSG replacement.</td>
+              <td><code>_run_convert_selected_mesh_to_csg</code>; helper path <code>mesh_to_csg_helper.gd</code> is declared but missing</td>
+            </tr>
+            <tr>
+              <td><code>Replace Scene TRES_RES Mesh Refs With Selected OBJ</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need a selected OBJ to replace scene mesh references in the current selection scope.</td>
+              <td>Requires selected OBJ path plus scene or resource targets.</td>
+              <td>Rewrites scene/resource mesh references.</td>
+              <td><code>_run_replace_mesh_refs_with_obj</code>, <code>mesh_obj_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Replace TRES_RES Mesh Refs With OBJ (Project-Wide)</code></td>
+              <td>Top menu</td>
+              <td>You need a broader migration pass after mesh exports or import-path changes.</td>
+              <td>Dialog options: current-folder candidate scope, dry run, same-folder-only, allow basename fallback.</td>
+              <td>Produces a report and may rewrite project resources if dry run is off.</td>
+              <td><code>_build_mesh_ref_replace_dialog</code>, <code>_run_replace_mesh_refs_with_obj_project</code>, <code>mesh_obj_helper.gd</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="texture-actions">Texture Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Resize Textures POT (Overwrite / Copy)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need power-of-two cleanup for selected textures.</td>
+              <td>Selection is files or folders. Mode is overwrite or copy.</td>
+              <td>Either overwrites or creates derived copies.</td>
+              <td><code>_run_texture_resize</code>, <code>texture_resize_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Flip Image Horizontal/Vertical</code>, <code>Rotate Image 90/180/270</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need simple non-destructive image transforms without leaving the editor.</td>
+              <td>Selection is files or folders. Mode is encoded by menu item.</td>
+              <td>Creates copied outputs with transformed image data.</td>
+              <td><code>_run_image_transform</code>, <code>image_transform_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Generate Missing Companion Maps</code> and <code>Generate All Companion Maps</code></td>
+              <td>Top menu, Context, FileSystem selection or current folder</td>
+              <td>You want generated normal, ambient, specular, and displacement companions for source textures.</td>
+              <td>Selection or current folder. Recursive variants are encoded by menu item. Toolchain defaults come from <code>texture_map_generator.gd</code>.</td>
+              <td>Writes companion textures such as <code>_normal</code>, <code>_ambient</code>, <code>_specular</code>, and <code>_displacement</code>.</td>
+              <td><code>_run_generate_texture_companion_maps</code>, <code>texture_map_generator.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Cleanup Orphan Companion Maps</code> and <code>Cleanup All Companion Maps</code></td>
+              <td>Top menu, Context, FileSystem selection or current folder</td>
+              <td>You need cleanup after source textures moved, were deleted, or were regenerated.</td>
+              <td>Selection or current folder. Recursive and non-recursive scope is encoded by menu item.</td>
+              <td>Deletes or reports companion files depending on action and implementation path; tool log records the result.</td>
+              <td><code>_run_cleanup_orphan_companion_maps</code>, <code>_run_cleanup_all_companion_maps</code>, <code>texture_map_generator.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Apply Terrain3D Image Import Standards (Selection / Current Folder Recursive)</code></td>
+              <td>Top menu, Context, FileSystem selection or current folder</td>
+              <td>You need Terrain3D source images normalized to the project import policy.</td>
+              <td>Selection or folder scope. Current implementation also manages a deferred reimport queue.</td>
+              <td>Mutates import metadata and triggers reimport/refresh behavior.</td>
+              <td><code>_run_terrain3d_image_import_standards</code>; helper path <code>terrain3d_image_import_helper.gd</code> is declared but missing</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="animation-actions">Animation Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Enable Imported Animation Persistence (Selected)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need FBX animation imports rewritten so generated animation resources persist across reimport.</td>
+              <td>Selection is files or folders.</td>
+              <td>Edits import files and triggers source reimport.</td>
+              <td><code>_run_enable_anim_import_persistence</code>, <code>fbx_anim_persist_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Enable Imported Animation Persistence (FBX Animations Folder)</code></td>
+              <td>Top menu</td>
+              <td>You want the same persistence pass applied to the hard-coded project animation folder.</td>
+              <td>Uses <code>res://assets/animations/fbx animations</code> as the target root.</td>
+              <td>Edits import files and triggers source reimport.</td>
+              <td><code>_on_tool_enable_anim_import_persistence_all</code>, <code>fbx_anim_persist_helper.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Rebuild ActionAdventure Animation Library</code></td>
+              <td>Top menu</td>
+              <td>You need the ActionAdventure animation library rebuilt from its dedicated script.</td>
+              <td>No extra UI. Script path is fixed in <code>BUILD_ACTION_ADVENTURE_LIBRARY_SCRIPT</code>.</td>
+              <td>Runs an editor script and reports success or failure.</td>
+              <td><code>_run_rebuild_action_adventure_animation_library</code>, <code>res://engine3d/tools/BuildActionAdventureLibrary.gd</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="maintenance-actions">Maintenance Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Force Thumbnail Refresh</code></td>
+              <td>Top menu</td>
+              <td>You need a broad thumbnail cache refresh in the editor.</td>
+              <td>No extra UI.</td>
+              <td>Triggers FileSystem/editor refresh behavior.</td>
+              <td><code>_run_force_thumbnail_refresh</code></td>
+            </tr>
+            <tr>
+              <td><code>Force Thumbnail Refresh (Selected)</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You only need selected paths refreshed.</td>
+              <td>Selection is files or folders.</td>
+              <td>Refreshes selected resources.</td>
+              <td><code>_run_force_thumbnail_refresh_selected</code></td>
+            </tr>
+            <tr>
+              <td><code>Force Scene Material Filtering (Current Scene, Dry Run)</code> and <code>(Current Scene)</code></td>
+              <td>Top menu</td>
+              <td>You need a scan or rewrite pass enforcing material filtering policy on the active scene.</td>
+              <td>Dry run is encoded by menu item. Runs a fixed editor script.</td>
+              <td>Either reports or rewrites current-scene material state.</td>
+              <td><code>_run_force_scene_material_filtering_current_scene</code>, <code>res://engine3d/tools/ForceSceneMaterialFiltering.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Cleanup Orphan .import Sidecars (Project)</code></td>
+              <td>Top menu</td>
+              <td>You want stale import metadata removed after asset churn.</td>
+              <td>No extra UI.</td>
+              <td>Project-wide cleanup with a tool-log summary.</td>
+              <td><code>_run_cleanup_orphan_import_sidecars_project</code>; helper path <code>import_sidecar_cleanup_helper.gd</code> is declared but missing</td>
+            </tr>
+            <tr>
+              <td><code>Relink Missing Assets (Active Scene/Selection, Dry Run)</code> and live run</td>
+              <td>Top menu</td>
+              <td>You need a guided repair pass for missing scene/resource references.</td>
+              <td>Dry run is encoded by menu item. Operates on active scene and selection scope.</td>
+              <td>Either reports or rewrites references; tool log summarizes results.</td>
+              <td><code>_run_relink_missing_assets_active_scene</code>; helper path <code>missing_asset_relink_helper.gd</code> is declared but missing</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="build-actions">Build Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Build Test Release (Regular)</code></td>
+              <td>Top menu</td>
+              <td>You need a test build using the regular project export path.</td>
+              <td>Uses <code>test_release_output_root</code>, <code>test_release_publish_to_gitea</code>, the Gitea URL/owner/repo/token settings, and optional <code>tool_godot_exe_override</code>.</td>
+              <td>Builds a release artifact and may publish it if enabled.</td>
+              <td><code>_run_test_release_regular</code>, <code>res://engine3d/tools/BuildTestReleaseRegular.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Build Test Release (Current Scene)</code></td>
+              <td>Top menu</td>
+              <td>You need a targeted test build pinned to the scene currently open in the editor.</td>
+              <td>Uses the same release settings group as the regular build flow.</td>
+              <td>Builds an artifact for current-scene validation and may publish it.</td>
+              <td><code>_run_test_release_current_scene</code>, <code>res://engine3d/tools/BuildTestReleaseCurrentScene.gd</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="optimization-actions">Optimization Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Optimize for Editing</code></td>
+              <td>Top menu</td>
+              <td>You need the map optimization pipeline configured for authoring-time output.</td>
+              <td>Uses the Map Optimization export settings group, including Blender path, staging/report directories, and UV template options.</td>
+              <td>Runs the optimization pipeline script with editing mode.</td>
+              <td><code>_run_map_optimization("editing")</code>, <code>res://engine3d/tools/MapOptimizationPipeline.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Optimize for Runtime Efficiency</code></td>
+              <td>Top menu</td>
+              <td>You need the same pipeline configured for runtime-focused output.</td>
+              <td>Uses the same Map Optimization settings group.</td>
+              <td>Runs the optimization pipeline script with runtime mode.</td>
+              <td><code>_run_map_optimization("runtime")</code>, <code>res://engine3d/tools/MapOptimizationPipeline.gd</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="asset-actions">Asset Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Move Selected To Folder...</code></td>
+              <td>Top menu, Context, FileSystem selection</td>
+              <td>You need a tracked in-editor move instead of dragging assets around manually.</td>
+              <td>Selection is files or folders. Uses a folder picker and remembers the last destination in metadata.</td>
+              <td>Moves selected assets and refreshes the FileSystem view.</td>
+              <td><code>_build_move_dialog</code>, <code>_run_move_selected_to_folder</code></td>
+            </tr>
+            <tr>
+              <td><code>Bake Selected Terrain Blend Materials</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You want only selected terrain blend materials baked out.</td>
+              <td>Uses <code>terrain_blend_bake_output_root</code>, <code>terrain_blend_bake_texture_size</code>, and <code>terrain_blend_bake_output_scale</code>.</td>
+              <td>Writes baked material textures and logs a summary.</td>
+              <td><code>_run_terrain_blend_bake(true)</code>, <code>res://engine3d/tools/TerrainBlendMaterialBaker.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Bake All Terrain Blend Materials In Scene</code></td>
+              <td>Top menu</td>
+              <td>You need a full-scene terrain blend bake pass.</td>
+              <td>Uses the same terrain blend bake settings group.</td>
+              <td>Writes baked material textures for the current scene.</td>
+              <td><code>_run_terrain_blend_bake(false)</code>, <code>res://engine3d/tools/TerrainBlendMaterialBaker.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Bake Selected Static PBR Meshes</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You want selected static PBR scene meshes baked into texture outputs.</td>
+              <td>Preview dialog controls include commit mode, unwrap mode, width, height, output scale, unwrap padding, edge dilation, emission export, and output root. Defaults come from the Selected Mesh Texture Bake settings group.</td>
+              <td>Produces preview images first, then writes baked outputs on confirm.</td>
+              <td><code>_run_selected_static_pbr_mesh_bake</code>, selected-mesh preview dialog, <code>res://engine3d/tools/SelectedMeshTextureBaker.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Bake Selected FileSystem Mesh Assets</code></td>
+              <td>Top menu, FileSystem selection</td>
+              <td>You want the same bake flow applied from selected mesh assets instead of live scene nodes.</td>
+              <td>Uses the same preview dialog and settings group as selected scene mesh bakes.</td>
+              <td>Produces previews, then writes baked outputs on confirm.</td>
+              <td><code>_run_selected_filesystem_mesh_asset_bake</code>, <code>res://engine3d/tools/SelectedMeshTextureBaker.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Bake Selected Group to Single Mesh</code></td>
+              <td>Top menu, scene selection</td>
+              <td>You need a selected group collapsed into a baked composite mesh.</td>
+              <td>Preview dialog controls include preview atlas size, final atlas size, padding, margin, packing algorithm, collapse shared materials, preserve groups, emission export, trimesh collision, instantiate baked prefab, output root, and optional ArmorPaint launch.</td>
+              <td>Builds previews, can launch ArmorPaint, and can instantiate the baked prefab beside the source root on confirm.</td>
+              <td><code>_run_selected_kitbash_composite_bake</code>, <code>res://engine3d/tools/KitbashCompositeBaker.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Bake Environment Control Map (Selected Root / Current Scene)</code></td>
+              <td>Top menu, scene selection optional</td>
+              <td>You need an RGBA control map baked either from a selected root or the whole scene.</td>
+              <td>Uses <code>environment_control_bake_output_root</code> and <code>environment_control_bake_resolution</code>.</td>
+              <td>Writes control maps and logs a summary.</td>
+              <td><code>_run_environment_control_map_bake</code>, <code>res://engine3d/tools/EnvironmentControlMapBaker.gd</code></td>
+            </tr>
+            <tr>
+              <td><code>Convert Poser CR2 to glTF...</code></td>
+              <td>Top menu</td>
+              <td>You need a guided import flow for Poser content.</td>
+              <td>Dialog fields cover CR2 path, OBJ path, output folder, runtime root, plus Blender executable and converter script defaults from the Poser CR2 settings group.</td>
+              <td>Runs the external conversion workflow and reports status in the dialog.</td>
+              <td><code>_build_poser_dialog</code>, <code>_on_poser_dialog_confirmed</code>, <code>poser_cr2_to_gltf.py</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="git-actions">Git Actions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Touchpoint</th>
+              <th>Use it when</th>
+              <th>Inputs and parameters</th>
+              <th>Outputs and side effects</th>
+              <th>Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Full Pull to Main</code></td>
+              <td>Top menu</td>
+              <td>You need an in-editor pull workflow against the configured upstream main branch.</td>
+              <td>Uses <code>git_remote_url</code>, <code>git_main_branch</code>, <code>git_in_editor_commit_message</code>, <code>git_remote_name</code>, and optional <code>tool_godot_exe_override</code>.</td>
+              <td>Runs the git pull script and writes a tool-log success or failure report.</td>
+              <td><code>_run_git_pull_main</code>, <code>res://engine3d/tools/GitPullMain.gd</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="filesystem-context-actions">FileSystem Context Actions</h2>
+        <p>The Tool Suite also installs a FileSystem context-menu plugin. It does not expose every top-menu action. The current coverage is:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Context submenu</th>
+              <th>Actions exposed</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Densetsu &gt; Geometry</code></td>
+              <td>Pack to Static Mesh, extract mesh/material/combined variants, pivot reassignment, mesh-to-OBJ, subdivide mesh, scale mesh, flip model normals</td>
+              <td>No scene-selection-only geometry actions are exposed here.</td>
+            </tr>
+            <tr>
+              <td><code>Densetsu &gt; Textures</code></td>
+              <td>Resize, flip/rotate, generate companion maps, cleanup companion maps, apply Terrain3D import standards</td>
+              <td>Context cleanup/generation calls default to recursive folder handling where noted in labels.</td>
+            </tr>
+            <tr>
+              <td><code>Densetsu &gt; Animation</code></td>
+              <td>Enable Imported Animation Persistence</td>
+              <td>Targets FileSystem-selected files/folders only.</td>
+            </tr>
+            <tr>
+              <td><code>Densetsu &gt; Assets</code></td>
+              <td>Replace Scene TRES/RES Refs with Selected OBJ, Move Selected To Folder...</td>
+              <td>Used for asset-path workflows rather than scene-only bakes.</td>
+            </tr>
+            <tr>
+              <td><code>Densetsu &gt; Maintenance</code></td>
+              <td>Force Thumbnail Refresh (Selected)</td>
+              <td>The broader maintenance actions remain top-menu only.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="high-risk-actions">High-Risk Actions To Review Before Running</h2>
+        <ul>
+          <li><code>Scale Selected Mesh Files ... (Overwrite)</code> rewrites selected resources in place.</li>
+          <li><code>Replace TRES_RES Mesh Refs With OBJ (Project-Wide)</code> can rewrite large swaths of the project; start with dry run.</li>
+          <li><code>Cleanup Orphan .import Sidecars (Project)</code> and companion cleanup actions remove files; confirm scope first.</li>
+          <li><code>Relink Missing Assets</code> and build/git actions can alter repo state or produce publishable outputs.</li>
+          <li><code>Move Selected To Folder...</code> changes resource paths; check downstream references after large moves.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="tool_suite_overview.html">Densetsu Tool Suite Overview</a></li>
+          <li><a href="tool_suite_implementation_reference.html">Densetsu Tool Suite Implementation Reference</a></li>
+          <li><a href="texture_maps_overview.html">Densetsu Texture Maps</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+
+      <details class="meta-toggle"><summary>Show page info</summary>
+        <div class='meta-grid'>
+          <div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>tool_suite_action_catalog</span></div>
+          <div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Densetsu Tool Suite Action Catalog</span></div>
+          <div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>active</span></div>
+          <div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div>
+          <div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Tooling Reference</span></div>
+          <div class='meta-item'><span class='meta-key'>audience</span><span class='meta-value'>Developers, level designers, technical artists</span></div>
+          <div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>addons/densetsu_tool_suite/plugin.gd and linked helper scripts</span></div>
+          <div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2026-06-09</span></div>
+          <div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>False</span></div>
+        </div>
+      </details>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
