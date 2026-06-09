@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,36 +38,77 @@
       <p class="eyebrow">engine</p>
       <h1>Combat Overview</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>The combat runtime centers on combat targets, attack FX handling, and projectile spawning. Evidence includes a combat target dummy for testing, an attack FX driver, and a projectile subsystem with templates and behaviors.</p>
-<h2>Core runtime elements</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><code>AttackFXDriver3D</code> — links combat state to VFX or debug visibility.</li>
-  <li><code>CombatTargetDummy3D</code> — test target with damage visualization and simple attack handling.</li>
-  <li><code>ActorProjectileSpawner3D</code> — spawns subweapons and projectiles.</li>
-  <li><code>DensetsuProjectile3D</code> — projectile runtime with hit + expire signals.</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Hit + damage flow</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li>Hit detection uses combat target areas and projectile hit callbacks.</li>
-  <li>Damage feedback is represented via target dummy visuals and type multipliers.</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Data dependencies</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>data/stats</code> — stats data.</li>
-  <li><code>data/status_effects</code> — status effect definitions.</li>
-  <li><code>data/projectiles</code> and <code>data3d/projectiles</code> — projectile templates.</li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Combat runtime scripts and projectile systems are present.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
 <ul>
-  <li><code>engine3d/combat/AttackFXDriver3D.gd</code></li>
-  <li><code>engine3d/combat/CombatTargetDummy3D.gd</code></li>
-  <li><code>engine3d/combat/projectiles/ActorProjectileSpawner3D.gd</code></li>
-  <li><code>engine3d/combat/projectiles/DensetsuProjectile3D.gd</code></li>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">from the start.  
+
+1: Overview 
+Game Identity 
+Title: Densetsu​
+
+---
+
+Densetsu combines action-driven exploration with philosophical narrative design. Every 
+mechanic reinforces reflection, balance, and natural consequence rather than domination. 
+Combat, movement, progression, even the world and its inhabitants reflect the player’s 
+actions in the universe..
+
+---
+
+2: World Overview 
+Historical Timeline 
+Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -79,7 +120,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
