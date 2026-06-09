@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,35 +38,80 @@
       <p class="eyebrow">engine</p>
       <h1>Data Persistence</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>Data persistence currently centers on Godot resources and structured data assets. The engine defines custom Resource classes and stores runtime data in <code>data/</code> and <code>data3d/</code> directories.</p>
-<h2>Resource schema</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><code>engine/data/resources/AIProfileData.gd</code></li>
-  <li><code>engine/data/resources/BiomeData.gd</code></li>
-  <li><code>engine/data/resources/CollisionData.gd</code></li>
-  <li><code>engine/data/resources/FactionData.gd</code></li>
-  <li><code>engine/data/resources/ItemData.gd</code></li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Runtime data assets</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li><code>data3d/camera/CAMERA_Player_Default.tres</code></li>
-  <li><code>data3d/items/INVENTORY_Player_Default.tres</code></li>
-  <li><code>data3d/items/SUBWEAPON_Player_Default.tres</code></li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Resource schemas and sample assets exist in the evidence set.</p>
-<h2>Open questions</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li>Long-term persistence (save slots, serialization strategy) is not documented here; see Save/Load.</li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
 <ul>
-  <li><code>engine/data/resources/*.gd</code></li>
-  <li><code>engine3d/data/resources/*.gd</code></li>
-  <li><code>data3d/</code> resources</li>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">Character growth in Densetsu reflects internal understanding and mastery, not 
+instantaneous power gain. Experience is earned naturally through action, reflection, and 
+persistence, aligning with the game’s themes of balance and temporal consequence. 
+Experience & Leveling 
+Players earn Experience Points (XP) through actions governed by skills and core stats.
+
+---
+
+5.​ Observer’s Log – Observation-based puzzle using insight timing. 
+6.​ Unstable Geometry – Physically degrading spaces with urgency. 
+Persistence of Unresolved Anomalies 
+Some loops resist closure. These persist subconsciously, influencing world behavior and 
+dialogue until the player gains insight or new tools.​
+
+---
+
+glow faintly. 
+ 
+10.4 Persistence of Unresolved Anomalies 
+Some anomalies resist resolution. They become latent — stored within the Infinitree’s 
+collective subconscious and the player’s narrative memory.​</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -78,7 +123,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
