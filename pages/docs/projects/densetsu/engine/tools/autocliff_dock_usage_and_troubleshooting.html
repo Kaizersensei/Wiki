@@ -3,35 +3,115 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Autocliff Dock Usage &amp; Troubleshooting</title>
-  <meta property="og:title" content="Autocliff Dock Usage & Troubleshooting">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <title>Autocliff Dock Usage and Troubleshooting</title>
+  <meta property="og:title" content="Autocliff Dock Usage and Troubleshooting">
+  <meta property="og:description" content="Workflow and troubleshooting guide for the Densetsu Autocliff dock.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/autocliff_dock_usage_and_troubleshooting.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Autocliff Dock Usage & Troubleshooting">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:title" content="Autocliff Dock Usage and Troubleshooting">
+  <meta property="twitter:description" content="Workflow and troubleshooting guide for the Densetsu Autocliff dock.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-  <header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
-  <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Autocliff Dock Usage &amp; Troubleshooting</h1><article class="markdown">
-    <div class="callout" id="content-status"><strong>Content status:</strong> Operational workflow documented; final screenshot-driven walkthrough is pending UI/foliage overlap resolution.</div>
-    <h2 id="at-a-glance">At a glance</h2>
-    <ul><li>Autocliff dock drives slope-based mesh placement on Terrain3D and generic mesh targets.</li><li>Authoring supports cliffs, foliage, buildings, and other placeables with parameter tuning.</li><li>Output can be MeshInstance3D for editable instances or MultiMesh for dense population.</li></ul>
-    <h2 id="how-it-works">How it works</h2>
-    <ul><li>Enable plugin, open dock, and select target surface (Terrain3D or mesh-bearing Node3D).</li><li>Add placeable meshes and configure slope, density, offset, and placement controls.</li><li>Generate output using the selected mode (individual instances or MultiMesh).</li><li>For mesh targets, sampling uses triangle ray tests and supports descendant mesh nodes under selected roots.</li></ul>
-    <h2 id="interfaces">Interfaces</h2>
-    <ul><li>Dock + project plugin integration under <code>res://addons/densetsu_autocliff</code>.</li><li>Plugin configuration via <code>res://addons/densetsu_autocliff/plugin.cfg</code>.</li><li>Local reference: <code>res://addons/densetsu_autocliff/README.md</code>.</li></ul>
-    <h2 id="operational-concerns">Operational concerns</h2>
-    <ul><li>If instances appear too high/low, validate placeable mesh origins/embedded offsets first.</li><li>Use MultiMesh for dense output to reduce per-instance overhead.</li><li>Mesh-target sampling bypasses collision requirements and is useful for imported/temporary geometry.</li></ul>
-    <h2 id="related-docs">Related docs</h2>
-    <ul><li><a href="../index.html">Engine index</a></li><li><a href="autocliff_terrain3d_overview.html">Autocliff Overview</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li></ul>
-    <details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Pending: add screenshot-driven examples after Autocliff UI and foliage-system overlap are finalized.</p></div></details>
-  </article></section></main>
+  <header class="site-header">
+    <div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div>
+    <nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Autocliff Dock Usage and Troubleshooting</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Workflow guide</td><th>Audience</th><td>Environment artists, level designers</td></tr>
+              <tr><th>Implementation status</th><td>Verified against current dock source</td><th>Last verified</th><td>2026-06-09</td></tr>
+              <tr><th>Source scripts</th><td><code>res://addons/densetsu_autocliff/autocliff_dock.gd</code></td><th>User touchpoint</th><td>Right-side Autocliff dock</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="workflow">Recommended Workflow</h2>
+        <ol>
+          <li>Select the target Terrain3D or mesh-bearing Node3D, then use the dock to copy that selection into the target path.</li>
+          <li>Set the output name so the generated content lands under a predictable root.</li>
+          <li>Add placeable meshes or packed scenes into the mesh pool and confirm the size-group preview looks reasonable.</li>
+          <li>Start with a small sample area and conservative density to validate orientation, bury depth, and overlap rules.</li>
+          <li>Only switch to MultiMesh output after the placement pattern itself looks correct.</li>
+        </ol>
+
+        <h2 id="dock-sections">Dock Sections</h2>
+        <table>
+          <thead><tr><th>Section</th><th>Controls</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Target and output</td><td>Target path, Use Selected, output name</td><td>Defines sampling source and where generated content is written.</td></tr>
+            <tr><td>Presets</td><td>Preset name, preset list, Save, Load, Refresh, Reset</td><td>Lets teams reuse tuned placement recipes.</td></tr>
+            <tr><td>Mesh pool</td><td>Add files, add selected node mesh, remove selected entries, clear pool</td><td>Defines what can be placed and how large/clearance-sensitive entries are.</td></tr>
+            <tr><td>Base placement parameters</td><td>Area size, sample spacing, ray height, slope min/max, height min/max, density, bury min/max, scale min/max, yaw jitter, collision mask</td><td>Primary candidate filter and transform generation controls.</td></tr>
+            <tr><td>Clearance and overlap</td><td>Clearance radius scale, clearance extra, avoid collider overlap, avoid static AABB overlap, avoid cluster overlap, clearance check areas</td><td>Prevents implausible or colliding placements.</td></tr>
+            <tr><td>Material filtering</td><td>Enable filter, material ID, filter mode</td><td>Restricts placement to chosen Terrain3D material IDs or blend cases.</td></tr>
+            <tr><td>Group tuning</td><td>Enable group tuning plus global and per-group density, scale, bury, yaw, clearance, cluster, slope windows</td><td>Lets large, medium, and small assets behave differently in one pass.</td></tr>
+            <tr><td>Actions</td><td>Generate, Clear, Use MultiMesh toggle</td><td>Runs placement, removes generated content, or converts output representation.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="parameter-notes">Parameter Notes</h2>
+        <table>
+          <thead><tr><th>Parameter family</th><th>What to watch</th><th>Common failure mode</th></tr></thead>
+          <tbody>
+            <tr><td>Slope window</td><td>Keep <code>slope_min</code> and <code>slope_max</code> wide enough for the target surface type.</td><td>No placements because all samples fail slope tests.</td></tr>
+            <tr><td>Height window</td><td>Use when a terrain should only populate above or below a given altitude band.</td><td>Unexpected empty areas if target elevation units are misunderstood.</td></tr>
+            <tr><td>Bury and scale</td><td>Validate with just a few placements first.</td><td>Assets float or sink because source pivots are not centered at the desired contact point.</td></tr>
+            <tr><td>Collision mask</td><td>Only relevant when blocker overlap checks are enabled.</td><td>Placements pass through blockers if the wrong layers are being tested.</td></tr>
+            <tr><td>Group tuning</td><td>Use after pool bounds look trustworthy.</td><td>Large assets disappear or cluster too aggressively when size grouping does not match the art set.</td></tr>
+            <tr><td>Material filter</td><td>Use only when the target is Terrain3D or material IDs are known.</td><td>No placements because the requested ID or filter mode never matches the sampled terrain data.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="output-modes">Output Modes</h2>
+        <table>
+          <thead><tr><th>Mode</th><th>Good for</th><th>Tradeoff</th></tr></thead>
+          <tbody>
+            <tr><td>Per-instance output</td><td>Manual cleanup, per-item editing, validating transforms</td><td>More scene nodes and more editor overhead on dense passes.</td></tr>
+            <tr><td>MultiMesh output</td><td>Dense repeated placement once the pattern is approved</td><td>Harder to hand-edit individual placements.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="troubleshooting">Troubleshooting</h2>
+        <table>
+          <thead><tr><th>Symptom</th><th>Likely cause</th><th>What to verify</th></tr></thead>
+          <tbody>
+            <tr><td>Nothing gets placed</td><td>Target path is wrong, mesh pool is empty, or filters reject every sample</td><td>Confirm target exists, pool has entries, and slope/height/material windows are not too restrictive.</td></tr>
+            <tr><td>Placements hover or sink badly</td><td>Source mesh origin is wrong or bury values are too aggressive</td><td>Inspect the original mesh pivot before changing placement math.</td></tr>
+            <tr><td>Dense clusters look unnatural</td><td>Cluster overlap and clearance settings are too loose</td><td>Raise clearance radius or cluster multipliers, then retest on a small area.</td></tr>
+            <tr><td>Terrain-only filter seems broken on mesh targets</td><td>Material filtering is built around Terrain3D material IDs</td><td>Disable material filter when sampling non-Terrain3D geometry.</td></tr>
+            <tr><td>Generated output is hard to edit</td><td>MultiMesh mode was enabled too early</td><td>Switch back to per-instance output until the placement recipe is stable.</td></tr>
+            <tr><td>Preset values do not appear to stick</td><td>Preset was not saved or the state file was not updated yet</td><td>Use explicit Save preset, then refresh the preset list and confirm persistence.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="media-needs">Recommended Media For This Page</h2>
+        <ul>
+          <li>Dock screenshot with every major section labeled.</li>
+          <li>One before/after capture showing per-instance output and MultiMesh output from the same preset.</li>
+          <li>One preset example for cliffs and one for small rock clutter.</li>
+        </ul>
+
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="autocliff_terrain3d_overview.html">Autocliff Overview</a></li>
+          <li><a href="autocliff_implementation_reference.html">Autocliff Implementation Reference</a></li>
+          <li><a href="debug_tools_overview.html">Internal Tools Overview</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
