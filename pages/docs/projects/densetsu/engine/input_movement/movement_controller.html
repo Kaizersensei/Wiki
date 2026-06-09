@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,30 +38,79 @@
       <p class="eyebrow">engine</p>
       <h1>Movement Controller</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>The movement controller resolves player input into actionable movement commands. It consumes input sources and movement profiles to drive locomotion state.</p>
-<h2>Key components</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><code>PlayerCommandResolver3D</code> — builds command frames from input sources.</li>
-  <li><code>PlayerInputSource</code> — player-controlled input source.</li>
-  <li><code>PlayerCommandFrame3D</code> — command frame data.</li>
-  <li><code>MOVEMENT_Player_Default.tres</code> — default movement profile data.</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Data assets</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li><code>data3d/movement/</code> — movement profiles.</li>
-  <li><code>data/movement/</code> — supporting movement data.</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Movement controller scripts and data profiles are present.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>engine3d/controllers/PlayerCommandResolver3D.gd</code></li>
-  <li><code>engine3d/controllers/PlayerCommandFrame3D.gd</code></li>
-  <li><code>engine3d/controllers/PlayerInputSource.gd</code></li>
-  <li><code>data3d/movement/MOVEMENT_Player_Default.tres</code></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">Densetsu combines action-driven exploration with philosophical narrative design. Every 
+mechanic reinforces reflection, balance, and natural consequence rather than domination. 
+Combat, movement, progression, even the world and its inhabitants reflect the player’s 
+actions in the universe..
+
+---
+
+Combat is not the goal but the means through which the world communicates its instability. 
+Exploration Philosophy 
+Movement and curiosity drive discovery. Levels are interconnected but contextually 
+meaningful.​
+ Environmental puzzles encourage using gadgets, elemental interaction, and observation
+
+---
+
+actors to gadgets—is self-contained yet interoperable. All systems are written in native 
+GDScript or C#, following principles of clarity, reusability, and data independence. 
+Every core feature (movement, combat, FSM, gadgets, etc.) will have tailor-made code, 
+generated or expanded upon from design blueprints. Both AI agents and human 
+programmers can safely modify or extend modules based on project needs.</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -73,7 +122,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
