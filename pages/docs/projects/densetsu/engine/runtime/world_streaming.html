@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,28 +38,77 @@
       <p class="eyebrow">engine</p>
       <h1>World Streaming</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>World streaming is not explicitly documented in the current evidence set. Existing data points indicate scene graph tooling and world scene assets, but no streaming-specific controller was captured.</p>
-<h2>Current evidence</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><code>engine/scene/SceneManager.gd</code> — scene registry and overrides.</li>
-  <li>World scenes: <code>Maps/Hirogawa.scn</code>, <code>Maps/Hirogawa_rough.scn</code>, <code>Maps/Test Room.scn</code>.</li>
-  <li><code>engine3d/world/DensetsuStaticMesh3D.gd</code> — world mesh utility.</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Unknown.</strong> Streaming-specific logic not confirmed.</p>
-<h2>Open questions</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li>Is streaming driven by SceneManager or a separate world streamer?</li>
-  <li>Are world chunks pre-authored or generated at runtime?</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>engine/scene/SceneManager.gd</code></li>
-  <li><code>engine3d/world/DensetsuStaticMesh3D.gd</code></li>
-  <li><code>Maps/*.scn</code></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">Tagline: “Swords, Sorcery and Shuriken” 
+Narrative Premise 
+A thousand years after the Great Eclipse divided the world into the eras Before Eclipse (BE) 
+and After Eclipse (AE), the remnants of civilization persist among anomalies — fragments of 
+time where history loops and grief refuses to fade. The player embodies Michio, a disciple of
+
+---
+
+Densetsu combines action-driven exploration with philosophical narrative design. Every 
+mechanic reinforces reflection, balance, and natural consequence rather than domination. 
+Combat, movement, progression, even the world and its inhabitants reflect the player’s 
+actions in the universe..
+
+---
+
+2: World Overview 
+Historical Timeline 
+Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -71,7 +120,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
