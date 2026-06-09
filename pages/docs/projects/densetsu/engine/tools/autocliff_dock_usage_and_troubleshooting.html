@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autocliff Dock Usage &amp; Troubleshooting</title>
+  <meta property="og:title" content="Autocliff Dock Usage & Troubleshooting">
+  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/tools/autocliff_dock_usage_and_troubleshooting.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Autocliff Dock Usage & Troubleshooting">
+  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../../../../../retraissance/projects/index.html">Projects</a><a href="../../../../../retraissance/densetsu/index.html">Densetsu</a><a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a><a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a></nav></header>
+  <main class="content"><section class="panel"><p class="eyebrow">engine</p><h1>Autocliff Dock Usage &amp; Troubleshooting</h1><article class="markdown">
+    <div class="callout" id="content-status"><strong>Content status:</strong> Operational workflow documented; final screenshot-driven walkthrough is pending UI/foliage overlap resolution.</div>
+    <h2 id="at-a-glance">At a glance</h2>
+    <ul><li>Autocliff dock drives slope-based mesh placement on Terrain3D and generic mesh targets.</li><li>Authoring supports cliffs, foliage, buildings, and other placeables with parameter tuning.</li><li>Output can be MeshInstance3D for editable instances or MultiMesh for dense population.</li></ul>
+    <h2 id="how-it-works">How it works</h2>
+    <ul><li>Enable plugin, open dock, and select target surface (Terrain3D or mesh-bearing Node3D).</li><li>Add placeable meshes and configure slope, density, offset, and placement controls.</li><li>Generate output using the selected mode (individual instances or MultiMesh).</li><li>For mesh targets, sampling uses triangle ray tests and supports descendant mesh nodes under selected roots.</li></ul>
+    <h2 id="interfaces">Interfaces</h2>
+    <ul><li>Dock + project plugin integration under <code>res://addons/densetsu_autocliff</code>.</li><li>Plugin configuration via <code>res://addons/densetsu_autocliff/plugin.cfg</code>.</li><li>Local reference: <code>res://addons/densetsu_autocliff/README.md</code>.</li></ul>
+    <h2 id="operational-concerns">Operational concerns</h2>
+    <ul><li>If instances appear too high/low, validate placeable mesh origins/embedded offsets first.</li><li>Use MultiMesh for dense output to reduce per-instance overhead.</li><li>Mesh-target sampling bypasses collision requirements and is useful for imported/temporary geometry.</li></ul>
+    <h2 id="related-docs">Related docs</h2>
+    <ul><li><a href="../index.html">Engine index</a></li><li><a href="autocliff_terrain3d_overview.html">Autocliff Overview</a></li><li><a href="debug_tools_overview.html">Debug Tools Overview</a></li></ul>
+    <details><summary>Unresolved conflicts / open questions</summary><div class="callout"><p>Pending: add screenshot-driven examples after Autocliff UI and foliage-system overlap are finalized.</p></div></details>
+  </article></section></main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
