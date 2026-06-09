@@ -29,7 +29,7 @@
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
       <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
-      <a href="../index.html">Engine</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
 
@@ -38,31 +38,78 @@
       <p class="eyebrow">engine</p>
       <h1>Input Overview</h1>
       <article class="markdown">
-<h2>Overview</h2>
-<p>The input system abstracts player commands behind an input source interface and command frame model. This keeps gameplay logic independent from raw device input.</p>
-<h2>Core interfaces</h2>
+        <div class="callout" id="content-status">
+          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        </div>
+
+        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
+        <h2 id="at-a-glance">At a glance</h2>
 <ul>
-  <li><strong>IInputSource</strong> — provides movement vectors and action flags.</li>
-  <li><strong>PlayerCommandFrame3D</strong> — records resolved command states per frame.</li>
-  <li><strong>PlayerCommandResolver3D</strong> — converts input source signals into command frames.</li>
+<li>(TODO) One-sentence system summary.</li>
+<li>(TODO) Primary owner/component boundary.</li>
+<li>(TODO) Current maturity/status and notable risks.</li>
 </ul>
-<h2>Input actions</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
+        <h2 id="how-it-works">How it works</h2>
 <ul>
-  <li>Move vector and side-scroller vector.</li>
-  <li>Jump pressed/just-pressed/just-released.</li>
-  <li>Run, modifier, dash, crouch toggles (see <code>PlayerInputSource</code> and <code>NullInputSource</code>).</li>
+<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
+<li>(TODO) Key deterministic rules/guardrails.</li>
+<li>(TODO) Failure modes and fallback behavior.</li>
 </ul>
-<h2>Status</h2>
-<p><strong>Implemented.</strong> Input source interface and resolver scripts exist.</p>
-<h2>Sources</h2>
+
+        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
+        <h2 id="interfaces">Interfaces</h2>
 <ul>
-  <li><code>engine3d/controllers/IInputSource.gd</code></li>
-  <li><code>engine3d/controllers/PlayerCommandFrame3D.gd</code></li>
-  <li><code>engine3d/controllers/PlayerCommandResolver3D.gd</code></li>
-  <li><code>engine3d/controllers/PlayerInputSource.gd</code></li>
-  <li><code>engine3d/controllers/NullInputSource.gd</code></li>
+<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
+<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
+<li>(TODO) Tooling/debug surfaces tied to this component.</li>
 </ul>
-</article>
+
+        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
+        <h2 id="operational-concerns">Operational concerns</h2>
+<ul>
+<li>(TODO) Performance/scalability constraints.</li>
+<li>(TODO) Testing and verification expectations.</li>
+<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
+</ul>
+
+        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
+        <h2 id="related-docs">Related docs</h2>
+<ul>
+<li><a href="../index.html">Engine index</a></li>
+<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
+</ul>
+
+        <details>
+          <summary>Raw source excerpts</summary>
+          <pre class="source-excerpt">Key principles: 
+●​ Certainty over probability: It assumes no free will or randomness, aiming for a 
+single, predictable outcome based on inputs, unlike probabilistic models that predict 
+a range of possible outcomes. 
+●​ Scientific and risk-based: It merges the scientific method with business principles
+
+---
+
+from the start.  
+
+1: Overview 
+Game Identity 
+Title: Densetsu​
+
+---
+
+2: World Overview 
+Historical Timeline 
+Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the</pre>
+        </details>
+
+        <details>
+          <summary>Unresolved conflicts / open questions</summary>
+          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
+        </details>
+
+      </article>
     
     <details class="meta-toggle"><summary>Show page info</summary>
 <div class='meta-grid'>
@@ -74,7 +121,5 @@
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
 
 
