@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Data Persistence</title>
   <meta property="og:title" content="Data Persistence">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Current Densetsu runtime persistence surfaces: manifest and catalog plumbing, diagnostics logging, and typed snapshot state.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/data_persistence.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Data Persistence">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Current Densetsu runtime persistence surfaces: manifest and catalog plumbing, diagnostics logging, and typed snapshot state.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,70 +30,77 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Data Persistence</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
-              <tr><th>Page type</th><td>Topic overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Partial implementation with repository drift</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>RuntimeManifestService.gd</code>, <code>DataCatalogService.gd</code>, <code>DiagnosticsService.gd</code>, runtime snapshot scripts, <code>engine/data/DataRegistry.gd</code>, <code>docs/production_rewrite_worklog.md</code>, and <code>docs/db-structure.md</code></td><th>User touchpoint</th><td>Boot-critical resource lookup, runtime diagnostics, and state-contract design</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The live runtime tree does not expose one unified save system yet. What exists today under the persistence umbrella is a smaller set of concerns: boot configuration through manifest and catalog services, directory-scan fallback for older data consumers, persistent diagnostics logging, and typed in-memory snapshot contracts for runtime state.</p>
+        <h2 id="current-persistence-surfaces">Current Persistence Surfaces</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current implementation</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Runtime manifest</td><td><code>RuntimeManifestService</code> and <code>RuntimeManifest</code> load and validate boot-critical resource paths.</td><td>Startup authority for scene, player, loading, and export-manifest references.</td></tr>
+            <tr><td>Data catalog</td><td><code>DataCatalogService</code> and <code>DataCatalog</code> provide explicit category/id-to-resource lookup and a small resource cache.</td><td>Runtime-facing path away from implicit filesystem discovery.</td></tr>
+            <tr><td>Legacy fallback</td><td><code>engine/data/DataRegistry.gd</code> still rescans category directories and prefers <code>DataCatalogService</code> only when a valid catalog is available.</td><td>Keeps older data consumers loadable during migration.</td></tr>
+            <tr><td>Diagnostics log</td><td><code>DiagnosticsService</code> writes newline-delimited JSON records to <code>user://runtime_diagnostics.log</code> in non-editor sessions.</td><td>Persistent boot and runtime failure trace.</td></tr>
+            <tr><td>Typed runtime snapshots</td><td><code>PlayerRuntimeSnapshot</code>, <code>PlayerUiPresentationSnapshot</code>, <code>WorldPresentationSnapshot</code>, and related child snapshots expose <code>to_dictionary()</code> and signature helpers.</td><td>Serializable in-memory state contracts for UI and service boundaries, not file-backed save slots.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="critical-repository-drift">Critical Repository Drift</h2>
+        <div class="callout">
+          <p><strong>Verified mismatch:</strong> the runtime services still default to <code>res://data/runtime/production_runtime_manifest.json</code> and <code>res://data/runtime/production_data_catalog.json</code>, but those files are not present in the current repository snapshot.</p>
+          <p><strong>Implication:</strong> manifest/catalog persistence is real in code and in the rewrite worklog, but the checked-in asset layer for that path is incomplete in this snapshot and should not be documented as fully present.</p>
+        </div>
+        <h2 id="current-vs-target">Current Versus Target</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Current verified state</th>
+              <th>Target direction from repo docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Boot configuration</td><td>Service code exists and expects explicit manifest/catalog resources.</td><td>Keep runtime startup deterministic and manifest-driven.</td></tr>
+            <tr><td>Gameplay save data</td><td>No dedicated save-slot or save-database runtime service is present under <code>engine3d/runtime</code>.</td><td><code>docs/db-structure.md</code> treats playthrough save data as a separate runtime save system, not part of the authoring DB.</td></tr>
+            <tr><td>Runtime state transport</td><td>Typed snapshot objects exist for player, objective, location, calendar, and world presentation state.</td><td>Use explicit contracts instead of broad mutable dictionaries or scene probing.</td></tr>
+            <tr><td>Failure trace persistence</td><td>Runtime diagnostics log is the only clearly file-backed user data surface verified in the live runtime code.</td><td>Make boot/runtime failure analysis routine rather than forensic.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="what-not-to-assume">What Not To Assume</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li>Do not treat loading-screen flow or scene reload helpers as save-system behavior.</li>
+          <li>Do not assume the worklog’s manifest/catalog asset files still exist in the current tree just because the service code references them.</li>
+          <li>Do not treat snapshot classes as proof of a completed save-file format; they are current state contracts, not a finished persistence pipeline.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
-        </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
           <li><a href="core_runtime_overview.html">Core Runtime Overview</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host & Content Slots</a></li>
           <li><a href="save_load.html">Save / Load</a></li>
+          <li><a href="world_streaming.html">World Streaming</a></li>
+          <li><a href="../data_authoring/database_overview.html">Authoring Database Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

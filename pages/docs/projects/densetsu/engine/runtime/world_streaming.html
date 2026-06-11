@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>World Streaming</title>
   <meta property="og:title" content="World Streaming">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Current Densetsu world-runtime truth: scene-bound world facades exist, but no standalone streaming service is present in the live runtime tree.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/world_streaming.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="World Streaming">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Current Densetsu world-runtime truth: scene-bound world facades exist, but no standalone streaming service is present in the live runtime tree.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,70 +30,86 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>World Streaming</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
-              <tr><th>Page type</th><td>Topic overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Facade-first world runtime slice</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>WorldFacadeService.gd</code>, <code>TerrainFacade3D.gd</code>, <code>WaterSurfaceFacade3D.gd</code>, <code>SkyWeatherFacade3D.gd</code>, <code>RuntimeCalendarService.gd</code>, <code>Terrain3DRuntimeCollisionBridge.gd</code>, <code>smoke_world_facades.gd</code>, <code>docs/production_rewrite_worklog.md</code>, and <code>docs/biome-driven maps.md</code></td><th>User touchpoint</th><td>Scene-bound world runtime ownership, facade boundaries, and streaming expectations</td></tr>
+              <tr><th>Risk level</th><td>Medium to high</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The live runtime tree does not currently expose a standalone chunk-streaming or region-streaming service. What it does expose is a project-owned world facade layer that resolves terrain, water, and sky/weather from the active scene so runtime systems can stop depending directly on plugin-specific node assumptions.</p>
+        <h2 id="current-world-runtime-surface">Current World Runtime Surface</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>WorldFacadeService</code></td><td>Autoload that refreshes against the active scene, builds facade snapshots, and publishes <code>facades_refreshed(scene_root)</code>.</td></tr>
+            <tr><td><code>TerrainFacade3D</code></td><td>Thin project-owned wrapper over Terrain3D discovery, height queries, region presence checks, and camera binding.</td></tr>
+            <tr><td><code>WaterSurfaceFacade3D</code></td><td>Controller-level wrapper over project water surface and flowmap controllers.</td></tr>
+            <tr><td><code>SkyWeatherFacade3D</code></td><td>Project-owned boundary for sky system, clock resolution, weather selection, and calendar/weather snapshots.</td></tr>
+            <tr><td><code>RuntimeCalendarService</code></td><td>Consumes world facade data and republishes normalized calendar and weather presentation state.</td></tr>
+            <tr><td><code>Terrain3DRuntimeCollisionBridge</code></td><td>Compatibility autoload that now prefers terrain facades for camera binding but still keeps the old direct fallback.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="validated-runtime-behavior">Validated Runtime Behavior</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>smoke_world_facades.tscn</code> validates that <code>WorldFacadeService</code> loads and resolves sky/weather, water, and empty-root terrain behavior.</li>
+          <li><code>WorldFacadeService</code> refreshes on tree changes instead of forcing every runtime consumer to re-scan the scene manually.</li>
+          <li><code>RuntimeCalendarService</code> treats world facade output as the normalized input for time and weather presentation.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
-        </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
+        <h2 id="what-this-is-not">What This Is Not</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Expectation</th>
+              <th>Current repository truth</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Dedicated world streaming service</td><td>No <code>WorldStreamingService</code> or equivalent runtime autoload is present.</td></tr>
+            <tr><td>Chunked runtime loader</td><td>No live runtime code in this tree manages chunk lifetime, region streaming, or streaming budgets as a first-class system.</td></tr>
+            <tr><td>Biome compiler at runtime</td><td><code>docs/biome-driven maps.md</code> keeps SQLite and compilation in the editor/tooling path; runtime is expected to consume compiled outputs later, not query SQLite directly.</td></tr>
+            <tr><td>Completed world facade migration</td><td>The worklog still labels terrain coverage backend-only, water coverage controller-level, and the collision bridge as a compatibility layer.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-vs-target">Current Versus Target</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Current verified state</th>
+              <th>Target direction from repo docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>World-system ownership</td><td>Project-owned facades now stand between runtime consumers and plugin/subsystem nodes.</td><td>Keep more gameplay/runtime code off direct plugin APIs.</td></tr>
+            <tr><td>Terrain and water control</td><td>Facade wrappers exist, but gameplay ownership is still partial and migration-limited.</td><td>Broaden project-owned boundaries until direct subsystem coupling is exceptional.</td></tr>
+            <tr><td>Streaming model</td><td>No standalone streamer is visible in the live runtime tree.</td><td><code>docs/biome-driven maps.md</code> points toward deterministic compiled chunk outputs and stable IDs for later runtime loading.</td></tr>
+          </tbody>
+        </table>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
           <li><a href="core_runtime_overview.html">Core Runtime Overview</a></li>
           <li><a href="data_persistence.html">Data Persistence</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host & Content Slots</a></li>
+          <li><a href="../rendering/sky_weather_system_overview.html">Sky Weather System Overview</a></li>
+          <li><a href="../data_authoring/generated_chunk_records.html">Generated Chunk Records</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

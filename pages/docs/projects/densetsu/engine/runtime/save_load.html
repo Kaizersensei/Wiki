@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Save / Load</title>
   <meta property="og:title" content="Save / Load">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Current Densetsu save/load status: design intent exists, but no dedicated runtime save service is present in the live tree.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/save_load.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Save / Load">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Current Densetsu save/load status: design intent exists, but no dedicated runtime save service is present in the live tree.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,70 +30,75 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Save / Load</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
-              <tr><th>Page type</th><td>Topic overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Page type</th><td>Status overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, technical designers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Planned system, not live runtime infrastructure</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>engine3d/runtime/</code>, runtime snapshot scripts, <code>docs/db-structure.md</code>, and <code>docs/biome-driven maps.md</code></td><th>User touchpoint</th><td>Expectations around playthrough persistence, restore flow, and state ownership</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The repo-local design notes clearly reserve a separate save-system layer for playthrough state, but that layer is not implemented as a dedicated runtime service in the live <code>engine3d/runtime</code> tree. The current runtime exposes state contracts and scene-loading flow, not a finished save-slot pipeline.</p>
+        <h2 id="what-exists-today">What Exists Today</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Verified state</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Runtime state contracts</td><td>Typed snapshot objects exist for player, combat presentation, inventory presentation, objective, location, calendar, and aggregated world presentation state.</td></tr>
+            <tr><td>Scene load flow</td><td><code>SceneFlowService</code> and <code>DensetsuLoadingScreen</code> handle scene transitions and reloads with a loading screen, not save restoration.</td></tr>
+            <tr><td>Diagnostics persistence</td><td><code>DiagnosticsService</code> writes <code>user://runtime_diagnostics.log</code> for non-editor sessions.</td></tr>
+            <tr><td>Save-oriented design notes</td><td><code>docs/db-structure.md</code> and <code>docs/biome-driven maps.md</code> describe separate runtime save data and stable generated IDs as future-facing requirements.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="what-is-missing">What Is Missing In The Live Runtime Tree</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Expected save/load concern</th>
+              <th>Current repository truth</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Save autoload or runtime service</td><td>No <code>SaveService</code>, save-slot manager, or equivalent runtime autoload is present.</td></tr>
+            <tr><td>Boot-time restore path</td><td><code>RuntimeBootstrap</code> validates manifest/catalog/services and starts scene flow; it does not restore playthrough state from disk.</td></tr>
+            <tr><td>File-backed gameplay state serializer</td><td>No repo-local save-file writer/reader is exposed in <code>engine3d/runtime</code>.</td></tr>
+            <tr><td>Save/load smoke coverage</td><td>No dedicated smoke scene for save-slot serialization or restore flow is present under <code>engine3d/tests/</code>.</td></tr>
+            <tr><td>Persistent world mutation layer</td><td>The runtime snapshot contracts are in-memory read models, not a durable world-state store.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="planned-direction-from-design-docs">Planned Direction From Design Docs</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>docs/db-structure.md</code> explicitly separates the authoring database from a playthrough save DB or save file.</li>
+          <li>The same design notes place runtime mutations under concepts such as <code>SaveState</code>, <code>RuntimeState</code>, and <code>WorldState</code>, not under the authoring DB.</li>
+          <li><code>docs/biome-driven maps.md</code> treats deterministic generated IDs as a prerequisite for later save/load reliability in generated worlds.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
-        </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
+        <h2 id="documentation-boundary">Documentation Boundary</h2>
+        <div class="callout">
+          <p><strong>Do not confuse</strong> scene loading with save loading. The current runtime has a documented loading-screen and scene-flow pipeline, but that is not a save restore system.</p>
+          <p><strong>Do not overstate</strong> snapshot contracts. They are useful state boundaries that could support a future save format, but the repo does not yet expose the durable save/load layer those notes imply.</p>
+        </div>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
-          <li><a href="core_runtime_overview.html">Core Runtime Overview</a></li>
           <li><a href="data_persistence.html">Data Persistence</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host & Content Slots</a></li>
+          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a></li>
+          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a></li>
+          <li><a href="../data_authoring/database_overview.html">Authoring Database Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
