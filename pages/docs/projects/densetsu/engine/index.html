@@ -48,97 +48,80 @@
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Engine Wiki</h1>
-      <article class="markdown">
-        <div class="callout" id="content-status">
-          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3-6 bullets max) and link to subpages for deep dives.
+                  <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Navigation hub</td><th>Audience</th><td>Developers, technical designers, tool maintainers</td></tr>
+              <tr><th>Implementation status</th><td>Engine wiki baseline under active restructuring</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td>Live source in <code>densetsu-dev</code>, documentation inventory, and the repo docs folder once available</td><th>User touchpoint</th><td>Main engine wiki landing page</td></tr>
+              <tr><th>Risk level</th><td>High until section source passes are complete</td><th>Inventory</th><td><a href="documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <h2 id="at-a-glance">At a glance</h2>
-<ul>
-<li>(TODO) One-sentence system summary.</li>
-<li>(TODO) Primary owner/component boundary.</li>
-<li>(TODO) Current maturity/status and notable risks.</li>
-</ul>
+        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
 
-        <h2 id="how-it-works">How it works</h2>
-<ul>
-<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
-<li>(TODO) Key deterministic rules/guardrails.</li>
-<li>(TODO) Failure modes and fallback behavior.</li>
-</ul>
+        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <ul>
+          <li>This page is now a tracked documentation stub for the engine documentation program rather than a generic placeholder.</li>
+          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
+          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
+          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+        </ul>
 
-        <h2 id="interfaces">Interfaces</h2>
-<ul>
-<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
-<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
-<li>(TODO) Tooling/debug surfaces tied to this component.</li>
-</ul>
+        <h2 id="key-sections">Key Sections</h2>
+        <ul>
+          <li><a href="actors/index.html">Actor System</a></li>
+          <li><a href="runtime/index.html">Core Runtime</a></li>
+          <li><a href="fsm/index.html">FSM System</a></li>
+          <li><a href="stats_combat/index.html">Stats & Combat</a></li>
+          <li><a href="input_movement/index.html">Input & Movement</a></li>
+          <li><a href="data_authoring/index.html">Data & Authoring</a></li>
+          <li><a href="tools/index.html">Tools Index</a></li>
+          <li><a href="rendering/index.html">Rendering & Performance</a></li>
+          <li><a href="editor/index.html">Editor</a></li>
+          <li><a href="integrations/index.html">Integrations</a></li>
+          <li><a href="networking/index.html">Networking & Multiplayer</a></li>
+          <li><a href="build-deploy/index.html">Build & Deployment</a></li>
+          <li><a href="testing-qa/index.html">Testing & QA</a></li>
+          <li><a href="telemetry/index.html">Telemetry & Observability</a></li>
+          <li><a href="modding/index.html">Modding & Plugins</a></li>
+        </ul>
+        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <ul>
+          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
+          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
+          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
+          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+        </ul>
 
-        <h2 id="operational-concerns">Operational concerns</h2>
-<ul>
-<li>(TODO) Performance/scalability constraints.</li>
-<li>(TODO) Testing and verification expectations.</li>
-<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
-</ul>
+        <h2 id="verification-boundary">Verification Boundary</h2>
+        <ul>
+          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
+          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
+          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+        </ul>
 
-        <h2 id="related-docs">Related docs</h2>
-<ul>
-<li><a href="index.html">Engine index</a></li>
-<li><a href="documentation_inventory.html">Documentation inventory</a></li>
-<li><a href="data_authoring/index.html">Data &amp; Authoring</a></li>
-<li><a href="data_authoring/database_overview.html">Authoring Database Overview</a></li>
-<li><a href="data_authoring/authoring_pipeline.html">Authoring Pipeline</a></li>
-<li><a href="data_authoring/actor_capabilities.html">Actor Capabilities</a></li>
-<li><a href="data_authoring/asset_registry.html">Asset Registry</a></li>
-<li><a href="data_authoring/placement_rules.html">Placement Rules</a></li>
-<li><a href="data_authoring/generated_chunk_records.html">Generated Chunk Records</a></li>
-<li><a href="data_authoring/world_state_overlays.html">World-State Overlays</a></li>
-<li><a href="tools/index.html">Tools index</a></li>
-<li><a href="tools/plugins_overview.html">Internal Plugins Overview</a></li>
-<li><a href="tools/debug_tools_overview.html">Debug Tools Overview</a></li>
-<li><a href="tools/tool_suite_overview.html">Densetsu Tool Suite</a></li>
-<li><a href="tools/autocliff_terrain3d_overview.html">Autocliff overview</a></li>
-<li><a href="tools/geometry_obj_export_overview.html">Geometry OBJ Export overview</a></li>
-</ul>
+        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <ul>
+          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
+          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
+          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+        </ul>
 
-        <details>
-          <summary>Raw source excerpts</summary>
-          <pre class="source-excerpt">Deterministic Design 
- 
-Deterministic design is an engineering approach that minimizes or eliminates unknowns in a 
-project by using a set of well-defined parameters to predict outcomes with certainty. Instead 
-of relying on probability or random chance, it uses a scientific and fact-based method to
-
----
-
-Title: Densetsu
-Genre: Metroidvania / Narrative Action Adventure
-Core Engine: Densetsu Engine (Godot-based FSM & Actor System)
-Primary Themes: Balance, Memory, Time, Renewal.
-Tagline: "Swords, Sorcery and Shuriken"
-
----
-
-systems described in the Game Design Document (GDD) are realized in practice. It bridges 
-creative intent and technical execution by detailing the structure, modular systems, and 
-development workflow that form the foundation of the Densetsu Engine. 
-Scope 
-This document serves as a blueprint for developers, designers, and technical artists under</pre>
-        </details>
-
-        <details>
-          <summary>Unresolved conflicts / open questions</summary>
-          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full names vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-        </details>
-
-      </article>
-    
-    <details class="meta-toggle"><summary>Show page info</summary>
-<div class='meta-grid'>
-<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>index</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Engine Wiki</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>stub</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>Index</span></div><div class='meta-item'><span class='meta-key'>aliases</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Densetsu Design Document.txt, Game Design Document.txt</span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2025-12-24</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>True</span></div>
-</div>
-</details>
-    </section>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="documentation_inventory.html">Documentation Inventory</a></li>
+          <li><a href="data_authoring/index.html">Data & Authoring</a></li>
+          <li><a href="tools/index.html">Tools Index</a></li>
+          <li><a href="runtime/index.html">Core Runtime</a></li>
+          <li><a href="actors/index.html">Actor System</a></li>
+          <li><a href="rendering/index.html">Rendering & Performance</a></li>
+          <li><a href="stats_combat/index.html">Stats & Combat</a></li>
+          <li><a href="input_movement/index.html">Input & Movement</a></li>
+        </ul>
+      </article></section>
   </main>
   <script src="../../../../retraissance/assets/site.js" defer></script>
 </body>

@@ -37,86 +37,60 @@
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Stats Overview</h1>
-      <article class="markdown">
-        <div class="callout" id="content-status">
-          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+                  <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Gameplay programmers, combat designers, technical designers</td></tr>
+              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
+              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
-        <h2 id="at-a-glance">At a glance</h2>
-<ul>
-<li>(TODO) One-sentence system summary.</li>
-<li>(TODO) Primary owner/component boundary.</li>
-<li>(TODO) Current maturity/status and notable risks.</li>
-</ul>
+        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
 
-        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
-        <h2 id="how-it-works">How it works</h2>
-<ul>
-<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
-<li>(TODO) Key deterministic rules/guardrails.</li>
-<li>(TODO) Failure modes and fallback behavior.</li>
-</ul>
+        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <ul>
+          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
+          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
+          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
+          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+        </ul>
 
-        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
-        <h2 id="interfaces">Interfaces</h2>
-<ul>
-<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
-<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
-<li>(TODO) Tooling/debug surfaces tied to this component.</li>
-</ul>
 
-        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
-        <h2 id="operational-concerns">Operational concerns</h2>
-<ul>
-<li>(TODO) Performance/scalability constraints.</li>
-<li>(TODO) Testing and verification expectations.</li>
-<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
-</ul>
+        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <ul>
+          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
+          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
+          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
+          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+        </ul>
 
-        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
-        <h2 id="related-docs">Related docs</h2>
-<ul>
-<li><a href="../index.html">Engine index</a></li>
-<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
-</ul>
+        <h2 id="verification-boundary">Verification Boundary</h2>
+        <ul>
+          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
+          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
+          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+        </ul>
 
-        <details>
-          <summary>Raw source excerpts</summary>
-          <pre class="source-excerpt">from the start.  
+        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <ul>
+          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
+          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
+          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+        </ul>
 
-1: Overview 
-Game Identity 
-Title: Densetsu​
-
----
-
-2: World Overview 
-Historical Timeline 
-Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the
-
----
-
-Combat in Densetsu emphasizes expression, precision, and consequence. It integrates 
-physics-driven reactions, hit prioritization, and timing mechanics based on player mastery. 
-Player Stats & Skills 
-●​ Core Stats: ​
-Level, HP Max, MP Max, Strength, Defense, Agility, Intelligence, Luck, XP Value.</pre>
-        </details>
-
-        <details>
-          <summary>Unresolved conflicts / open questions</summary>
-          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-        </details>
-
-      </article>
-    
-    <details class="meta-toggle"><summary>Show page info</summary>
-<div class='meta-grid'>
-<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>stats_overview</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Stats Overview</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>stub</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>System</span></div><div class='meta-item'><span class='meta-key'>aliases</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Densetsu Design Document.txt, Project memory (core player stats)</span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2025-12-24</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>True</span></div>
-</div>
-</details>
-    </section>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="../index.html">Engine Wiki</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+          <li><a href="index.html">Stats & Combat</a></li>
+          <li><a href="combat_overview.html">Combat Overview</a></li>
+          <li><a href="skills_and_elemental_affinities.html">Skills & Elemental Affinities</a></li>
+        </ul>
+      </article></section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>

@@ -11,62 +11,57 @@
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Build & Deployment</h1>
-      <article class="markdown">
-        <div class="callout" id="content-status">
-          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+                  <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Section hub</td><th>Audience</th><td>Build engineers, release maintainers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Section hub under active restructuring</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td>Pending code audit for this section in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Section landing page in the engine wiki</td></tr>
+              <tr><th>Risk level</th><td>High until section source passes are complete</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
-        <h2 id="at-a-glance">At a glance</h2>
-<ul>
-<li>(TODO) One-sentence system summary.</li>
-<li>(TODO) Primary owner/component boundary.</li>
-<li>(TODO) Current maturity/status and notable risks.</li>
-</ul>
+        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
 
-        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
-        <h2 id="how-it-works">How it works</h2>
-<ul>
-<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
-<li>(TODO) Key deterministic rules/guardrails.</li>
-<li>(TODO) Failure modes and fallback behavior.</li>
-</ul>
+        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <ul>
+          <li>This page is now a tracked documentation stub for this section of the engine wiki rather than a generic placeholder.</li>
+          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
+          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
+          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+        </ul>
 
-        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
-        <h2 id="interfaces">Interfaces</h2>
-<ul>
-<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
-<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
-<li>(TODO) Tooling/debug surfaces tied to this component.</li>
-</ul>
 
-        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
-        <h2 id="operational-concerns">Operational concerns</h2>
-<ul>
-<li>(TODO) Performance/scalability constraints.</li>
-<li>(TODO) Testing and verification expectations.</li>
-<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
-</ul>
+        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <ul>
+          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
+          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
+          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
+          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+        </ul>
 
-        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
-        <h2 id="related-docs">Related docs</h2>
-<ul>
-<li><a href="../index.html">Engine index</a></li>
-<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
-</ul>
+        <h2 id="verification-boundary">Verification Boundary</h2>
+        <ul>
+          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
+          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
+          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+        </ul>
 
-        <details>
-          <summary>Raw source excerpts</summary>
-          <p>(TODO) Add minimal excerpt only when needed for traceability.</p>
-        </details>
+        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <ul>
+          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
+          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
+          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+        </ul>
 
-        <details>
-          <summary>Unresolved conflicts / open questions</summary>
-          <div class="callout"><p>(TODO) Track only active blockers here; archive resolved items in changelogs.</p></div>
-        </details>
-
-      </article>
-    </section>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="../index.html">Engine Wiki</a></li>
+          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
+        </ul>
+      </article></section>
   </main>
 </body>
 </html>
