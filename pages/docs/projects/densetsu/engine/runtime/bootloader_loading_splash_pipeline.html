@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bootloader / Loading / Splash Pipeline</title>
   <meta property="og:title" content="Bootloader / Loading / Splash Pipeline">
-  <meta property="og:description" content="Densetsu engine startup sequence documentation: bootloader, startup splashes, loading screen, and scene handoff.">
+  <meta property="og:description" content="Verified role of DensetsuBootLoader, DensetsuLoadingScreen, and startup splash playback in the Densetsu engine.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/bootloader_loading_splash_pipeline.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Bootloader / Loading / Splash Pipeline">
+  <meta property="twitter:description" content="Verified role of DensetsuBootLoader, DensetsuLoadingScreen, and startup splash playback in the Densetsu engine.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
@@ -22,6 +26,7 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
@@ -29,62 +34,86 @@
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Bootloader / Loading / Splash Pipeline</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>Pipeline overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Verified legacy and reusable loading slice</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>project.godot</code>, <code>DensetsuBootLoader.gd</code>, <code>DensetsuBootLoader.tscn</code>, <code>DensetsuLoadingScreen.gd</code>, and <code>DensetsuSplashScreen.gd</code></td><th>User touchpoint</th><td>Startup flow design, controlled scene handoff, loading-screen ownership</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
-        <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
-        </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
-        </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
+        <p>The current production runtime boots through <code>res://engine3d/runtime/RuntimeBootstrap.tscn</code>, not through <code>DensetsuBootLoader</code>. The bootloader pipeline is still real code and a valid launch asset, but it should be documented as a reusable direct-scene startup path rather than the authoritative project boot root.</p>
+        <h2 id="current-role">Current Role</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Verified state</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Primary runtime entry</td><td><code>project.godot</code> points at <code>RuntimeBootstrap.tscn</code>.</td></tr>
+            <tr><td>Bootloader asset</td><td><code>DensetsuBootLoader.gd</code> remains a concrete loading-and-handoff scene controller.</td></tr>
+            <tr><td>Loading host</td><td>The bootloader instantiates <code>DensetsuLoadingScreen.tscn</code> and configures its behavior before starting the load.</td></tr>
+            <tr><td>Splash playback</td><td>The bootloader can play an ordered splash scene list before the loading screen appears.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="verified-sequence">Verified Sequence</h2>
+        <ol>
+          <li><code>DensetsuBootLoader</code> resolves a target scene from <code>target_scene_path</code>, optionally overridden by <code>--scene=...</code> or <code>--scene ...</code>.</li>
+          <li>If <code>play_startup_splashes</code> is enabled, it plays each configured splash scene in order and waits for each <code>finished</code> signal.</li>
+          <li>It instantiates <code>DensetsuLoadingScreen.tscn</code> and pushes configuration into the instance, including auto-switch behavior, minimum visible time, overlay visibility, and optional content scene injection.</li>
+          <li>It connects <code>loading_started</code>, <code>loading_progress</code>, <code>loading_completed</code>, and <code>loading_failed</code> for boot logging and failure visibility.</li>
+          <li>It calls <code>begin_load_scene(resolved_target)</code> on the loading screen and lets that node own the actual load lifecycle.</li>
+        </ol>
+        <h2 id="exposed-controls">Exposed Controls</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Current controls</th>
+              <th>What they affect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Load target</td><td><code>target_scene_path</code>, <code>use_cmdline_scene_override</code>, <code>cmdline_scene_key</code>, <code>cmdline_scene_token</code></td><td>Which scene the pipeline ultimately loads.</td></tr>
+            <tr><td>Loading host</td><td><code>loading_screen_scene</code>, <code>loading_content_scene</code>, <code>apply_loading_content_scene</code></td><td>Which loading screen scene is used and whether extra content is injected into it.</td></tr>
+            <tr><td>Presentation</td><td><code>force_overlay_visible</code>, <code>show_default_status_text</code>, <code>minimum_visible_seconds</code></td><td>Overlay visibility and user-facing loading cadence.</td></tr>
+            <tr><td>Scene handoff</td><td><code>auto_switch_to_loaded_scene</code></td><td>Whether the loading screen changes to the loaded scene automatically after completion.</td></tr>
+            <tr><td>Splashes</td><td><code>play_startup_splashes</code>, <code>startup_splash_scenes</code>, <code>startup_splash_allow_skip</code>, <code>startup_splash_gap_seconds</code></td><td>Whether startup splash presets play and how they behave.</td></tr>
+            <tr><td>Diagnostics</td><td><code>verbose_boot_log</code></td><td>Console visibility for startup progress and failure timing.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="default-scene-wrapper">Default Scene Wrapper</h2>
+        <p><code>DensetsuBootLoader.tscn</code> is a simple wrapper around the bootloader script and currently sets <code>minimum_visible_seconds = 1.0</code>. That makes it a ready-to-use launch scene for controlled flows, but it does not replace the manifest-driven runtime bootstrap path documented elsewhere.</p>
+        <h2 id="documentation-boundary">Documentation Boundary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Verified answer</th>
+              <th>Do not infer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Is this the current production boot root?</td><td>No. Production boot starts at <code>RuntimeBootstrap.tscn</code>.</td><td>Do not route runtime architecture discussions through the bootloader page first.</td></tr>
+            <tr><td>Is the bootloader dead code?</td><td>No. The script and scene are live project assets.</td><td>Do not delete or rewrite around it on the assumption that the runtime bootstrap made it obsolete.</td></tr>
+            <tr><td>Who owns scene loading once the pipeline starts?</td><td><code>DensetsuLoadingScreen</code> owns the actual load request and completion handoff.</td><td>Do not document the bootloader as if it contains the whole loading implementation.</td></tr>
+          </tbody>
+        </table>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
           <li><a href="core_runtime_overview.html">Core Runtime Overview</a></li>
-          <li><a href="data_persistence.html">Data Persistence</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host & Content Slots</a></li>
-          <li><a href="save_load.html">Save / Load</a></li>
+          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a></li>
+          <li><a href="startup_splashes_parameter_driven.html">Startup Splashes Parameter-Driven</a></li>
+          <li><a href="../actors/actor_system_overview.html">Actor System Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>

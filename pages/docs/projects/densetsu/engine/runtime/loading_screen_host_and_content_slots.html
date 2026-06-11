@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Loading Screen Host &amp; Content Slots</title>
   <meta property="og:title" content="Loading Screen Host &amp; Content Slots">
-  <meta property="og:description" content="DensetsuLoadingScreen design and usage: reusable loading host, content root, and top-level parameter exposure.">
+  <meta property="og:description" content="Verified behavior of DensetsuLoadingScreen as the reusable loading host for content scenes, overlay UI, and scene handoff.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/loading_screen_host_and_content_slots.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Loading Screen Host &amp; Content Slots">
+  <meta property="twitter:description" content="Verified behavior of DensetsuLoadingScreen as the reusable loading host for content scenes, overlay UI, and scene handoff.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
@@ -22,6 +26,7 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
@@ -29,62 +34,88 @@
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Loading Screen Host &amp; Content Slots</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
-              <tr><th>Page type</th><td>Topic overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Page type</th><td>Component reference</td><th>Audience</th><td>Engine programmers, UI programmers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Verified reusable runtime host</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>DensetsuLoadingScreen.gd</code> and its default scene wiring under <code>engine3d/loading/</code></td><th>User touchpoint</th><td>Loading-screen composition, scene load ownership, UI slotting</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p><code>DensetsuLoadingScreen</code> is not just a static art screen. It is the reusable runtime host that owns content-scene instancing, overlay bindings, optional threaded scene loading, fallback behavior, completion signaling, and scene handoff timing.</p>
+        <h2 id="host-responsibilities">Host Responsibilities</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Current role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Content host</td><td>Instantiates an arbitrary <code>PackedScene</code> under <code>ContentRoot</code> through <code>content_scene</code>, <code>set_content_scene()</code>, or <code>add_content_node()</code>.</td></tr>
+            <tr><td>Overlay shell</td><td>Owns rebinding for overlay canvas, loading panel, gauge, status label, and detail label through exported node paths.</td></tr>
+            <tr><td>Presentation layer</td><td>Applies visibility, panel layout, style override, label styling, and gauge styling from exported properties.</td></tr>
+            <tr><td>Load driver</td><td>Starts blocking or threaded scene load requests, polls progress, emits signals, and optionally changes to the loaded scene.</td></tr>
+            <tr><td>Diagnostics bridge</td><td>Logs to <code>DiagnosticsService</code> when that autoload is available.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="slot-and-binding-surface">Slot And Binding Surface</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>content_root_path</code> defaults to <code>ContentRoot</code> and is the slot for arbitrary runtime content.</li>
+          <li><code>overlay_canvas_path</code>, <code>loading_panel_path</code>, <code>gauge_path</code>, <code>status_label_path</code>, and <code>detail_label_path</code> let the scene remap its UI bindings without rewriting the script.</li>
+          <li><code>clear_content_before_instancing</code> controls whether old content children are removed before new content is inserted.</li>
+          <li>Overlay visibility, panel size, bottom margin, style override, and label tinting are all exported, so the same script can host different presentation layouts.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
-        </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
+        <h2 id="loading-behavior">Loading Behavior</h2>
+        <ol>
+          <li><code>begin_load_scene(scene_path)</code> normalizes the path, resets progress state, updates status text, and emits <code>loading_started</code>.</li>
+          <li>If <code>use_threaded_loading</code> is disabled, it defers directly into blocking load mode.</li>
+          <li>If threaded loading is enabled, it uses <code>ResourceLoader.load_threaded_request()</code>, polls status every frame, and emits <code>loading_progress</code>.</li>
+          <li>If a threaded request errors or times out and fallback is enabled, it attempts a blocking <code>ResourceLoader.load()</code> path instead.</li>
+          <li>On success, it stores the loaded <code>PackedScene</code>, emits <code>loading_completed</code>, and changes scene automatically once <code>minimum_visible_seconds</code> has elapsed if <code>auto_switch_to_loaded_scene</code> is enabled.</li>
+        </ol>
+        <h2 id="signals-and-extension-points">Signals And Extension Points</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Signal</th>
+              <th>Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>loading_started(scene_path)</code></td><td>External boot or test harnesses can react when the load request begins.</td></tr>
+            <tr><td><code>loading_progress(scene_path, progress)</code></td><td>Lets callers monitor or mirror progress without owning the poll loop.</td></tr>
+            <tr><td><code>loading_completed(scene_path, packed_scene)</code></td><td>Provides a hook before or alongside automatic scene switching.</td></tr>
+            <tr><td><code>loading_failed(scene_path, reason)</code></td><td>Surfaces user-visible or diagnostic failure reasons to the host pipeline.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-limitations">Current Limitations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Verified state</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Threaded loading default</td><td><code>use_threaded_loading</code> defaults to <code>false</code>, so threaded behavior must be enabled intentionally.</td></tr>
+            <tr><td>Dependency expectation</td><td>Diagnostics logging is opportunistic; the script checks for <code>/root/DiagnosticsService</code> rather than assuming it always exists.</td></tr>
+            <tr><td>Content contract</td><td>The host accepts arbitrary scenes, but this page does not define any stronger content-scene API than normal Godot node composition.</td></tr>
+          </tbody>
+        </table>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
+          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a></li>
+          <li><a href="startup_splashes_parameter_driven.html">Startup Splashes Parameter-Driven</a></li>
           <li><a href="core_runtime_overview.html">Core Runtime Overview</a></li>
-          <li><a href="data_persistence.html">Data Persistence</a></li>
-          <li><a href="save_load.html">Save / Load</a></li>
+          <li><a href="../data_authoring/index.html">Data And Authoring</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>

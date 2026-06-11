@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Startup Splashes (Parameter-Driven)</title>
   <meta property="og:title" content="Startup Splashes (Parameter-Driven)">
-  <meta property="og:description" content="Reusable startup splash scenes for Densetsu engine boot flow using DensetsuSplashScreen presets.">
+  <meta property="og:description" content="Verified behavior of DensetsuSplashScreen and its default boot-time splash presets.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/startup_splashes_parameter_driven.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Startup Splashes (Parameter-Driven)">
+  <meta property="twitter:description" content="Verified behavior of DensetsuSplashScreen and its default boot-time splash presets.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
@@ -22,6 +26,7 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
@@ -29,62 +34,74 @@
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Startup Splashes (Parameter-Driven)</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
-              <tr><th>Page type</th><td>Topic overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Page type</th><td>Component reference</td><th>Audience</th><td>Engine programmers, UI programmers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Verified reusable splash primitive</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>DensetsuSplashScreen.gd</code> and the bootloader defaults under <code>engine3d/loading/splashes/</code></td><th>User touchpoint</th><td>Startup branding, informational splash scenes, skip handling</td></tr>
+              <tr><th>Risk level</th><td>Low to medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
-        <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
-        </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
-        </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
+        <p><code>DensetsuSplashScreen</code> is the reusable splash primitive behind the current startup splash presets. The script exposes node paths, timing, text, visuals, and skip behavior as parameters so multiple branded or informational splash scenes can share one playback implementation.</p>
+        <h2 id="parameter-driven-surface">Parameter-Driven Surface</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Current parameters</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Node bindings</td><td>Root, background, logo, title, subtitle, and skip-hint node paths.</td><td>Lets one script drive different splash scene layouts.</td></tr>
+            <tr><td>Playback</td><td><code>auto_play</code>, <code>allow_skip</code>, <code>skip_actions</code>, <code>skip_with_any_input</code>, <code>minimum_display_before_skip_seconds</code></td><td>Controls when and how input can interrupt playback.</td></tr>
+            <tr><td>Timing</td><td><code>fade_in_seconds</code>, <code>hold_seconds</code>, <code>fade_out_seconds</code>, <code>skip_fade_out_seconds</code></td><td>Defines the full splash cadence.</td></tr>
+            <tr><td>Visuals and text</td><td>Background color or texture, logo texture, title and subtitle text, tinting, and optional skip hint.</td><td>Turns the primitive into project-specific presets without code duplication.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="playback-contract">Playback Contract</h2>
+        <ol>
+          <li>On <code>_ready()</code>, the script resolves its nodes, applies visuals, enables processing, and auto-plays at runtime when <code>auto_play</code> is enabled.</li>
+          <li><code>play()</code> resets internal state, arms skip timing if skipping is allowed, and fades the root control in.</li>
+          <li>It waits for the configured hold period unless a valid skip event is accepted.</li>
+          <li>It fades out using either the normal fade-out duration or the faster skip fade-out duration.</li>
+          <li>It emits <code>finished</code> when playback is complete so callers can sequence the next splash or proceed into loading.</li>
+        </ol>
+        <h2 id="skip-behavior">Skip Behavior</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Verified behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Default action-based skip</td><td><code>skip_actions</code> defaults to <code>ui_accept</code>, <code>ui_cancel</code>, and <code>unarmed_action</code>.</td></tr>
+            <tr><td>Broad input skip</td><td>If enabled, key, mouse, joypad-button, and screen-touch input can also skip.</td></tr>
+            <tr><td>Early-skip guard</td><td><code>minimum_display_before_skip_seconds</code> gates when skip becomes active.</td></tr>
+            <tr><td>Skip hint visibility</td><td>The hint can be shown always or only once skipping is currently allowed.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="default-boot-usage">Default Boot Usage</h2>
+        <p><code>DensetsuBootLoader</code> currently seeds <code>startup_splash_scenes</code> with <code>DensetsuCompanyLogoSplash.tscn</code> and <code>DensetsuStartupInfoSplash.tscn</code>. When splash playback is enabled, the bootloader instantiates each scene, forwards <code>startup_splash_allow_skip</code> into the splash instance, awaits its <code>finished</code> signal, and optionally waits for <code>startup_splash_gap_seconds</code> before moving to the next one.</p>
+        <h2 id="runtime-boundary">Runtime Boundary</h2>
+        <div class="callout">
+          <p><strong>Verified distinction:</strong> these splash assets are part of the bootloader-controlled startup pipeline, not the current manifest-driven runtime bootstrap root.</p>
+          <p><strong>Implication:</strong> document them as reusable presentation assets and bootloader presets, not as proof that the whole project still boots through the legacy loading scene.</p>
+        </div>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
+          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a></li>
+          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a></li>
           <li><a href="core_runtime_overview.html">Core Runtime Overview</a></li>
-          <li><a href="data_persistence.html">Data Persistence</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host & Content Slots</a></li>
+          <li><a href="../index.html">Engine Wiki</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
