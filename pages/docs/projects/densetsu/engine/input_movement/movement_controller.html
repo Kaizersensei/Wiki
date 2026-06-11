@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Movement Controller</title>
   <meta property="og:title" content="Movement Controller">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Current Densetsu movement ownership across command-frame input, character motor authority, and compatibility mirroring.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/input_movement/movement_controller.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Movement Controller">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Current Densetsu movement ownership across command-frame input, character motor authority, and compatibility mirroring.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,68 +30,87 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Movement Controller</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>Topic overview</td><th>Audience</th><td>Gameplay programmers, combat designers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Live hybrid controller stack</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>engine3d/actors/components/ActorInputComponent3D.gd</code>, <code>ActorMovementComponent3D.gd</code>, <code>engine3d/actors/character/CharacterMotorModel3D.gd</code>, <code>engine3d/data/resources/MovementData3D.gd</code>, <code>engine3d/actors/ActorPlayerShell3D.tscn</code>, and <code>docs/production_rewrite_worklog.md</code></td><th>User touchpoint</th><td>Reference page for current movement ownership and controller boundaries</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The current repo no longer has one simple movement-controller script for the shell path. Movement is a chain: input becomes a command frame, the character motor owns the live shell locomotion when present, and the older movement component remains as a compatibility mirror or fallback executor.</p>
+        <h2 id="ownership-chain">Ownership Chain</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Verified owner</th>
+              <th>Current responsibility</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Input capture</td><td><code>ActorInputComponent3D</code></td><td>Reads project actions, resolves or directly builds a <code>PlayerCommandFrame3D</code>, and publishes it each physics tick.</td></tr>
+            <tr><td>Live shell movement authority</td><td><code>CharacterMotorModel3D</code></td><td>Owns locomotion, gait arbitration, jump and traversal handoff, posture, burst movement, state tags, and animation intent on the shell path.</td></tr>
+            <tr><td>Compatibility mirror</td><td><code>ActorMovementComponent3D</code></td><td>Mirrors motor state when the motor is active, or runs its own fallback locomotion path when no motor authority is present.</td></tr>
+            <tr><td>Presentation and consumers</td><td>Animation, presentation, combat, inventory, camera, UI, and state-machine components</td><td>Read command frames, movement state, or published actor state tags without needing to own locomotion themselves.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="shell-player-wiring">Shell Player Wiring</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>ActorPlayerShell3D.tscn</code> wires the current shell player with <code>Input</code>, <code>CharacterMotor</code>, <code>Movement</code>, <code>Traversal</code>, <code>ShellStateMachine</code>, <code>Presentation</code>, and <code>Camera</code> nodes together under <code>ActorShell3D</code>.</li>
+          <li>That scene layout is the clearest current reference for the movement stack the rewrite is actually validating.</li>
+          <li>The legacy player scene still exists and still matters elsewhere, so this page documents the shell movement chain without pretending it already replaced all legacy runtime locomotion.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <h2 id="what-the-motor-owns-now">What The Motor Owns Now</h2>
         <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li>Grounded and airborne locomotion.</li>
+          <li>Walk, run, and sprint separation, including analog walk thresholds and start, stop, landing, and turn variants.</li>
+          <li>Crouch or crouch-move posture behavior, with sneak collapsed into the crouch family in the current runtime vocabulary.</li>
+          <li>Jump, double jump, wall jump, dash, and roll.</li>
+          <li>Camera-relative direction handling plus side-scroller-aware movement when that camera context is active.</li>
+          <li>Actor state-tag publication and motor-owned animation intent for downstream presentation systems.</li>
         </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
+        <h2 id="why-the-old-movement-component-still-exists">Why The Old Movement Component Still Exists</h2>
         <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+          <li>The rewrite worklog explicitly records that <code>ActorMovementComponent3D</code> had been carrying two responsibilities at once: command-frame capture and locomotion execution.</li>
+          <li>The current split moves command-frame capture into <code>ActorInputComponent3D</code> and live shell authority into <code>CharacterMotorModel3D</code>.</li>
+          <li><code>ActorMovementComponent3D</code> still matters because other systems already listen to its published command frame or state surface, and because it can still execute locomotion when a shell actor does not have the new motor authority active.</li>
         </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <h2 id="safe-current-assumptions">Safe Current Assumptions</h2>
         <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+          <li>If a shell actor has an active <code>CharacterMotorModel3D</code>, that motor is the first movement authority and the movement component disables its own physics execution path.</li>
+          <li>If the motor is absent, the movement component still has a real fallback locomotion implementation driven by <code>MovementData3D</code>.</li>
+          <li>Movement tuning remains resource-driven. Walk, run, sprint, air, jump, wall, dash, roll, and posture numbers still come from <code>MovementData3D</code>.</li>
         </ul>
-
+        <h2 id="known-boundaries-and-risks">Known Boundaries And Risks</h2>
+        <ul>
+          <li>The page title is singular, but the implementation is distributed across multiple shell components and one motor model.</li>
+          <li>Legacy actor roots still own movement in older runtime paths, so shell movement documentation should not be read as a universal actor statement.</li>
+          <li>Consumer systems are still being migrated away from older compatibility surfaces, which is why mirrored state tags and bridge components remain in the tree.</li>
+        </ul>
+        <h2 id="validation">Validation</h2>
+        <ul>
+          <li><code>engine3d/tests/smoke_actor_player_shell.gd</code> verifies shell movement, command-frame publication, and state synchronization through the player shell path.</li>
+          <li><code>docs/production_rewrite_worklog.md</code> records the split of input capture away from the movement component and the later promotion of <code>CharacterMotorModel3D</code> into first movement authority.</li>
+          <li><code>ActorPlayerShell3D.tscn</code> is the concrete scene proof that input, motor, movement mirror, traversal, and presentation are all wired together in the current rewrite path.</li>
+        </ul>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
-          <li><a href="index.html">Input & Movement</a></li>
+          <li><a href="index.html">Input &amp; Movement</a></li>
           <li><a href="input_overview.html">Input Overview</a></li>
           <li><a href="sonic_style_physics_optional.html">Optional Sonic-Style Physics</a></li>
+          <li><a href="../actors/actor_system_overview.html">Actor System Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

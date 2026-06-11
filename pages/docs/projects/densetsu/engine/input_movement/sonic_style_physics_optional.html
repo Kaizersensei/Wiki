@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Optional Sonic-Style Physics</title>
   <meta property="og:title" content="Optional Sonic-Style Physics">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="What the current repo actually exposes for high-mobility movement feel, and what the 'Sonic-style' page title does not mean.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/input_movement/sonic_style_physics_optional.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Optional Sonic-Style Physics">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="What the current repo actually exposes for high-mobility movement feel, and what the 'Sonic-style' page title does not mean.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,68 +30,79 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Optional Sonic-Style Physics</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
-              <tr><th>Page type</th><td>Feature overview</td><th>Audience</th><td>Gameplay programmers, combat designers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Page type</th><td>Feature framing</td><th>Audience</th><td>Gameplay programmers, movement designers, QA</td></tr>
+              <tr><th>Implementation status</th><td>Historical page title, modern repo uses general movement tunables instead</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>engine3d/data/resources/MovementData3D.gd</code>, <code>engine3d/actors/components/ActorMovementComponent3D.gd</code>, <code>engine3d/actors/character/CharacterMotorModel3D.gd</code>, <code>engine3d/actors/character/CharacterMoveCatalog3D.gd</code>, <code>engine3d/actors/ActorPlayerShell3D.tscn</code>, and <code>docs/production_rewrite_worklog.md</code></td><th>User touchpoint</th><td>Reference page for optional high-mobility movement feel and naming limits</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The current repo does not implement a dedicated subsystem, flag, or runtime mode literally named <code>sonic</code>. This page title should be read as historical shorthand for optional high-mobility movement feel, not as the name of a standalone engine feature.</p>
+        <h2 id="what-exists-instead">What Exists Instead</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>MovementData3D.gd</code> exposes the tunable movement surface: walk, run, sprint, air control, jump and double jump, coyote time, jump buffer, wall jump, dash, roll, crouch, sneak-speed compatibility, slope limits, and fall handling.</li>
+          <li>The shell runtime routes those values through <code>CharacterMotorModel3D</code> when the modern shell path is active.</li>
+          <li><code>ActorMovementComponent3D</code> preserves the same broad movement vocabulary for compatibility and fallback execution.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <h2 id="high-mobility-features-that-are-real">High-Mobility Features That Are Real</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Verified support</th>
+              <th>Where it lives now</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Gait split</td><td>Walk, run, and sprint are distinct runtime states.</td><td><code>CharacterMotorModel3D</code> plus <code>CharacterMoveCatalog3D</code>.</td></tr>
+            <tr><td>Air mobility</td><td>Jump, double jump, wall jump, air accel, coyote time, and jump buffering exist.</td><td><code>MovementData3D</code>, motor logic, and compatibility movement logic.</td></tr>
+            <tr><td>Burst movement</td><td>Dash and roll are first-class runtime states with cooldowns and durations.</td><td><code>MovementData3D</code>, motor logic, and move catalog.</td></tr>
+            <tr><td>Low posture</td><td>Crouch and crouch-move exist; sneak currently collapses into the crouch family.</td><td><code>CharacterMotorModel3D</code>, <code>ActorMovementComponent3D</code>, and related presentation code.</td></tr>
+            <tr><td>Directional variants</td><td>Turn, landing, start, and stop states now exist in the shell movement vocabulary.</td><td><code>CharacterMoveCatalog3D</code> and the shell motor/presentation path.</td></tr>
+            <tr><td>Camera or side-scroller control</td><td>Movement can respect third-person, first-person, and side-scroller camera contexts.</td><td><code>ActorMovementComponent3D</code> compatibility path and shell camera or motor wiring.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="optional-feel-tuning">Optional Feel Tuning</h2>
         <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li><code>MovementData3D</code> contains a dedicated <code>C2 Feel</code> section for extra acceleration or deceleration shaping.</li>
+          <li>The shell motor exposes opt-in toggles such as <code>dash_enabled</code>, <code>roll_enabled</code>, posture toggle behavior, analog walk thresholds, and combat-lock movement rules.</li>
+          <li>This means the real optional surface is parameter-driven movement feel, not a single “enable Sonic mode” switch.</li>
         </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
+        <h2 id="what-the-title-should-not-imply">What The Title Should Not Imply</h2>
         <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+          <li>There is no verified <code>SonicStylePhysics</code> class, config, scene, or project setting in the inspected runtime tree.</li>
+          <li>The engine does not expose a separate movement subsystem that only applies to Sonic-like gameplay.</li>
+          <li>The current shell runtime also no longer treats <code>Sneak</code> as a distinct locomotion state; it resolves to <code>Crouch</code> or <code>CrouchMove</code>.</li>
         </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <h2 id="best-current-reading">Best Current Reading</h2>
         <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+          <li>If the design goal is faster or more expressive arcade locomotion, work through <code>MovementData3D</code>, the shell motor exports, and the move catalog instead of looking for a named Sonic module.</li>
+          <li>If the goal is documentation cleanup, treat this page title as legacy wording that now maps to a broader movement-feel surface.</li>
         </ul>
-
+        <h2 id="validation">Validation</h2>
+        <ul>
+          <li>Targeted source checks across <code>engine3d/</code> found no dedicated runtime surface literally named <code>sonic</code>.</li>
+          <li><code>MovementData3D.gd</code> and <code>CharacterMoveCatalog3D.gd</code> provide the real current movement vocabulary and tuning surface.</li>
+          <li><code>docs/production_rewrite_worklog.md</code> records the modern shell locomotion path in terms of character motor, move catalog, gait separation, dash or roll, wall jump, and crouch handling rather than any named Sonic system.</li>
+        </ul>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
-          <li><a href="index.html">Input & Movement</a></li>
+          <li><a href="index.html">Input &amp; Movement</a></li>
           <li><a href="input_overview.html">Input Overview</a></li>
           <li><a href="movement_controller.html">Movement Controller</a></li>
+          <li><a href="../actors/actor_system_overview.html">Actor System Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
