@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Actor Types &amp; Lifecycle</title>
   <meta property="og:title" content="Actor Types &amp; Lifecycle">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Verified actor families, runtime ownership, and lifecycle boundaries in the June 2026 Densetsu repo state.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/actors/actor_types_lifecycle.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Actor Types &amp; Lifecycle">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Verified actor families, runtime ownership, and lifecycle boundaries in the June 2026 Densetsu repo state.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,68 +30,92 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Actor Types &amp; Lifecycle</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>Lifecycle reference</td><th>Audience</th><td>Gameplay programmers, AI programmers, technical designers</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Live split between legacy authority and shell migration</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>engine3d/actors/</code>, <code>engine3d/runtime/PlayerActorService.gd</code>, <code>engine3d/tests/smoke_actor_player_shell.gd</code>, <code>docs/production_rewrite_worklog.md</code>, and actor notes in <code>AGENTS.md</code></td><th>User touchpoint</th><td>Reference page for actor ownership, scene types, and runtime lifecycle boundaries</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The current actor lifecycle is transitional rather than uniform. The repo contains both the legacy monolith path and a real shell/component path, and documentation has to describe where each one is authoritative instead of flattening them into one fictional system.</p>
+        <h2 id="current-actor-families">Current Actor Families</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Family</th>
+              <th>Verified root</th>
+              <th>Current role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Legacy base actor</td><td><code>ActorCharacter3D</code></td><td>Monolithic gameplay authority for the older runtime path.</td></tr>
+            <tr><td>Legacy player</td><td><code>ActorPlayer3D</code></td><td>Production player root that still extends <code>ActorCharacter3D</code> while attaching rewrite components at runtime.</td></tr>
+            <tr><td>Legacy NPC</td><td><code>ActorNPC3D</code></td><td>Monolithic NPC path with budgeting, wander, and animation-driver runtime support.</td></tr>
+            <tr><td>Legacy animals</td><td><code>AnimalNPC3D</code></td><td>Animal-specialized NPC path layered on top of <code>ActorNPC3D</code>.</td></tr>
+            <tr><td>Shell base actor</td><td><code>ActorShell3D</code></td><td>Component-composition root for the rewrite path.</td></tr>
+            <tr><td>Shell player and humanoids</td><td><code>ActorPlayerShell3D.tscn</code>, <code>ActorHumanoidNPCShell3D.tscn</code>, <code>ActorHumanoidEnemyShell3D.tscn</code></td><td>Validated migration scenes for player, NPC, and enemy composition.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="lifecycle-by-path">Lifecycle By Path</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Legacy path</th>
+              <th>Shell path</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Scene root</td><td><code>ActorCharacter3D</code>-derived scene owns broad gameplay state directly.</td><td><code>ActorShell3D</code> scene collects child <code>ActorComponent3D</code> nodes.</td></tr>
+            <tr><td>Initialization</td><td>Root script configures role, controller, camera, animation, and subsystem links itself.</td><td><code>ActorShell3D._collect_components()</code> attaches components and emits <code>actor_shell_ready</code>.</td></tr>
+            <tr><td>Runtime state</td><td>Monolith keeps movement, combat, camera, and presentation responsibilities mixed together.</td><td>State is mirrored through dedicated input, movement, combat, inventory, presentation, camera, and identity components.</td></tr>
+            <tr><td>State tags</td><td><code>ActorPlayer3D</code> exposes rewrite-style tag publishing as a bridge layer.</td><td><code>ActorShell3D</code> owns <code>publish_state_tags()</code> and emits <code>state_tags_changed</code>.</td></tr>
+            <tr><td>Runtime consumers</td><td>Older gameplay code can still read directly from legacy actor surfaces.</td><td><code>PlayerActorService</code> prefers typed shell-style components and snapshots where available.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="what-player-runtime-actually-uses">What Player Runtime Actually Uses</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>ActorPlayer3D.gd</code> still extends <code>ActorCharacter3D.gd</code>. That is the clearest signal that the player monolith has not been fully retired.</li>
+          <li>The same player root now attaches rewrite components and exposes <code>get_actor_components()</code>, <code>get_component_by_script()</code>, and state-tag publication so services can move toward shell-friendly contracts without an all-at-once scene swap.</li>
+          <li><code>PlayerActorService.gd</code> reads identity, inventory, combat, presentation, and movement through component lookups first, then packages those values into typed runtime and UI snapshots.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <h2 id="what-the-shell-path-already-proves">What The Shell Path Already Proves</h2>
         <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li><code>ActorShell3D.gd</code> is not empty scaffolding. It manages component collection, state-tag publishing, death-state toggles, and generic attack or hit-reaction relays.</li>
+          <li><code>engine3d/tests/smoke_actor_player_shell.gd</code> verifies that <code>ActorPlayerShell3D</code> instantiates, exposes the component API, moves under shell-owned movement, synchronizes state across motor and presentation layers, and produces combat and inventory contracts.</li>
+          <li>The shell scenes therefore count as live migration assets, but not as universal runtime authority for every actor family.</li>
         </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
+        <h2 id="known-boundaries-and-risks">Known Boundaries And Risks</h2>
         <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+          <li><code>ActorCharacter3D.gd</code> remains the highest-risk actor file because player and NPC behavior still fan out from it.</li>
+          <li>The player path is hybrid: production still depends on the legacy root, while services and tests already exercise shell-style contracts.</li>
+          <li>Creature and animal coverage has not crossed over to a dedicated shell-root family in the current repo snapshot.</li>
         </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <h2 id="validation">Validation</h2>
         <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+          <li><code>AGENTS.md</code> explicitly documents <code>ActorCharacter3D</code> as the current runtime authority and the shell path as the migration target.</li>
+          <li><code>docs/production_rewrite_worklog.md</code> records the actor-shell/component architecture as an active rewrite objective rather than completed migration.</li>
+          <li><code>engine3d/tests/smoke_actor_player_shell.gd</code> is the strongest repo-native proof that the shell player scene owns real runtime behavior already.</li>
         </ul>
-
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Actor System</a></li>
           <li><a href="actor_system_overview.html">Actor System Overview</a></li>
           <li><a href="creatures_as_actors_framework.html">Creatures as Actors (Framework)</a></li>
+          <li><a href="../runtime/core_runtime_overview.html">Core Runtime Overview</a></li>
+          <li><a href="../input_movement/index.html">Input &amp; Movement</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

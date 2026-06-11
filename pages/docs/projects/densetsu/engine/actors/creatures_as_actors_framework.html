@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Creatures as Actors (Framework)</title>
   <meta property="og:title" content="Creatures as Actors (Framework)">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Verified repo state for animals and creatures inside the Densetsu actor system, including the current legacy-shell boundary.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/actors/creatures_as_actors_framework.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Creatures as Actors (Framework)">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Verified repo state for animals and creatures inside the Densetsu actor system, including the current legacy-shell boundary.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,68 +30,79 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Creatures as Actors (Framework)</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>Framework overview</td><th>Audience</th><td>Gameplay programmers, AI programmers, technical designers</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Concept is real, creature coverage is still mostly legacy</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>engine3d/actors/AnimalNPC3D.gd</code>, <code>engine3d/actors/templates/animals/</code>, shell actor scenes under <code>engine3d/actors/</code>, <code>docs/production_rewrite_worklog.md</code>, and actor notes in <code>AGENTS.md</code></td><th>User touchpoint</th><td>Reference page for how creatures fit into the actor architecture</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The framework idea is correct: creatures are supposed to live inside the actor architecture rather than as a separate gameplay species system. The important correction is scope. In the current repo snapshot, creature support is only partially on that path, and most animal content still rides the legacy actor stack.</p>
+        <h2 id="what-is-verified">What Is Verified</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li><code>AnimalNPC3D.gd</code> extends <code>ActorNPC3D.gd</code>, which means the current animal path is a specialization of the legacy NPC actor line.</li>
+          <li>The animal specialization in that script is animation-state auto-mapping and runtime retry logic around imported clips. It is not a shell-root replacement.</li>
+          <li>The animal templates currently found under <code>engine3d/actors/templates/animals/</code> point at <code>AnimalNPC3D.gd</code> as their root script.</li>
+          <li>Humanoid shell scenes do exist, but they are not the same thing as a verified creature-wide shell framework.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <h2 id="current-split">Current Split</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Current verified state</th>
+              <th>Meaning for documentation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Animal scene roots</td><td>Animal templates use <code>AnimalNPC3D</code>, which inherits from <code>ActorNPC3D</code>.</td><td>Describe animals as actor-based, but still on the legacy NPC branch.</td></tr>
+            <tr><td>Humanoid rewrite scenes</td><td><code>ActorPlayerShell3D</code>, <code>ActorHumanoidNPCShell3D</code>, and <code>ActorHumanoidEnemyShell3D</code> are present.</td><td>Use them as migration evidence, not proof that all creature families already moved.</td></tr>
+            <tr><td>Rewrite objective</td><td>The worklog treats shell/component actors as the long-term direction.</td><td>The creature page can describe direction, but must keep present-tense claims narrow.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="how-creatures-fit-today">How Creatures Fit Today</h2>
         <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li>Creatures are part of the actor family in the sense that they reuse actor roots, movement, animation, and NPC runtime behavior rather than forming a separate engine subsystem.</li>
+          <li>For the live repo state, that mostly means legacy inheritance: animal scenes inherit the NPC line and keep the same broad lifecycle constraints as other monolith-backed actors.</li>
+          <li>The main creature-specific addition currently verified in code is animation adaptation, where imported animal clips are mapped onto actor intent names such as idle, walk, run, jump, attack, hurt, and death.</li>
         </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
+        <h2 id="what-is-not-yet-true">What Is Not Yet True</h2>
         <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+          <li>There is no verified dedicated creature shell root in the current source pass.</li>
+          <li>There is no evidence in the inspected files that animal templates have already been re-authored onto <code>ActorShell3D</code>.</li>
+          <li>The existence of shell humanoid scenes should not be rewritten as a finished universal creature framework.</li>
         </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <h2 id="migration-reading">Migration Reading</h2>
         <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+          <li>The rewrite direction still points toward component-owned actors.</li>
+          <li>If creatures follow that direction, the likely path is migration from legacy animal NPC scenes toward shell-composed variants, not a separate parallel creature subsystem.</li>
+          <li>That migration is not complete enough yet to be documented as present-day runtime truth.</li>
         </ul>
-
+        <h2 id="validation">Validation</h2>
+        <ul>
+          <li>Recursive checks across <code>engine3d/actors/templates/animals/</code> show the current animal templates referencing <code>AnimalNPC3D.gd</code>.</li>
+          <li><code>AnimalNPC3D.gd</code> directly confirms legacy inheritance and clip-to-intent auto-mapping behavior.</li>
+          <li><code>AGENTS.md</code> and <code>docs/production_rewrite_worklog.md</code> both reinforce that the shell path is the migration target, not the completed actor truth for every family.</li>
+        </ul>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Actor System</a></li>
           <li><a href="actor_system_overview.html">Actor System Overview</a></li>
-          <li><a href="actor_types_lifecycle.html">Actor Types & Lifecycle</a></li>
+          <li><a href="actor_types_lifecycle.html">Actor Types &amp; Lifecycle</a></li>
+          <li><a href="../runtime/core_runtime_overview.html">Core Runtime Overview</a></li>
+          <li><a href="../input_movement/index.html">Input &amp; Movement</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-
