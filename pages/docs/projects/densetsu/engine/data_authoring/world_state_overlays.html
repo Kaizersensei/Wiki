@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>World-State Overlays</title>
+  <meta property="og:title" content="World-State Overlays">
+  <meta property="og:description" content="Target overlay model for modifying authored world content in Densetsu.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/world_state_overlays.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="World-State Overlays">
+  <meta property="twitter:description" content="Target overlay model for modifying authored world content in Densetsu.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>World-State Overlays</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Domain reference</td><th>Audience</th><td>Technical designers, narrative designers, tools programmers</td></tr>
+              <tr><th>Implementation status</th><td>Target model only</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>D:\Desktop\DEV\wiki\docbase\db-documentation.md</code>, <code>authoring_workspace.gd</code>, <code>0001_authoring_core.sql</code></td><th>User touchpoint</th><td>Planned biome, variant, quest, and compile editors</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>World-state overlays are authored conditions that modify normal content based on story, environment, temporal state, or region state. They do not replace the base catalog. They tell the engine which variants, suppressions, or extra rules should apply when a world condition is active.</p>
+        <h2 id="overlay-versus-variant">Overlay Versus Variant</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Variant</td><td>The alternate authored form, such as a burned bamboo or corrupted hound.</td></tr>
+            <tr><td>Overlay</td><td>The condition that decides when that alternate form replaces or modifies the normal one.</td></tr>
+            <tr><td>Runtime state</td><td>The live per-instance state and save data, which should not be used as a substitute for overlay authoring.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="example-overlay-behaviors">Example Overlay Behaviors</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Overlay pattern</th>
+              <th>Typical effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>burned</code></td><td>Replace healthy foliage variants with burned variants and suppress some growth rules.</td></tr>
+            <tr><td><code>frozen</code></td><td>Swap water or plant variants and change hazard or traversal expectations.</td></tr>
+            <tr><td><code>corrupted</code></td><td>Add corruption hazards, suppress sacred or healthy growth, and enable corrupted variants.</td></tr>
+            <tr><td><code>restored</code></td><td>Re-enable healthy variants and reduce hazard or enemy pressure.</td></tr>
+            <tr><td><code>time_sick</code></td><td>Add temporal anomalies and unstable props or effects.</td></tr>
+            <tr><td><code>occupied</code></td><td>Inject camps, patrol anchors, barricades, or faction-specific actor sets.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="authoring-expectations">Authoring Expectations</h2>
+        <ul>
+          <li>Overlays should reference variants and rule sets instead of duplicating whole biomes whenever possible.</li>
+          <li>Overlays should be able to replace, suppress, or add placement behavior.</li>
+          <li>Overlay activation should be explainable through story, temporal, environmental, or system triggers.</li>
+          <li>Compile and validation tooling should be able to preview the resolved result of an active overlay.</li>
+        </ul>
+        <h2 id="current-implementation-status">Current Implementation Status</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current status</th>
+              <th>Verification note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Schema</td><td>No overlay tables exist in the current migrations.</td><td>Verified by direct inspection of <code>0001_authoring_core.sql</code>.</td></tr>
+            <tr><td>Repositories</td><td>No overlay repository is implemented.</td><td>The addon currently exposes biome and material-profile repositories only.</td></tr>
+            <tr><td>Workspace module</td><td>No dedicated overlay editor or module exists.</td><td><code>MODULE_ORDER</code> contains no overlay surface in the current shell.</td></tr>
+            <tr><td>Compile interaction</td><td>Not implemented.</td><td>No overlay-aware compile pass is currently exposed.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="verification-notes">Verification Notes</h2>
+        <div class="callout">
+          <p><strong>Verified:</strong> overlays are a central part of the intended authoring taxonomy in the handout.</p>
+          <p><strong>Not implemented:</strong> there is no live overlay editor, schema, or compile integration in the current addon snapshot.</p>
+        </div>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="actor_capabilities.html">Actor Capabilities</a></li>
+          <li><a href="placement_rules.html">Placement Rules</a></li>
+          <li><a href="generated_chunk_records.html">Generated Chunk Records</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>

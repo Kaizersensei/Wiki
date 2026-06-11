@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generated Chunk Records</title>
+  <meta property="og:title" content="Generated Chunk Records">
+  <meta property="og:description" content="Deterministic generated-content record model for Densetsu authoring and the current compile gap.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/generated_chunk_records.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Generated Chunk Records">
+  <meta property="twitter:description" content="Deterministic generated-content record model for Densetsu authoring and the current compile gap.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Generated Chunk Records</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Domain overview</td><th>Audience</th><td>Tools programmers, world builders, technical designers</td></tr>
+              <tr><th>Implementation status</th><td>Target model with compile-scaffold foothold</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>D:\Desktop\DEV\wiki\docbase\db-documentation.md</code>, <code>authoring_workspace.gd</code>, <code>0001_authoring_core.sql</code></td><th>User touchpoint</th><td>Planned compile workflow and generated-content inspectors</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Generated chunk records are the project-owned evidence of deterministic world generation. The handout is explicit: Densetsu should not depend on opaque random scatter near the player. Authoring data, terrain data, and a seed should resolve into reproducible generated output with stable identities and explainable reasons.</p>
+        <h2 id="deterministic-model">Deterministic Model</h2>
+        <ol>
+          <li>Authoring records define the allowed outputs and their conditions.</li>
+          <li>Terrain and semantic context provide the substrate and local facts.</li>
+          <li>A compile or generation pass resolves the result from those inputs plus a seed.</li>
+          <li>The runtime loads generated results as stable authored world content, not as fresh random rolls.</li>
+        </ol>
+        <h2 id="what-needs-stable-identity">What Needs Stable Identity</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Generated content type</th>
+              <th>Identity expectation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Visual-only clutter batches</td><td>Can be stored as deterministic batch output without per-object gameplay identity.</td></tr>
+            <tr><td>Interactive plants, resources, hazards, or dens</td><td>Need stable generated object IDs for save-state, locking, deletion, or manual conversion.</td></tr>
+            <tr><td>Quest-relevant generated objects</td><td>Need traceable, explainable records and strong validation.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="target-record-fields">Target Record Fields</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>stable_id</code></td><td>Stable generated object identifier.</td></tr>
+            <tr><td><code>region_id</code></td><td>Owning world region.</td></tr>
+            <tr><td><code>terrain3d_region_id</code></td><td>Terrain3D region reference.</td></tr>
+            <tr><td><code>chunk_id</code></td><td>Compiled chunk or cell ID.</td></tr>
+            <tr><td><code>rule_id</code></td><td>Placement or generation rule that produced the output.</td></tr>
+            <tr><td><code>output_type</code></td><td>Plant, rock, resource, actor, hazard, and so on.</td></tr>
+            <tr><td><code>output_id</code></td><td>Resolved catalog record that was spawned.</td></tr>
+            <tr><td><code>position</code>, <code>rotation</code>, <code>scale</code></td><td>Resolved transform data.</td></tr>
+            <tr><td><code>seed</code></td><td>Deterministic seed component.</td></tr>
+            <tr><td><code>generation_reason</code></td><td>Human-readable explanation of why this object exists.</td></tr>
+            <tr><td><code>is_locked</code></td><td>Designer locked the generated result in place.</td></tr>
+            <tr><td><code>is_deleted</code></td><td>Designer suppressed the generated result.</td></tr>
+            <tr><td><code>converted_to_manual</code></td><td>Generated object became a manual authored object.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-implementation-status">Current Implementation Status</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current status</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Compile module</td><td>Scaffold only.</td><td><code>authoring_workspace.gd</code> labels Compile as a shell.</td></tr>
+            <tr><td><code>compiler_reports</code> table</td><td>Exists for status and summary output.</td><td>Schema foothold only, not generated-object storage.</td></tr>
+            <tr><td>Generated-record schema</td><td>Not implemented.</td><td>No chunk-record or generated-object tables in current migrations.</td></tr>
+            <tr><td>Reason tracing</td><td>Not implemented.</td><td>No live explain-why output surface in current addon.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="verification-notes">Verification Notes</h2>
+        <div class="callout">
+          <p><strong>Verified:</strong> deterministic generation with stable IDs is a hard requirement in the handout.</p>
+          <p><strong>Not implemented:</strong> the current addon has no generated-record schema beyond the placeholder compile-report table.</p>
+        </div>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="authoring_pipeline.html">Authoring Pipeline</a></li>
+          <li><a href="placement_rules.html">Placement Rules</a></li>
+          <li><a href="world_state_overlays.html">World-State Overlays</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>

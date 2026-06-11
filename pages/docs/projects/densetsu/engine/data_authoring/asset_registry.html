@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asset Registry</title>
+  <meta property="og:title" content="Asset Registry">
+  <meta property="og:description" content="Target asset-registry model for the Densetsu Authoring database and the current material-profile foothold.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/asset_registry.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Asset Registry">
+  <meta property="twitter:description" content="Target asset-registry model for the Densetsu Authoring database and the current material-profile foothold.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Asset Registry</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Domain overview</td><th>Audience</th><td>Tools programmers, technical artists, technical designers</td></tr>
+              <tr><th>Implementation status</th><td>Partial implementation</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>material_index_service.gd</code>, <code>material_profile_repository.gd</code>, <code>0001_authoring_core.sql</code>, <code>0002_material_profile_metadata.sql</code></td><th>User touchpoint</th><td>Authoring workspace Materials module and material sync workflow</td></tr>
+              <tr><th>Risk level</th><td>Medium to high</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The asset registry is meant to catalog references to project assets, not replace Godot's asset pipeline. Files remain files. The authoring database tracks stable IDs, metadata, ownership, validation status, and cross-record relations. Today, the only concrete registry slice is external material profiling.</p>
+        <h2 id="target-role">Target Role In The Authoring Model</h2>
+        <ul>
+          <li>Register models, materials, textures, scenes, animations, audio, VFX, UI assets, and reference art by stable authored IDs.</li>
+          <li>Store metadata such as owner domain, import status, license state, author, and notes.</li>
+          <li>Support validation and cross-linking without moving binary content into SQLite.</li>
+        </ul>
+        <h2 id="current-implemented-slice">Current Implemented Slice</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current behavior</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Scene scan</td><td><code>material_index_service.gd</code> walks the edited scene and builds a unique material index.</td><td>Collects overrides, overlays, mesh-surface materials, and usage paths.</td></tr>
+            <tr><td>Database table</td><td><code>material_profiles</code> stores external material references.</td><td>Migration <code>0002_material_profile_metadata.sql</code> adds resource path, class, built-in flag, usage count, and source scene path.</td></tr>
+            <tr><td>Operator workflow</td><td>The Materials module can sync scene materials into DB records.</td><td><code>_sync_materials_pressed()</code> writes external profiles and skips built-in materials.</td></tr>
+            <tr><td>Registry scope</td><td>Materials only.</td><td>No general asset table exists yet.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-material-fields">Current Material Registry Fields</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Meaning today</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>id</code></td><td>Stable DB key for the material profile row.</td></tr>
+            <tr><td><code>display_name</code></td><td>Human-readable material label derived from resource path or built-in class name.</td></tr>
+            <tr><td><code>resource_path</code></td><td>Godot resource path for external materials.</td></tr>
+            <tr><td><code>class_name</code></td><td>Godot class type reported by the material resource.</td></tr>
+            <tr><td><code>is_builtin</code></td><td>Whether the material is scene-local rather than external.</td></tr>
+            <tr><td><code>last_usage_count</code></td><td>Latest counted number of usages in the scanned scene.</td></tr>
+            <tr><td><code>source_scene_path</code></td><td>The scene path from which the profile was indexed.</td></tr>
+            <tr><td><code>notes</code></td><td>Free-form comment field.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="target-registry-fields">Target Registry Fields</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Expected purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>asset_id</code></td><td>Stable authored asset identifier across domains.</td></tr>
+            <tr><td><code>asset_type</code></td><td>Model, texture, scene, material, audio, VFX, UI, or reference art.</td></tr>
+            <tr><td><code>path</code></td><td>Godot resource path or curated source reference.</td></tr>
+            <tr><td><code>owner_domain</code></td><td>Actor, biome, item, world, UI, or toolchain ownership.</td></tr>
+            <tr><td><code>import_status</code></td><td>Valid, missing, outdated, or intentionally placeholder.</td></tr>
+            <tr><td><code>license_status</code></td><td>Internal, commissioned, third-party licensed, or placeholder.</td></tr>
+            <tr><td><code>author</code></td><td>Creator or source attribution.</td></tr>
+            <tr><td><code>checksum</code></td><td>Optional validation fingerprint.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="implementation-gap">Implementation Gap</h2>
+        <div class="callout">
+          <p><strong>Current truth:</strong> the project already has a useful registry foothold for scene materials, including usage indexing and DB sync.</p>
+          <p><strong>Current limit:</strong> there is no generalized asset registry table or editor flow yet for models, textures, scenes, audio, VFX, or UI assets.</p>
+        </div>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="database_overview.html">Authoring Database Overview</a></li>
+          <li><a href="authoring_pipeline.html">Authoring Pipeline</a></li>
+          <li><a href="../tools/texture_maps_overview.html">Texture Maps</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>

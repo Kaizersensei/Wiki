@@ -3,21 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Database &amp; Data Model Overview</title>
-  <meta property="og:title" content="Database &amp; Data Model Overview">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <title>Authoring Database Overview</title>
+  <meta property="og:title" content="Authoring Database Overview">
+  <meta property="og:description" content="Current Densetsu Authoring database architecture, schema coverage, and implementation limits.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/database_overview.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Database &amp; Data Model Overview">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:title" content="Authoring Database Overview">
+  <meta property="twitter:description" content="Current Densetsu Authoring database architecture, schema coverage, and implementation limits.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -28,98 +26,92 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
-      <h1>Database &amp; Data Model Overview</h1>
+      <h1>Authoring Database Overview</h1>
       <article class="markdown">
-        <div class="callout" id="content-status">
-          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Tools programmers, engine programmers, technical designers</td></tr>
+              <tr><th>Implementation status</th><td>Partial database slice</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>authoring_database_service.gd</code>, <code>migration_runner.gd</code>, <code>0001_authoring_core.sql</code>, <code>0002_material_profile_metadata.sql</code></td><th>User touchpoint</th><td>Authoring workspace database status panel and DB initialization flow</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
         </div>
-
-        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
-        <h2 id="at-a-glance">At a glance</h2>
-<ul>
-<li>(TODO) One-sentence system summary.</li>
-<li>(TODO) Primary owner/component boundary.</li>
-<li>(TODO) Current maturity/status and notable risks.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
-        <h2 id="how-it-works">How it works</h2>
-<ul>
-<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
-<li>(TODO) Key deterministic rules/guardrails.</li>
-<li>(TODO) Failure modes and fallback behavior.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
-        <h2 id="interfaces">Interfaces</h2>
-<ul>
-<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
-<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
-<li>(TODO) Tooling/debug surfaces tied to this component.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
-        <h2 id="operational-concerns">Operational concerns</h2>
-<ul>
-<li>(TODO) Performance/scalability constraints.</li>
-<li>(TODO) Testing and verification expectations.</li>
-<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
-        <h2 id="related-docs">Related docs</h2>
-<ul>
-<li><a href="../index.html">Engine index</a></li>
-<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
-</ul>
-
-        <details>
-          <summary>Raw source excerpts</summary>
-          <pre class="source-excerpt">Key principles: 
-●​ Certainty over probability: It assumes no free will or randomness, aiming for a 
-single, predictable outcome based on inputs, unlike probabilistic models that predict 
-a range of possible outcomes. 
-●​ Scientific and risk-based: It merges the scientific method with business principles
-
----
-
-from the start.  
-
-1: Overview 
-Game Identity 
-Title: Densetsu​
-
----
-
-2: World Overview 
-Historical Timeline 
-Time in Densetsu is measured relative to the Great Eclipse, an event that fractured the</pre>
-        </details>
-
-        <details>
-          <summary>Unresolved conflicts / open questions</summary>
-          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-        </details>
-
+        <p>The Densetsu Authoring database is intended to become the structured knowledge layer for authored game content. Today, the implementation is only a first slice: the workspace shell can probe a project-owned SQLite path, run migrations, and expose a few repositories, but the full authoring taxonomy from the handout is not yet present in schema or UI.</p>
+        <h2 id="current-architecture">Current Architecture</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Current role</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Workspace shell</td><td><code>authoring_workspace.gd</code> shows DB status and can trigger initialization.</td><td>Acts as the current operator entry point.</td></tr>
+            <tr><td>Database service</td><td><code>authoring_database_service.gd</code> owns path, backend selection, status refresh, and repository creation.</td><td>Central service boundary for the current addon slice.</td></tr>
+            <tr><td>Backend</td><td><code>sqlite_authoring_database_backend.gd</code> expects the <code>SQLite</code> class from <code>godot-sqlite</code>.</td><td>Blocked until the dependency exists in the project tree.</td></tr>
+            <tr><td>Migrations</td><td><code>migration_runner.gd</code> applies sorted <code>.sql</code> migrations and records versions.</td><td>Creates a repeatable schema bootstrap path.</td></tr>
+            <tr><td>Repositories</td><td>Biome and material-profile repositories are currently implemented.</td><td>No repositories yet for actors, overlays, placement rules, or generated records.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="implemented-schema">Implemented Schema Today</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Table</th>
+              <th>Purpose</th>
+              <th>Current status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>biomes</code></td><td>First semantic-domain foothold for biome records.</td><td>Queryable through <code>BiomeRepository</code>.</td></tr>
+            <tr><td><code>material_profiles</code></td><td>Catalog of external scene materials synced from the Material Tracker backend.</td><td>Most concrete asset-registry foothold in the current build.</td></tr>
+            <tr><td><code>water_systems</code></td><td>Reserved authoring table for water-system records.</td><td>Defined in schema but not surfaced through a repository or editor view.</td></tr>
+            <tr><td><code>map_assignments</code></td><td>Lightweight mapping between map path, domain, and target ID.</td><td>Useful foothold, but not a placement-rule system.</td></tr>
+            <tr><td><code>compiler_reports</code></td><td>Reserved table for compile and validation output.</td><td>No full compile pass writes are implemented yet.</td></tr>
+            <tr><td><code>schema_migrations</code></td><td>Migration bookkeeping created by the runner.</td><td>Internal support table rather than authored content.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="dependency-state">Dependency State</h2>
+        <div class="callout">
+          <p><strong>Verified blocker:</strong> the addon code expects <code>res://addons/godot-sqlite/gdsqlite.gdextension</code>, but that addon is not present in the scanned <code>densetsu-dev</code> tree.</p>
+          <p><strong>Effect:</strong> the database path and migration flow are real, but a working SQLite backend cannot be assumed in this snapshot.</p>
+        </div>
+        <h2 id="target-model-vs-current-slice">Target Model Versus Current Slice</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Target model</th>
+              <th>Current slice</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Catalog scope</td><td>Actors, capabilities, assets, overlays, placement rules, generated records, and more.</td><td>Biomes, material profiles, water-system placeholder table, map assignments, and compile-report placeholder table.</td></tr>
+            <tr><td>Asset registry</td><td>Multi-domain asset catalog with owner, license, status, checksum, and typed references.</td><td>External scene materials only, via material indexing and <code>material_profiles</code>.</td></tr>
+            <tr><td>Compile model</td><td>Deterministic authoring-data to generated-record pipeline with explainable output.</td><td>Compile module shell and report table only.</td></tr>
+            <tr><td>Editor coverage</td><td>Dedicated editors for semantic domains and variants.</td><td>Shell modules with limited live behavior, mainly DB status and material sync.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="authoring_pipeline.html">Authoring Pipeline</a></li>
+          <li><a href="asset_registry.html">Asset Registry</a></li>
+          <li><a href="placement_rules.html">Placement Rules</a></li>
+          <li><a href="generated_chunk_records.html">Generated Chunk Records</a></li>
+        </ul>
       </article>
-    
-    <details class="meta-toggle"><summary>Show page info</summary>
-<div class='meta-grid'>
-<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>database_overview</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Database &amp; Data Model Overview</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>stub</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>System</span></div><div class='meta-item'><span class='meta-key'>aliases</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Game Design Document.txt, Densetsu Design Document.txt</span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2025-12-24</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>True</span></div>
-</div>
-</details>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

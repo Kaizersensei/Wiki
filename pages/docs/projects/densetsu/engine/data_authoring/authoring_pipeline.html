@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Authoring Pipeline</title>
   <meta property="og:title" content="Authoring Pipeline">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Current Densetsu Authoring workspace flow, module behavior, and migration limits.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/authoring_pipeline.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Authoring Pipeline">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Current Densetsu Authoring workspace flow, module behavior, and migration limits.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -28,99 +26,91 @@
       <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
       <a href="../../../../../retraissance/projects/index.html">Projects</a>
       <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
-      <a href="../../../../../retraissance/densetsu/universe/index.html">Universe</a>
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Authoring Pipeline</h1>
       <article class="markdown">
-        <div class="callout" id="content-status">
-          <strong>Content status:</strong> Generated scaffold. Keep each section concise (3–6 bullets max) and link to subpages for deep dives.
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Workflow overview</td><th>Audience</th><td>Technical designers, tools programmers, world builders</td></tr>
+              <tr><th>Implementation status</th><td>Workspace shell with partial live behavior</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>plugin.gd</code>, <code>authoring_workspace.gd</code>, <code>authoring_context.gd</code>, <code>authoring_scene_bridge.gd</code></td><th>User touchpoint</th><td>Densetsu Authoring main screen and scene-bridge side panel</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
         </div>
-
-        <!-- Section guidance: keep 3–6 bullets in At a glance before linking out. -->
-        <h2 id="at-a-glance">At a glance</h2>
-<ul>
-<li>(TODO) One-sentence system summary.</li>
-<li>(TODO) Primary owner/component boundary.</li>
-<li>(TODO) Current maturity/status and notable risks.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 bullets in How it works; move implementation detail to subpages. -->
-        <h2 id="how-it-works">How it works</h2>
-<ul>
-<li>(TODO) Runtime flow or lifecycle in ordered steps.</li>
-<li>(TODO) Key deterministic rules/guardrails.</li>
-<li>(TODO) Failure modes and fallback behavior.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 bullets in Interfaces and link full contracts elsewhere. -->
-        <h2 id="interfaces">Interfaces</h2>
-<ul>
-<li>(TODO) Inputs (events, data contracts, authoring surfaces).</li>
-<li>(TODO) Outputs (state transitions, persisted data, emitted signals).</li>
-<li>(TODO) Tooling/debug surfaces tied to this component.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 bullets in Operational concerns and link runbooks/subpages for detail. -->
-        <h2 id="operational-concerns">Operational concerns</h2>
-<ul>
-<li>(TODO) Performance/scalability constraints.</li>
-<li>(TODO) Testing and verification expectations.</li>
-<li>(TODO) Known gaps, migration notes, or rollout constraints.</li>
-</ul>
-
-        <!-- Section guidance: keep 3–6 links max; split by domain when the list grows. -->
-        <h2 id="related-docs">Related docs</h2>
-<ul>
-<li><a href="../index.html">Engine index</a></li>
-<li>(TODO) Add 1–5 most relevant pages for this topic.</li>
-</ul>
-
-        <details>
-          <summary>Raw source excerpts</summary>
-          <pre class="source-excerpt">●​ Leverage modular design to reduce dependency bottlenecks.​
- 
-●​ Prioritize reusable tools and pipelines.​
- 
-●​ Maintain morale through regular creative reviews and open contribution.​
-
----
-
-Scope 
-This reference focuses exclusively on runtime systems and their integration hierarchy. It 
-does not cover art pipelines, content creation, or narrative writing, except where those 
-elements directly interact with core systems (for example, dialogue or quest triggers linked to 
-Actors).
-
----
-
-transitions, and cooldowns. 
- 
-Behavior Authoring Guidelines 
-●​ Single Responsibility: Each State Unit should handle one behavioural concern only.​</pre>
-        </details>
-
-        <details>
-          <summary>Unresolved conflicts / open questions</summary>
-          <div class="callout"><p>Open: hierarchy between time rifts and anomalies not locked; naming conventions (full vs given names) not fully locked. Time travel remains non-player-controlled; chat canon overrides docs.</p></div>
-        </details>
-
+        <p>The current authoring pipeline is a scaffolded editor shell rather than a full database-first workflow. It establishes module boundaries, scene-view policy, database initialization, and one real sync path for materials. Most domain editors described by the handout are still future implementation work.</p>
+        <h2 id="current-operator-flow">Current Operator Flow</h2>
+        <ol>
+          <li>Open the Densetsu Authoring main screen registered by <code>plugin.gd</code>.</li>
+          <li>Refresh scene context so the workspace can detect the active scene, Terrain3D targets, river managers, and tool availability.</li>
+          <li>Inspect DB status and initialize the schema if the SQLite backend is available.</li>
+          <li>Switch between scaffold modules such as Biome, Terrain, Vegetation, Water, Materials, and Compile.</li>
+          <li>Use the Materials module to index scene materials and sync external material profiles into the database.</li>
+        </ol>
+        <h2 id="workspace-modules">Workspace Modules</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>Current behavior</th>
+              <th>Reality check</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Overview</td><td>Summarizes shell status, terrain targets, and river-manager presence.</td><td>Operational shell only.</td></tr>
+            <tr><td>Biome</td><td>Reports schema readiness and biome row count.</td><td>No real biome editing workflow yet.</td></tr>
+            <tr><td>Terrain</td><td>Reports Terrain3D targets and applies camera-only scene policy.</td><td>Semantic bindings and masks are not migrated.</td></tr>
+            <tr><td>Vegetation</td><td>Shows availability of tree authoring, foliage, and Autocliff side tools.</td><td>Workspace does not own their state yet.</td></tr>
+            <tr><td>Water</td><td>Shows waterways availability and river-manager detection.</td><td>Water-system authoring is not migrated into DB tooling.</td></tr>
+            <tr><td>Materials</td><td>Builds a shared scene material index and syncs external materials to <code>material_profiles</code>.</td><td>Most mature workflow in the current addon.</td></tr>
+            <tr><td>Compile</td><td>Exposes a compile shell and DB readiness display.</td><td>No full compile pipeline is implemented.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="scene-policy-model">Scene-Policy Model</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Policy field</th>
+              <th>Current meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>requires_scene_view</code></td><td>Whether the active module expects the live 3D editor context.</td></tr>
+            <tr><td><code>interaction_mode</code></td><td>Current modes are <code>none</code>, <code>camera_only</code>, or <code>camera_pick</code>.</td></tr>
+            <tr><td><code>allow_editor_selection</code></td><td>Currently disabled for all module policies in this slice.</td></tr>
+            <tr><td><code>allow_node_transforms</code></td><td>Currently disabled for all module policies in this slice.</td></tr>
+          </tbody>
+        </table>
+        <p>The scene bridge is therefore a read-oriented sidecar today. It supports context display and pick reporting, not freeform scene editing.</p>
+        <h2 id="first-real-migration-foothold">First Real Migration Foothold</h2>
+        <div class="callout">
+          <p><strong>Materials are the first concrete migration slice.</strong> The authoring workspace and the legacy material tracker already share the same scene-index backend, and external material profiles can be written into the DB.</p>
+          <p>This makes the material path the best current example for how future authoring domains should move from ad hoc editor state into project-owned database records.</p>
+        </div>
+        <h2 id="current-blockers">Current Blockers</h2>
+        <ul>
+          <li>The SQLite backend dependency is missing from the scanned project tree.</li>
+          <li>No actor, overlay, placement-rule, or generated-record editors are implemented yet.</li>
+          <li>Compile behavior is still a shell, so deterministic generated-content output cannot be verified in this snapshot.</li>
+          <li>Terrain, vegetation, and water modules are context-aware scaffolds rather than full authoring surfaces.</li>
+        </ul>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="database_overview.html">Authoring Database Overview</a></li>
+          <li><a href="asset_registry.html">Asset Registry</a></li>
+          <li><a href="placement_rules.html">Placement Rules</a></li>
+          <li><a href="generated_chunk_records.html">Generated Chunk Records</a></li>
+        </ul>
       </article>
-    
-    <details class="meta-toggle"><summary>Show page info</summary>
-<div class='meta-grid'>
-<div class='meta-item'><span class='meta-key'>id</span><span class='meta-value'>authoring_pipeline</span></div><div class='meta-item'><span class='meta-key'>title</span><span class='meta-value'>Authoring Pipeline</span></div><div class='meta-item'><span class='meta-key'>status</span><span class='meta-value'>stub</span></div><div class='meta-item'><span class='meta-key'>domain</span><span class='meta-value'>engine</span></div><div class='meta-item'><span class='meta-key'>type</span><span class='meta-value'>System</span></div><div class='meta-item'><span class='meta-key'>aliases</span><span class='meta-value'></span></div><div class='meta-item'><span class='meta-key'>sources</span><span class='meta-value'>Densetsu Design Document.txt</span></div><div class='meta-item'><span class='meta-key'>last_reviewed</span><span class='meta-value'>2025-12-24</span></div><div class='meta-item'><span class='meta-key'>generated</span><span class='meta-value'>True</span></div>
-</div>
-</details>
     </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

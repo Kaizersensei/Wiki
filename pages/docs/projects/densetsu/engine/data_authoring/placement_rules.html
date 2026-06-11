@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Placement Rules</title>
+  <meta property="og:title" content="Placement Rules">
+  <meta property="og:description" content="Target placement-rule model for Densetsu authoring and the current schema gap.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/placement_rules.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Placement Rules">
+  <meta property="twitter:description" content="Target placement-rule model for Densetsu authoring and the current schema gap.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Placement Rules</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Domain reference</td><th>Audience</th><td>Technical designers, world builders, tools programmers</td></tr>
+              <tr><th>Implementation status</th><td>Target model only</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>D:\Desktop\DEV\wiki\docbase\db-documentation.md</code>, <code>authoring_workspace.gd</code>, <code>authoring_context.gd</code>, <code>0001_authoring_core.sql</code></td><th>User touchpoint</th><td>Planned biome, terrain, vegetation, and compile editors</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Placement rules connect authored records to the conditions under which they may appear. They are the semantic bridge between Terrain3D substrate, biome meaning, topology masks, and deterministic generation output.</p>
+        <h2 id="what-placement-rules-do">What Placement Rules Do</h2>
+        <ul>
+          <li>Choose what may spawn or be authored in a location.</li>
+          <li>Express conditions such as biome, topology, soil, moisture, slope, altitude, and exclusion zones.</li>
+          <li>Make generation explainable instead of opaque or random.</li>
+          <li>Keep placement logic separate from runtime state and separate from raw asset files.</li>
+        </ul>
+        <h2 id="target-rule-fields">Target Rule Fields</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>rule_id</code></td><td>Stable authored rule identifier.</td></tr>
+            <tr><td><code>output_type</code></td><td>Plant, rock, resource, actor, hazard, or prop.</td></tr>
+            <tr><td><code>output_id</code></td><td>Record produced when the rule matches.</td></tr>
+            <tr><td><code>biome_id</code></td><td>Required biome relation.</td></tr>
+            <tr><td><code>topology_id</code></td><td>Required topology relation.</td></tr>
+            <tr><td><code>terrain_surface_id</code></td><td>Required Terrain3D or semantic surface relation.</td></tr>
+            <tr><td><code>soil_profile_id</code></td><td>Required soil relation.</td></tr>
+            <tr><td><code>moisture_min/max</code></td><td>Allowed moisture range.</td></tr>
+            <tr><td><code>slope_min/max</code></td><td>Allowed slope range.</td></tr>
+            <tr><td><code>altitude_min/max</code></td><td>Allowed elevation range.</td></tr>
+            <tr><td><code>density</code></td><td>Spawn density or authored presence rate.</td></tr>
+            <tr><td><code>cluster_radius</code></td><td>Clustering behavior.</td></tr>
+            <tr><td><code>min_spacing</code></td><td>Minimum spacing between outputs.</td></tr>
+            <tr><td><code>max_per_chunk</code></td><td>Chunk budget control.</td></tr>
+            <tr><td><code>generation_weight</code></td><td>Selection weight inside a rule set.</td></tr>
+            <tr><td><code>priority</code></td><td>Conflict-resolution priority.</td></tr>
+            <tr><td><code>exclusion_rule_id</code></td><td>Blocking or suppression relation.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-footholds">Current Footholds In The Live Addon</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current value</th>
+              <th>Why it is not enough</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Terrain module</td><td>Reports Terrain3D targets and enforces camera-only scene policy.</td><td>No placement-rule editing or evaluation is implemented.</td></tr>
+            <tr><td><code>map_assignments</code> table</td><td>Maps <code>map_path</code>, <code>domain</code>, and <code>target_id</code>.</td><td>Useful for ownership and linkage, but not expressive enough for placement conditions.</td></tr>
+            <tr><td>Compile module</td><td>Scaffold only.</td><td>No live rule evaluation, generated-object reasoning, or deterministic batch output yet.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="design-guardrails">Design Guardrails</h2>
+        <ul>
+          <li>Do not hide placement meaning inside hardcoded enums with no authoring surface.</li>
+          <li>Do not duplicate whole biome records just to express local placement changes.</li>
+          <li>Do not let runtime randomness replace deterministic authored rule evaluation.</li>
+          <li>Keep Terrain3D as substrate owner and use placement rules for semantic meaning above it.</li>
+        </ul>
+        <h2 id="verification-notes">Verification Notes</h2>
+        <div class="callout">
+          <p><strong>Verified:</strong> placement rules are a major target-domain requirement in the handout.</p>
+          <p><strong>Not implemented:</strong> there is no placement-rule table, repository, or editor workflow in the current addon snapshot.</p>
+        </div>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="database_overview.html">Authoring Database Overview</a></li>
+          <li><a href="generated_chunk_records.html">Generated Chunk Records</a></li>
+          <li><a href="world_state_overlays.html">World-State Overlays</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>

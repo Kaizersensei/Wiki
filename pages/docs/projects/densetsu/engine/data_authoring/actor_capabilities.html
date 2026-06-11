@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Actor Capabilities</title>
+  <meta property="og:title" content="Actor Capabilities">
+  <meta property="og:description" content="Target actor-capability taxonomy for the Densetsu Authoring database and the current implementation gap.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/actor_capabilities.html">
+  <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Actor Capabilities">
+  <meta property="twitter:description" content="Target actor-capability taxonomy for the Densetsu Authoring database and the current implementation gap.">
+  <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
+  <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
+</head>
+<body class="theme-wiki">
+  <header class="site-header">
+    <div class="brand">
+      <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
+        <img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" />
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a>
+      <a href="../../../../../retraissance/projects/index.html">Projects</a>
+      <a href="../../../../../retraissance/densetsu/index.html">Densetsu</a>
+      <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
+    </nav>
+  </header>
+  <main class="content">
+    <section class="panel">
+      <p class="eyebrow">engine</p>
+      <h1>Actor Capabilities</h1>
+      <article class="markdown">
+        <div class="callout">
+          <table>
+            <tbody>
+              <tr><th>Page type</th><td>Domain reference</td><th>Audience</th><td>Gameplay programmers, tools programmers, technical designers</td></tr>
+              <tr><th>Implementation status</th><td>Target model only</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source scripts</th><td><code>D:\Desktop\DEV\wiki\docbase\db-documentation.md</code>, <code>0001_authoring_core.sql</code>, <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Planned actor and variant editors in the Authoring workspace</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Actor capabilities describe what an actor can do. They are not actor categories, and they are not runtime state. The authoring database needs this distinction because the same base actor may be player-controllable, dialogue-capable, rideable, combatant, or harvestable without becoming five different actor types.</p>
+        <h2 id="core-rule">Core Rule</h2>
+        <ul>
+          <li>Category answers what the thing fundamentally is.</li>
+          <li>Capability answers what the thing can do.</li>
+          <li>Runtime state answers what the thing is doing right now.</li>
+          <li>Variant answers how this authored form differs from its base record.</li>
+        </ul>
+        <h2 id="recommended-capability-families">Recommended Capability Families</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Family</th>
+              <th>Example capabilities</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Control</td><td><code>controllable_by_player</code>, <code>controllable_by_ai</code>, <code>possessable</code>, <code>commandable</code></td><td>Defines control ownership, not narrative role.</td></tr>
+            <tr><td>Social</td><td><code>dialogue_capable</code>, <code>merchant</code>, <code>trainer</code>, <code>quest_anchor</code>, <code>recruitable</code></td><td>Use relations or tags rather than separate actor classes.</td></tr>
+            <tr><td>Combat</td><td><code>combatant</code>, <code>hostile_default</code>, <code>guard_capable</code>, <code>parry_capable</code>, <code>drops_loot</code></td><td>Keep these separate from current aggro or alive/dead state.</td></tr>
+            <tr><td>Mounting</td><td><code>rideable</code>, <code>can_mount</code>, <code>tameable</code>, <code>bond_tracked</code>, <code>rider_slot_provider</code></td><td><code>rideable</code> and <code>can_mount</code> belong to different actors and must not be merged.</td></tr>
+            <tr><td>Interaction</td><td><code>harvestable</code>, <code>cuttable</code>, <code>flammable</code>, <code>can_be_grabbed</code></td><td>Important for active objects, resource nodes, and environmental actors.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="authoring-expectations">Authoring Expectations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Record concern</th>
+              <th>Expected authoring behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Base actor record</td><td>Defines actor family, default assets, base behavior, and default capability relations.</td></tr>
+            <tr><td>Variant record</td><td>Overrides only the fields or capability deltas that differ from the base actor.</td></tr>
+            <tr><td>Runtime state</td><td>Stored outside the authoring catalog as save data, FSM state, or live relationship state.</td></tr>
+            <tr><td>UI behavior</td><td>Editors should support add/remove capability actions, base comparison, validation, and resolved previews.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-implementation-status">Current Implementation Status</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Current status</th>
+              <th>Verification note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Schema tables</td><td>No actor or capability tables are present in <code>0001_authoring_core.sql</code>.</td><td>Verified by direct schema inspection.</td></tr>
+            <tr><td>Repositories</td><td>No actor or capability repositories are implemented in the addon.</td><td>Only biome and material-profile repositories exist today.</td></tr>
+            <tr><td>Workspace module</td><td>No Actor module exists in <code>MODULE_ORDER</code>.</td><td>The current workspace is not yet an actor-authoring surface.</td></tr>
+            <tr><td>Behavior docs risk</td><td>High risk of confusion if runtime states are documented as capabilities.</td><td>This page should be treated as policy guidance for future implementation.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="verification-notes">Verification Notes</h2>
+        <div class="callout">
+          <p><strong>Verified:</strong> the capability taxonomy is clearly defined in the handout.</p>
+          <p><strong>Not yet implemented:</strong> there is no live actor-capability authoring surface in the current Densetsu Authoring addon snapshot.</p>
+        </div>
+        <h2 id="related-docs">Related Docs</h2>
+        <ul>
+          <li><a href="index.html">Data &amp; Authoring</a></li>
+          <li><a href="database_overview.html">Authoring Database Overview</a></li>
+          <li><a href="world_state_overlays.html">World-State Overlays</a></li>
+          <li><a href="../actors/actor_system_overview.html">Actor System Overview</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+  <script src="../../../../../retraissance/assets/site.js" defer></script>
+</body>
+</html>
