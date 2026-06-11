@@ -4,26 +4,26 @@
     <tbody>
       <tr><th>Page type</th><td>Section hub</td><th>Audience</th><td>Engine programmers, tools programmers, technical designers, world builders</td></tr>
       <tr><th>Implementation status</th><td>Active documentation baseline</td><th>Last verified</th><td>2026-06-11</td></tr>
-      <tr><th>Source inputs</th><td><code>docs/db-structure.md</code> and <code>res://addons/densetsu_authoring/</code></td><th>User touchpoint</th><td>Engine wiki entry point for the authoring database program</td></tr>
+      <tr><th>Source inputs</th><td><code>docs/authoring-space.md</code>, <code>docs/db-structure.md</code>, <code>docs/biome-driven maps.md</code>, and <code>addons/densetsu_authoring/</code></td><th>User touchpoint</th><td>Engine wiki entry point for the authoring database and compile program</td></tr>
       <tr><th>Risk level</th><td>High while the broader authoring model is still being implemented</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
     </tbody>
   </table>
 </div>
 <h2>Overview</h2>
-<p>This section documents the Densetsu authoring-data model and the editor/database layer being built to support it. The handout defines the intended taxonomy. The codebase defines the current implementation slice. Pages in this section must make that distinction obvious.</p>
+<p>This section documents the Densetsu authoring-data model and the editor or database layer being built to support it. The repo docs describe the target Authoring workspace, the target SQLite taxonomy, and the biome compiler direction. The addon code shows which part of that plan is already real in the project.</p>
 <h2>What This Section Covers</h2>
 <ul>
-  <li>The target Authoring DB taxonomy: entities, actors, capabilities, asset references, placement rules, overlays, and generated records.</li>
-  <li>The current Densetsu Authoring plugin: workspace shell, SQLite service, migrations, repositories, and scene-policy scaffolding.</li>
+  <li>The target Authoring workspace: shared context, module rail, report strip, sidecar orchestration, and compile flow.</li>
+  <li>The current Densetsu Authoring addon: workspace shell, SQLite service layer, migrations, repositories, and scene-policy scaffolding.</li>
   <li>The migration path from early scaffold to a database-first authoring workflow that stays compatible with Godot assets and Terrain3D.</li>
 </ul>
-<h2>Pages In This First Baseline</h2>
+<h2>Pages In This Baseline</h2>
 <ul>
-  <li><a href="database_overview.html">Authoring Database Overview</a> - current architecture, schema, dependencies, and verified implementation status.</li>
+  <li><a href="database_overview.html">Authoring Database Overview</a> - current architecture, schema coverage, dependencies, and verified implementation status.</li>
   <li><a href="authoring_pipeline.html">Authoring Pipeline</a> - current workspace flow, planned compile flow, and where the live code stops today.</li>
-  <li><a href="actor_capabilities.html">Actor Capabilities</a> - target capability taxonomy and the current lack of actor-capability schema support.</li>
-  <li><a href="asset_registry.html">Asset Registry</a> - target asset catalog rules and the current material-profile foothold.</li>
-  <li><a href="placement_rules.html">Placement Rules</a> - the planned biome/topology rule layer above Terrain3D and authored assets.</li>
+  <li><a href="actor_capabilities.html">Actor Capabilities</a> - target capability taxonomy and the schema foothold added for entity capabilities.</li>
+  <li><a href="asset_registry.html">Asset Registry</a> - target asset catalog rules and the current asset-registry or material-profile footing.</li>
+  <li><a href="placement_rules.html">Placement Rules</a> - the planned biome, topology, and generation rule layer above Terrain3D and authored assets.</li>
   <li><a href="generated_chunk_records.html">Generated Chunk Records</a> - deterministic generation record expectations and current compile-scaffold limits.</li>
   <li><a href="world_state_overlays.html">World-State Overlays</a> - variant-switch and suppression rules for story, environmental, and temporal world changes.</li>
 </ul>
@@ -38,13 +38,13 @@
   </thead>
   <tbody>
     <tr><td>Plugin</td><td><code>res://addons/densetsu_authoring/plugin.gd</code> is enabled in <code>project.godot</code>.</td><td>The editor-facing shell exists today and is no longer purely theoretical.</td></tr>
-    <tr><td>Database backend</td><td>The code expects <code>godot-sqlite</code>, but the addon files are not present in the scanned tree.</td><td>The documented DB path is real, but schema setup is currently blocked by a missing dependency.</td></tr>
-    <tr><td>Schema scope</td><td>The implemented schema currently covers biomes, material profiles, water systems, map assignments, compiler reports, and schema migrations.</td><td>The handout target is much broader than the live schema, so docs must not imply full catalog coverage yet.</td></tr>
-    <tr><td>Section coverage</td><td>This first pass covers the database foundation and five high-value taxonomy pages.</td><td>Readers get a usable baseline now without pretending the whole authoring model is already implemented.</td></tr>
+    <tr><td>Database backend</td><td>The code expects <code>godot-sqlite</code>, but the addon files are not present in the current project tree.</td><td>The database service path is real, but opening a live SQLite backend is currently dependency-blocked.</td></tr>
+    <tr><td>Schema scope</td><td>The implemented schema now covers early semantic tables, entity and tag foundations, asset registry tables, capability tables, and record-variant tables.</td><td>The live schema has moved beyond the earliest biome-only slice and should be documented that way.</td></tr>
+    <tr><td>Workspace scope</td><td>The Authoring workspace shell, module list, DB status panel, material sync path, and scene policies are implemented. Full domain editors are not.</td><td>Readers can separate the real shell from the larger target architecture described in the docs.</td></tr>
   </tbody>
 </table>
 <h2>Status</h2>
-<p><strong>Partially implemented.</strong> The authoring workspace shell, context model, migration runner, and a small schema are implemented. Most of the cataloguing system described by the handout remains target architecture and is documented as such in this section.</p>
+<p><strong>Partially implemented.</strong> The authoring workspace shell, context model, migration runner, repositories, and a growing schema are implemented. Most of the full cataloguing and compile model described in the repo docs remains target architecture and should be read as planned state, not completed engine behavior.</p>
 <h2>Next Page Families</h2>
 <ul>
   <li>Biome and ecology pages</li>
@@ -54,7 +54,9 @@
 </ul>
 <h2>Sources</h2>
 <ul>
+  <li><code>docs/authoring-space.md</code></li>
   <li><code>docs/db-structure.md</code></li>
+  <li><code>docs/biome-driven maps.md</code></li>
   <li><code>addons/densetsu_authoring/plugin.gd</code></li>
   <li><code>addons/densetsu_authoring/core/authoring_context.gd</code></li>
   <li><code>addons/densetsu_authoring/ui/authoring_workspace.gd</code></li>

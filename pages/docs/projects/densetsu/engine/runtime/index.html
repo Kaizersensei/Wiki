@@ -1,33 +1,47 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Core Runtime</title><link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head><body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../index.html">Engine Wiki</a></nav></header><main class="content"><section class="panel slack-doc-page"><p class="eyebrow">engine</p><h1>Core Runtime</h1><article class="markdown">
+<div class="callout">
+  <table>
+    <tbody>
+      <tr><th>Page type</th><td>Section hub</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
+      <tr><th>Implementation status</th><td>Implemented rewrite slice with ongoing expansion</td><th>Last verified</th><td>2026-06-11</td></tr>
+      <tr><th>Source inputs</th><td><code>project.godot</code>, <code>engine3d/runtime/</code>, <code>engine3d/loading/</code>, <code>engine3d/tests/</code>, and <code>docs/production_rewrite_worklog.md</code></td><th>User touchpoint</th><td>Engine wiki landing page for runtime architecture</td></tr>
+      <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+    </tbody>
+  </table>
+</div>
 <h2>Overview</h2>
-<p>The Core Runtime section covers the startup path, scene lifecycle, input capture, and shared runtime services that keep the game loop moving. Evidence comes from the bootloader and loading screen stack, autoload singletons, and scene management scripts captured in the context database.</p>
-<h2>Scope</h2>
+<p>The active runtime no longer boots through an arbitrary gameplay scene. It starts in <code>RuntimeBootstrap.tscn</code>, validates runtime ownership through explicit services, resolves startup content through the runtime manifest and data catalog, and then hands scene activation to <code>SceneFlowService</code>.</p>
+<h2>Current Runtime Shape</h2>
 <ul>
-  <li>Bootstrapping and splash sequence</li>
-  <li>Loading screen lifecycle and progress reporting</li>
-  <li>Scene registration and runtime scene application</li>
-  <li>Autoload singletons (event bus, input manager, runtime)</li>
-  <li>Resource-backed data persistence</li>
+  <li><strong>Startup root:</strong> <code>project.godot</code> points to <code>res://engine3d/runtime/RuntimeBootstrap.tscn</code>.</li>
+  <li><strong>Core authority:</strong> manifest, catalog, diagnostics, scene flow, presentation, and player-lookup services are autoloaded explicitly.</li>
+  <li><strong>Diagnostics:</strong> runtime failures are meant to produce visible feedback and persistent traces instead of silent blank-screen failure.</li>
+  <li><strong>Debug flow:</strong> editor runs default to scene-selector mode through <code>run/main_run_args="--scene-selector"</code>.</li>
+  <li><strong>Validation:</strong> runtime smoke scenes and export-manifest checks are part of the rewrite acceptance path.</li>
 </ul>
 <h2>Pages</h2>
 <ul>
-  <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a> — Startup flow and splash sequencing.</li>
-  <li><a href="core_runtime_overview.html">Core Runtime Overview</a> — Responsibilities and system map.</li>
-  <li><a href="data_persistence.html">Data Persistence</a> — Resource-backed data types and storage points.</li>
-  <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a> — Loading screen host structure and visuals.</li>
-  <li><a href="save_load.html">Save Load</a> — Status and gaps for save/load workflows.</li>
-  <li><a href="startup_splashes_parameter_driven.html">Startup Splashes Parameter Driven</a> — Splash screen scenes and sequencing.</li>
-  <li><a href="world_streaming.html">World Streaming</a> — Current scene graph evidence and streaming gap.</li>
+  <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a> - startup flow, loading handoff, and splash responsibilities.</li>
+  <li><a href="core_runtime_overview.html">Core Runtime Overview</a> - service boundaries, ownership, and runtime boot sequence.</li>
+  <li><a href="data_persistence.html">Data Persistence</a> - current persistence surfaces and catalog-backed data flow.</li>
+  <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a> - loading-screen structure and scene-transition UI ownership.</li>
+  <li><a href="save_load.html">Save Load</a> - current save/load status and remaining evidence gaps.</li>
+  <li><a href="startup_splashes_parameter_driven.html">Startup Splashes Parameter Driven</a> - startup splash chain and configuration role.</li>
+  <li><a href="world_streaming.html">World Streaming</a> - current state of scene loading versus fully documented world streaming.</li>
 </ul>
 <h2>Status</h2>
-<p><strong>Implemented (partial)</strong>. Boot and loading systems, autoloads, and scene management are implemented. Save/Load and World Streaming still need explicit evidence or a design decision.</p>
-<h2>Sources</h2>
+<p><strong>Implemented and still under rewrite.</strong> The deterministic boot path, runtime services, manifest or catalog authority, selector flow, and smoke gates are present. The documentation and code still show migration seams around full catalog coverage, headless reliability, and later runtime subsystems such as complete save/load and world streaming.</p>
+<h2>Primary Sources</h2>
 <ul>
-  <li><code>engine3d/loading/DensetsuBootLoader.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingScreen.gd</code></li>
-  <li><code>engine3d/loading/DensetsuLoadingGauge.gd</code></li>
-  <li><code>engine/scene/SceneManager.gd</code></li>
-  <li><code>autoload/EventBus.gd</code>, <code>autoload/InputManager.gd</code>, <code>autoload/Runtime.gd</code></li>
+  <li><code>project.godot</code></li>
+  <li><code>engine3d/runtime/RuntimeBootstrap.gd</code></li>
+  <li><code>engine3d/runtime/RuntimeManifestService.gd</code></li>
+  <li><code>engine3d/runtime/DataCatalogService.gd</code></li>
+  <li><code>engine3d/runtime/SceneFlowService.gd</code></li>
+  <li><code>engine3d/runtime/RuntimeDebugOverlayService.gd</code></li>
+  <li><code>engine3d/runtime/PlayerActorService.gd</code></li>
+  <li><code>engine3d/loading/</code></li>
+  <li><code>engine3d/tests/</code></li>
+  <li><code>docs/production_rewrite_worklog.md</code></li>
 </ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
-

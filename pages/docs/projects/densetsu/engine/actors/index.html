@@ -1,28 +1,39 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Actor System</title><link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head><body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../index.html">Engine Wiki</a></nav></header><main class="content"><section class="panel slack-doc-page"><p class="eyebrow">engine</p><h1>Actor System</h1><article class="markdown">
+<div class="callout">
+  <table>
+    <tbody>
+      <tr><th>Page type</th><td>Section hub</td><th>Audience</th><td>Gameplay programmers, AI programmers, technical designers</td></tr>
+      <tr><th>Implementation status</th><td>Active migration zone</td><th>Last verified</th><td>2026-06-11</td></tr>
+      <tr><th>Source inputs</th><td><code>AGENTS.md</code>, <code>engine3d/actors/</code>, <code>engine3d/runtime/PlayerActorService.gd</code>, and <code>docs/production_rewrite_worklog.md</code></td><th>User touchpoint</th><td>Engine wiki landing page for actor architecture</td></tr>
+      <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+    </tbody>
+  </table>
+</div>
 <h2>Overview</h2>
-<p>The Actor System defines how playable characters, NPCs, and world entities are represented and updated. Core evidence includes the ActorInterface3D base, ActorCharacter3D, and concrete actor scenes for player, NPC, and scenery.</p>
-<h2>Scope</h2>
+<p>The actor stack is currently split between two truths. The production game still depends on the legacy <code>ActorCharacter3D</code> path, while the shell or component architecture exists in parallel as the migration target for player, NPC, enemy, and presentation ownership.</p>
+<h2>Current Architecture</h2>
 <ul>
-  <li>Actor interface lifecycle hooks</li>
-  <li>Character actors (player, NPC)</li>
-  <li>Scenery actors</li>
-  <li>Actor parameters and tags</li>
+  <li><strong>Legacy authority:</strong> <code>ActorCharacter3D.gd</code> remains the runtime authority for the active gameplay path.</li>
+  <li><strong>Player reality:</strong> <code>ActorPlayer3D</code> still extends the legacy actor root in production, even though shell-based player scenes and bridges exist.</li>
+  <li><strong>Rewrite path:</strong> <code>ActorShell3D</code> plus components such as input, movement, combat, camera, animation, traversal, and state tags are live and used by shell scenes.</li>
+  <li><strong>Service boundary:</strong> <code>PlayerActorService</code> is the current runtime-facing lookup layer that helps isolate the rest of the runtime from direct player-scene assumptions.</li>
 </ul>
 <h2>Pages</h2>
 <ul>
-  <li><a href="actor_system_overview.html">Actor System Overview</a> — responsibilities and interfaces.</li>
-  <li><a href="actor_types_lifecycle.html">Actor Types Lifecycle</a> — common lifecycle phases and state changes.</li>
-  <li><a href="creatures_as_actors_framework.html">Creatures As Actors Framework</a> — how creature/NPC actors are structured.</li>
+  <li><a href="actor_system_overview.html">Actor System Overview</a> - current ownership split, migration boundary, and runtime risks.</li>
+  <li><a href="actor_types_lifecycle.html">Actor Types Lifecycle</a> - actor categories and lifecycle concerns.</li>
+  <li><a href="creatures_as_actors_framework.html">Creatures As Actors Framework</a> - creature and NPC framing inside the actor model.</li>
 </ul>
 <h2>Status</h2>
-<p><strong>Implemented.</strong> Actor base classes and concrete actor scenes are present in the evidence set.</p>
-<h2>Sources</h2>
+<p><strong>Implemented and under rewrite.</strong> The legacy actor path is still authoritative, but shell scenes, typed components, and player-service boundaries are already present and should be treated as the migration direction rather than unused experiments.</p>
+<h2>Primary Sources</h2>
 <ul>
-  <li><code>engine3d/actors/ActorInterface3D.gd</code></li>
   <li><code>engine3d/actors/ActorCharacter3D.gd</code></li>
-  <li><code>engine3d/actors/ActorNPC3D.gd</code></li>
   <li><code>engine3d/actors/ActorPlayer3D.gd</code></li>
-  <li><code>engine3d/actors/ActorScenery3D.tscn</code></li>
+  <li><code>engine3d/actors/ActorShell3D.gd</code></li>
+  <li><code>engine3d/actors/components/</code></li>
+  <li><code>engine3d/runtime/PlayerActorService.gd</code></li>
+  <li><code>docs/production_rewrite_worklog.md</code></li>
+  <li><code>AGENTS.md</code></li>
 </ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
-

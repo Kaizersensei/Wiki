@@ -39,12 +39,12 @@
             <tbody>
               <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Tools programmers, engine programmers, technical designers</td></tr>
               <tr><th>Implementation status</th><td>Partial database slice</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td><code>authoring_database_service.gd</code>, <code>migration_runner.gd</code>, <code>0001_authoring_core.sql</code>, <code>0002_material_profile_metadata.sql</code></td><th>User touchpoint</th><td>Authoring workspace database status panel and DB initialization flow</td></tr>
+              <tr><th>Source inputs</th><td><code>authoring_database_service.gd</code>, <code>migration_runner.gd</code>, <code>0001_authoring_core.sql</code>, <code>0002_material_profile_metadata.sql</code>, <code>0003_authoring_foundations.sql</code>, and <code>docs/authoring-space.md</code></td><th>User touchpoint</th><td>Authoring workspace database status panel and DB initialization flow</td></tr>
               <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p>The Densetsu Authoring database is intended to become the structured knowledge layer for authored game content. Today, the implementation is only a first slice: the workspace shell can probe a project-owned SQLite path, run migrations, and expose a few repositories, but the full authoring taxonomy from the handout is not yet present in schema or UI.</p>
+        <p>The Densetsu Authoring database is intended to become the structured knowledge layer for authored game content. Today, the implementation is still a staged build-out: the workspace shell can probe a project-owned SQLite path, run migrations, expose repositories, and report database status, but the full authoring taxonomy from the repo docs is not yet surfaced in schema, repositories, or editor modules.</p>
         <h2 id="current-architecture">Current Architecture</h2>
         <table>
           <thead>
@@ -55,35 +55,34 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Workspace shell</td><td><code>authoring_workspace.gd</code> shows DB status and can trigger initialization.</td><td>Acts as the current operator entry point.</td></tr>
-            <tr><td>Database service</td><td><code>authoring_database_service.gd</code> owns path, backend selection, status refresh, and repository creation.</td><td>Central service boundary for the current addon slice.</td></tr>
-            <tr><td>Backend</td><td><code>sqlite_authoring_database_backend.gd</code> expects the <code>SQLite</code> class from <code>godot-sqlite</code>.</td><td>Blocked until the dependency exists in the project tree.</td></tr>
+            <tr><td>Workspace shell</td><td><code>authoring_workspace.gd</code> shows DB status, module context, and material-sync hooks.</td><td>Acts as the current operator entry point.</td></tr>
+            <tr><td>Database service</td><td><code>authoring_database_service.gd</code> owns path, backend selection, status refresh, repository creation, and migration execution.</td><td>Central service boundary for the current addon slice.</td></tr>
+            <tr><td>Backend</td><td><code>sqlite_authoring_database_backend.gd</code> expects the <code>SQLite</code> class from <code>godot-sqlite</code>.</td><td>Blocked until that dependency is present in the project tree.</td></tr>
             <tr><td>Migrations</td><td><code>migration_runner.gd</code> applies sorted <code>.sql</code> migrations and records versions.</td><td>Creates a repeatable schema bootstrap path.</td></tr>
-            <tr><td>Repositories</td><td>Biome and material-profile repositories are currently implemented.</td><td>No repositories yet for actors, overlays, placement rules, or generated records.</td></tr>
+            <tr><td>Repositories</td><td>Biome, entity, and material-profile repositories are currently implemented.</td><td>The broader target model still lacks many domain-specific repositories.</td></tr>
           </tbody>
         </table>
         <h2 id="implemented-schema">Implemented Schema Today</h2>
         <table>
           <thead>
             <tr>
-              <th>Table</th>
-              <th>Purpose</th>
-              <th>Current status</th>
+              <th>Area</th>
+              <th>Current tables</th>
+              <th>What that means</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>biomes</code></td><td>First semantic-domain foothold for biome records.</td><td>Queryable through <code>BiomeRepository</code>.</td></tr>
-            <tr><td><code>material_profiles</code></td><td>Catalog of external scene materials synced from the Material Tracker backend.</td><td>Most concrete asset-registry foothold in the current build.</td></tr>
-            <tr><td><code>water_systems</code></td><td>Reserved authoring table for water-system records.</td><td>Defined in schema but not surfaced through a repository or editor view.</td></tr>
-            <tr><td><code>map_assignments</code></td><td>Lightweight mapping between map path, domain, and target ID.</td><td>Useful foothold, but not a placement-rule system.</td></tr>
-            <tr><td><code>compiler_reports</code></td><td>Reserved table for compile and validation output.</td><td>No full compile pass writes are implemented yet.</td></tr>
-            <tr><td><code>schema_migrations</code></td><td>Migration bookkeeping created by the runner.</td><td>Internal support table rather than authored content.</td></tr>
+            <tr><td>Early semantic footholds</td><td><code>biomes</code>, <code>water_systems</code>, <code>map_assignments</code>, <code>compiler_reports</code></td><td>The first authoring domains and compile placeholders exist, but they are not yet the full biome compiler model described in the repo docs.</td></tr>
+            <tr><td>Material and asset footing</td><td><code>material_profiles</code>, <code>asset_registry</code>, <code>entity_assets</code></td><td>The project now has both scene-material syncing and a broader asset-registry foundation.</td></tr>
+            <tr><td>Entity and tagging foundations</td><td><code>entities</code>, <code>tags</code>, <code>entity_tags</code></td><td>The schema has moved beyond a pure biome-only experiment toward a more general authoring catalog spine.</td></tr>
+            <tr><td>Capabilities and variants</td><td><code>capability_definitions</code>, <code>entity_capabilities</code>, <code>record_variants</code>, <code>record_variant_overrides</code>, <code>variant_capability_overrides</code>, <code>variant_asset_overrides</code></td><td>The groundwork for capability-driven authoring and world-state overlays now exists in schema form.</td></tr>
+            <tr><td>Migration bookkeeping</td><td><code>schema_migrations</code></td><td>Internal support for repeatable database upgrades.</td></tr>
           </tbody>
         </table>
         <h2 id="dependency-state">Dependency State</h2>
         <div class="callout">
-          <p><strong>Verified blocker:</strong> the addon code expects <code>res://addons/godot-sqlite/gdsqlite.gdextension</code>, but that addon is not present in the scanned <code>densetsu-dev</code> tree.</p>
-          <p><strong>Effect:</strong> the database path and migration flow are real, but a working SQLite backend cannot be assumed in this snapshot.</p>
+          <p><strong>Verified blocker:</strong> the addon code expects <code>res://addons/godot-sqlite/gdsqlite.gdextension</code>, but that addon is not present in the current project tree.</p>
+          <p><strong>Effect:</strong> the database path, migrations, and service layering are real, but a working SQLite backend cannot be assumed in this snapshot without adding the missing dependency.</p>
         </div>
         <h2 id="target-model-vs-current-slice">Target Model Versus Current Slice</h2>
         <table>
@@ -95,10 +94,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Catalog scope</td><td>Actors, capabilities, assets, overlays, placement rules, generated records, and more.</td><td>Biomes, material profiles, water-system placeholder table, map assignments, and compile-report placeholder table.</td></tr>
-            <tr><td>Asset registry</td><td>Multi-domain asset catalog with owner, license, status, checksum, and typed references.</td><td>External scene materials only, via material indexing and <code>material_profiles</code>.</td></tr>
-            <tr><td>Compile model</td><td>Deterministic authoring-data to generated-record pipeline with explainable output.</td><td>Compile module shell and report table only.</td></tr>
-            <tr><td>Editor coverage</td><td>Dedicated editors for semantic domains and variants.</td><td>Shell modules with limited live behavior, mainly DB status and material sync.</td></tr>
+            <tr><td>Catalog scope</td><td>Actors, capabilities, assets, overlays, placement rules, generated records, and more.</td><td>Foundations for entities, capabilities, variants, assets, biomes, and map assignments exist, but domain coverage is still partial.</td></tr>
+            <tr><td>Asset registry</td><td>Multi-domain asset catalog with owner, license, status, checksum, and typed references.</td><td>The schema supports that direction, while the most concrete live sync path is still material-profile indexing.</td></tr>
+            <tr><td>Compile model</td><td>Deterministic authoring-data to generated-record pipeline with explainable output.</td><td>Compile shell and report table exist, but the end-to-end compiler remains planned work.</td></tr>
+            <tr><td>Editor coverage</td><td>Dedicated editors for semantic domains and variants.</td><td>Workspace shell and module placeholders exist; most deep editors do not.</td></tr>
           </tbody>
         </table>
         <h2 id="related-docs">Related Docs</h2>

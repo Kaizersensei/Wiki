@@ -13,11 +13,9 @@
   <meta property="twitter:title" content="Engine Wiki">
   <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../retraissance/index.html" aria-label="Retraissance">
@@ -43,85 +41,90 @@
       </div>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Engine Wiki</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>Navigation hub</td><th>Audience</th><td>Developers, technical designers, tool maintainers</td></tr>
-              <tr><th>Implementation status</th><td>Engine wiki baseline under active restructuring</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Live source in <code>densetsu-dev</code>, documentation inventory, and the repo docs folder once available</td><th>User touchpoint</th><td>Main engine wiki landing page</td></tr>
-              <tr><th>Risk level</th><td>High until section source passes are complete</td><th>Inventory</th><td><a href="documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Current-state overview with selective deep pages</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>docs/production_rewrite_worklog.md</code>, <code>docs/player_input_reference.md</code>, <code>docs/authoring-space.md</code>, <code>docs/db-structure.md</code>, <code>docs/biome-driven maps.md</code>, and <code>docs/EngineReference/agent_quickstart.md</code></td><th>User touchpoint</th><td>Main engine wiki landing page</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
 
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
+        <p>The Densetsu engine docs now have two active source layers. The live repo documents the current rewrite state, while the wiki is being updated section by section to distinguish implemented behavior from target architecture instead of flattening both into one generic overview.</p>
 
-        <h2 id="current-documentation-state">Current Documentation State</h2>
-        <ul>
-          <li>This page is now a tracked documentation stub for the engine documentation program rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
-        </ul>
+        <h2 id="current-state">Current State</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Verified state on June 11, 2026</th>
+              <th>Primary sources</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Runtime boot</td><td><code>project.godot</code> starts at <code>engine3d/runtime/RuntimeBootstrap.tscn</code> and relies on explicit runtime services.</td><td><code>project.godot</code>, <code>docs/production_rewrite_worklog.md</code></td></tr>
+            <tr><td>Actor system</td><td>The legacy monolith still owns production gameplay, while the shell or component path exists in parallel and is under active migration.</td><td><code>docs/production_rewrite_worklog.md</code>, <code>AGENTS.md</code></td></tr>
+            <tr><td>Input and locomotion</td><td>The player input labels, command-frame mapping, and active bindings are explicitly documented and partially cleaned up.</td><td><code>docs/player_input_reference.md</code></td></tr>
+            <tr><td>Animation rewrite</td><td>The runtime still carries bridge behavior, but the documented target is a torso or legs behavior split with curated movesets and palettes.</td><td><code>docs/character_animation_fsm_reference_notes.md</code>, <code>docs/animation_set_rewrite_audit.md</code></td></tr>
+            <tr><td>Authoring data</td><td>The Authoring addon, migrations, repositories, and workspace shell exist, but the full database taxonomy remains a target architecture.</td><td><code>docs/authoring-space.md</code>, <code>docs/db-structure.md</code>, <code>addons/densetsu_authoring/</code></td></tr>
+            <tr><td>Biome pipeline</td><td>The biome compiler is planned as a database-first, Terrain3D-driven compiler layer. The broad design is documented, but the end-to-end compiler is not yet the live runtime authority.</td><td><code>docs/biome-driven maps.md</code></td></tr>
+          </tbody>
+        </table>
 
         <h2 id="key-sections">Key Sections</h2>
         <ul>
           <li><a href="actors/index.html">Actor System</a></li>
           <li><a href="runtime/index.html">Core Runtime</a></li>
           <li><a href="fsm/index.html">FSM System</a></li>
-          <li><a href="stats_combat/index.html">Stats & Combat</a></li>
-          <li><a href="input_movement/index.html">Input & Movement</a></li>
-          <li><a href="data_authoring/index.html">Data & Authoring</a></li>
+          <li><a href="stats_combat/index.html">Stats &amp; Combat</a></li>
+          <li><a href="input_movement/index.html">Input &amp; Movement</a></li>
+          <li><a href="data_authoring/index.html">Data &amp; Authoring</a></li>
           <li><a href="tools/index.html">Tools Index</a></li>
-          <li><a href="rendering/index.html">Rendering & Performance</a></li>
+          <li><a href="rendering/index.html">Rendering &amp; Performance</a></li>
           <li><a href="editor/index.html">Editor</a></li>
           <li><a href="integrations/index.html">Integrations</a></li>
-          <li><a href="networking/index.html">Networking & Multiplayer</a></li>
-          <li><a href="build-deploy/index.html">Build & Deployment</a></li>
-          <li><a href="testing-qa/index.html">Testing & QA</a></li>
-          <li><a href="telemetry/index.html">Telemetry & Observability</a></li>
-          <li><a href="modding/index.html">Modding & Plugins</a></li>
-        </ul>
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
-        <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li><a href="networking/index.html">Networking &amp; Multiplayer</a></li>
+          <li><a href="build-deploy/index.html">Build &amp; Deployment</a></li>
+          <li><a href="testing-qa/index.html">Testing &amp; QA</a></li>
+          <li><a href="telemetry/index.html">Telemetry &amp; Observability</a></li>
+          <li><a href="modding/index.html">Modding &amp; Plugins</a></li>
         </ul>
 
-        <h2 id="verification-boundary">Verification Boundary</h2>
+        <h2 id="planned-direction">Planned Direction</h2>
         <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+          <li>Keep one deterministic runtime entry backed by manifest and catalog authority.</li>
+          <li>Reduce gameplay ownership inside <code>ActorCharacter3D</code> by moving stable domains toward shell components and service boundaries.</li>
+          <li>Finish the player-input cleanup so runtime labels, bindings, and locomotion semantics match the active shell path cleanly.</li>
+          <li>Replace the current animation bridge model with the documented torso or legs behavior architecture and curated palette workflow.</li>
+          <li>Expand the Authoring workspace from shell-plus-schema into a broader SQLite-backed authoring surface with compile outputs that stay runtime file-driven.</li>
+          <li>Layer biome semantics and deterministic generation on top of Terrain3D without making runtime query SQLite directly.</li>
         </ul>
 
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
+        <h2 id="reading-rule">Reading Rule</h2>
         <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
+          <li>If a page cites repo docs and code paths directly, treat it as a current-source summary.</li>
+          <li>If a page still says it is awaiting a direct source pass, treat it as backlog structure rather than implementation authority.</li>
+          <li>The documentation inventory is still useful as backlog, but parts of it reflect an older scan and should not outrank the June 2026 repo docs.</li>
         </ul>
 
         <h2 id="related-docs">Related Docs</h2>
         <ul>
           <li><a href="documentation_inventory.html">Documentation Inventory</a></li>
-          <li><a href="data_authoring/index.html">Data & Authoring</a></li>
-          <li><a href="tools/index.html">Tools Index</a></li>
           <li><a href="runtime/index.html">Core Runtime</a></li>
           <li><a href="actors/index.html">Actor System</a></li>
-          <li><a href="rendering/index.html">Rendering & Performance</a></li>
-          <li><a href="stats_combat/index.html">Stats & Combat</a></li>
-          <li><a href="input_movement/index.html">Input & Movement</a></li>
+          <li><a href="input_movement/index.html">Input &amp; Movement</a></li>
+          <li><a href="data_authoring/index.html">Data &amp; Authoring</a></li>
+          <li><a href="tools/index.html">Tools Index</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../retraissance/assets/site.js" defer></script>
 </body>

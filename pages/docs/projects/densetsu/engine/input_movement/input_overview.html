@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Input Overview</title>
   <meta property="og:title" content="Input Overview">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Canonical Densetsu player input labels, command-frame mapping, and current binding rules.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/input_movement/input_overview.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Input Overview">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Canonical Densetsu player input labels, command-frame mapping, and current binding rules.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,68 +30,75 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Input Overview</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Gameplay programmers, combat designers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Live reference</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>docs/player_input_reference.md</code>, <code>engine3d/controllers/</code>, and <code>project.godot</code></td><th>User touchpoint</th><td>Reference page for canonical player input labels and bindings</td></tr>
+              <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>This page documents the canonical label surface for the active shell or motor runtime path. It is intentionally narrower than a general control-guide page: the goal here is to keep the engine-side action labels, command-frame fields, and current binding rules aligned.</p>
+        <h2 id="pipeline">Pipeline</h2>
+        <ol>
+          <li><code>project.godot</code> defines the input actions that exist in the project.</li>
+          <li><code>PlayerInputActions.gd</code> names the canonical labels used by runtime code.</li>
+          <li><code>PlayerInputSource.gd</code> reads the live input map.</li>
+          <li><code>PlayerCommandResolver3D.gd</code> resolves live input into a <code>PlayerCommandFrame3D</code>.</li>
+          <li>The active actor or motor path consumes the command frame through shell or component boundaries.</li>
+        </ol>
+        <h2 id="action-families">Action Families</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Family</th>
+              <th>Examples</th>
+              <th>Current notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Core locomotion</td><td><code>move_left</code>, <code>move_right</code>, <code>move_up</code>, <code>move_down</code>, <code>jump</code>, <code>shift_action</code></td><td><code>shift_action</code> is the active sprint or modifier label.</td></tr>
+            <tr><td>Optional locomotion</td><td><code>dash</code>, <code>roll</code>, <code>crouch</code>, <code>sneak</code>, depth and side-axis labels</td><td><code>sneak</code> is currently an alias for crouch or duck-walk behavior.</td></tr>
+            <tr><td>Combat and interaction</td><td><code>unarmed_action</code>, <code>armed_attack</code>, <code>ranged_attack</code>, <code>aim</code>, <code>block</code>, <code>weapon_toggle</code></td><td><code>block</code> and <code>weapon_toggle</code> are present in code and input map but intentionally unbound.</td></tr>
+            <tr><td>Camera and control mode</td><td><code>look_*</code>, <code>camera_toggle</code>, <code>camera_recenter</code>, <code>side_scroller_toggle</code>, <code>control_scheme_toggle</code></td><td><code>control_scheme_toggle</code> exists in the input map but is currently unbound.</td></tr>
+            <tr><td>Menu and UI</td><td><code>menu_inventory_toggle</code>, <code>menu_status_toggle</code>, <code>menu_map_toggle</code>, <code>menu_subweapon_toggle</code></td><td>Documented here because they are part of the player-control label surface even though they are not locomotion commands.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="command-frame">Command Frame Mapping</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li>The command frame carries movement vectors, jump and modifier edges, attack intent, posture intent, camera toggles, and derived gesture helpers.</li>
+          <li><code>ledge_grab_held</code> is currently derived from the modifier path rather than being its own project input action.</li>
+          <li><code>sneak_held</code> is still preserved at input level for compatibility even though the active locomotion path collapses it into crouch-family behavior.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <h2 id="binding-rules">Binding Rules</h2>
         <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li>Add every supported player action label to <code>project.godot</code> even if it remains temporarily unbound.</li>
+          <li>Keep <code>PlayerInputActions.gd</code> and the input reference document in sync when labels are introduced, repurposed, or retired.</li>
+          <li>Do not let fallback-only labels become silent shipping behavior.</li>
         </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
+        <h2 id="open-cleanup-items">Open Cleanup Items</h2>
         <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
+          <li>Decide whether ledge-grab stays modifier-derived or becomes its own explicit label.</li>
+          <li>Decide whether <code>run</code> remains alias-only or returns as a first-class binding.</li>
+          <li>Finalize explicit bindings for <code>block</code> and <code>weapon_toggle</code> once combat layout is locked.</li>
         </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
-          <li><a href="index.html">Input & Movement</a></li>
+          <li><a href="index.html">Input &amp; Movement</a></li>
           <li><a href="movement_controller.html">Movement Controller</a></li>
-          <li><a href="sonic_style_physics_optional.html">Optional Sonic-Style Physics</a></li>
+          <li><a href="sonic_style_physics_optional.html">Sonic Style Physics Optional</a></li>
+          <li><a href="../actors/actor_system_overview.html">Actor System Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

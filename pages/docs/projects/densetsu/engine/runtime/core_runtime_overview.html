@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Core Runtime Overview</title>
   <meta property="og:title" content="Core Runtime Overview">
-  <meta property="og:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="og:description" content="Current Densetsu runtime boot path, service ownership, and validation surface.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/runtime/core_runtime_overview.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Core Runtime Overview">
-  <meta property="twitter:description" content="Retraissance projects, Densetsu universe lore, engine docs, and readers.">
+  <meta property="twitter:description" content="Current Densetsu runtime boot path, service ownership, and validation surface.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
-
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
 <body class="theme-wiki">
-
   <header class="site-header">
     <div class="brand">
       <a href="../../../../../retraissance/index.html" aria-label="Retraissance">
@@ -32,70 +30,90 @@
       <a href="../../../../../retraissance/densetsu/engine/index.html">Engine</a>
     </nav>
   </header>
-
   <main class="content">
     <section class="panel">
       <p class="eyebrow">engine</p>
       <h1>Core Runtime Overview</h1>
-                  <article class="markdown">
+      <article class="markdown">
         <div class="callout">
           <table>
             <tbody>
               <tr><th>Page type</th><td>System overview</td><th>Audience</th><td>Engine programmers, gameplay programmers, QA</td></tr>
-              <tr><th>Implementation status</th><td>Documentation stub awaiting subsystem source pass</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td>Pending direct source audit for this subsystem in <code>densetsu-dev</code> plus the repo docs folder once available</td><th>User touchpoint</th><td>Engine wiki reference page for this subsystem</td></tr>
-              <tr><th>Risk level</th><td>High until verified against code and incoming docs</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+              <tr><th>Implementation status</th><td>Live rewrite baseline</td><th>Last verified</th><td>2026-06-11</td></tr>
+              <tr><th>Source inputs</th><td><code>project.godot</code>, <code>engine3d/runtime/</code>, <code>engine3d/loading/</code>, <code>engine3d/tests/</code>, and <code>docs/production_rewrite_worklog.md</code></td><th>User touchpoint</th><td>Runtime boot, diagnostics, and scene-flow reference</td></tr>
+              <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-
-        <p>This page has been upgraded from the old generated scaffold to the stronger metadata-first documentation shell. It now states its verification boundary explicitly so the engine wiki can function as a responsible source of truth while deeper subsystem source passes are still in progress.</p>
-
-        <h2 id="current-documentation-state">Current Documentation State</h2>
+        <p>The runtime rewrite establishes one explicit boot root, one manifest-driven startup path, and one set of autoloaded service boundaries. The old habit of treating whichever map happened to open as the runtime entry point is no longer the intended architecture.</p>
+        <h2 id="boot-sequence">Boot Sequence</h2>
+        <ol>
+          <li><code>project.godot</code> starts <code>res://engine3d/runtime/RuntimeBootstrap.tscn</code>.</li>
+          <li><code>RuntimeBootstrap</code> acquires diagnostics, manifest, catalog, and scene-flow services from the autoload layer.</li>
+          <li><code>RuntimeManifestService</code> validates startup-critical resources such as startup scene, player scene, loading screen, and catalog paths.</li>
+          <li><code>DataCatalogService</code> validates and resolves explicit category-to-resource mappings.</li>
+          <li><code>SceneFlowService</code> hands execution to either the production startup scene or the debug scene selector path.</li>
+        </ol>
+        <h2 id="autoload-surface">Autoload Surface</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Current role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>DiagnosticsService</code></td><td>Runtime trace logging and failure visibility support.</td></tr>
+            <tr><td><code>RuntimeManifestService</code></td><td>Startup-manifest loading and validation.</td></tr>
+            <tr><td><code>DataCatalogService</code></td><td>Explicit catalog-backed resource lookup.</td></tr>
+            <tr><td><code>SceneFlowService</code></td><td>Scene loading, loading-screen handoff, and selector return flow.</td></tr>
+            <tr><td><code>ObjectiveService</code>, <code>LocationService</code>, <code>RuntimeCalendarService</code>, <code>WorldPresentationService</code></td><td>Runtime-facing state services added during the rewrite slices.</td></tr>
+            <tr><td><code>PlayerActorService</code></td><td>Project-owned player-authority lookup and typed player-state boundary.</td></tr>
+            <tr><td><code>CombatDomainService</code>, <code>WorldFacadeService</code></td><td>Domain service boundaries used to reduce direct scene-owner coupling.</td></tr>
+            <tr><td><code>RuntimeDebugOverlayService</code></td><td>Debug overlay, selector back path, and runtime inspection helpers.</td></tr>
+            <tr><td><code>Terrain3DRuntimeCollisionBridge</code>, <code>SimpleGrass</code></td><td>Compatibility/runtime content dependencies still registered in project config.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-boundaries">Current Boundaries</h2>
         <ul>
-          <li>This page is now a tracked documentation stub for this subsystem page in the engine wiki rather than a generic placeholder.</li>
-          <li>Subsystem-specific implementation details are still pending direct verification against live source.</li>
-          <li>Missing detail on this page means <strong>not yet documented</strong>, not <strong>does not exist</strong>.</li>
-          <li>The documentation inventory remains the master tracker for remaining deep-dive work and verification gaps.</li>
+          <li>The runtime manifest and data catalog exist and are active, but catalog scope is still migration-limited rather than fully exhaustive.</li>
+          <li>Some runtime consumers still keep migration fallback behavior around catalog-backed lookup instead of treating the catalog as the only path yet.</li>
+          <li>The debug selector is part of the intended boot surface, not a side-door replacement for runtime startup discipline.</li>
+          <li>Diagnostics and visible failure handling are part of the runtime contract because blank-screen export failures were a real problem during the rewrite.</li>
         </ul>
-
-
-        <h2 id="what-this-page-should-answer">What This Page Should Eventually Answer</h2>
+        <h2 id="validation-surface">Validation Surface</h2>
         <ul>
-          <li>What this subsystem or section is responsible for in the Densetsu engine.</li>
-          <li>Which runtime, editor, data, or toolchain surfaces it owns.</li>
-          <li>How it integrates with adjacent engine systems and where those boundaries sit.</li>
-          <li>What operators or programmers need to know to use, change, test, or debug it safely.</li>
+          <li>Runtime smoke scenes live under <code>engine3d/tests/</code>.</li>
+          <li>The worklog treats validation as mandatory, not optional manual spot-checking.</li>
+          <li>Headless acceptance still has environment-specific reliability limits, so some passes rely on rebuilt tester packages and runtime diagnostics instead of pure headless confidence.</li>
         </ul>
-
-        <h2 id="verification-boundary">Verification Boundary</h2>
-        <ul>
-          <li>Only the page identity, section placement, and documentation-program status are verified here today.</li>
-          <li>Implementation behavior, contracts, and edge cases still need direct confirmation from code and supporting docs.</li>
-          <li>Until that source pass happens, implementation work should be cross-checked against <code>densetsu-dev</code> rather than inferred from omissions on this page.</li>
-        </ul>
-
-        <h2 id="next-source-inputs">Next Source Inputs</h2>
-        <ul>
-          <li>Relevant scripts, scenes, resources, and tests in <code>densetsu-dev</code> for this subsystem.</li>
-          <li>The repository <code>docs</code> folder once it becomes available in source control.</li>
-          <li>Any project-owned handouts, tooling notes, or implementation references already referenced by the documentation inventory.</li>
-        </ul>
-
+        <h2 id="current-vs-target">Current vs Target</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>Current verified state</th>
+              <th>Target direction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Startup authority</td><td>Single bootstrap scene and explicit autoload services are live.</td><td>Keep boot deterministic and content-drift resistant.</td></tr>
+            <tr><td>Data discovery</td><td>Manifest and catalog exist with migration fallback in older data paths.</td><td>Remove reliance on implicit scanning and filesystem accidents.</td></tr>
+            <tr><td>Player authority</td><td><code>PlayerActorService</code> exists, but runtime still bridges between legacy and shell actor paths.</td><td>Move more runtime reads to typed service and component contracts.</td></tr>
+            <tr><td>Failure handling</td><td>Diagnostics and visible boot-failure surfaces are implemented.</td><td>Make export/runtime debugging routine instead of forensic.</td></tr>
+          </tbody>
+        </table>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
-          <li><a href="../index.html">Engine Wiki</a></li>
-          <li><a href="../documentation_inventory.html">Documentation Inventory</a></li>
           <li><a href="index.html">Core Runtime</a></li>
-          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader / Loading / Splash Pipeline</a></li>
+          <li><a href="bootloader_loading_splash_pipeline.html">Bootloader Loading Splash Pipeline</a></li>
           <li><a href="data_persistence.html">Data Persistence</a></li>
-          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host & Content Slots</a></li>
-          <li><a href="save_load.html">Save / Load</a></li>
+          <li><a href="loading_screen_host_and_content_slots.html">Loading Screen Host And Content Slots</a></li>
+          <li><a href="../data_authoring/database_overview.html">Authoring Database Overview</a></li>
         </ul>
-      </article></section>
+      </article>
+    </section>
   </main>
   <script src="../../../../../retraissance/assets/site.js" defer></script>
 </body>
 </html>
-
-

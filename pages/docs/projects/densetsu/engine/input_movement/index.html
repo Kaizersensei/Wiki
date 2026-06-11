@@ -1,27 +1,40 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Input & Movement</title><link rel="stylesheet" href="../../../../../retraissance/assets/site.css" /></head><body class="theme-wiki"><header class="site-header"><div class="brand"><a href="../../../../../retraissance/index.html" aria-label="Retraissance"><img class="nav-logo" src="../../../../../retraissance/assets/res/LOGO_Retraissance.gif" alt="Retraissance" /></a></div><nav class="nav-links"><a class="nav-home" href="../../../../../retraissance/index.html">Retraissance</a><a href="../index.html">Engine Wiki</a></nav></header><main class="content"><section class="panel slack-doc-page"><p class="eyebrow">engine</p><h1>Input & Movement</h1><article class="markdown">
+<div class="callout">
+  <table>
+    <tbody>
+      <tr><th>Page type</th><td>Section hub</td><th>Audience</th><td>Gameplay programmers, combat designers, QA</td></tr>
+      <tr><th>Implementation status</th><td>Implemented with active control-surface cleanup</td><th>Last verified</th><td>2026-06-11</td></tr>
+      <tr><th>Source inputs</th><td><code>docs/player_input_reference.md</code>, <code>docs/animation_set_rewrite_audit.md</code>, <code>engine3d/controllers/</code>, and <code>project.godot</code></td><th>User touchpoint</th><td>Engine wiki landing page for player controls and command resolution</td></tr>
+      <tr><th>Risk level</th><td>Medium</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
+    </tbody>
+  </table>
+</div>
 <h2>Overview</h2>
-<p>Input &amp; Movement covers the player input abstraction and movement command resolution. Evidence includes input source interfaces, command frames, and default movement profiles.</p>
-<h2>Scope</h2>
+<p>The current player-control path is explicit enough to document directly. Input actions live in <code>project.godot</code>, are named centrally in <code>PlayerInputActions.gd</code>, are resolved into a command frame by <code>PlayerCommandResolver3D</code>, and are consumed by the active actor and motor stack.</p>
+<h2>Current Input Reality</h2>
 <ul>
-  <li>Input source abstraction and command frames</li>
-  <li>Movement controller logic</li>
-  <li>Movement profile data assets</li>
+  <li><strong>Canonical labels:</strong> the active label list is documented in <code>docs/player_input_reference.md</code> and mirrored in <code>engine3d/controllers/PlayerInputActions.gd</code>.</li>
+  <li><strong>Command frame:</strong> <code>PlayerCommandFrame3D</code> is the runtime handoff object for locomotion, combat, posture, camera, and edge-trigger signals.</li>
+  <li><strong>Current cleanup state:</strong> <code>block</code> and <code>weapon_toggle</code> exist in code and input map but remain intentionally unbound by default.</li>
+  <li><strong>Locomotion caveat:</strong> <code>sneak</code> is currently an input alias for crouch or duck-walk, not a separate locomotion family on the active player path.</li>
+  <li><strong>Known ambiguity:</strong> <code>ledge_grab_held</code> is still derived from the modifier path rather than being its own first-class label.</li>
 </ul>
 <h2>Pages</h2>
 <ul>
-  <li><a href="input_overview.html">Input Overview</a> — input source and command frame design.</li>
-  <li><a href="movement_controller.html">Movement Controller</a> — movement command resolution and controller flow.</li>
-  <li><a href="sonic_style_physics_optional.html">Sonic Style Physics Optional</a> — current status and gaps.</li>
+  <li><a href="input_overview.html">Input Overview</a> - action families, command-frame mapping, and current binding rules.</li>
+  <li><a href="movement_controller.html">Movement Controller</a> - movement-state resolution and controller flow.</li>
+  <li><a href="sonic_style_physics_optional.html">Sonic Style Physics Optional</a> - legacy or optional movement-mode notes relative to the active locomotion path.</li>
 </ul>
 <h2>Status</h2>
-<p><strong>Implemented.</strong> Input sources and movement command scripts are present in the evidence set.</p>
-<h2>Sources</h2>
+<p><strong>Implemented and being tightened.</strong> The input surface is no longer vague, but the docs and code still show migration seams around control layout finalization, ledge-grab intent, and how closely locomotion states should mirror authored animation slots.</p>
+<h2>Primary Sources</h2>
 <ul>
-  <li><code>engine3d/controllers/IInputSource.gd</code></li>
-  <li><code>engine3d/controllers/PlayerCommandFrame3D.gd</code></li>
-  <li><code>engine3d/controllers/PlayerCommandResolver3D.gd</code></li>
+  <li><code>docs/player_input_reference.md</code></li>
+  <li><code>docs/animation_set_rewrite_audit.md</code></li>
+  <li><code>engine3d/controllers/PlayerInputActions.gd</code></li>
   <li><code>engine3d/controllers/PlayerInputSource.gd</code></li>
-  <li><code>data3d/movement/MOVEMENT_Player_Default.tres</code></li>
+  <li><code>engine3d/controllers/PlayerCommandResolver3D.gd</code></li>
+  <li><code>engine3d/controllers/PlayerCommandFrame3D.gd</code></li>
+  <li><code>project.godot</code></li>
 </ul>
 </article></section></main><script src="../../../../../retraissance/assets/site.js" defer></script></body></html>
-
