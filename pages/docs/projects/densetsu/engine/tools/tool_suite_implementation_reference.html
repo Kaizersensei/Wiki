@@ -161,7 +161,7 @@
         <table>
           <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
           <tbody>
-            <tr><td><code>git_remote_url</code></td><td><code>ssh://git@gitea.eventidemiles.com:2221/Retraissance/densetsu-dev.git</code></td><td>Full Pull to Main</td></tr>
+            <tr><td><code>git_remote_url</code></td><td><code>ssh://git@example-host.example/example-org/example-repo.git</code></td><td>Full Pull to Main</td></tr>
             <tr><td><code>git_main_branch</code></td><td><code>main</code></td><td>Full Pull to Main</td></tr>
             <tr><td><code>git_in_editor_commit_message</code></td><td><code>Godot In-editor commit</code></td><td>Full Pull to Main</td></tr>
             <tr><td><code>git_remote_name</code></td><td><code>origin</code></td><td>Full Pull to Main</td></tr>
@@ -173,13 +173,13 @@
         <table>
           <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
           <tbody>
-            <tr><td><code>test_release_output_root</code></td><td><code>D:/Test</code></td><td>All test release builds</td></tr>
+            <tr><td><code>test_release_output_root</code></td><td><code>&lt;local test release output root&gt;</code></td><td>All test release builds</td></tr>
             <tr><td><code>test_release_publish_to_gitea</code></td><td><code>true</code></td><td>Post-build publish step</td></tr>
-            <tr><td><code>test_release_gitea_base_url</code></td><td><code>https://gitea.eventidemiles.com</code></td><td>Publish step</td></tr>
-            <tr><td><code>test_release_gitea_owner</code></td><td><code>Retraissance</code></td><td>Publish step</td></tr>
-            <tr><td><code>test_release_gitea_repo</code></td><td><code>densetsu-dev</code></td><td>Publish step</td></tr>
-            <tr><td><code>test_release_gitea_token_file</code></td><td><code>res://temp/local/gitea_token.txt</code></td><td>Publish authentication</td></tr>
-            <tr><td><code>test_release_gitea_token_env_var</code></td><td><code>DENSETSU_GITEA_TOKEN</code></td><td>Publish authentication fallback</td></tr>
+            <tr><td><code>test_release_gitea_base_url</code></td><td><code>https://example-host.example</code></td><td>Publish step</td></tr>
+            <tr><td><code>test_release_gitea_owner</code></td><td><code>example-owner</code></td><td>Publish step</td></tr>
+            <tr><td><code>test_release_gitea_repo</code></td><td><code>example-repo</code></td><td>Publish step</td></tr>
+            <tr><td><code>test_release_gitea_token_file</code></td><td><code>res://temp/local/release_token.txt</code></td><td>Publish authentication</td></tr>
+            <tr><td><code>test_release_gitea_token_env_var</code></td><td><code>PROJECT_RELEASE_TOKEN</code></td><td>Publish authentication fallback</td></tr>
           </tbody>
         </table>
 
@@ -205,9 +205,9 @@
         <table>
           <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
           <tbody>
-            <tr><td><code>poser_cr2_blender_exe</code></td><td><code>F:/Blender/blender.exe</code></td><td>Poser conversion dialog</td></tr>
+            <tr><td><code>poser_cr2_blender_exe</code></td><td><code>&lt;local blender executable&gt;</code></td><td>Poser conversion dialog</td></tr>
             <tr><td><code>poser_cr2_blender_script</code></td><td><code>res://scripts/poser_cr2_to_gltf.py</code></td><td>Poser conversion dialog</td></tr>
-            <tr><td><code>poser_cr2_default_runtime_root</code></td><td><code>F:/poser4/Runtime</code></td><td>Poser conversion dialog</td></tr>
+            <tr><td><code>poser_cr2_default_runtime_root</code></td><td><code>&lt;local poser runtime root&gt;</code></td><td>Poser conversion dialog</td></tr>
             <tr><td><code>poser_cr2_default_output_dir</code></td><td><code>res://temp</code></td><td>Poser conversion dialog</td></tr>
           </tbody>
         </table>
@@ -240,7 +240,7 @@
         <table>
           <thead><tr><th>Setting</th><th>Default</th><th>Used by</th></tr></thead>
           <tbody>
-            <tr><td><code>kitbash_bake_blender_exe</code></td><td><code>F:/Blender/blender.exe</code></td><td>Kitbash composite bake</td></tr>
+            <tr><td><code>kitbash_bake_blender_exe</code></td><td><code>&lt;local blender executable&gt;</code></td><td>Kitbash composite bake</td></tr>
             <tr><td><code>kitbash_bake_armorpaint_exe</code></td><td><code>""</code></td><td>ArmorPaint handoff</td></tr>
             <tr><td><code>kitbash_bake_output_root</code></td><td><code>res://assets/3d-baked/kitbash_composites</code></td><td>Kitbash composite bake output</td></tr>
             <tr><td><code>kitbash_bake_preview_atlas_size</code></td><td><code>1024</code></td><td>Preview atlas size</td></tr>
