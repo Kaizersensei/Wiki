@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Asset Registry</title>
   <meta property="og:title" content="Asset Registry">
-  <meta property="og:description" content="Target asset-registry model for the Densetsu Authoring database and the current material-profile foothold.">
+  <meta property="og:description" content="Current asset-registry schema foundations in Densetsu Authoring and the live material-sync path that already writes into them.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/asset_registry.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Asset Registry">
-  <meta property="twitter:description" content="Target asset-registry model for the Densetsu Authoring database and the current material-profile foothold.">
+  <meta property="twitter:description" content="Current asset-registry schema foundations in Densetsu Authoring and the live material-sync path that already writes into them.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
@@ -38,77 +38,70 @@
           <table>
             <tbody>
               <tr><th>Page type</th><td>Domain overview</td><th>Audience</th><td>Tools programmers, technical artists, technical designers</td></tr>
-              <tr><th>Implementation status</th><td>Partial implementation</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td><code>material_index_service.gd</code>, <code>material_profile_repository.gd</code>, <code>0001_authoring_core.sql</code>, <code>0002_material_profile_metadata.sql</code></td><th>User touchpoint</th><td>Authoring workspace Materials module and material sync workflow</td></tr>
+              <tr><th>Implementation status</th><td>Schema foundation exists, editor flow is still narrow</td><th>Last verified</th><td>2026-06-12</td></tr>
+              <tr><th>Source inputs</th><td><code>0003_authoring_foundations.sql</code>, <code>entity_repository.gd</code>, <code>material_profile_repository.gd</code>, <code>material_index_service.gd</code>, and <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Authoring workspace Materials module and material sync workflow</td></tr>
               <tr><th>Risk level</th><td>Medium to high</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p>The asset registry is meant to catalog references to project assets, not replace Godot's asset pipeline. Files remain files. The authoring database tracks stable IDs, metadata, ownership, validation status, and cross-record relations. Today, the only concrete registry slice is external material profiling.</p>
-        <h2 id="target-role">Target Role In The Authoring Model</h2>
-        <ul>
-          <li>Register models, materials, textures, scenes, animations, audio, VFX, UI assets, and reference art by stable authored IDs.</li>
-          <li>Store metadata such as owner domain, import status, license state, author, and notes.</li>
-          <li>Support validation and cross-linking without moving binary content into SQLite.</li>
-        </ul>
-        <h2 id="current-implemented-slice">Current Implemented Slice</h2>
+        <p>The asset registry is no longer just a target model. The current schema already includes a generalized asset catalog foundation, but the only concrete authoring path writing into it today is still the material-profile sync flow.</p>
+        <h2 id="current-foundation">Current Foundation</h2>
         <table>
           <thead>
             <tr>
               <th>Surface</th>
+              <th>Current role</th>
+              <th>Verification note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>asset_registry</code></td><td>General asset table keyed by <code>asset_id</code> with type, path, status, owner, license, author, notes, checksum, and timestamps.</td><td>Added in <code>0003_authoring_foundations.sql</code>.</td></tr>
+            <tr><td><code>entity_assets</code></td><td>Join table linking authored entities to asset rows by slot.</td><td>Also added in <code>0003_authoring_foundations.sql</code>.</td></tr>
+            <tr><td><code>entity_repository.gd</code></td><td>Current write boundary for generic entities and asset links.</td><td>Can upsert assets and link them to entities, but it is not a dedicated asset-browser workflow.</td></tr>
+            <tr><td><code>material_profiles</code></td><td>Domain-specific extension table for scene-indexed external materials.</td><td>Remains the most mature asset-related authoring slice.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="live-write-path">Live Write Path</h2>
+        <ol>
+          <li><code>material_index_service.gd</code> scans the open scene and builds a unique material index with usage counts and paths.</li>
+          <li><code>material_profile_repository.gd</code> skips built-in materials and processes only external material resources.</li>
+          <li>For each external material, the repository calls <code>entity_repository.gd</code> to upsert:
+            <code>entities</code> row: <code>material_profile::&lt;resource_path&gt;</code>
+            <code>asset_registry</code> row: <code>asset::&lt;resource_path&gt;</code>
+            <code>entity_assets</code> link: asset slot <code>material_resource</code></li>
+          <li>The same sync pass also writes the domain-specific <code>material_profiles</code> row with class, resource path, usage count, and source scene path.</li>
+        </ol>
+        <h2 id="what-the-registry-means-today">What The Registry Means Today</h2>
+        <ul>
+          <li>The project already has a generalized schema for asset tracking across domains.</li>
+          <li>The project does not yet have a generalized asset authoring UI that lets operators browse, edit, validate, or bulk-manage asset records directly.</li>
+          <li>The current registry should therefore be read as a real data foundation with one live ingestion path, not as a finished content-management surface.</li>
+        </ul>
+        <h2 id="current-material-specific-slice">Current Material-Specific Slice</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Field group</th>
               <th>Current behavior</th>
-              <th>Evidence</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Scene scan</td><td><code>material_index_service.gd</code> walks the edited scene and builds a unique material index.</td><td>Collects overrides, overlays, mesh-surface materials, and usage paths.</td></tr>
-            <tr><td>Database table</td><td><code>material_profiles</code> stores external material references.</td><td>Migration <code>0002_material_profile_metadata.sql</code> adds resource path, class, built-in flag, usage count, and source scene path.</td></tr>
-            <tr><td>Operator workflow</td><td>The Materials module can sync scene materials into DB records.</td><td><code>_sync_materials_pressed()</code> writes external profiles and skips built-in materials.</td></tr>
-            <tr><td>Registry scope</td><td>Materials only.</td><td>No general asset table exists yet.</td></tr>
+            <tr><td>Registry identity</td><td><code>asset_id</code>, <code>asset_type</code>, <code>path</code>, and <code>owner_domain</code> are written through <code>entity_repository.gd</code>.</td></tr>
+            <tr><td>Domain details</td><td><code>material_profiles</code> stores <code>resource_path</code>, <code>class_name</code>, <code>is_builtin</code>, <code>last_usage_count</code>, and <code>source_scene_path</code>.</td></tr>
+            <tr><td>Operator touchpoint</td><td>The Authoring workspace Materials module can refresh the scene index and sync external material profiles into the DB.</td></tr>
           </tbody>
         </table>
-        <h2 id="current-material-fields">Current Material Registry Fields</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Field</th>
-              <th>Meaning today</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><code>id</code></td><td>Stable DB key for the material profile row.</td></tr>
-            <tr><td><code>display_name</code></td><td>Human-readable material label derived from resource path or built-in class name.</td></tr>
-            <tr><td><code>resource_path</code></td><td>Godot resource path for external materials.</td></tr>
-            <tr><td><code>class_name</code></td><td>Godot class type reported by the material resource.</td></tr>
-            <tr><td><code>is_builtin</code></td><td>Whether the material is scene-local rather than external.</td></tr>
-            <tr><td><code>last_usage_count</code></td><td>Latest counted number of usages in the scanned scene.</td></tr>
-            <tr><td><code>source_scene_path</code></td><td>The scene path from which the profile was indexed.</td></tr>
-            <tr><td><code>notes</code></td><td>Free-form comment field.</td></tr>
-          </tbody>
-        </table>
-        <h2 id="target-registry-fields">Target Registry Fields</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Field</th>
-              <th>Expected purpose</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><code>asset_id</code></td><td>Stable authored asset identifier across domains.</td></tr>
-            <tr><td><code>asset_type</code></td><td>Model, texture, scene, material, audio, VFX, UI, or reference art.</td></tr>
-            <tr><td><code>path</code></td><td>Godot resource path or curated source reference.</td></tr>
-            <tr><td><code>owner_domain</code></td><td>Actor, biome, item, world, UI, or toolchain ownership.</td></tr>
-            <tr><td><code>import_status</code></td><td>Valid, missing, outdated, or intentionally placeholder.</td></tr>
-            <tr><td><code>license_status</code></td><td>Internal, commissioned, third-party licensed, or placeholder.</td></tr>
-            <tr><td><code>author</code></td><td>Creator or source attribution.</td></tr>
-            <tr><td><code>checksum</code></td><td>Optional validation fingerprint.</td></tr>
-          </tbody>
-        </table>
-        <h2 id="implementation-gap">Implementation Gap</h2>
+        <h2 id="current-limitations">Current Limitations</h2>
+        <ul>
+          <li>No dedicated asset repository class exists yet beyond the generic entity repository helpers.</li>
+          <li>No general asset editor module exists in <code>MODULE_ORDER</code>.</li>
+          <li>No verified live ingestion path exists yet for models, textures, audio, VFX, UI assets, or animation sets.</li>
+          <li>Because the SQLite backend addon is missing from the repo snapshot, the schema and code path are real but cannot be assumed operational without restoring that dependency.</li>
+        </ul>
+        <h2 id="safe-current-reading">Safe Current Reading</h2>
         <div class="callout">
-          <p><strong>Current truth:</strong> the project already has a useful registry foothold for scene materials, including usage indexing and DB sync.</p>
-          <p><strong>Current limit:</strong> there is no generalized asset registry table or editor flow yet for models, textures, scenes, audio, VFX, or UI assets.</p>
+          <p><strong>Verified now:</strong> the authoring DB already contains a generalized asset-registry schema and a generic entity-to-asset linking layer.</p>
+          <p><strong>Still missing:</strong> a broad asset-management editor and non-material ingestion workflows.</p>
         </div>
         <h2 id="related-docs">Related Docs</h2>
         <ul>

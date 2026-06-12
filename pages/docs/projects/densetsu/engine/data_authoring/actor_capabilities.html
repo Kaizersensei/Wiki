@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Actor Capabilities</title>
   <meta property="og:title" content="Actor Capabilities">
-  <meta property="og:description" content="Target actor-capability taxonomy for the Densetsu Authoring database and the current implementation gap.">
+  <meta property="og:description" content="Current actor-capability footing in the Densetsu Authoring schema: generic foundations exist, actor-specific authoring surfaces do not.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/actor_capabilities.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Actor Capabilities">
-  <meta property="twitter:description" content="Target actor-capability taxonomy for the Densetsu Authoring database and the current implementation gap.">
+  <meta property="twitter:description" content="Current actor-capability footing in the Densetsu Authoring schema: generic foundations exist, actor-specific authoring surfaces do not.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
@@ -38,73 +38,81 @@
           <table>
             <tbody>
               <tr><th>Page type</th><td>Domain reference</td><th>Audience</th><td>Gameplay programmers, tools programmers, technical designers</td></tr>
-              <tr><th>Implementation status</th><td>Target model only</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td><code>docs/db-structure.md</code>, <code>0003_authoring_foundations.sql</code>, <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Planned actor and variant editors in the Authoring workspace</td></tr>
+              <tr><th>Implementation status</th><td>Generic capability schema exists, actor-specific workflow does not</td><th>Last verified</th><td>2026-06-12</td></tr>
+              <tr><th>Source inputs</th><td><code>docs/db-structure.md</code>, <code>0003_authoring_foundations.sql</code>, <code>entity_repository.gd</code>, and <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Planned actor and variant editors in the Authoring workspace</td></tr>
               <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p>Actor capabilities describe what an actor can do. They are not actor categories, and they are not runtime state. The authoring database needs this distinction because the same base actor may be player-controllable, dialogue-capable, rideable, combatant, or harvestable without becoming five different actor types.</p>
-        <h2 id="core-rule">Core Rule</h2>
+        <p>The capability taxonomy is no longer only a handout concept. The current database schema already contains generic capability foundations, but it does not yet expose an actor-specific editor, actor-domain repository, or live capability-authoring workflow.</p>
+        <h2 id="core-distinction">Core Distinction</h2>
         <ul>
           <li>Category answers what the thing fundamentally is.</li>
           <li>Capability answers what the thing can do.</li>
-          <li>Runtime state answers what the thing is doing right now.</li>
+          <li>Runtime state answers what the thing is doing now.</li>
           <li>Variant answers how this authored form differs from its base record.</li>
         </ul>
-        <h2 id="recommended-capability-families">Recommended Capability Families</h2>
+        <p>That rule still matters, because the current schema is generic enough to support many domains and should not be forced into actor-only semantics too early.</p>
+        <h2 id="current-schema-foothold">Current Schema Foothold</h2>
         <table>
           <thead>
             <tr>
-              <th>Family</th>
-              <th>Example capabilities</th>
-              <th>Notes</th>
+              <th>Table</th>
+              <th>Current role</th>
+              <th>Why it matters here</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Control</td><td><code>controllable_by_player</code>, <code>controllable_by_ai</code>, <code>possessable</code>, <code>commandable</code></td><td>Defines control ownership, not narrative role.</td></tr>
-            <tr><td>Social</td><td><code>dialogue_capable</code>, <code>merchant</code>, <code>trainer</code>, <code>quest_anchor</code>, <code>recruitable</code></td><td>Use relations or tags rather than separate actor classes.</td></tr>
-            <tr><td>Combat</td><td><code>combatant</code>, <code>hostile_default</code>, <code>guard_capable</code>, <code>parry_capable</code>, <code>drops_loot</code></td><td>Keep these separate from current aggro or alive/dead state.</td></tr>
-            <tr><td>Mounting</td><td><code>rideable</code>, <code>can_mount</code>, <code>tameable</code>, <code>bond_tracked</code>, <code>rider_slot_provider</code></td><td><code>rideable</code> and <code>can_mount</code> belong to different actors and must not be merged.</td></tr>
-            <tr><td>Interaction</td><td><code>harvestable</code>, <code>cuttable</code>, <code>flammable</code>, <code>can_be_grabbed</code></td><td>Important for active objects, resource nodes, and environmental actors.</td></tr>
+            <tr><td><code>entities</code></td><td>Generic authored record base keyed by <code>entity_id</code> and <code>domain</code>.</td><td>Actor records would most likely sit here under an actor-like domain instead of requiring a separate first-pass actor table.</td></tr>
+            <tr><td><code>capability_definitions</code></td><td>Catalog of capability IDs, display names, domains, and config schemas.</td><td>This is the first real capability-definition foothold in the live schema.</td></tr>
+            <tr><td><code>entity_capabilities</code></td><td>Join table enabling or configuring capabilities per entity.</td><td>This is the concrete relation layer the older wiki wording said did not exist.</td></tr>
+            <tr><td><code>record_variants</code></td><td>Variant rows linked to base records.</td><td>Important because capability deltas belong on variants, not only on base records.</td></tr>
+            <tr><td><code>variant_capability_overrides</code></td><td>Per-variant capability override layer.</td><td>Provides the shape for capability additions, removals, or altered config per variant.</td></tr>
           </tbody>
         </table>
-        <h2 id="authoring-expectations">Authoring Expectations</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Record concern</th>
-              <th>Expected authoring behavior</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Base actor record</td><td>Defines actor family, default assets, base behavior, and default capability relations.</td></tr>
-            <tr><td>Variant record</td><td>Overrides only the fields or capability deltas that differ from the base actor.</td></tr>
-            <tr><td>Runtime state</td><td>Stored outside the authoring catalog as save data, FSM state, or live relationship state.</td></tr>
-            <tr><td>UI behavior</td><td>Editors should support add/remove capability actions, base comparison, validation, and resolved previews.</td></tr>
-          </tbody>
-        </table>
-        <h2 id="current-implementation-status">Current Implementation Status</h2>
+        <h2 id="what-exists-versus-what-does-not">What Exists Versus What Does Not</h2>
         <table>
           <thead>
             <tr>
               <th>Surface</th>
-              <th>Current status</th>
-              <th>Verification note</th>
+              <th>Current truth</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Schema tables</td><td>No actor or capability tables are present in <code>0001_authoring_core.sql</code>.</td><td>Verified by direct schema inspection.</td></tr>
-            <tr><td>Repositories</td><td>No actor or capability repositories are implemented in the addon.</td><td>Only biome and material-profile repositories exist today.</td></tr>
-            <tr><td>Workspace module</td><td>No Actor module exists in <code>MODULE_ORDER</code>.</td><td>The current workspace is not yet an actor-authoring surface.</td></tr>
-            <tr><td>Behavior docs risk</td><td>High risk of confusion if runtime states are documented as capabilities.</td><td>This page should be treated as policy guidance for future implementation.</td></tr>
+            <tr><td>Schema</td><td>Capability tables now exist in <code>0003_authoring_foundations.sql</code>.</td></tr>
+            <tr><td>Repository layer</td><td><code>entity_repository.gd</code> exists, but it only exposes generic entity and asset helpers today. There is no dedicated capability CRUD repository yet.</td></tr>
+            <tr><td>Workspace module</td><td>No Actor module or capability editor exists in <code>MODULE_ORDER</code>.</td></tr>
+            <tr><td>Live workflow</td><td>No verified operator flow currently adds or edits actor capabilities through the Authoring workspace.</td></tr>
           </tbody>
         </table>
-        <h2 id="verification-notes">Verification Notes</h2>
+        <h2 id="recommended-capability-reading">Recommended Capability Reading</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Family</th>
+              <th>Examples</th>
+              <th>Current reading</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Control</td><td><code>controllable_by_player</code>, <code>controllable_by_ai</code>, <code>possessable</code></td><td>Fits naturally into generic capability definitions plus per-entity or per-variant config.</td></tr>
+            <tr><td>Social</td><td><code>dialogue_capable</code>, <code>merchant</code>, <code>trainer</code>, <code>quest_anchor</code></td><td>Should remain capability-driven instead of becoming separate actor classes.</td></tr>
+            <tr><td>Combat</td><td><code>combatant</code>, <code>hostile_default</code>, <code>guard_capable</code>, <code>drops_loot</code></td><td>Should stay separate from live aggro, HP, or death state.</td></tr>
+            <tr><td>Mounting</td><td><code>rideable</code>, <code>can_mount</code>, <code>tameable</code></td><td>Useful example of why actor identity and capability must stay decoupled.</td></tr>
+            <tr><td>Interaction</td><td><code>harvestable</code>, <code>cuttable</code>, <code>flammable</code>, <code>can_be_grabbed</code></td><td>Applies beyond humanoid actors and fits the generic entity model.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="current-limit">Current Limit</h2>
         <div class="callout">
-          <p><strong>Verified:</strong> the capability taxonomy is clearly defined in the handout.</p>
-          <p><strong>Not yet implemented:</strong> there is no live actor-capability authoring surface in the current Densetsu Authoring addon snapshot.</p>
+          <p><strong>Verified now:</strong> the schema and variant model already support capability-driven authoring in principle.</p>
+          <p><strong>Still missing:</strong> actor-domain records, capability editors, domain-specific repositories, previews, validation rules, and user-facing workflows.</p>
         </div>
+        <h2 id="safe-current-assumption">Safe Current Assumption</h2>
+        <ul>
+          <li>Do not document actor capabilities as absent from the schema anymore.</li>
+          <li>Do document actor capability authoring as not yet surfaced in the addon UI.</li>
+          <li>Expect the eventual actor workflow to build on generic <code>entities</code>, capability tables, and variant overrides rather than inventing a parallel one-off actor-only model.</li>
+        </ul>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
           <li><a href="index.html">Data &amp; Authoring</a></li>

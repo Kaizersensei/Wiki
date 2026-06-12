@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>World-State Overlays</title>
   <meta property="og:title" content="World-State Overlays">
-  <meta property="og:description" content="Target overlay model for modifying authored world content in Densetsu.">
+  <meta property="og:description" content="Current world-state overlay footing in Densetsu Authoring: variant override schema exists, overlay activation model does not.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/world_state_overlays.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="World-State Overlays">
-  <meta property="twitter:description" content="Target overlay model for modifying authored world content in Densetsu.">
+  <meta property="twitter:description" content="Current world-state overlay footing in Densetsu Authoring: variant override schema exists, overlay activation model does not.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
@@ -38,13 +38,13 @@
           <table>
             <tbody>
               <tr><th>Page type</th><td>Domain reference</td><th>Audience</th><td>Technical designers, narrative designers, tools programmers</td></tr>
-              <tr><th>Implementation status</th><td>Target model only</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td><code>docs/db-structure.md</code>, <code>authoring_workspace.gd</code>, <code>0003_authoring_foundations.sql</code></td><th>User touchpoint</th><td>Planned biome, variant, quest, and compile editors</td></tr>
+              <tr><th>Implementation status</th><td>Variant override foundation exists, overlay-condition workflow does not</td><th>Last verified</th><td>2026-06-12</td></tr>
+              <tr><th>Source inputs</th><td><code>docs/db-structure.md</code>, <code>0003_authoring_foundations.sql</code>, <code>entity_repository.gd</code>, and <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Planned variant, quest, and compile editors in the Authoring workspace</td></tr>
               <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p>World-state overlays are authored conditions that modify normal content based on story, environment, temporal state, or region state. They do not replace the base catalog. They tell the engine which variants, suppressions, or extra rules should apply when a world condition is active.</p>
+        <p>World-state overlays are still not a finished authoring feature, but they are no longer pure theory. The current schema already contains variant and override tables that can represent altered forms and per-variant changes. What is still missing is the layer that says when those altered forms should become active.</p>
         <h2 id="overlay-versus-variant">Overlay Versus Variant</h2>
         <table>
           <thead>
@@ -54,55 +54,74 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Variant</td><td>The alternate authored form, such as a burned bamboo or corrupted hound.</td></tr>
-            <tr><td>Overlay</td><td>The condition that decides when that alternate form replaces or modifies the normal one.</td></tr>
-            <tr><td>Runtime state</td><td>The live per-instance state and save data, which should not be used as a substitute for overlay authoring.</td></tr>
+            <tr><td>Variant</td><td>The alternate authored form, such as a burned prop, corrupted creature, or restored state.</td></tr>
+            <tr><td>Overlay</td><td>The authored condition that activates, suppresses, or swaps those variants.</td></tr>
+            <tr><td>Runtime state</td><td>The live per-instance state or save-state layer, which should not replace authored overlay logic.</td></tr>
           </tbody>
         </table>
-        <h2 id="example-overlay-behaviors">Example Overlay Behaviors</h2>
+        <h2 id="current-schema-foothold">Current Schema Foothold</h2>
         <table>
           <thead>
             <tr>
-              <th>Overlay pattern</th>
-              <th>Typical effect</th>
+              <th>Table</th>
+              <th>Current role</th>
+              <th>Overlay relevance</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>burned</code></td><td>Replace healthy foliage variants with burned variants and suppress some growth rules.</td></tr>
-            <tr><td><code>frozen</code></td><td>Swap water or plant variants and change hazard or traversal expectations.</td></tr>
-            <tr><td><code>corrupted</code></td><td>Add corruption hazards, suppress sacred or healthy growth, and enable corrupted variants.</td></tr>
-            <tr><td><code>restored</code></td><td>Re-enable healthy variants and reduce hazard or enemy pressure.</td></tr>
-            <tr><td><code>time_sick</code></td><td>Add temporal anomalies and unstable props or effects.</td></tr>
-            <tr><td><code>occupied</code></td><td>Inject camps, patrol anchors, barricades, or faction-specific actor sets.</td></tr>
+            <tr><td><code>record_variants</code></td><td>Defines alternate authored forms for a base record.</td><td>Provides the direct data home for “burned”, “corrupted”, “restored”, or similar alternate forms.</td></tr>
+            <tr><td><code>record_variant_overrides</code></td><td>Stores field-level differences for a variant.</td><td>Supports targeted swaps instead of full record duplication.</td></tr>
+            <tr><td><code>variant_capability_overrides</code></td><td>Changes capability relations per variant.</td><td>Useful when overlays should alter what the active form can do.</td></tr>
+            <tr><td><code>variant_asset_overrides</code></td><td>Changes linked assets per variant.</td><td>Useful when overlays should swap models, materials, FX, or other art assets.</td></tr>
           </tbody>
         </table>
-        <h2 id="authoring-expectations">Authoring Expectations</h2>
+        <h2 id="what-these-foundations-do-and-do-not-solve">What These Foundations Do And Do Not Solve</h2>
         <ul>
-          <li>Overlays should reference variants and rule sets instead of duplicating whole biomes whenever possible.</li>
-          <li>Overlays should be able to replace, suppress, or add placement behavior.</li>
-          <li>Overlay activation should be explainable through story, temporal, environmental, or system triggers.</li>
-          <li>Compile and validation tooling should be able to preview the resolved result of an active overlay.</li>
+          <li>They do solve how alternate forms and override deltas can be represented in schema.</li>
+          <li>They do not solve overlay activation conditions such as story flags, temporal state, environmental triggers, regional ownership, or corruption progression.</li>
+          <li>They do not provide a compile-time resolution pass that explains why one variant won over another.</li>
         </ul>
-        <h2 id="current-implementation-status">Current Implementation Status</h2>
+        <h2 id="current-missing-pieces">Current Missing Pieces</h2>
         <table>
           <thead>
             <tr>
               <th>Surface</th>
               <th>Current status</th>
-              <th>Verification note</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Schema</td><td>No overlay tables exist in the current migrations.</td><td>Verified by direct inspection of <code>0001_authoring_core.sql</code>.</td></tr>
-            <tr><td>Repositories</td><td>No overlay repository is implemented.</td><td>The addon currently exposes biome and material-profile repositories only.</td></tr>
-            <tr><td>Workspace module</td><td>No dedicated overlay editor or module exists.</td><td><code>MODULE_ORDER</code> contains no overlay surface in the current shell.</td></tr>
-            <tr><td>Compile interaction</td><td>Not implemented.</td><td>No overlay-aware compile pass is currently exposed.</td></tr>
+            <tr><td>Explicit overlay-condition tables</td><td>Not implemented in the current migrations.</td></tr>
+            <tr><td>Overlay repository</td><td>Not implemented. The addon currently exposes a generic entity repository plus biome and material-profile repositories.</td></tr>
+            <tr><td>Workspace module</td><td>No dedicated overlay editor or module exists in <code>MODULE_ORDER</code>.</td></tr>
+            <tr><td>Compile integration</td><td>Not implemented. No verified overlay-aware compile or preview pass exists in the current workspace shell.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="best-current-reading">Best Current Reading</h2>
+        <ul>
+          <li>The repo already has the schema shape for alternate forms and delta application.</li>
+          <li>The repo does not yet have the authored condition system that would make those forms into true world-state overlays.</li>
+          <li>Overlay documentation should therefore talk about a real variant foundation plus a missing activation layer, not a fully absent system.</li>
+        </ul>
+        <h2 id="example-overlay-patterns">Example Overlay Patterns</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Overlay idea</th>
+              <th>What current schema could represent</th>
+              <th>What is still missing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>burned</code></td><td>Burned variant assets and capability changes.</td><td>The condition that decides when a region or object becomes burned.</td></tr>
+            <tr><td><code>corrupted</code></td><td>Corrupted variants plus capability or asset overrides.</td><td>The system that activates corruption based on world rules or story state.</td></tr>
+            <tr><td><code>occupied</code></td><td>Alternate record forms or support assets.</td><td>The overlay trigger and compile-time resolution for faction occupation.</td></tr>
+            <tr><td><code>restored</code></td><td>Restored variants and rule-facing deltas.</td><td>The layer that transitions from damaged state to restored state.</td></tr>
           </tbody>
         </table>
         <h2 id="verification-notes">Verification Notes</h2>
         <div class="callout">
-          <p><strong>Verified:</strong> overlays are a central part of the intended authoring taxonomy in the handout.</p>
-          <p><strong>Not implemented:</strong> there is no live overlay editor, schema, or compile integration in the current addon snapshot.</p>
+          <p><strong>Verified now:</strong> variant and override tables in <code>0003_authoring_foundations.sql</code> are real and relevant to overlay design.</p>
+          <p><strong>Still not implemented:</strong> explicit overlay conditions, editor workflows, and compile or preview resolution.</p>
         </div>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
