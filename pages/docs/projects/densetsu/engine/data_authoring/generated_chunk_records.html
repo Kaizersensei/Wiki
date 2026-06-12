@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generated Chunk Records</title>
   <meta property="og:title" content="Generated Chunk Records">
-  <meta property="og:description" content="Deterministic generated-content record model for Densetsu authoring and the current compile gap.">
+  <meta property="og:description" content="Current compile-facing footholds for deterministic generated content in Densetsu Authoring, and the generated-record layers that still do not exist yet.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/generated_chunk_records.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Generated Chunk Records">
-  <meta property="twitter:description" content="Deterministic generated-content record model for Densetsu authoring and the current compile gap.">
+  <meta property="twitter:description" content="Current compile-facing footholds for deterministic generated content in Densetsu Authoring, and the generated-record layers that still do not exist yet.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
@@ -38,78 +38,55 @@
           <table>
             <tbody>
               <tr><th>Page type</th><td>Domain overview</td><th>Audience</th><td>Tools programmers, world builders, technical designers</td></tr>
-              <tr><th>Implementation status</th><td>Target model with compile-scaffold foothold</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td><code>docs/biome-driven maps.md</code>, <code>authoring_workspace.gd</code>, <code>0003_authoring_foundations.sql</code></td><th>User touchpoint</th><td>Planned compile workflow and generated-content inspectors</td></tr>
+              <tr><th>Implementation status</th><td>Target model with compile-report footholds</td><th>Last verified</th><td>2026-06-12</td></tr>
+              <tr><th>Source inputs</th><td><code>docs/biome-driven maps.md</code>, <code>docs/authoring-space.md</code>, <code>0001_authoring_core.sql</code>, and <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Planned Compile workflow, report viewers, and runtime catalog outputs</td></tr>
               <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p>Generated chunk records are the project-owned evidence of deterministic world generation. The handout is explicit: Densetsu should not depend on opaque random scatter near the player. Authoring data, terrain data, and a seed should resolve into reproducible generated output with stable identities and explainable reasons.</p>
-        <h2 id="deterministic-model">Deterministic Model</h2>
-        <ol>
-          <li>Authoring records define the allowed outputs and their conditions.</li>
-          <li>Terrain and semantic context provide the substrate and local facts.</li>
-          <li>A compile or generation pass resolves the result from those inputs plus a seed.</li>
-          <li>The runtime loads generated results as stable authored world content, not as fresh random rolls.</li>
-        </ol>
-        <h2 id="what-needs-stable-identity">What Needs Stable Identity</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Generated content type</th>
-              <th>Identity expectation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Visual-only clutter batches</td><td>Can be stored as deterministic batch output without per-object gameplay identity.</td></tr>
-            <tr><td>Interactive plants, resources, hazards, or dens</td><td>Need stable generated object IDs for save-state, locking, deletion, or manual conversion.</td></tr>
-            <tr><td>Quest-relevant generated objects</td><td>Need traceable, explainable records and strong validation.</td></tr>
-          </tbody>
-        </table>
-        <h2 id="target-record-fields">Target Record Fields</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Field</th>
-              <th>Meaning</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><code>stable_id</code></td><td>Stable generated object identifier.</td></tr>
-            <tr><td><code>region_id</code></td><td>Owning world region.</td></tr>
-            <tr><td><code>terrain3d_region_id</code></td><td>Terrain3D region reference.</td></tr>
-            <tr><td><code>chunk_id</code></td><td>Compiled chunk or cell ID.</td></tr>
-            <tr><td><code>rule_id</code></td><td>Placement or generation rule that produced the output.</td></tr>
-            <tr><td><code>output_type</code></td><td>Plant, rock, resource, actor, hazard, and so on.</td></tr>
-            <tr><td><code>output_id</code></td><td>Resolved catalog record that was spawned.</td></tr>
-            <tr><td><code>position</code>, <code>rotation</code>, <code>scale</code></td><td>Resolved transform data.</td></tr>
-            <tr><td><code>seed</code></td><td>Deterministic seed component.</td></tr>
-            <tr><td><code>generation_reason</code></td><td>Human-readable explanation of why this object exists.</td></tr>
-            <tr><td><code>is_locked</code></td><td>Designer locked the generated result in place.</td></tr>
-            <tr><td><code>is_deleted</code></td><td>Designer suppressed the generated result.</td></tr>
-            <tr><td><code>converted_to_manual</code></td><td>Generated object became a manual authored object.</td></tr>
-          </tbody>
-        </table>
-        <h2 id="current-implementation-status">Current Implementation Status</h2>
+        <p>Generated chunk records are still a planned compile product, not a live database surface. The current repo already fixes the direction, though: SQLite is meant to stay editor-and-compiler authority only, while runtime consumes compiled outputs through catalog and manifest layers instead of querying the authoring database directly.</p>
+        <h2 id="current-verified-footholds">Current Verified Footholds</h2>
         <table>
           <thead>
             <tr>
               <th>Surface</th>
-              <th>Current status</th>
-              <th>Evidence</th>
+              <th>Current role</th>
+              <th>Why it is still incomplete</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Compile module</td><td>Scaffold only.</td><td><code>authoring_workspace.gd</code> labels Compile as a shell.</td></tr>
-            <tr><td><code>compiler_reports</code> table</td><td>Exists for status and summary output.</td><td>Schema foothold only, not generated-object storage.</td></tr>
-            <tr><td>Generated-record schema</td><td>Not implemented.</td><td>No chunk-record or generated-object tables in current migrations.</td></tr>
-            <tr><td>Reason tracing</td><td>Not implemented.</td><td>No live explain-why output surface in current addon.</td></tr>
+            <tr><td><code>compiler_reports</code></td><td>The live schema already has a compile-report table with <code>domain</code>, <code>status</code>, <code>summary</code>, and <code>created_at</code>.</td><td>It stores summary/report rows only, not generated chunk or object data.</td></tr>
+            <tr><td><code>map_assignments</code></td><td>The addon can already bind authored targets to map paths and domains.</td><td>This provides compile scope, not generated output storage.</td></tr>
+            <tr><td>Compile module</td><td><code>authoring_workspace.gd</code> exposes Compile as a named module in the workspace shell.</td><td>The current view only reports schema readiness and states that validation/compile orchestration will be built later.</td></tr>
+            <tr><td>Runtime direction</td><td>The design docs consistently require compiled outputs to feed the existing manifest and catalog flow.</td><td>No current addon code in this slice emits those compiled chunk records yet.</td></tr>
           </tbody>
         </table>
-        <h2 id="verification-notes">Verification Notes</h2>
+        <h2 id="target-generated-layer">Target Generated Layer</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Generated content type</th>
+              <th>Expected identity and storage behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Visual filler batches</td><td>Can remain compact compiled batch data when the result is purely visual and does not need per-instance gameplay state.</td></tr>
+            <tr><td>Interactive generated objects</td><td>Need stable IDs, chunk and region provenance, resolved output IDs, transforms, seed data, and mutation flags such as locked, deleted, or converted-to-manual.</td></tr>
+            <tr><td>Debug and validation provenance</td><td>Should preserve the rule, biome, topology, Terrain3D evidence, and seed or chunk context that produced each generated result.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="what-is-still-missing">What Is Still Missing</h2>
+        <ul>
+          <li>No <code>generated_chunk_records</code>, <code>generated_chunks</code>, <code>generated_instance_batches</code>, <code>generated_objects</code>, or <code>generation_seeds</code> tables exist in the current migrations.</li>
+          <li>No compile service, chunk emitter, or generated-output inspector exists in the addon code under <code>addons/densetsu_authoring</code>.</li>
+          <li>No stable-ID writer, per-object provenance trail, or explain-why surface exists yet for generated placements.</li>
+          <li>No current implementation in this slice emits manifest-visible or catalog-visible compiled outputs for runtime consumption.</li>
+          <li>Because the SQLite backend addon is missing from the repo snapshot, even the existing assignment and report footholds cannot be assumed operational without restoring that dependency.</li>
+        </ul>
+        <h2 id="safe-current-reading">Safe Current Reading</h2>
         <div class="callout">
-          <p><strong>Verified:</strong> deterministic generation with stable IDs is a hard requirement in the handout.</p>
-          <p><strong>Not implemented:</strong> the current addon has no generated-record schema beyond the placeholder compile-report table.</p>
+          <p><strong>Verified now:</strong> the repo already commits to a compiled-data runtime path and includes minimal compile-scope and compile-report schema footholds.</p>
+          <p><strong>Still missing:</strong> the actual generated-record schema, deterministic output writer, and runtime export pipeline are not implemented in the current addon slice.</p>
         </div>
         <h2 id="related-docs">Related Docs</h2>
         <ul>

@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Placement Rules</title>
   <meta property="og:title" content="Placement Rules">
-  <meta property="og:description" content="Target placement-rule model for Densetsu authoring and the current schema gap.">
+  <meta property="og:description" content="Current placement-rule footholds in Densetsu Authoring, and the rule schema and evaluation layers that still do not exist yet.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaizersensei.github.io/Wiki/pages/docs/projects/densetsu/engine/data_authoring/placement_rules.html">
   <meta property="og:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Placement Rules">
-  <meta property="twitter:description" content="Target placement-rule model for Densetsu authoring and the current schema gap.">
+  <meta property="twitter:description" content="Current placement-rule footholds in Densetsu Authoring, and the rule schema and evaluation layers that still do not exist yet.">
   <meta property="twitter:image" content="https://kaizersensei.github.io/Wiki/pages/retraissance/assets/media/brand/logo-crt.gif">
   <link rel="stylesheet" href="../../../../../retraissance/assets/site.css" />
 </head>
@@ -38,74 +38,56 @@
           <table>
             <tbody>
               <tr><th>Page type</th><td>Domain reference</td><th>Audience</th><td>Technical designers, world builders, tools programmers</td></tr>
-              <tr><th>Implementation status</th><td>Target model only</td><th>Last verified</th><td>2026-06-11</td></tr>
-              <tr><th>Source inputs</th><td><code>docs/biome-driven maps.md</code>, <code>authoring_workspace.gd</code>, <code>authoring_context.gd</code>, <code>0003_authoring_foundations.sql</code></td><th>User touchpoint</th><td>Planned biome, terrain, vegetation, and compile editors</td></tr>
+              <tr><th>Implementation status</th><td>Target model with assignment and variant footholds</td><th>Last verified</th><td>2026-06-12</td></tr>
+              <tr><th>Source inputs</th><td><code>docs/biome-driven maps.md</code>, <code>docs/authoring-space.md</code>, <code>0001_authoring_core.sql</code>, <code>0003_authoring_foundations.sql</code>, and <code>authoring_workspace.gd</code></td><th>User touchpoint</th><td>Planned Biome, Terrain, Vegetation, and Compile workflow surfaces</td></tr>
               <tr><th>Risk level</th><td>High</td><th>Inventory</th><td><a href="../documentation_inventory.html">Documentation Inventory</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p>Placement rules connect authored records to the conditions under which they may appear. They are the semantic bridge between Terrain3D substrate, biome meaning, topology masks, and deterministic generation output.</p>
-        <h2 id="what-placement-rules-do">What Placement Rules Do</h2>
-        <ul>
-          <li>Choose what may spawn or be authored in a location.</li>
-          <li>Express conditions such as biome, topology, soil, moisture, slope, altitude, and exclusion zones.</li>
-          <li>Make generation explainable instead of opaque or random.</li>
-          <li>Keep placement logic separate from runtime state and separate from raw asset files.</li>
-        </ul>
-        <h2 id="target-rule-fields">Target Rule Fields</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Field</th>
-              <th>Meaning</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><code>rule_id</code></td><td>Stable authored rule identifier.</td></tr>
-            <tr><td><code>output_type</code></td><td>Plant, rock, resource, actor, hazard, or prop.</td></tr>
-            <tr><td><code>output_id</code></td><td>Record produced when the rule matches.</td></tr>
-            <tr><td><code>biome_id</code></td><td>Required biome relation.</td></tr>
-            <tr><td><code>topology_id</code></td><td>Required topology relation.</td></tr>
-            <tr><td><code>terrain_surface_id</code></td><td>Required Terrain3D or semantic surface relation.</td></tr>
-            <tr><td><code>soil_profile_id</code></td><td>Required soil relation.</td></tr>
-            <tr><td><code>moisture_min/max</code></td><td>Allowed moisture range.</td></tr>
-            <tr><td><code>slope_min/max</code></td><td>Allowed slope range.</td></tr>
-            <tr><td><code>altitude_min/max</code></td><td>Allowed elevation range.</td></tr>
-            <tr><td><code>density</code></td><td>Spawn density or authored presence rate.</td></tr>
-            <tr><td><code>cluster_radius</code></td><td>Clustering behavior.</td></tr>
-            <tr><td><code>min_spacing</code></td><td>Minimum spacing between outputs.</td></tr>
-            <tr><td><code>max_per_chunk</code></td><td>Chunk budget control.</td></tr>
-            <tr><td><code>generation_weight</code></td><td>Selection weight inside a rule set.</td></tr>
-            <tr><td><code>priority</code></td><td>Conflict-resolution priority.</td></tr>
-            <tr><td><code>exclusion_rule_id</code></td><td>Blocking or suppression relation.</td></tr>
-          </tbody>
-        </table>
-        <h2 id="current-footholds">Current Footholds In The Live Addon</h2>
+        <p>Placement rules are still mostly planned, but they are no longer floating without context. The repo already has assignment, variant, and compile-shell surfaces that a future rule system would attach to, even though the actual placement-rule schema and evaluation pass have not been migrated yet.</p>
+        <h2 id="current-verified-footholds">Current Verified Footholds</h2>
         <table>
           <thead>
             <tr>
               <th>Surface</th>
-              <th>Current value</th>
-              <th>Why it is not enough</th>
+              <th>Current role</th>
+              <th>Why it is still incomplete</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Terrain module</td><td>Reports Terrain3D targets and enforces camera-only scene policy.</td><td>No placement-rule editing or evaluation is implemented.</td></tr>
-            <tr><td><code>map_assignments</code> table</td><td>Maps <code>map_path</code>, <code>domain</code>, and <code>target_id</code>.</td><td>Useful for ownership and linkage, but not expressive enough for placement conditions.</td></tr>
-            <tr><td>Compile module</td><td>Scaffold only.</td><td>No live rule evaluation, generated-object reasoning, or deterministic batch output yet.</td></tr>
+            <tr><td><code>map_assignments</code></td><td>The live schema can already bind a <code>map_path</code> and <code>domain</code> to a <code>target_id</code>.</td><td>That links authored scope to a map or Terrain3D target, but it does not encode placement conditions or outputs.</td></tr>
+            <tr><td><code>biomes</code></td><td>The current addon has a real biome table and repository count path.</td><td>Biome records exist, but no generation-rule or topology-binding tables join them to deterministic placement logic yet.</td></tr>
+            <tr><td><code>record_variants</code> and override tables</td><td>The authoring DB now has a generalized variant foundation for alternate record definitions.</td><td>Variants can represent alternate outputs, but they do not decide when or where content is placed.</td></tr>
+            <tr><td>Terrain, Vegetation, and Compile modules</td><td><code>authoring_workspace.gd</code> exposes all three as named modules in the hub shell.</td><td>The current views are scaffolds only: Terrain reports active targets, Vegetation reports sidecar availability, and Compile is still a placeholder entrypoint.</td></tr>
           </tbody>
         </table>
-        <h2 id="design-guardrails">Design Guardrails</h2>
+        <h2 id="target-rule-shape">Target Rule Shape Still Comes From Design Docs</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Target concern</th>
+              <th>Expected fields or behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Identity</td><td><code>rule_id</code>, rule-set membership, priority, and enable/disable state.</td></tr>
+            <tr><td>Conditions</td><td>Biome or tag constraints, topology flags, terrain surface bindings, soil, moisture, slope, altitude, and exclusion logic.</td></tr>
+            <tr><td>Outputs</td><td><code>output_type</code>, <code>output_id</code>, density, cluster radius, spacing, max-per-chunk, and stable-ID policy inputs.</td></tr>
+            <tr><td>Explainability</td><td>A compile pass should be able to explain which rule matched, what evidence it used, and why a placement was skipped.</td></tr>
+          </tbody>
+        </table>
+        <h2 id="what-is-still-missing">What Is Still Missing</h2>
         <ul>
-          <li>Do not hide placement meaning inside hardcoded enums with no authoring surface.</li>
-          <li>Do not duplicate whole biome records just to express local placement changes.</li>
-          <li>Do not let runtime randomness replace deterministic authored rule evaluation.</li>
-          <li>Keep Terrain3D as substrate owner and use placement rules for semantic meaning above it.</li>
+          <li>No <code>placement_rules</code>, <code>generation_rules</code>, <code>generation_rule_sets</code>, <code>terrain_bindings</code>, <code>foliage_bindings</code>, or <code>spawn_bindings</code> tables exist in the current migrations.</li>
+          <li>No placement-rule repository, CRUD editor, or validation surface exists in the addon code.</li>
+          <li>No deterministic evaluation pass exists yet that resolves Terrain3D inputs plus authored rules into generated outputs.</li>
+          <li>No operator-facing explain-why or skipped-placement reporting exists beyond the compile-shell placeholder.</li>
+          <li>Because the SQLite backend addon is missing from the repo snapshot, even the existing schema footholds cannot be assumed operational without restoring that dependency.</li>
         </ul>
-        <h2 id="verification-notes">Verification Notes</h2>
+        <h2 id="safe-current-reading">Safe Current Reading</h2>
         <div class="callout">
-          <p><strong>Verified:</strong> placement rules are a major target-domain requirement in the handout.</p>
-          <p><strong>Not implemented:</strong> there is no placement-rule table, repository, or editor workflow in the current addon snapshot.</p>
+          <p><strong>Verified now:</strong> map assignment, biome storage, and generalized variant foundations already exist around the future placement-rule workflow.</p>
+          <p><strong>Still missing:</strong> the actual rule tables, editors, and deterministic rule-evaluation pipeline remain design targets, not live addon features.</p>
         </div>
         <h2 id="related-docs">Related Docs</h2>
         <ul>
