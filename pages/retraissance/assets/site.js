@@ -561,7 +561,7 @@ const buildBreadcrumb = () => {
         </div>
       </div>
       <div class="nav-dropdown">
-        <a class="nav-dropdown-toggle" href="${prefix}retraissance/contacts.html">Contacts ?</a>
+        <a class="nav-dropdown-toggle" href="${prefix}retraissance/contacts.html">Contacts &#9662;</a>
         <div class="nav-dropdown-menu">
           <a href="${prefix}retraissance/contacts.html">Contacts Overview</a>
           <a href="${prefix}retraissance/contacts/contact-form.html">Contact Form</a>
