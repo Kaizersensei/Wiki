@@ -1,18 +1,14 @@
-.contact-form-frame {
-  display: block;
-  width: 100%;
-  min-height: 1100px;
-  border: 0;
-  margin-top: 1.5rem;
-  background: #fff;
-}
 .contact-form-link {
   display: inline-block;
   padding: .65rem 1rem;
   border: 1px solid var(--border);
   border-radius: .4rem;
-  background: var(--meta-bg);
+  background: var(--accent);
+  color: #fff;
+  text-shadow: none;
 }
 .contact-form-link:hover, .contact-form-link:focus-visible {
   border-color: var(--accent);
 }
+
+.contact-form-link:visited { color: #fff; }
