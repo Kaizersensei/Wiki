@@ -22,3 +22,9 @@ pages/retraissance/densetsu/assets/media/.tosort/
 snapshots/
 disable-editor.flag
 pages/retraissance/assets/editor-tools.js
+
+# Imported archives and tool build intermediates
+.import/
+tools-src/*/dist/
+tools-src/*/.env
+tools-src/*/.env.local

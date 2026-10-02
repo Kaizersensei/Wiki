@@ -1,0 +1,5 @@
+{
+  "name": "UnwrApp3D",
+  "description": "3D painting with UV unwrapping, layered 2D editing, and texture export.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>InfiniBoard</title>
+
+    <style>
+      /* Critical Layout Resets */
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #18181b;
+        color: white;
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #27272a; }
+      ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #71717a; }
+
+      .checkerboard {
+        background-color: #27272a;
+        background-image:
+          linear-gradient(45deg, #3f3f46 25%, transparent 25%),
+          linear-gradient(-45deg, #3f3f46 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #3f3f46 75%),
+          linear-gradient(-45deg, transparent 75%, #3f3f46 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      }
+
+      @keyframes animate-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes slide-in-from-left {
+        from { transform: translateX(-1rem); }
+        to { transform: translateX(0); }
+      }
+
+      .animate-in { animation: animate-in 0.2s ease-out; }
+      .slide-in-from-left-4 { animation: slide-in-from-left 0.2s ease-out; }
+    </style>
+    <script type="module" crossorigin src="./assets/index-D5wB5fyK.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D5pO8I2e.css">
+  </head>
+  <body>
+    <div id="root"></div>
+
+  </body>
+</html>

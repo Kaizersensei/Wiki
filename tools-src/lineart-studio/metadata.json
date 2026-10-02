@@ -1,0 +1,5 @@
+{
+  "name": "LineArt Studio",
+  "description": "Image to line art extraction with adjustable filters and edge detection.",
+  "requestFramePermissions": []
+}

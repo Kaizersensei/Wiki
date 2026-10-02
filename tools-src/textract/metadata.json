@@ -1,0 +1,5 @@
+{
+  "name": "TeXtract",
+  "description": "Extract and straighten textures with perspective warping, PBR maps, and local upscaling.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,4 @@
+# Imported tool sources and generated browser assets
+tools-src/** text=auto eol=lf
+pages/retraissance/software/tools/** text=auto eol=lf
+pages/retraissance/software/tools/*/assets/* linguist-generated=true whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

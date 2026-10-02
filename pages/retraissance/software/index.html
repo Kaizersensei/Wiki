@@ -22,40 +22,92 @@
       <h1>Software</h1>
       <p>Internal/custom software downloads and documentation.</p>
 
-      <div class="filters">
-        <label for="tl-search">Search</label>
-        <input id="tl-search" type="search" placeholder="Search software and tools">
+      <section aria-labelledby="tools-heading">
+        <h2 id="tools-heading">Tools</h2>
+        <p>Web apps and utilities for creating and managing projects.</p>
 
-        <label for="tl-tag">Filter tag</label>
-        <select id="tl-tag"><option value="all">All</option></select>
+        <div class="filters">
+          <label for="tl-search">Search</label>
+          <input id="tl-search" type="search" placeholder="Search tools">
 
-        <label for="tl-sort">Sort</label>
-        <select id="tl-sort">
-          <option value="name">Name (A-Z)</option>
-          <option value="name-desc">Name (Z-A)</option>
-        </select>
-      </div>
+          <label for="tl-tag">Filter tag</label>
+          <select id="tl-tag"><option value="all">All</option></select>
 
-      <div id="tl-list" class="link-list"></div>
+          <label for="tl-sort">Sort</label>
+          <select id="tl-sort">
+            <option value="name">Name (A-Z)</option>
+            <option value="name-desc">Name (Z-A)</option>
+          </select>
+        </div>
 
-      <div class="callout">
-        <strong>Notes:</strong> keep software/tool names aligned with their media folder slugs under
-        <code>assets/media/tools/&lt;slug&gt;</code> if screenshots/downloads are added.
-      </div>
+        <div id="tl-list" class="link-list"></div>
+
+
+      </section>
     </section>
   </main>
 
   <script id="tools-data-json" type="application/json">
 [
   {
-    "name": "Example Tool",
-    "href": "example_tool.html",
-    "tags": ["E", "cli", "example"]
+    "name": "InfiniBoard",
+    "href": "tools/infiniboard/index.html",
+    "description": "Compose images, text, and mockups on an infinite canvas.",
+    "tags": [
+      "whiteboard",
+      "design"
+    ],
+    "guide": "tools/infiniboard.html"
   },
   {
-    "name": "InfiniBoard",
-    "href": "infiniboard.html",
-    "tags": ["I"]
+    "name": "InPoster",
+    "href": "tools/inposter/index.html",
+    "description": "Compose and preview social posts with image attachments and local history.",
+    "tags": [
+      "writing",
+      "social media",
+      "local"
+    ],
+    "guide": "tools/inposter.html"
+  },
+  {
+    "name": "LineArt Studio",
+    "href": "tools/lineart-studio/index.html",
+    "description": "Turn images into line art with edge detection and adjustable filters.",
+    "tags": [
+      "images",
+      "line art"
+    ],
+    "guide": "tools/lineart-studio.html"
+  },
+  {
+    "name": "T-Ex (TeXtract)",
+    "href": "tools/textract/index.html",
+    "description": "Extract and straighten textures, generate PBR maps, and upscale locally.",
+    "tags": [
+      "textures",
+      "images"
+    ],
+    "guide": "tools/textract.html"
+  },
+  {
+    "name": "UnwrApp3D",
+    "href": "tools/unwrapp3d/index.html",
+    "description": "Paint 3D models, unwrap UVs, and export textures.",
+    "tags": [
+      "3D",
+      "painting"
+    ],
+    "guide": "tools/unwrapp3d.html"
+  },
+  {
+    "name": "Example Tool",
+    "href": "../tools/example_tool.html",
+    "description": "Example command-line tool documentation.",
+    "tags": [
+      "cli",
+      "example"
+    ]
   }
 ]
   </script>
@@ -86,22 +138,22 @@
     const normalizeHref = (href) => {
       if (!href) return '#';
       if (/^https?:/i.test(href)) return href;
-      const clean = href.replace(/^\\/?/, '');
-      return `/pages/retraissance/tools/${clean}`;
+      const clean = href.replace(/^\/+/, '');
+      return clean;
     };
 
     const render = () => {
       const q = (tlSearch.value || '').toLowerCase();
       const tag = tlTag.value;
-      let items = tlData.filter(d => (d.name || '').toLowerCase().includes(q));
+      let items = tlData.filter(d => `${d.name} ${d.description || ''}`.toLowerCase().includes(q));
       if (tag !== 'all') items = items.filter(d => (d.tags || []).includes(tag));
 
       if (tlSort.value === 'name') items.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
       else items.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
 
       const html = items.length
-        ? '<ul class="link-list">' + items.map(d => `<li><a href="${normalizeHref(d.href)}">${d.name}</a>${(d.tags||[]).map(t => `<span class="meta-chip">${t}</span>`).join('')}</li>`).join('') + '</ul>'
-        : '<p>No software listed.</p>';
+        ? '<ul class="link-list">' + items.map(d => `<li><a href="${normalizeHref(d.href)}">${d.name}</a>${(d.tags||[]).map(t => `<span class="meta-chip">${t}</span>`).join('')}${d.description ? `<p>${d.description}</p>` : ''}${d.guide ? `<a href="${d.guide}">Guide</a>` : ''}</li>`).join('') + '</ul>'
+        : '<p>No tools match your search.</p>';
       tlList.innerHTML = html;
     };
 
