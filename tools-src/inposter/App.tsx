@@ -274,6 +274,8 @@ const App: React.FC = () => {
             )}
           </div>
 
+          <div className="mt-3 flex justify-end"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdE0VJq3IeFe8ICOzFE9-TG4YgG1yS0DTwUMKkffUAkCkcWug/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100" aria-label="Report a bug (opens in a new tab)">Report a bug</a></div>
+
           {/* Planner Sub-Tabs for Mobile Only */}
           {state.view === 'planner' && (
             <div className="flex lg:hidden mt-3 p-1 bg-slate-100 rounded-xl">

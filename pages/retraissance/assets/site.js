@@ -548,7 +548,6 @@ const buildBreadcrumb = () => {
           <a href="${prefix}retraissance/team/index.html">Team</a>
           <a href="${prefix}retraissance/projects/index.html">Projects</a>
           <a href="${prefix}retraissance/sitemap.html">Site Map</a>
-          <a href="${prefix}retraissance/contacts.html">Contact</a>
           <a href="${prefix}retraissance/impressum.html">Impressum</a>
         </div>
       </div>
@@ -559,6 +558,14 @@ const buildBreadcrumb = () => {
           <a href="${prefix}retraissance/reader/story/index.html">Main Story Script</a>
           <a href="${prefix}retraissance/densetsu/universe/index.html">Universe Wiki</a>
           <a href="${prefix}retraissance/densetsu/engine/index.html">Engine Wiki</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <a class="nav-dropdown-toggle" href="${prefix}retraissance/contacts.html">Contacts ?</a>
+        <div class="nav-dropdown-menu">
+          <a href="${prefix}retraissance/contacts.html">Contacts Overview</a>
+          <a href="${prefix}retraissance/contacts/contact-form.html">Contact Form</a>
+          <a href="${prefix}retraissance/contacts/bug-report.html">Bug Report</a>
         </div>
       </div>
       <button class="nav-btn nav-random nav-random-icon" title="Random data page" style="background-image: url('${randomSrc}');">Random</button>

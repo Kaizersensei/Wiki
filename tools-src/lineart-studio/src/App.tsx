@@ -328,6 +328,7 @@ export default function App() {
             </div>
 
             <div className="flex items-center gap-2">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdE0VJq3IeFe8ICOzFE9-TG4YgG1yS0DTwUMKkffUAkCkcWug/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center rounded border border-zinc-700 px-3 py-2 text-xs font-semibold text-zinc-300 hover:bg-zinc-800 hover:text-white" aria-label="Report a bug (opens in a new tab)">Report a bug</a>
               <Tooltip>
                 <TooltipTrigger
                   onMouseDown={() => setShowOriginal(true)}

@@ -42,6 +42,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
   if (!isVisible) {
     return (
+
+
       <button
         onClick={onToggleVisibility}
         className="absolute top-2 left-1/2 -translate-x-1/2 bg-zinc-900/85 hover:bg-zinc-800 backdrop-blur border border-zinc-700 rounded-full px-3 py-1 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white shadow-lg z-[9999] transition editor-control"
@@ -114,6 +116,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </button>
 
       <div className="w-px h-4 bg-zinc-700"></div>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdE0VJq3IeFe8ICOzFE9-TG4YgG1yS0DTwUMKkffUAkCkcWug/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="flex shrink-0 items-center rounded px-2 py-1 text-xs text-zinc-300 hover:bg-zinc-800 hover:text-white editor-control" aria-label="Report a bug (opens in a new tab)">Report a bug</a>
 
       <button
         onClick={onToggleVisibility}

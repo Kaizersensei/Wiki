@@ -224,6 +224,7 @@ export default function App() {
           </nav>
         </div>
         <div className="flex gap-2">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdE0VJq3IeFe8ICOzFE9-TG4YgG1yS0DTwUMKkffUAkCkcWug/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center rounded border border-accent/20 bg-accent/10 px-3 py-1 text-[11px] text-accent hover:bg-accent/20" aria-label="Report a bug (opens in a new tab)">Report a bug</a>
           <button
             onClick={() => fileInputRef.current?.click()}
             className="bg-accent/10 hover:bg-accent/20 border border-accent/20 text-accent px-3 py-1 rounded text-[11px] font-medium transition-all"

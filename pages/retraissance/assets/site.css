@@ -1201,3 +1201,10 @@ details.meta-toggle .meta-grid {
     order: 2;
   }
 }
+
+/* Keep the expanded Contacts navigation usable on narrow screens. */
+@media (max-width: 640px) {
+  .site-header { flex-wrap: wrap; gap: 8px; }
+  .site-header .nav-links { flex-wrap: wrap; width: 100%; min-width: 0; }
+  .nav-dropdown:last-of-type .nav-dropdown-menu { left: auto; right: 0; }
+}

@@ -433,6 +433,7 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-3">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdE0VJq3IeFe8ICOzFE9-TG4YgG1yS0DTwUMKkffUAkCkcWug/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center rounded-md border border-brand-border px-3 py-2 text-xs text-slate-300 hover:bg-brand-border" aria-label="Report a bug (opens in a new tab)">Report a bug</a>
           <label className="cursor-pointer">
             <input type="file" className="hidden" onChange={onImageUpload} accept="image/*" />
             <div className="px-4 py-2 bg-brand-border hover:bg-[#383D47] rounded-md text-sm font-medium transition-colors flex items-center gap-2">
